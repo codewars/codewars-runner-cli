@@ -23,8 +23,8 @@ describe( 'opts', function(){
                     expect(opts.language).to.equal('javascript');
                 });
 
-                it( 'should set test_framework to default if it was missing', function(){
-                    expect(opts.test_framework).to.equal('cw-2');
+                it( 'should set testFramework to default if it was missing', function(){
+                    expect(opts.testFramework).to.equal('cw-2');
                 });
             });
 
