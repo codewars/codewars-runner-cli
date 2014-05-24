@@ -157,6 +157,16 @@ try{
         after: function(cb) {
             afterCallbacks.push(cb);
         },
+        handleError: function(ex) {
+            if (ex.name == 'AssertionError') {
+                this.fail( ex.message );
+            } else{
+                console.log("<ERROR::>" + ex.message);
+            }
+        },
+        fail: function(message) {
+            _expect(false, message);
+        },
         expect: function(passed, message, options){
             _expect(passed, message, options)
         },
@@ -241,12 +251,12 @@ try{
             return array[~~(array.length * Math.random())]
         },
         Error: function(message){
-            this.name = "Test:Error";
+            this.name = "AssertionError";
             this.message = (message || "");
         }
     }
 
-    Test.Error.prototype = Error.prototype;
+    Test.Error.prototype = require('assert').AssertionError.prototype;
 
     Object.freeze(Test);
     Object.defineProperty(global, 'Test', {
