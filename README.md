@@ -10,8 +10,7 @@ You can run `node run --help` to view information about which arguments are supp
 The purpose of this project is to provide a low level ability to run "Kata". This tool will eventually be used by both
 the codewars.com sandboxing processes as well as used by developers locally so that they can do kata offline.
 
-A key advantage to having this tool open sourced is that it becomes possible for the community to contribute support for
-new languages and frameworks.
+A key advantage to having this tool open sourced is that it becomes possible for the Codewars community to contribute support for new languages and frameworks. By simply adding new languages to this tool, the majority of the work will be done and it will become much easier to support the new language on Codewars.com. 
 
 ## Supported Languages and Testing Frameworks
 
