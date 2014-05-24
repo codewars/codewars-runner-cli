@@ -37,7 +37,7 @@ class Test
     def measure
       start = Time.now
       yield
-      ((Time.now - start) * 1000).round(3)
+      ((Time.now - start) * 1000000).to_i
     end
 
     def describe(message)
