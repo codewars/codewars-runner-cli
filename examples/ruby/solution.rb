@@ -1,0 +1,3 @@
+class Example
+
+end
