@@ -1,0 +1,21 @@
+{
+    "name": "codewars-cli",
+    "description": "Codewars.com toolchain utilities",
+    "version": "0.0.1",
+    "author": {
+        "name": "Jake Hoffner",
+        "email": "jake@codewars.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/codewars/codewars-cli.git"
+    },
+    "dependencies": {
+        "nomnom": "1.6.x",
+        "mocha": "1.19.x",
+        "chai": "1.9.x"
+    },
+    "engines" : {
+        "node": "0.10.x"
+    }
+}
