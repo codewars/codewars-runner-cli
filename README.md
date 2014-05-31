@@ -1,6 +1,6 @@
 # codewars-cli
 
-> TODO: Rename project to `codewars-compiler`
+> TODO: Rename project to `codewars-compiler`, `codewars-cli-runner` or something that is less ambiguous. 
 
 This is the command-line utility used by [Codewars](http://www.codewars.com) to execute code snippets of various languages,
 using various testing frameworks.
