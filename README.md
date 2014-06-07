@@ -60,3 +60,27 @@ node run -l ruby -c "a = 1" -f "Test.expect a == 1"
 ```
 node run -l js -c "a = 1" -f "Test.expect(a == 1)"
 ```
+
+## Docker
+
+The cli now supports running inside a docker container for better isolation.
+
+#### Build
+```
+docker build -t codewars/cli-runner .
+```
+
+#### Run Help
+```
+docker run --rm codewars/cli-runner --help
+```
+
+#### Run JavaScript Kata
+```
+docker run --rm codewars/cli-runner -l js -c "a = 1" -f "Test.expect(a == 1)"
+```
+
+#### Run Ruby Kata
+```
+docker run --rm codewars/cli-runner -l ruby -c "a = 1" -f "Test.expect a == 1"
+```
