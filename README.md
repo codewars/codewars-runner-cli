@@ -84,3 +84,16 @@ docker run --rm codewars/cli-runner -l js -c "a = 1" -f "Test.expect(a == 1)"
 ```
 docker run --rm codewars/cli-runner -l ruby -c "a = 1" -f "Test.expect a == 1"
 ```
+
+### Vagrant
+
+> Version 1.6.3 or higher is required.
+
+ A fully working environment is provided via Vagrant. These steps will get a working server running:
+ ```
+ vagrant up
+ vagrant ssh
+ supervisor /vagrant/server.js
+ ```
+
+ You should now have a fully working server with Docker support. You can access the server using `localhost:8080'.
