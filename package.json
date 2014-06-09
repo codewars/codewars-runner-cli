@@ -13,7 +13,11 @@
     "dependencies": {
         "nomnom": "1.6.x",
         "mocha": "1.19.x",
-        "chai": "1.9.x"
+        "chai": "1.9.x",
+        "express": "*",
+        "response-time": "*",
+        "connect-timeout": "*",
+        "body-parser": "*"
     },
     "engines" : {
         "node": "0.10.x"
