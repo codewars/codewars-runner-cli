@@ -1,18 +1,14 @@
-# codewars-cli
+# codewars-runner
 
-> TODO: Rename project to `codewars-compiler`, `codewars-cli-runner` or something that is less ambiguous. 
-
-This is the command-line utility used by [Codewars](http://www.codewars.com) to execute code snippets of various languages,
-using various testing frameworks.
+This project is both a command-line utility and server, used by [Codewars](http://www.codewars.com) to execute small sets of code within various languages, using various testing frameworks.
 
 You can run `node run --help` to view information about which arguments are supported.
 
 ## Purpose
 
-The purpose of this project is to provide a low level ability to run "Kata". This tool will eventually be used by both
-the codewars.com sandboxing processes as well as used by developers locally so that they can do kata offline.
+The purpose of this project is to provide a low level ability to run "Kata". It utilizes Docker containers in order to sandbox the code. Each time the code is ran, it is executed within a new Docker container.
 
-A key advantage to having this tool open sourced is that it becomes possible for the Codewars community to contribute support for new languages and frameworks. By simply adding new languages to this tool, the majority of the work will be done and it will become much easier to support the new language on Codewars.com. 
+A key advantage to having this tool open sourced is that it becomes possible for the Codewars community to contribute support for new languages and frameworks. New languages, testing frameworks and testing capabilities can be added to via this project.
 
 ## Supported Languages and Testing Frameworks
 
@@ -84,6 +80,10 @@ docker run --rm codewars/cli-runner -l js -c "a = 1" -f "Test.expect(a == 1)"
 ```
 docker run --rm codewars/cli-runner -l ruby -c "a = 1" -f "Test.expect a == 1"
 ```
+
+### Server
+
+You can run a server which wraps the CLI and runs it within a Docker container. If you have Docker installed on your machine and the Codewars image built, all you need to do to start the server is run `node server`. You can then make posts requests to `localhost:8080/run` and provide the same arguments that you would for the CLI tool. 
 
 ### Vagrant
 
