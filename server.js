@@ -18,7 +18,7 @@ app.use(function(err, req, res, next) {
 
 app.get('/', function(req, res) {
     res.type( "text/plain" );
-    res.send( 200, "Codewars Runner is live!" );
+    res.send( 200, "Codewars Runner is live!!" );
 });
 
 app.post('/run', function(req, res) {
