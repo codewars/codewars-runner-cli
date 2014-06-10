@@ -1,0 +1,11 @@
+[
+    {
+        "name": "codewars-runner",
+        "script": "server.js",
+        "ignoreWatch": ["[\\/\\\\]\\./", "node_modules"],
+        "watch": "true",
+        "pid_file": "/var/run/codewars-runner.pid",
+        "error_file": "/var/log/codewars-runner.err.log",
+        "out_file": "/var/log/codewars-runner.out.log",
+        "env": {}
+    }]
