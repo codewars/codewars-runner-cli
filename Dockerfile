@@ -7,6 +7,9 @@
 
 FROM dockerfile/nodejs
 
+# install Essential
+RUN apt-get install -y build-essential
+
 # Install Ruby
 RUN apt-get install -y ruby
 
