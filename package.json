@@ -1,14 +1,14 @@
 {
-    "name": "codewars-cli",
-    "description": "Codewars.com toolchain utilities",
-    "version": "0.0.1",
+    "name": "codewars-runner",
+    "description": "Codewars.com code sandbox capabilities",
+    "version": "0.0.2",
     "author": {
         "name": "Jake Hoffner",
         "email": "jake@codewars.com"
     },
     "repository": {
         "type": "git",
-        "url": "http://github.com/codewars/codewars-cli.git"
+        "url": "http://github.com/codewars/codewars-runner.git"
     },
     "dependencies": {
         "nomnom": "1.6.x",
