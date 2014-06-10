@@ -7,20 +7,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 # Inline shell script to provision Vagrant
 provision_script = <<-EOF
-echo "APT-GET UPDATE"
-apt-get update
 
-# Add nodejs repo
-add-apt-repository -y ppa:chris-lea/node.js
-apt-get -y update
-
-echo "INSTALL NODEJS"
-apt-get install -y nodejs
-
-echo "INSTALL NPM"
-apt-get -qq -y install npm
-
-npm install -g supervisor
 EOF
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -34,11 +21,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     d.build_image "/vagrant", args: "-t codewars/cli-runner"
   end
 
+  config.vm.provision "shell", path: 'setup/provision.sh'
+
   # Setting up a static network on 10.100.150.0 class C subnet
   # This is to make future expansion of the vagrant file to a small test cluster easier
   config.vm.network "private_network", ip: "10.100.150.2"
   config.vm.network "forwarded_port", guest: 8080, host: 8080
-
-
-  config.vm.provision "shell", inline: provision_script
 end
