@@ -8,7 +8,7 @@ You can run `node run --help` to view information about which arguments are supp
 
 The purpose of this project is to provide a low level ability to run "Kata". It utilizes Docker containers in order to sandbox the code. Each time the code is ran, it is executed within a new Docker container.
 
-A key advantage to having this tool open sourced is that it becomes possible for the Codewars community to contribute support for new languages and frameworks. New languages, testing frameworks and testing capabilities can be added to via this project.
+Through this project, the Codewars community can contribute support for new languages and frameworks to be supported by codewars. 
 
 ## Supported Languages and Testing Frameworks
 
