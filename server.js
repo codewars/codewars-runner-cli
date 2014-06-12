@@ -1,7 +1,5 @@
 var express = require('express'),
-    exec = require('child_process' ).exec,
-    parseBodyToArgs = require('./lib/util').parseBodyToArgs,
-    config = require('./lib/config');
+    run = require('./lib/docker' ).run;
 
 var app = express();
 
@@ -22,14 +20,15 @@ app.get('/', function(req, res) {
 });
 
 app.post('/run', function(req, res) {
-    var args = parseBodyToArgs(req.body ),
-        cmd = config.cmds.dockerRun + ' ' + args;
+    var image = req.body.image || 'codewars/cli-runner';
+    delete req.body.image;
 
-    console.time(config.cmds.dockerRun);
-    console.log(cmd);
-    exec(cmd, {timeout: 10000}, function(error, stdout, stderr){
-        console.timeEnd(config.cmds.dockerRun);
-        res.end(stdout || stderr);
+    console.time(image);
+    console.log(image);
+
+    run(image, 'run', req.body, function(error, out){
+        console.timeEnd(image);
+        res.end(out);
     });
 });
 
