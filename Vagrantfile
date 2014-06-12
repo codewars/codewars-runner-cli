@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     d.build_image "/vagrant", args: "-t codewars/cli-runner"
   end
 
-  config.vm.provision "shell", path: 'setup/provision.sh'
+  config.vm.provision "shell", path: 'provision.sh'
 
   # Setting up a static network on 10.100.150.0 class C subnet
   # This is to make future expansion of the vagrant file to a small test cluster easier
