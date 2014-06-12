@@ -17,7 +17,9 @@
         "express": "*",
         "response-time": "*",
         "connect-timeout": "*",
-        "body-parser": "*"
+        "body-parser": "*",
+        "dockerode": "2.0.x",
+        "memory-streams": "*"
     },
     "engines" : {
         "node": "0.10.x"
