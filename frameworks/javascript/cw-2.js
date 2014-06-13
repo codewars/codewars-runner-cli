@@ -64,15 +64,15 @@ try{
         }
     }
 
-    console._log = console.log;
-    console.log = function(){
-        var out = [];
-        Array.prototype.slice.apply(arguments).forEach(function(arg){
-            out.push(Test.format(arg));
-        });
-
-        console._log(out.join(' '));
-    };
+//    console._log = console.log;
+//    console.log = function(){
+//        var out = [];
+//        Array.prototype.slice.apply(arguments).forEach(function(arg){
+//            out.push(Test.format(arg));
+//        });
+//
+//        console._log(out.join(' '));
+//    };
 
     function combineMessages(msgs, separator){
         return msgs.filter(function(m){return m != null;}).join(separator)
@@ -114,7 +114,6 @@ try{
             try{
                 if (describing) throw "cannot call describe within another describe";
                 describing = true;
-
                 console.log("<DESCRIBE::>" + _message(msg));
                 fn();
             }
@@ -160,7 +159,7 @@ try{
         handleError: function(ex) {
             if (ex.name == 'AssertionError') {
                 this.fail( ex.message );
-            } else{
+            } else if(ex.name != "Test:Error") {
                 console.log("<ERROR::>" + ex.message);
             }
         },
@@ -251,12 +250,13 @@ try{
             return array[~~(array.length * Math.random())]
         },
         Error: function(message){
-            this.name = "AssertionError";
+            this.name = "Test:Error";
             this.message = (message || "");
         }
     }
 
-    Test.Error.prototype = require('assert').AssertionError.prototype;
+//    Test.Error.prototype = require('assert').AssertionError.prototype;
+    Test.Error.prototype = Error.prototype;
 
     Object.freeze(Test);
     Object.defineProperty(global, 'Test', {

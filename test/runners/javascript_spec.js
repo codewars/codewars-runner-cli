@@ -18,6 +18,20 @@ describe( 'javascript runner', function(){
                     done();
                 });
             });
+
+            it( 'should handle a basic failed test', function(done){
+                runner.run({language: 'javascript', solution: 'a = 1', fixture: 'Test.expect(a == 2)', testFramework: 'cw-2'}, function(buffer) {
+                    expect(buffer.stdout ).to.equal('<FAILED::>Value is not what was expected\n');
+                    done();
+                });
+            });
+
+            it( 'should handle logging objects', function(done){
+                runner.run({language: 'javascript', solution:'console.log({a: 1});', testFramework: 'cw-2'}, function(buffer) {
+                    expect(buffer.stdout ).to.equal('{ a: 1 }\n');
+                    done();
+                });
+            });
         });
     });
 });
