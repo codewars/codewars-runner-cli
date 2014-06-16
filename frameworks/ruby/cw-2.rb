@@ -1,5 +1,22 @@
+class StandardError
+  # cleans the backtrace so that it doesn't contain a ton of information that would likely confuse users.
+  def set_backtrace(trace)
+    trace = trace.map do |line|
+      # get rid of all of the from filename crap
+      line = line.gsub(/(from )*(.)*\//, '')
+      # completely strip out anything that is within the framework or main
+      if line =~ /(cw-2.rb|<main>)/
+        nil
+      # else strip any evaluation line numbers, as they will be different than the user's own code.
+      else
+        line.gsub(/-e:(\d)+:/, '')
+      end
+    end.compact
+    super(trace)
+  end
+end
 
-
+NameError
 class Test
 
   class Error < StandardError
@@ -21,10 +38,10 @@ class Test
         success_msg = "Test Passed"
         success_msg += ": #{options[:success_msg]}" if options[:success_msg]
 
-        puts "<PASSED::>#{success_msg}"
+        puts "<PASSED::>#{format_msg(success_msg)}"
       else
         message ||= 'Value is not what was expected'
-        puts "<FAILED::>#{message}"
+        puts "<FAILED::>#{format_msg(message)}"
         if $describing
           @@failed << Test::Error.new(message)
         else
@@ -34,17 +51,19 @@ class Test
 
     end
 
+
+
     def measure
       start = Time.now
       yield
-      ((Time.now - start) * 1000000).to_i
+      ((Time.now - start) * 1000).to_i
     end
 
-    def describe(message)
+    def describe(message, &block)
       ms = measure do
         begin
           $describing = true
-          puts "<DESCRIBE::>#{message}"
+          puts "<DESCRIBE::>#{format_msg(message)}"
           yield
         ensure
           $describing = false
@@ -56,13 +75,13 @@ class Test
       puts "<COMPLETEDIN::>#{ms}ms" if ms
     end
 
-    def it(message)
-      puts "<IT::>#{message}"
+    def it(message, &block)
+      puts "<IT::>#{format_msg(message)}"
       @@before_blocks.each do |block|
         block.call
       end
       begin
-        yield
+        wrap_error(&block)
       ensure
         @@after_blocks.each do |block|
           block.call
@@ -151,6 +170,26 @@ class Test
 
     def random_number
       rand(100)
+    end
+
+    private
+
+    def format_msg(msg)
+      msg.gsub("\n", "<:BR:>")
+    end
+
+    def wrap_error
+      begin
+        yield
+      rescue Test::Error => test_ex
+        # Do nothing, output should have already been written.
+      rescue => ex
+        handle_error(ex)
+      end
+    end
+
+    def handle_error(ex)
+      puts "<ERROR::>#{ex.inspect}<:BR:>#{ex.backtrace.join("<:BR:>")}"
     end
 
   end
