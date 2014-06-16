@@ -84,7 +84,8 @@ try{
         }else if (typeof msg == 'array'){
             msg = combineMessages(msg, ' - ')
         }
-        return prefix ? (prefix + ' - ' + msg) : msg
+        msg = prefix ? (prefix + ' - ' + msg) : msg;
+        return (msg || '').replace(new RegExp('\n', 'g'), '<:BR:>')
     }
 
     var Test = {
@@ -117,6 +118,9 @@ try{
                 console.log("<DESCRIBE::>" + _message(msg));
                 fn();
             }
+            catch (ex) {
+                Test.handleError(ex);
+            }
             finally{
                 var ms = new Date() - start;
                 console.log("<COMPLETEDIN::>" + ms);
@@ -138,8 +142,10 @@ try{
             });
 
             var start = new Date();
-            try{
+            try {
                 fn();
+            } catch(ex){
+                Test.handleError(ex);
             } finally {
                 var ms = new Date() - start;
                 console.log("<COMPLETEDIN::>" + ms);
@@ -159,9 +165,26 @@ try{
         handleError: function(ex) {
             if (ex.name == 'AssertionError') {
                 this.fail( ex.message );
-            } else if(ex.name != "Test:Error") {
-                console.log("<ERROR::>" + ex.message);
+            } else if(ex.name != "TestError") {
+                console.log("<ERROR::>" + _message(Test.trace(ex)));
             }
+        },
+        // clean up the stack trace of the exception so that it doesn't give confusing results.
+        // Results would be confusing because the user submitted code is compiled into a script where
+        // the line numbers will no longer match up.
+        trace: function(ex) {
+            return (ex.stack || ex.toString())
+                // remove file names (ie: (/cli-runner/...))
+                .replace(/\s\(.*\)/g, '')
+                // remove at [eval] statements
+                .replace(/(at)*( Object.)*\s*[(]?\[eval\].*(:\d*)*[)]?\n/g, '')
+                // remove stack trace beyond the Module information
+                .replace(/at Module[\w\s.:\d\n]*/g, '')
+                // remove at Object.<anonymous>
+                .replace(/\t*at Object.<\w*>\n/g, '');
+        },
+        pass: function() {
+            _expect(true);
         },
         fail: function(message) {
             _expect(false, message);
@@ -205,7 +228,7 @@ try{
                 fn();
                 Test.expect(true)
             }catch(ex){
-                if (ex.name == 'Test:Error'){
+                if (ex.name == 'TestError'){
                     throw ex;
                 }
                 else {
@@ -250,7 +273,7 @@ try{
             return array[~~(array.length * Math.random())]
         },
         Error: function(message){
-            this.name = "Test:Error";
+            this.name = "TestError";
             this.message = (message || "");
         }
     }
