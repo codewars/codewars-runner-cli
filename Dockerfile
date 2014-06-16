@@ -6,9 +6,12 @@
 # Append any relevant run args as per the help
 
 FROM dockerfile/nodejs
+RUN apt-get update
 
-RUN apt-get install -y ruby
-#
+#install ruby + mono
+RUN apt-get install -y ruby --fix-missing
+RUN apt-get install -y mono-complete --fix-missing
+
 ## install bundler
 RUN gem install rspec --no-ri --no-rdoc
 RUN gem install minitest --no-ri --no-rdoc
