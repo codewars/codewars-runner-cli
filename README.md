@@ -73,12 +73,12 @@ docker run --rm codewars/cli-runner --help
 
 #### Run JavaScript Kata
 ```
-docker run --rm codewars/cli-runner -l js -c "a = 1" -f "Test.expect(a == 1)"
+docker run --rm codewars/cli-runner run -l js -c "a = 1" -f "Test.expect(a == 1)"
 ```
 
 #### Run Ruby Kata
 ```
-docker run --rm codewars/cli-runner -l ruby -c "a = 1" -f "Test.expect a == 1"
+docker run --rm codewars/cli-runner run -l ruby -c "a = 1" -f "Test.expect a == 1"
 ```
 
 ### Server
