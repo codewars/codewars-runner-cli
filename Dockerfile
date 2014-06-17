@@ -10,7 +10,8 @@ RUN apt-get update
 
 #install ruby + mono
 RUN apt-get install -y ruby --fix-missing
-RUN apt-get install -y mono-complete --fix-missing
+
+RUN apt-get install -y mono-csharp-shell --fix-missing
 
 ## install bundler
 RUN gem install rspec --no-ri --no-rdoc
