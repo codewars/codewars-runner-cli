@@ -1,4 +1,7 @@
 import unittest
+def exit():
+  return
+
 
 class CwTestResult(unittest.TestResult):
   def addSuccess(self, test):
@@ -11,4 +14,5 @@ class CwTestResult(unittest.TestResult):
 
   def addError(self, test, err):
     print "<FAILED::>Unhandled Exception: "  + err[1].message
+
 
