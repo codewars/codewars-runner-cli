@@ -33,15 +33,38 @@ describe( 'java runner', function(){
                                + 'public class TestFix {\n'
                                + '    public TestFix(){}'
                                + '    @Test\n'
-                               + '    public void testStuff(){\n'
+                               + '    public void myTestFunction(){\n'
                                + '        Solution s = new Solution();\n'
                                + '        assertEquals("wow", 3, s.testthing());\n'
-                               + '        System.out.println("before");\n'
-                               + '        //assertEquals("wow", 1, s.testthing());\n'
-                               + '        System.out.println("after");\n'
+                               + '        System.out.println("test out");\n'
                                + '}}'
                     }, function(buffer) {
-                expect(buffer.stdout ).to.equal('42\n');
+                expect(buffer.stdout ).to.equal('<DESCRIBE::>myTestFunction(TestFix)\ntest out\n<PASSED::>Test Passed\n');
+                done();
+            });
+        });
+        it('should handle junit tests failing', function(done){
+            runner.run({language: 'java',
+                        solution: 'public class Solution {\n'
+                                + '    public Solution(){}\n'
+                                + '    public int testthing(){return 3;}\n'
+                                + '    public static void main(String[] args){\n'
+                                + '        System.out.println("42");\n'
+                                + '    }\n'
+                                + '}\n',
+                        fixture: 'import static org.junit.Assert.assertEquals;\n'
+                               + 'import org.junit.Test;\n'
+                               + 'import org.junit.runners.JUnit4;\n'
+                               + 'public class TestFix {\n'
+                               + '    public TestFix(){}'
+                               + '    @Test\n'
+                               + '    public void myTestFunction(){\n'
+                               + '        Solution s = new Solution();\n'
+                               + '        assertEquals("Failed Message", 5, s.testthing());\n'
+                               + '        System.out.println("test out");\n'
+                               + '}}'
+                    }, function(buffer) {
+                expect(buffer.stdout ).to.equal('<DESCRIBE::>myTestFunction(TestFix)\n<FAILED::>Failed Message expected:<5> but was:<3>\n');
                 done();
             });
         });
