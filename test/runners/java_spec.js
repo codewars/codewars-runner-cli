@@ -17,4 +17,28 @@ describe( 'java runner', function(){
             });
         });
     });
+    describe( 'junit', function(){
+        it('should handle basic junit tests', function(done){
+        //TODO this
+            runner.run({language: 'java',
+                        solution: 'class Solution {\n'
+                                + '    //public static void main(String[] args){\n'
+                                + '    //    System.out.println("42");\n'
+                                + '    //}\n'
+                                + '}\n',
+                        fixture: 'import static org.junit.Assert.assertEquals;\n'
+                               + 'import org.junit.Test;\n'
+                               + 'import org.junit.runners.JUnit4;\n'
+                               + 'public class TestFix {\n'
+                               + '    public TestFix(){}'
+                               + '    @Test\n'
+                               + '    public void testStuff(){\n'
+                               + '        assertEquals("wow", 1, 5);\n'
+                               + '}}'
+                    }, function(buffer) {
+                expect(buffer.stdout ).to.equal('42\n');
+                done();
+            });
+        });
+    });
 });
