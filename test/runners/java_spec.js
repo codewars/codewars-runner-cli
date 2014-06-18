@@ -19,7 +19,6 @@ describe( 'java runner', function(){
     });
     describe( 'junit', function(){
         it('should handle basic junit tests', function(done){
-        //TODO this
             runner.run({language: 'java',
                         solution: 'public class Solution {\n'
                                 + '    public Solution(){}\n'
