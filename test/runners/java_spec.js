@@ -36,8 +36,9 @@ describe( 'java runner', function(){
                                + '    @Test\n'
                                + '    public void testStuff(){\n'
                                + '        Solution s = new Solution();\n'
+                               + '        assertEquals("wow", 3, s.testthing());\n'
                                + '        System.out.println("before");\n'
-                               + '        assertEquals("wow", 1, s.testthing());\n'
+                               + '        //assertEquals("wow", 1, s.testthing());\n'
                                + '        System.out.println("after");\n'
                                + '}}'
                     }, function(buffer) {
