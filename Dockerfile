@@ -7,7 +7,15 @@
 
 FROM dockerfile/nodejs
 
-RUN apt-get install -y ruby
+# Install psp to add exxternal repos
+RUN apt-get install -y python-software-properties
+
+#Install ruby
+## add brightbox repo
+RUN add-apt-repository ppa:brightbox/ruby-ng
+Run apt-get update
+##install ruby package
+RUN apt-get install -y ruby2.0
 #
 ## install bundler
 RUN gem install rspec --no-ri --no-rdoc
