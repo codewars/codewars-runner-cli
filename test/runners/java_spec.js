@@ -21,10 +21,12 @@ describe( 'java runner', function(){
         it('should handle basic junit tests', function(done){
         //TODO this
             runner.run({language: 'java',
-                        solution: 'class Solution {\n'
-                                + '    //public static void main(String[] args){\n'
-                                + '    //    System.out.println("42");\n'
-                                + '    //}\n'
+                        solution: 'public class Solution {\n'
+                                + '    public Solution(){}\n'
+                                + '    public int testthing(){return 3;}\n'
+                                + '    public static void main(String[] args){\n'
+                                + '        System.out.println("42");\n'
+                                + '    }\n'
                                 + '}\n',
                         fixture: 'import static org.junit.Assert.assertEquals;\n'
                                + 'import org.junit.Test;\n'
@@ -33,7 +35,8 @@ describe( 'java runner', function(){
                                + '    public TestFix(){}'
                                + '    @Test\n'
                                + '    public void testStuff(){\n'
-                               + '        assertEquals("wow", 1, 5);\n'
+                               + '        Solution s = new Solution();\n'
+                               + '        assertEquals("wow", 1, s.testthing());\n'
                                + '}}'
                     }, function(buffer) {
                 expect(buffer.stdout ).to.equal('42\n');
