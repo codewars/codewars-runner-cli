@@ -36,7 +36,9 @@ describe( 'java runner', function(){
                                + '    @Test\n'
                                + '    public void testStuff(){\n'
                                + '        Solution s = new Solution();\n'
+                               + '        System.out.println("before");\n'
                                + '        assertEquals("wow", 1, s.testthing());\n'
+                               + '        System.out.println("after");\n'
                                + '}}'
                     }, function(buffer) {
                 expect(buffer.stdout ).to.equal('42\n');
