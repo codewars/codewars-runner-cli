@@ -41,7 +41,7 @@ try{
             if (options.successMsg){
                 successMsg += ": " + options.successMsg;
             }
-            console.log('<PASSED::>' + successMsg);
+            console.log('<PASSED::>' + Test.format(successMsg));
             correct++;
         } else {
             msg = _message(msg) || 'Value is not what was expected';
@@ -52,7 +52,7 @@ try{
                 incorrect++;
             }
             else{
-                console.log("<FAILED::>" + msg);
+                console.log("<FAILED::>" + Test.format(msg));
                 var error = new Test.Error(msg);
                 if (describing){
                     failed.push(error);
@@ -84,14 +84,18 @@ try{
         }else if (typeof msg == 'array'){
             msg = combineMessages(msg, ' - ')
         }
-        return prefix ? (prefix + ' - ' + msg) : msg
+        msg = prefix ? (prefix + ' - ' + msg) : msg;
+        return msg || '';
     }
 
     var Test = {
-        // formats a string for HTML output
+        // formats an value to be outputted. If a function is provided then it will be evaluated,
+        // if an object is provided then it will JSONfied. By default
+        // any line breaks will be replaced with <:BR:> so that the entire message is considered
+        // one group of data.
         format: function(obj, options){
             options = options || {};
-            var out;
+            var out = '';
             if(typeof obj == 'string') {
                 out = obj;
             } else if (typeof obj == 'function'){
@@ -100,7 +104,7 @@ try{
                 out = obj && obj !== true ? JSON.stringify(obj, null, options.indent ? 4 : 0) : ('' + obj)
             }
 
-            return out;
+            return out.replace(new RegExp('\n', 'g'), '\\n');
         },
         inspect: function(obj){
             if(typeof obj == 'string'){
@@ -114,8 +118,11 @@ try{
             try{
                 if (describing) throw "cannot call describe within another describe";
                 describing = true;
-                console.log("<DESCRIBE::>" + _message(msg));
+                console.log("<DESCRIBE::>" + Test.format(_message(msg)));
                 fn();
+            }
+            catch (ex) {
+                Test.handleError(ex);
             }
             finally{
                 var ms = new Date() - start;
@@ -132,14 +139,16 @@ try{
         it: function(msg, fn) {
             if (!describing) throw '"it" calls must be invoked within a parent "describe" context';
 
-            console.log("<IT::>" + _message(msg));
+            console.log("<IT::>" + Test.format(_message(msg)));
             beforeCallbacks.forEach(function(cb){
                 cb();
             });
 
             var start = new Date();
-            try{
+            try {
                 fn();
+            } catch(ex){
+                Test.handleError(ex);
             } finally {
                 var ms = new Date() - start;
                 console.log("<COMPLETEDIN::>" + ms);
@@ -159,9 +168,26 @@ try{
         handleError: function(ex) {
             if (ex.name == 'AssertionError') {
                 this.fail( ex.message );
-            } else if(ex.name != "Test:Error") {
-                console.log("<ERROR::>" + ex.message);
+            } else if(ex.name != "TestError") {
+                console.log("<ERROR::>" + this.format(_message(Test.trace(ex))));
             }
+        },
+        // clean up the stack trace of the exception so that it doesn't give confusing results.
+        // Results would be confusing because the user submitted code is compiled into a script where
+        // the line numbers will no longer match up.
+        trace: function(ex) {
+            return (ex.stack || ex.toString())
+                // remove file names (ie: (/cli-runner/...))
+                .replace(/\s\(.*\)/g, '')
+                // remove at [eval] statements
+                .replace(/(at)*( Object.)*\s*[(]?\[eval\].*(:\d*)*[)]?\n/g, '')
+                // remove stack trace beyond the Module information
+                .replace(/at Module[\w\s.:\d\n]*/g, '')
+                // remove at Object.<anonymous>
+                .replace(/\t*at Object.<\w*>\n/g, '');
+        },
+        pass: function() {
+            _expect(true);
         },
         fail: function(message) {
             _expect(false, message);
@@ -205,7 +231,7 @@ try{
                 fn();
                 Test.expect(true)
             }catch(ex){
-                if (ex.name == 'Test:Error'){
+                if (ex.name == 'TestError'){
                     throw ex;
                 }
                 else {
@@ -250,7 +276,7 @@ try{
             return array[~~(array.length * Math.random())]
         },
         Error: function(message){
-            this.name = "Test:Error";
+            this.name = "TestError";
             this.message = (message || "");
         }
     }

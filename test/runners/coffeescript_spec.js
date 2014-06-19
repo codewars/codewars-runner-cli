@@ -19,5 +19,26 @@ describe( 'coffeescript runner', function(){
                 });
             });
         });
+
+        it( 'should handle comments as fixture', function(done){
+            runner.run({language: 'coffeescript', solution: 'console.log(42)', fixture: '#', testFramework: 'cw-2'}, function(buffer) {
+                expect(buffer.stdout ).to.equal('42\n');
+                done();
+            });
+        });
+
+        it( 'should handle a basic failed test', function(done){
+            runner.run({language: 'coffeescript', solution: 'a = 1', fixture: 'Test.expect(a == 2)', testFramework: 'cw-2'}, function(buffer) {
+                expect(buffer.stdout ).to.equal('<FAILED::>Value is not what was expected\n');
+                done();
+            });
+        });
+
+        it( 'should handle logging objects', function(done){
+            runner.run({language: 'coffeescript', solution:'console.log {a: 1}', testFramework: 'cw-2'}, function(buffer) {
+                expect(buffer.stdout ).to.equal('{ a: 1 }\n');
+                done();
+            });
+        });
     });
 });
