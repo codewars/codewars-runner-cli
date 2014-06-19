@@ -6,6 +6,6 @@ public class CwTestRunner
     {
         JUnitCore core = new JUnitCore();
         core.addListener(new CwRunListener());
-        core.run(TestFix.class);
+        core.run(TestFixture.class);
     }
 }

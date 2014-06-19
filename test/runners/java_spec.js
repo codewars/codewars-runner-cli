@@ -30,8 +30,8 @@ describe( 'java runner', function(){
                         fixture: 'import static org.junit.Assert.assertEquals;\n'
                                + 'import org.junit.Test;\n'
                                + 'import org.junit.runners.JUnit4;\n'
-                               + 'public class TestFix {\n'
-                               + '    public TestFix(){}'
+                               + 'public class TestFixture {\n'
+                               + '    public TestFixture(){}'
                                + '    @Test\n'
                                + '    public void myTestFunction(){\n'
                                + '        Solution s = new Solution();\n'
@@ -39,7 +39,7 @@ describe( 'java runner', function(){
                                + '        System.out.println("test out");\n'
                                + '}}'
                     }, function(buffer) {
-                expect(buffer.stdout ).to.equal('<DESCRIBE::>myTestFunction(TestFix)\ntest out\n<PASSED::>Test Passed\n');
+                expect(buffer.stdout ).to.equal('<DESCRIBE::>myTestFunction(TestFixture)\ntest out\n<PASSED::>Test Passed\n');
                 done();
             });
         });
@@ -55,8 +55,8 @@ describe( 'java runner', function(){
                         fixture: 'import static org.junit.Assert.assertEquals;\n'
                                + 'import org.junit.Test;\n'
                                + 'import org.junit.runners.JUnit4;\n'
-                               + 'public class TestFix {\n'
-                               + '    public TestFix(){}'
+                               + 'public class TestFixture {\n'
+                               + '    public TestFixture(){}'
                                + '    @Test\n'
                                + '    public void myTestFunction(){\n'
                                + '        Solution s = new Solution();\n'
@@ -64,7 +64,7 @@ describe( 'java runner', function(){
                                + '        System.out.println("test out");\n'
                                + '}}'
                     }, function(buffer) {
-                expect(buffer.stdout ).to.equal('<DESCRIBE::>myTestFunction(TestFix)\n<FAILED::>Failed Message expected:<5> but was:<3>\n');
+                expect(buffer.stdout ).to.equal('<DESCRIBE::>myTestFunction(TestFixture)\n<FAILED::>Failed Message expected:<5> but was:<3>\n');
                 done();
             });
         });
