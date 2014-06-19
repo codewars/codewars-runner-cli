@@ -1,4 +1,5 @@
 var express = require('express'),
+    config = require('./lib/config'),
     docker = require('./lib/docker');
 
 var app = express();
@@ -19,14 +20,22 @@ app.get('/', function(req, res) {
     res.send( 200, "Codewars Runner is live!" );
 });
 
+app.get('/version', function(req, res) {
+    res.end(config.version);
+});
+
+app.post('/pull_latest', function(req, res) {
+
+});
+
 app.post('/run', function(req, res) {
-    var image = req.body.image || 'codewars/cli-runner';
+    var image = req.body.image || 'codewars/cli-runner:' + config.version;
     delete req.body.image;
 
     console.time(image);
     console.log(image);
 
-    docker.run(res, image, 'run', req.body, function(error, data, stdout, stderr){
+    docker.run(image, 'run', req.body, function(error, data, stdout, stderr){
         console.timeEnd(image);
 
         if (stdout) {
