@@ -59,7 +59,7 @@ describe( 'ruby runner', function(){
                 });
             });
             it( 'should gracefully handle reference errors', function(done) {
-                runner.run({language: 'javascript',
+                runner.run({language: 'ruby',
                     solution:'a = 1',
                     fixture: 'describe "test" do\n' +
                         'it("test1") { a.idontexist() }\n' +
@@ -76,6 +76,22 @@ describe( 'ruby runner', function(){
                     done();
                 });
             });
+        });
+    });
+    describe('rspec', function() {
+        it('should handle a basic assertion', function(done){
+            runner.run({language: 'ruby',
+                solution: 'a = 1',
+                fixture: 'describe "test" do\n' +
+                    'it("test1") { a.idontexist() }\n' +
+                    'it("test2") { expect(true)}\n' +
+                    'end',
+                testFramework: 'rspec'}, function(buffer)
+                {
+                    expect(buffer.stdout).to.equal('wow');
+                    done();
+                }
+            );
         });
     });
 });
