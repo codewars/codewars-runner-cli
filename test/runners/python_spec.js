@@ -74,7 +74,7 @@ describe( 'python runner', function(){
                         testFramework: 'unittest'},
                        function(buffer){
                 console.log(buffer);
-                expect(buffer.stdout).to.equal('<FAILED::>Unhandled Exception: exception\n');
+                expect(buffer.stdout).to.equal('<ERROR::>Unhandled Exception: exception\n');
                 done();
             });
         });
