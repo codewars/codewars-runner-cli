@@ -13,7 +13,7 @@ class CwRSpecFormatter
     @output.puts "<IT::>" + formatMessage(notification.example.description)
   end
   def example_passed(notification)
-    @output.puts "<PASSED::>" + formatMessage(notification.example.description)
+    @output.puts "<PASSED::>Test Passed"# + formatMessage(notification.example.description)
   end
   def example_failed(notification)
     @output.puts "<FAILED::>" + formatMessage(notification.exception.message) + "\\n" + notification.formatted_backtrace.join("\\n")
