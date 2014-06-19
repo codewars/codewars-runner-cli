@@ -17,7 +17,7 @@ class CwTestResult(unittest.TestResult):
     super(CwTestResult, self).addFailure(test, err)
 
   def addError(self, test, err):
-    print "<FAILED::>Unhandled Exception: "  + formatMessage(err[1].message)
+    print "<ERROR::>Unhandled Exception: "  + formatMessage(err[1].message)
     super(CwTestResult, self).addError(test, error)
 
 
