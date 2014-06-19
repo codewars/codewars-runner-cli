@@ -5,7 +5,7 @@ var opts = require("nomnom")
           help: "solution code to run"
         },
         solutionFile: {
-            abbr: 'cf',
+            abbr: 'C',
             full: 'solution-file',
             help: "solution file to run"
         },
@@ -14,7 +14,7 @@ var opts = require("nomnom")
             help: 'Test fixture code to test with'
         },
         fixtureFile: {
-            abbr: 'ff',
+            abbr: 'F',
             full: 'fixture-file',
             help: 'Test fixture code to test with'
         },
@@ -23,7 +23,7 @@ var opts = require("nomnom")
             help: 'Setup code to be used for executing the code'
         },
         setupFile: {
-            abbr: 'sf',
+            abbr: 'S',
             full: 'setup-file',
             help: 'Setup file to be used for executing the code'
         },
@@ -32,7 +32,7 @@ var opts = require("nomnom")
             help: 'The language to execute the code in'
         },
         languageVersion: {
-            abbr: 'lv',
+            abbr: 'V',
             full: 'language-version',
             help: 'The version of the language that you wish to use'
         },
