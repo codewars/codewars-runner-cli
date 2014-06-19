@@ -38,10 +38,10 @@ class Test
         success_msg = "Test Passed"
         success_msg += ": #{options[:success_msg]}" if options[:success_msg]
 
-        puts "<PASSED::>#{format_msg(success_msg)}"
+        puts "<PASSED::>#{success_msg}"
       else
         message ||= 'Value is not what was expected'
-        puts "<FAILED::>#{format_msg(message)}"
+        puts "<FAILED::>#{message}"
         if $describing
           @@failed << Test::Error.new(message)
         else
@@ -50,8 +50,6 @@ class Test
       end
 
     end
-
-
 
     def measure
       start = Time.now
@@ -63,7 +61,7 @@ class Test
       ms = measure do
         begin
           $describing = true
-          puts "<DESCRIBE::>#{format_msg(message)}"
+          puts "<DESCRIBE::>#{message}"
           yield
         ensure
           $describing = false
@@ -76,7 +74,7 @@ class Test
     end
 
     def it(message, &block)
-      puts "<IT::>#{format_msg(message)}"
+      puts "<IT::>#{message}"
       @@before_blocks.each do |block|
         block.call
       end
@@ -175,7 +173,7 @@ class Test
     private
 
     def format_msg(msg)
-      msg.gsub("\n", "<:BR:>")
+      msg.gsub("\n", "\\n")
     end
 
     def wrap_error
@@ -189,7 +187,7 @@ class Test
     end
 
     def handle_error(ex)
-      puts "<ERROR::>#{ex.inspect}<:BR:>#{ex.backtrace.join("<:BR:>")}"
+      puts "<ERROR::>#{format_msg(ex.inspect)}\\n#{ex.backtrace.join("\\n")}"
     end
 
   end

@@ -41,7 +41,7 @@ try{
             if (options.successMsg){
                 successMsg += ": " + options.successMsg;
             }
-            console.log('<PASSED::>' + successMsg);
+            console.log('<PASSED::>' + Test.format(successMsg));
             correct++;
         } else {
             msg = _message(msg) || 'Value is not what was expected';
@@ -52,7 +52,7 @@ try{
                 incorrect++;
             }
             else{
-                console.log("<FAILED::>" + msg);
+                console.log("<FAILED::>" + Test.format(msg));
                 var error = new Test.Error(msg);
                 if (describing){
                     failed.push(error);
@@ -85,14 +85,17 @@ try{
             msg = combineMessages(msg, ' - ')
         }
         msg = prefix ? (prefix + ' - ' + msg) : msg;
-        return (msg || '').replace(new RegExp('\n', 'g'), '<:BR:>')
+        return msg || '';
     }
 
     var Test = {
-        // formats a string for HTML output
+        // formats an value to be outputted. If a function is provided then it will be evaluated,
+        // if an object is provided then it will JSONfied. By default
+        // any line breaks will be replaced with <:BR:> so that the entire message is considered
+        // one group of data.
         format: function(obj, options){
             options = options || {};
-            var out;
+            var out = '';
             if(typeof obj == 'string') {
                 out = obj;
             } else if (typeof obj == 'function'){
@@ -101,7 +104,7 @@ try{
                 out = obj && obj !== true ? JSON.stringify(obj, null, options.indent ? 4 : 0) : ('' + obj)
             }
 
-            return out;
+            return out.replace(new RegExp('\n', 'g'), '\\n');
         },
         inspect: function(obj){
             if(typeof obj == 'string'){
@@ -115,7 +118,7 @@ try{
             try{
                 if (describing) throw "cannot call describe within another describe";
                 describing = true;
-                console.log("<DESCRIBE::>" + _message(msg));
+                console.log("<DESCRIBE::>" + Test.format(_message(msg)));
                 fn();
             }
             catch (ex) {
@@ -136,7 +139,7 @@ try{
         it: function(msg, fn) {
             if (!describing) throw '"it" calls must be invoked within a parent "describe" context';
 
-            console.log("<IT::>" + _message(msg));
+            console.log("<IT::>" + Test.format(_message(msg)));
             beforeCallbacks.forEach(function(cb){
                 cb();
             });
@@ -166,7 +169,7 @@ try{
             if (ex.name == 'AssertionError') {
                 this.fail( ex.message );
             } else if(ex.name != "TestError") {
-                console.log("<ERROR::>" + _message(Test.trace(ex)));
+                console.log("<ERROR::>" + this.format(_message(Test.trace(ex))));
             }
         },
         // clean up the stack trace of the exception so that it doesn't give confusing results.
