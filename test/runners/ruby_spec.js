@@ -67,7 +67,7 @@ describe( 'ruby runner', function(){
                         'end',
                     testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.contain('<ERROR::>');
-                    expect(buffer.stdout).to.contain('<:BR:>');
+                    expect(buffer.stdout).to.contain('\\n');
                     expect(buffer.stdout).to.contain('NoMethodError:');
                     expect(buffer.stdout).to.not.contain('from /cli-runner/');
                     expect(buffer.stdout).to.not.contain('-e:');
