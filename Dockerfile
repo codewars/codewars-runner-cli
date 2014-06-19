@@ -8,19 +8,24 @@
 FROM dockerfile/nodejs
 RUN apt-get update
 
-#install ruby + mono
-RUN apt-get install -y ruby --fix-missing
+#Install ruby
+RUN apt-get install -y ruby2.0
 
-RUN apt-get install -y mono-csharp-shell --fix-missing
+#link the ruby command to 2.0 because ubuntu is dumb
+RUN rm /usr/bin/ruby
+RUN ln /usr/bin/ruby2.0 /usr/bin/ruby
 
 ## install bundler
 RUN gem install rspec --no-ri --no-rdoc
-RUN gem install minitest --no-ri --no-rdoc
+#RUN gem install minitest --no-ri --no-rdoc
+
+# Install Mono
+RUN apt-get install -y mono-csharp-shell --fix-missing
 
 # Install Coffeescript
 RUN npm -g install coffee-script
 RUN npm -g install chai
-RUN npm -g install mocha
+#RUN npm -g install mocha
 
 # Install Python 3
 
