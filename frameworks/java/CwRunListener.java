@@ -5,16 +5,14 @@ import org.junit.runner.Description;
 public class CwRunListener extends RunListener
 {
     private boolean failed;
-//    private boolean anyfails;
     public void testFailure(Failure failure)
     {
         failed = true;
-//        anyfails = true;
-        System.out.println("<FAILED::>" + failure.getMessage());
+        System.out.println("<FAILED::>" + formatMessage(failure.getMessage()));
     }
     public void testStarted(Description description)
     {
-        System.out.println("<DESCRIBE::>" + description.getDisplayName());
+        System.out.println("<DESCRIBE::>" + formatMessage(description.getDisplayName()));
         failed = false;
     }
     public void testFinished(Description description)
@@ -24,16 +22,8 @@ public class CwRunListener extends RunListener
             System.out.println("<PASSED::>Test Passed");
         }
     }
-/*    public void testRunStarted(Description description)
+    private static String formatMessage(String s)
     {
-        anyfails = false;
+        return s.replaceAll("\n", "\\n");
     }
-    public void testRunFinished(Description description)
-    {
-            System.out.println("<PASSED::>All Tests Passed");
-        if(!anyfails)
-        {
-            System.out.println("<PASSED::>All Tests Passed");
-        }
-    }*/
 }
