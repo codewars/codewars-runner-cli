@@ -1,7 +1,11 @@
 import unittest
+import string
+
 def exit():
   return
 
+def formatMessage(message):
+  return string.replace(message, "\n", "\\n")
 
 class CwTestResult(unittest.TestResult):
   def addSuccess(self, test):
@@ -9,10 +13,11 @@ class CwTestResult(unittest.TestResult):
     super(CwTestResult, self).addSuccess(test)
 
   def addFailure(self, test, err):
-    print "<FAILED::>" + err[1].message
+    print "<FAILED::>" + formatMessage(err[1].message)
     super(CwTestResult, self).addFailure(test, err)
 
   def addError(self, test, err):
-    print "<FAILED::>Unhandled Exception: "  + err[1].message
+    print "<FAILED::>Unhandled Exception: "  + formatMessage(err[1].message)
+    super(CwTestResult, self).addError(test, error)
 
 
