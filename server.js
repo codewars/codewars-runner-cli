@@ -1,5 +1,5 @@
 var express = require('express'),
-    run = require('./lib/docker' ).run;
+    docker = require('./lib/docker');
 
 var app = express();
 
@@ -26,11 +26,34 @@ app.post('/run', function(req, res) {
     console.time(image);
     console.log(image);
 
-    run(image, 'run', req.body, function(error, out){
+    docker.run(res, image, 'run', req.body, function(error, data, stdout, stderr){
         console.timeEnd(image);
-        res.end(out);
+
+        if (stdout) {
+            res.end(stdout);
+        } else {
+            console.warn('stdout did not return any data, going with stderr');
+            console.info(stderr);
+
+            res.end(JSON.stringify({
+                stdout: '',
+                stderr: stderr,
+                failed: true
+            }));
+        }
     });
 });
+
+// for testing only
+//app.post('/run', function(req, res) {
+//    var image = req.body.image || 'codewars/cli-runner';
+//    delete req.body.image;
+//
+//    docker.runCmd(image, 'run', req.body, function(error, out){
+//        console.log(out);
+//        res.end(out);
+//    });
+//});
 
 server = app.listen(8080, function() {
     console.log('Listening on port %d', server.address().port);
