@@ -29,7 +29,7 @@ app.post('/pull_latest', function(req, res) {
 });
 
 app.post('/run', function(req, res) {
-    var image = req.body.image || 'codewars/cli-runner:' + config.version;
+    var image = req.body.image;
     delete req.body.image;
 
     console.time(image);
@@ -43,11 +43,13 @@ app.post('/run', function(req, res) {
         } else {
             console.warn('stdout did not return any data, going with stderr');
             console.info(stderr);
-
+            error = error || {};
             res.end(JSON.stringify({
                 stdout: '',
-                stderr: stderr,
-                failed: true
+                stderr: stderr || error.reason,
+                statusCode: error.statusCode,
+                failed: true,
+                details: error.json
             }));
         }
     });
