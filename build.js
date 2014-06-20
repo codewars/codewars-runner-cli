@@ -27,13 +27,17 @@ var docker = require('./lib/docker'),
         .parse();
 
 console.log('Building image, this may take a while...');
-docker.build(opts.file, opts.image, function(err, stdout) {
+docker.build(opts.file, opts.image, function(err, stdout, stderr) {
     console.log(stdout);
+    console.log(stderr);
     console.log('Image name = ' + docker.taggedImage(opts.image));
 
     if(opts.push) {
         console.log('Pushing image...');
-        docker.push(opts.image, function() {
+
+        docker.push(opts.image, function(err, stdout, stderr) {
+            console.log(stdout);
+            console.log(stderr);
             console.log('Image pushed');
         });
     }

@@ -1,6 +1,9 @@
+// TODO: Security still needs to be added to most endpoints
+
 var express = require('express'),
     config = require('./lib/config'),
-    docker = require('./lib/docker');
+    docker = require('./lib/docker'),
+    exec = require('child_process').exec;
 
 var app = express();
 
@@ -24,8 +27,20 @@ app.get('/version', function(req, res) {
     res.end(config.version);
 });
 
-app.post('/pull_latest', function(req, res) {
+// updates to the latest code and docker images
+app.post('/update', function(req, res) {
+    exec('git pull', function(err, stdout, stderr) {
+        var git = stdout || stderr;
 
+        docker.pull(null, function(err, stdout, stderr) {
+            res.end(JSON.stringify({
+                git: git,
+                docker: stdout || stderr,
+                version: config.version,
+                image: docker.taggedImage()
+            }));
+        });
+    });
 });
 
 app.post('/run', function(req, res) {
