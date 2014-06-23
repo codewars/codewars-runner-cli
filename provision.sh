@@ -1,12 +1,18 @@
 #!/bin/sh
 echo "APT-GET UPDATE"
-apt-get update
+apt-get -y update
+
+echo "INSTALL SysOp Tools"
+apt-get install -y iptables
+
 
 apt-get install monit
 
 # Add nodejs repo
 add-apt-repository -y ppa:chris-lea/node.js
-apt-get -y update
+
+echo "INSTALL MONO SHELL"
+apt-get -y install mono-csharp-shell --fix-missing
 
 echo "INSTALL NODEJS"
 apt-get install -y nodejs
@@ -20,4 +26,9 @@ npm install -g supervisor
 echo "Install server packages"
 cd /vagrant
 npm install
+
+echo "Setting some sandbox limits"
+sudo iptables -A OUTPUT -m owner --uid-owner 1000 -j DROP
+sudo sed -i '$a vagrant soft nproc 20' /etc/security/limits.conf
+sudo sed -i '$a session required pam_limits.so' /etc/pam.d/common-session
 
