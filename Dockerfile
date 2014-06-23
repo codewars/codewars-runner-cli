@@ -29,10 +29,20 @@ RUN npm -g install chai
 
 # Install Python 3
 
+# Install Java
+RUN apt-get install -y openjdk-6-jdk
+#### Install runtime
+##RUN apt-get install -y openjdk-6-jre-headless
+#### Install aptitude to download package
+##RUN apt-get install -y aptitude
+####
+##RUN aptitude download openjdk-6-jdk; dpkg -i --ignore-depends=openjdk-6-jre openjdk-6-jdk*.deb
 
 # ADD cli-runner and install node deps
 ADD . /cli-runner
 WORKDIR /cli-runner
 RUN npm install
 
-ENTRYPOINT ["node"]
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
