@@ -59,7 +59,7 @@ describe( 'ruby runner', function(){
                 });
             });
             it( 'should gracefully handle reference errors', function(done) {
-                runner.run({language: 'javascript',
+                runner.run({language: 'ruby',
                     solution:'a = 1',
                     fixture: 'describe "test" do\n' +
                         'it("test1") { a.idontexist() }\n' +
@@ -76,6 +76,53 @@ describe( 'ruby runner', function(){
                     done();
                 });
             });
+        });
+    });
+    describe('rspec', function() {
+        it('should handle a basic assertion', function(done){
+            runner.run({language: 'ruby',
+                solution: 'a = 1',
+                fixture: 'describe "test" do\n' +
+                    'it("test2") { expect(1).to eq(1)}\n' +
+                    'end',
+                testFramework: 'rspec'}, function(buffer)
+                {
+                    expect(buffer.stdout).to.equal('<DESCRIBE::>test\n<IT::>test2\n<PASSED::>Test Passed\n');
+                    done();
+                }
+            );
+        });
+        it('should handle a basic failed assertion', function(done){
+            runner.run({language: 'ruby',
+                solution: 'a = 1',
+                fixture: 'describe "test" do\n' +
+                    'it("test2") { expect(1).to eq(2)}\n' +
+                    'end',
+                testFramework: 'rspec'}, function(buffer)
+                {
+                    expect(buffer.stdout).to.contain('<DESCRIBE::>test\n<IT::>test2');
+                    expect(buffer.stdout).to.contain('<FAILED::>');
+                    expect(buffer.stdout).to.not.contain('<PASSED::>');
+                    done();
+                }
+            );
+        });
+        it('should handle a basic assertion', function(done){
+            runner.run({language: 'ruby',
+                solution: 'a = 1',
+                fixture: 'describe "test" do\n' +
+                    'it("test1") { a.idontexist() }\n' +
+                    'it("test2") { expect(true)}\n' +
+                    'end',
+                testFramework: 'rspec'}, function(buffer)
+                {
+                    expect(buffer.stdout).to.contain('<DESCRIBE::>test');
+                    expect(buffer.stdout).to.contain('<IT::>test1');
+                    expect(buffer.stdout).to.contain('<IT::>test2');
+                    expect(buffer.stdout).to.contain('<FAILED::>');
+                    done();
+                }
+            );
         });
     });
 });
