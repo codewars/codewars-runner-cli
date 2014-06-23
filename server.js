@@ -54,17 +54,22 @@ app.post('/run', function(req, res) {
     docker.run(image, 'run', req.body, function(error, data, stdout, stderr){
         console.timeEnd(image);
 
-        if (stdout) {
-            res.end(stdout);
+        json = safeParse(stdout);
+
+        if (json) {
+            json.freeMem = os.freemem();
+            res.end(JSON.stringify(json));
+
         } else {
-            console.warn('stdout did not return any data, going with stderr');
+            console.warn('stdout did not return valid data, going with stderr');
             console.info(stderr);
             error = error || {};
             res.end(JSON.stringify({
-                stdout: '',
+                stdout: stdout,
                 stderr: stderr || error.reason,
                 statusCode: error.statusCode,
                 failed: true,
+                freeMem: os.freemem(),
                 details: error.json
             }));
         }
@@ -85,6 +90,18 @@ app.get('/status', function(req, res) {
         }));
     });
 });
+
+function safeParse(json) {
+    try
+    {
+        return json ? JSON.parse(json) : null;
+    }
+    catch(ex)
+    {
+        console.log(ex);
+        return null
+    }
+}
 
 // for testing only
 //app.post('/run', function(req, res) {
