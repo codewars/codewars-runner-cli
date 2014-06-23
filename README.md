@@ -100,7 +100,10 @@ You can run a server which wraps the CLI and runs it within a Docker container. 
  ```
  vagrant up
  vagrant ssh
- supervisor /vagrant/server.js
+ cd /vagrant
+ node build
+ supervisor server.js
  ```
 
- You should now have a fully working server with Docker support. You can access the server using `localhost:8080'.
+ You should now have a fully working server with Docker support. You can access the server using `localhost:8080`. You can post requests to `/run` with the same arguments that the CLI accepts. 
+ 
