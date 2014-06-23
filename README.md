@@ -25,9 +25,16 @@ Through this project, the Codewars community can contribute support for new lang
     - codewars
 
 - Python
-    - unittest (comming soon...)
-    - codewars (comming soon...)
+    - unittest
+    - codewars
 
+- Java
+    - junit
+
+- C#
+    - Codewars
+    - nunit (comming soon...)
+    
 ## Examples:
 
 ### Basic Usage
