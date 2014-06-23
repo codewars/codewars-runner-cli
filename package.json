@@ -19,7 +19,8 @@
         "connect-timeout": "*",
         "body-parser": "*",
         "dockerode": "2.0.x",
-        "memory-streams": "*"
+        "memory-streams": "*",
+		"temporary": "*"
     },
     "engines" : {
         "node": "0.10.x"
