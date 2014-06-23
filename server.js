@@ -3,7 +3,8 @@
 var express = require('express'),
     config = require('./lib/config'),
     docker = require('./lib/docker'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    os = require('os');
 
 var app = express();
 
@@ -67,6 +68,21 @@ app.post('/run', function(req, res) {
                 details: error.json
             }));
         }
+    });
+});
+
+app.get('/status', function(req, res) {
+    docker.run(null, 'run', {l: 'javascript', c: 'console.log(1+1)'}, function(err, data, stdout, stderr) {
+        res.end(JSON.stringify({
+            healthy: stdout.indexOf('stdout":"2\\n",') > 0,
+            freeMem: os.freemem(),
+            dryRun: {
+                error: err && err.toString(),
+                data: data,
+                stdout: stdout,
+                stderr: stderr
+            }
+        }));
     });
 });
 
