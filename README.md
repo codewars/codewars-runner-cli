@@ -21,7 +21,7 @@ Through this project, the Codewars community can contribute support for new lang
     - codewars
 
 - Ruby
-    - rspec (comming soon...)
+    - rspec
     - codewars
 
 - Python
