@@ -1,3 +1,10 @@
 /node_modules
 /tmp
 /local_config.js
+Solution.class
+Solution.java
+solution.rb
+TestFixture.class
+TestFixture.java
+frameworks/java/CwRunListener.class
+frameworks/java/CwTestRunner.class

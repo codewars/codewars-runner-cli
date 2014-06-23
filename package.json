@@ -1,7 +1,7 @@
 {
     "name": "codewars-runner",
     "description": "Codewars.com code sandbox capabilities",
-    "version": "0.0.2",
+    "version": "0.1.5",
     "author": {
         "name": "Jake Hoffner",
         "email": "jake@codewars.com"
