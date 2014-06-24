@@ -63,14 +63,16 @@ getOrPost('/update', function(req, res) {
 });
 
 app.post('/run', function(req, res) {
-    var image = req.body.image;
+    var image = req.body.image,
+        taggedImage = docker.taggedImage(image);
+
     delete req.body.image;
 
-    console.time(image);
-    console.log(image);
+    console.time(taggedImage);
+    console.log(taggedImage);
 
     docker.run(image, 'run', req.body, function(error, data, stdout, stderr){
-        console.timeEnd(image);
+        console.timeEnd(taggedImage);
 
         json = safeParse(stdout);
 
