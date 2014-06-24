@@ -27,6 +27,8 @@ echo "Install server packages"
 cd /vagrant
 npm install
 
+npm install -g mocha
+
 echo "Setting some sandbox limits"
 sudo iptables -A OUTPUT -m owner --uid-owner 1000 -j DROP
 sudo sed -i '$a vagrant soft nproc 20' /etc/security/limits.conf
