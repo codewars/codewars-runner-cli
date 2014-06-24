@@ -9,7 +9,7 @@ var express = require('express'),
 var app = express();
 
 //app.use(require('response-time')(5));
-app.use(require('connect-timeout')(10000));
+//app.use(require('connect-timeout')(10000));
 app.use(require('body-parser')());
 
 app.use(function(err, req, res, next) {
@@ -28,20 +28,38 @@ app.get('/version', function(req, res) {
     res.end(config.version);
 });
 
+app.get('/build', function(req, res) {
+    exec('node build', function(err, stdout, stderr) {
+        res.end(JSON.stringify({
+           stdout: stdout,
+           stderr: stderr
+        }));
+    });
+});
+
 // updates to the latest code and docker images
-app.post('/update', function(req, res) {
+// responds to both get and post for backwards comparability and easier debugging.
+getOrPost('/update', function(req, res) {
     exec('git pull', function(err, stdout, stderr) {
         var git = stdout || stderr;
 
-        docker.pull(null, function(err, stdout, stderr) {
-            res.end(JSON.stringify({
-                git: git,
-                docker: stdout || stderr,
-                version: config.version,
-                image: docker.taggedImage()
-            }));
+        exec('node pull', function(err, stdout, stderr) {
+            if (stderr || !stdout) {
+                res.end(JSON.stringify({
+                    git: git,
+                    docker: stderr,
+                    version: config.version
+                }));
+            }
+            else {
+                json = JSON.parse(stdout);
+                json.git = git;
+                res.end(JSON.stringify(json));
+            }
         });
     });
+
+    useTimeout(45000, res);
 });
 
 app.post('/run', function(req, res) {
@@ -76,6 +94,8 @@ app.post('/run', function(req, res) {
             }));
         }
     });
+
+    useTimeout(10000, res);
 });
 
 app.get('/status', function(req, res) {
@@ -92,7 +112,18 @@ app.get('/status', function(req, res) {
             }
         }));
     });
+
+    useTimeout(5000, res);
 });
+
+function useTimeout(timeout, res) {
+    setTimeout(function() {
+        res.end(JSON.stringify({
+            failed: true,
+            reason: 'Response timed out, took longer than ' + timeout + 'ms'
+        }));
+    }, timeout);
+}
 
 function safeParse(json) {
     try
@@ -104,6 +135,11 @@ function safeParse(json) {
         console.log(ex);
         return null
     }
+}
+
+function getOrPost(route, cb) {
+    app.get(route, cb);
+    app.post(route, cb);
 }
 
 // for testing only
