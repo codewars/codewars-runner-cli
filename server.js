@@ -9,7 +9,7 @@ var express = require('express'),
 var app = express();
 
 //app.use(require('response-time')(5));
-//app.use(require('connect-timeout')(10000));
+app.use(require('connect-timeout')(10000));
 app.use(require('body-parser')());
 
 app.use(function(err, req, res, next) {
@@ -58,6 +58,7 @@ app.post('/run', function(req, res) {
 
         if (json) {
             json.freeMem = os.freemem();
+            json.v = config.version;
             res.end(JSON.stringify(json));
 
         } else {
@@ -70,6 +71,7 @@ app.post('/run', function(req, res) {
                 statusCode: error.statusCode,
                 failed: true,
                 freeMem: os.freemem(),
+                v: config.version,
                 details: error.json
             }));
         }
@@ -81,6 +83,7 @@ app.get('/status', function(req, res) {
         res.end(JSON.stringify({
             healthy: stdout.indexOf('stdout":"2\\n",') > 0,
             freeMem: os.freemem(),
+            version: config.version,
             dryRun: {
                 error: err && err.toString(),
                 data: data,
