@@ -6,9 +6,9 @@ You can run `node run --help` to view information about which arguments are supp
 
 ## Purpose
 
-The purpose of this project is to provide a low level ability to run "Kata". It utilizes Docker containers in order to sandbox the code. Each time the code is ran, it is executed within a new Docker container.
+The purpose of this project is to provide a low level ability to run "Kata". It provides a mechanism for executing different configurations of code using various languages and testing frameworks. 
 
-Through this project, the Codewars community can contribute support for new languages and frameworks to be supported by codewars. 
+Docker can be utilized in order to sandbox code execution. A server is provided that can accept "run" requests and execute them within a Docker container. 
 
 ## Supported Languages and Testing Frameworks
 
@@ -38,6 +38,9 @@ Through this project, the Codewars community can contribute support for new lang
 ## Examples:
 
 ### Basic Usage
+
+The "CLI" capabilities can be used without having to run Docker. As long as you have the language and frameworks installed on your host machine, you will be able to run the CLI tool standalone. 
+
 If you just wanted to execute some code and return its output, you can do so like the following:
 
 #### Ruby
@@ -65,8 +68,6 @@ node run -l js -c "a = 1" -f "Test.expect(a == 1)"
 ```
 
 ## Docker
-
-The cli now supports running inside a docker container for better isolation.
 
 #### Build
 ```
@@ -107,3 +108,10 @@ You can run a server which wraps the CLI and runs it within a Docker container. 
 
  You should now have a fully working server with Docker support. You can access the server using `localhost:8080`. You can post requests to `/run` with the same arguments that the CLI accepts. 
  
+### Notes about image versioning
+
+The Docker images used by server.js are tagged within a version number. Some utilities have been provided to make it easier to manage versioned images. 
+
+#### build.js
+
+simply run `node build` to build the latest versioned image
