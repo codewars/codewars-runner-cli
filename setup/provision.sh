@@ -13,6 +13,9 @@ add-apt-repository -y ppa:chris-lea/node.js
 echo "INSTALL NODEJS"
 apt-get install -y nodejs
 
+echo "Symlinking nodejs -> node"
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+
 echo "INSTALL NPM"
 apt-get -qq -y install npm
 
