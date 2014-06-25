@@ -1,7 +1,7 @@
 {
     "name": "codewars-runner",
     "description": "Codewars.com code sandbox capabilities",
-    "version": "0.0.2",
+    "version": "0.1.5",
     "author": {
         "name": "Jake Hoffner",
         "email": "jake@codewars.com"
@@ -19,7 +19,8 @@
         "connect-timeout": "*",
         "body-parser": "*",
         "dockerode": "2.0.x",
-        "memory-streams": "*"
+        "memory-streams": "*",
+		"temporary": "*"
     },
     "engines" : {
         "node": "0.10.x"
