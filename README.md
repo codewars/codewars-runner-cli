@@ -6,9 +6,9 @@ You can run `node run --help` to view information about which arguments are supp
 
 ## Purpose
 
-The purpose of this project is to provide a low level ability to run "Kata". It provides a mechanism for executing different configurations of code using various languages and testing frameworks. 
+The purpose of this project is to provide a low level ability to run "Kata". It provides a mechanism for executing different configurations of code using various languages and testing frameworks.
 
-Docker can be utilized in order to sandbox code execution. A server is provided that can accept "run" requests and execute them within a Docker container. 
+Docker can be utilized in order to sandbox code execution. A server is provided that can accept "run" requests and execute them within a Docker container.
 
 ## Supported Languages and Testing Frameworks
 
@@ -34,12 +34,12 @@ Docker can be utilized in order to sandbox code execution. A server is provided 
 - C#
     - Codewars
     - nunit (comming soon...)
-    
+
 ## Examples:
 
 ### Basic Usage
 
-The "CLI" capabilities can be used without having to run Docker. As long as you have the language and frameworks installed on your host machine, you will be able to run the CLI tool standalone. 
+The "CLI" capabilities can be used without having to run Docker. As long as you have the language and frameworks installed on your host machine, you will be able to run the CLI tool standalone.
 
 If you just wanted to execute some code and return its output, you can do so like the following:
 
@@ -91,7 +91,7 @@ docker run --rm codewars/cli-runner run -l ruby -c "a = 1" -f "Test.expect a == 
 
 ### Server
 
-You can run a server which wraps the CLI and runs it within a Docker container. If you have Docker installed on your machine and the Codewars image built, all you need to do to start the server is run `node server`. You can then make posts requests to `localhost:8080/run` and provide the same arguments that you would for the CLI tool. 
+You can run a server which wraps the CLI and runs it within a Docker container. If you have Docker installed on your machine and the Codewars image built, all you need to do to start the server is run `node server`. You can then make posts requests to `localhost:8080/run` and provide the same arguments that you would for the CLI tool.
 
 ### Vagrant
 
@@ -106,12 +106,36 @@ You can run a server which wraps the CLI and runs it within a Docker container. 
  supervisor server.js
  ```
 
- You should now have a fully working server with Docker support. You can access the server using `localhost:8080`. You can post requests to `/run` with the same arguments that the CLI accepts. 
- 
+ You should now have a fully working server with Docker support. You can access the server using `localhost:8080`. You can post requests to `/run` with the same arguments that the CLI accepts.
+
 ### Notes about image versioning
 
-The Docker images used by server.js are tagged within a version number. Some utilities have been provided to make it easier to manage versioned images. 
+The Docker images used by server.js are tagged within a version number. Some utilities have been provided to make it easier to manage versioned images.
 
 #### build.js
 
 simply run `node build` to build the latest versioned image
+
+### Droplet setup
+grab the files
+```
+cd /
+git clone https://github.com/entrefuse/codewars-runner
+cd /codewars-runner/setup
+```
+create a non-root user and give it permissions
+```
+sh create-user.sh
+```
+provision the machine
+```
+sh provision.sh
+```
+set up the production environment
+```
+sh prod.sh
+```
+set up the hourly docker restart
+```
+bash restarer.sh
+```
