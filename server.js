@@ -52,6 +52,11 @@ getOrPost('/update', function(req, res)
         buffer.push(data);
     });
 
+    updateSh.stderr.on('data', function(data)
+    {
+        buffer.push(data);
+    });
+
     updateSh.on('exit', function (code)
     {
         buffer.push(code);
