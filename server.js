@@ -39,27 +39,26 @@ app.get('/build', function(req, res) {
 
 // updates to the latest code and docker images
 // responds to both get and post for backwards comparability and easier debugging.
-getOrPost('/update', function(req, res) {
-    exec('git pull', function(err, stdout, stderr) {
-        var git = stdout || stderr;
+getOrPost('/update', function(req, res)
+{
+    res.writeHead(200, {'Content-Type': 'text/plain'});
 
-        exec('node pull', function(err, stdout, stderr) {
-            if (stderr || !stdout) {
-                res.end(JSON.stringify({
-                    git: git,
-                    docker: stderr,
-                    version: config.version
-                }));
-            }
-            else {
-                json = JSON.parse(stdout);
-                json.git = git;
-                res.end(JSON.stringify(json));
-            }
-        });
+    var updateSh = require('child_process').spawn('sh', [ 'setup/update.sh' ], {
+        cwd: process.env.PWD
     });
 
-    useTimeout(45000, res);
+    updateSh.stdout.on('data', function (data)
+    {
+        var buff = new Buffer(data);
+        res.write(buff.toString('utf8'));
+    });
+
+    updateSh.on('exit', function (code)
+    {
+        res.end(code);
+    });
+
+    useTimeout(60000, res);
 });
 
 app.post('/run', function(req, res) {
