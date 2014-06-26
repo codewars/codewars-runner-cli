@@ -41,21 +41,21 @@ app.get('/build', function(req, res) {
 // responds to both get and post for backwards comparability and easier debugging.
 getOrPost('/update', function(req, res)
 {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-
     var updateSh = require('child_process').spawn('sh', [ 'setup/update.sh' ], {
         cwd: process.env.PWD
     });
 
-    updateSh.stdout.on('data', function (data)
+    var buffer = [];
+
+    updateSh.stdout.on('data', function(data)
     {
-        var buff = new Buffer(data);
-        res.write(buff.toString('utf8'));
+        buffer.push(data);
     });
 
     updateSh.on('exit', function (code)
     {
-        res.end(code);
+        buffer.push(code);
+        res.end(buffer.join(''));
     });
 
     useTimeout(60000, res);
