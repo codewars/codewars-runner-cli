@@ -7,6 +7,9 @@ sudo service docker restart
 
 cd /codewars-runner
 
+echo "Install npm packages"
+npm install
+
 echo "Giving user permission to the directory"
 sudo chown -R safeuser:safeuser .
 

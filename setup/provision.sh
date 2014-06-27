@@ -23,9 +23,6 @@ apt-get -qq -y install npm
 echo "Installing pm2"
 sudo npm install pm2 -g
 
-echo "Install server packages"
-cd /vagrant
-npm install
 
 echo "Setting some sandbox limits"
 sudo iptables -A OUTPUT -m owner --uid-owner 1000 -j DROP
