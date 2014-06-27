@@ -13,7 +13,7 @@ describe( 'javascript runner', function(){
 
         describe('cw-2', function() {
             it( 'should handle a basic assertion', function(done){
-                runner.run({language: 'javascript', solution: 'a = 1', fixture: 'Test.expect(a == 1)', testFramework: 'cw-2'}, function(buffer) {
+                runner.run({language: 'javascript', solution: 'a = 1', fixture: 'Test.expect(a == 1);', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                     done();
                 });
@@ -78,6 +78,20 @@ describe( 'javascript runner', function(){
                         expect(buffer.stdout).to.contain('ReferenceError:');
                         expect(buffer.stdout).to.not.contain('[eval]');
                         expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                        done();
+                    });
+                });
+                it( 'should gracefully top level handle reference errors', function(done) {
+                    runner.run({language: 'javascript',
+                                solution:'b.test()',
+                                fixture: 'describe("test", function(){\n' +
+                                    'it("test2", function(){ Test.expect(true)});})',
+                                testFramework: 'cw-2'}, function(buffer) {
+                        expect(buffer.stdout).to.contain('<ERROR::>');
+                        expect(buffer.stdout).to.contain('\\n');
+                        expect(buffer.stdout).to.contain('ReferenceError:');
+                        expect(buffer.stdout).to.not.contain('[eval]');
+                        expect(buffer.stdout).to.not.contain('Object.Test.handleError');
                         done();
                     });
                 });
