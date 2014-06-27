@@ -20,7 +20,7 @@ echo "Starting pm2"
 pm2 --run-as-user safeuser start server.js
 
 echo "Installing startup script"
-pm2 startup ubuntu
+pm2 startup ubuntu -u safeuser
 
 echo "Saving pm2 configuration"
 pm2 save
