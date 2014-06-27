@@ -1,8 +1,11 @@
 
-try{
+try
+{
     var fnToString = Function.toString;
-    Function.prototype.toString = function(){
-        switch (this){
+    Function.prototype.toString = function ()
+    {
+        switch (this)
+        {
             case Test.expect:
             case Test.randomNumber:
             case Test.randomize:
@@ -16,7 +19,8 @@ try{
     };
 
     _setTimeout = setTimeout;
-    setTimeout = function(fn, timeout){
+    setTimeout = function (fn, timeout)
+    {
         if (timeout > 50) throw 'setTimeout is restricted to no more than 50ms.';
         return _setTimeout(fn, timeout)
     }
@@ -32,32 +36,41 @@ try{
     $$_SUCCESS__ = null;
     $STDOUT = [];
 
-    var _expect = function(passed, msg, options){
+    var _expect = function (passed, msg, options)
+    {
         options = options || {};
         if (Object.__proto__.extraCredit || Object.prototype.extraCredit) throw 'extraCredit cannot be on the object prototype';
 
-        if(passed){
+        if (passed)
+        {
             var successMsg = "Test Passed";
-            if (options.successMsg){
+            if (options.successMsg)
+            {
                 successMsg += ": " + options.successMsg;
             }
             console.log('<PASSED::>' + Test.format(successMsg));
             correct++;
-        } else {
+        }
+        else
+        {
             msg = _message(msg) || 'Value is not what was expected';
-            if (options.extraCredit) {
+            if (options.extraCredit)
+            {
                 msg = (options.extraCredit !== true) ? _message(options.extraCredit) : null;
                 msg = combineMessages(["Test Missed", msg], ": ");
                 console.log("<MISSED::>" + msg);
                 incorrect++;
             }
-            else{
+            else
+            {
                 console.log("<FAILED::>" + Test.format(msg));
                 var error = new Test.Error(msg);
-                if (describing){
+                if (describing)
+                {
                     failed.push(error);
                 }
-                else{
+                else
+                {
                     throw error;
                 }
             }
@@ -74,14 +87,22 @@ try{
 //        console._log(out.join(' '));
 //    };
 
-    function combineMessages(msgs, separator){
-        return msgs.filter(function(m){return m != null;}).join(separator)
+    function combineMessages(msgs, separator)
+    {
+        return msgs.filter(function (m)
+        {
+            return m != null;
+        }).join(separator)
     }
 
-    function _message(msg, prefix){
-        if (typeof msg == 'function'){
+    function _message(msg, prefix)
+    {
+        if (typeof msg == 'function')
+        {
             msg = msg()
-        }else if (typeof msg == 'array'){
+        }
+        else if (typeof msg == 'array')
+        {
             msg = combineMessages(msg, ' - ')
         }
         msg = prefix ? (prefix + ' - ' + msg) : msg;
@@ -93,89 +114,133 @@ try{
         // if an object is provided then it will JSONfied. By default
         // any line breaks will be replaced with <:BR:> so that the entire message is considered
         // one group of data.
-        format: function(obj, options){
+        format: function (obj, options)
+        {
             options = options || {};
             var out = '';
-            if(typeof obj == 'string') {
+            if (typeof obj == 'string')
+            {
                 out = obj;
-            } else if (typeof obj == 'function'){
+            }
+            else if (typeof obj == 'function')
+            {
                 out = obj.toString();
-            } else {
+            }
+            else
+            {
                 out = obj && obj !== true ? JSON.stringify(obj, null, options.indent ? 4 : 0) : ('' + obj)
             }
 
             return out.replace(new RegExp('\n', 'g'), '\\n');
         },
-        inspect: function(obj){
-            if(typeof obj == 'string'){
+        inspect: function (obj)
+        {
+            if (typeof obj == 'string')
+            {
                 return obj;
-            } else {
+            }
+            else
+            {
                 return obj && obj !== true ? JSON.stringify(obj) : ('' + obj)
             }
         },
-        describe: function(msg, fn) {
+        describe: function (msg, fn)
+        {
             var start = new Date();
-            try{
+            try
+            {
                 if (describing) throw "cannot call describe within another describe";
                 describing = true;
                 console.log("<DESCRIBE::>" + Test.format(_message(msg)));
                 fn();
             }
-            catch (ex) {
+            catch (ex)
+            {
                 Test.handleError(ex);
             }
-            finally{
+            finally
+            {
                 var ms = new Date() - start;
                 console.log("<COMPLETEDIN::>" + ms);
                 describing = false;
                 beforeCallbacks = [];
                 afterCallbacks = [];
 
-                if (failed.length > 0){
+                if (failed.length > 0)
+                {
                     throw failed[0];
                 }
             }
         },
-        it: function(msg, fn) {
+        it: function (msg, fn)
+        {
             if (!describing) throw '"it" calls must be invoked within a parent "describe" context';
 
             console.log("<IT::>" + Test.format(_message(msg)));
-            beforeCallbacks.forEach(function(cb){
+            beforeCallbacks.forEach(function (cb)
+            {
                 cb();
             });
 
             var start = new Date();
-            try {
+            try
+            {
                 fn();
-            } catch(ex){
+            }
+            catch (ex)
+            {
                 Test.handleError(ex);
-            } finally {
+            }
+            finally
+            {
                 var ms = new Date() - start;
                 console.log("<COMPLETEDIN::>" + ms);
 
-                afterCallbacks.forEach(function(cb){
+                afterCallbacks.forEach(function (cb)
+                {
                     cb();
                 });
             }
 
         },
-        before: function(cb) {
+        before: function (cb)
+        {
             beforeCallbacks.push(cb);
         },
-        after: function(cb) {
+        after: function (cb)
+        {
             afterCallbacks.push(cb);
         },
-        handleError: function(ex) {
-            if (ex.name == 'AssertionError') {
-                this.fail( ex.message );
-            } else if(ex.name != "TestError") {
+        // handles an error and writes the appropriate output. If a function is provided it will handle the error
+        // if the function errors, and then rethrow the exception
+        handleError: function (ex)
+        {
+            if (typeof ex == "function")
+            {
+                try
+                {
+                    ex();
+                }
+                catch(ex)
+                {
+                    this.handleError(ex);
+                    throw ex;
+                }
+            }
+            else if (ex.name == 'AssertionError')
+            {
+                this.fail(ex.message);
+            }
+            else if (ex.name != "TestError")
+            {
                 console.log("<ERROR::>" + this.format(_message(Test.trace(ex))));
             }
         },
         // clean up the stack trace of the exception so that it doesn't give confusing results.
         // Results would be confusing because the user submitted code is compiled into a script where
-        // the line numbers will no longer match up.
-        trace: function(ex) {
+        // additional code is injected and line numbers will not match.
+        trace: function (ex)
+        {
             return (ex.stack || ex.toString())
                 // remove file names (ie: (/cli-runner/...))
                 .replace(/\s\(.*\)/g, '')
@@ -184,87 +249,119 @@ try{
                 // remove stack trace beyond the Module information
                 .replace(/at Module[\w\s.:\d\n]*/g, '')
                 // remove at Object.<anonymous>
-                .replace(/\t*at Object.<\w*>\n/g, '');
+                .replace(/\t*at Object.<\w*>\n/g, '')
+                // handleError is used to wrap top level code, so lets remove it so that it doesn't
+                // confuse users who won't understand why it is there.
+                .replace('at Object.Test.handleError', '');
         },
-        pass: function() {
+        pass: function ()
+        {
             _expect(true);
         },
-        fail: function(message) {
+        fail: function (message)
+        {
             _expect(false, message);
         },
-        expect: function(passed, message, options){
+        expect: function (passed, message, options)
+        {
             _expect(passed, message, options)
         },
-        assertSimilar: function(actual, expected, msg, options){
+        assertSimilar: function (actual, expected, msg, options)
+        {
             this.assertEquals(this.inspect(actual), this.inspect(expected), msg, options)
         },
-        assertNotSimilar: function(actual, expected, msg, options){
+        assertNotSimilar: function (actual, expected, msg, options)
+        {
             this.assertNotEquals(this.inspect(actual), this.inspect(expected), msg, options)
         },
-        assertEquals: function(actual, expected, msg, options) {
-            if(actual !== expected){
+        assertEquals: function (actual, expected, msg, options)
+        {
+            if (actual !== expected)
+            {
                 msg = _message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg);
                 Test.expect(false, msg, options);
-            }else{
+            }
+            else
+            {
                 options = options || {};
                 options.successMsg = options.successMsg || 'Value == ' + Test.inspect(expected);
                 Test.expect(true, null, options);
             }
         },
-        assertNotEquals: function(a, b, msg, options){
-            if(a === b){
+        assertNotEquals: function (a, b, msg, options)
+        {
+            if (a === b)
+            {
                 msg = _message('Not Expected: ' + Test.inspect(a), msg);
                 Test.expect(false, msg, options);
-            }else{
+            }
+            else
+            {
                 options = options || {};
                 options.successMsg = options.successMsg || 'Value != ' + Test.inspect(b);
                 Test.expect(true, null, options);
             }
         },
-        expectNoError: function(msg, fn){
-            if(!fn){
+        expectNoError: function (msg, fn)
+        {
+            if (!fn)
+            {
                 fn = msg;
                 msg = 'Unexpected error was thrown';
             }
 
-            try{
+            try
+            {
                 fn();
                 Test.expect(true)
-            }catch(ex){
-                if (ex.name == 'TestError'){
+            }
+            catch (ex)
+            {
+                if (ex.name == 'TestError')
+                {
                     throw ex;
                 }
-                else {
+                else
+                {
                     msg += ': ' + ex.toString()
                     Test.expect(false, msg)
                 }
             }
         },
-        expectError: function(msg, fn, options){
-            if(!fn){
+        expectError: function (msg, fn, options)
+        {
+            if (!fn)
+            {
                 fn = msg;
                 msg = 'Expected an error to be thrown'
             }
 
             var passed = false;
-            try{
+            try
+            {
                 fn();
-            }catch(ex){
+            }
+            catch (ex)
+            {
                 console.log('<b>Expected error was thrown:</b> ' + ex.toString());
                 passed = true
             }
 
             Test.expect(passed, msg, options)
         },
-        randomNumber: function(){
+        randomNumber: function ()
+        {
             return Math.round(Math.random() * 100)
         },
-        randomToken: function(){
+        randomToken: function ()
+        {
             return Math.random().toString(36).substr(8)
         },
-        randomize: function(array){
+        randomize: function (array)
+        {
             var arr = array.concat(), i = arr.length, j, x;
-            while(i) {
+            while (i)
+            {
                 j = (Math.random() * i) | 0;
                 x = arr[--i];
                 arr[i] = arr[j];
@@ -272,10 +369,12 @@ try{
             }
             return arr;
         },
-        sample: function(array){
+        sample: function (array)
+        {
             return array[~~(array.length * Math.random())]
         },
-        Error: function(message){
+        Error: function (message)
+        {
             this.name = "TestError";
             this.message = (message || "");
         }
@@ -306,8 +405,9 @@ try{
         writable: false,
         value: Test.after
     })
-    
 
-}catch(ex){
+
+}catch(ex)
+{
     throw "Failed to load core API methods";
 }
