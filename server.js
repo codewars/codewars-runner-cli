@@ -63,7 +63,7 @@ getOrPost('/update', function(req, res)
         res.end(buffer.join(''));
     });
 
-    useTimeout(1200000, res, buffer);
+    useTimeout(90000, res, buffer);
 });
 
 app.post('/run', function(req, res) {
