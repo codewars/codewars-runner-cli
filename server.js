@@ -127,7 +127,7 @@ app.get('/status', function(req, res) {
 function useTimeout(timeout, res, buffer) {
     setTimeout(function() {
         res.end(JSON.stringify({
-            buffer: buffer,
+            buffer: buffer && buffer.join(''),
             timeout: true,
             reason: 'Response timed out, took longer than ' + timeout + 'ms'
         }));
