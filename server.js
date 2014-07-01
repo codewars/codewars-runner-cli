@@ -39,7 +39,7 @@ app.get('/build', function(req, res) {
 
 // updates to the latest code and docker images
 // responds to both get and post for backwards comparability and easier debugging.
-getOrPost('/update', function(req, res)
+app.all('/update', function(req, res)
 {
     var updateSh = require('child_process').spawn('sh', [ 'setup/update.sh' ], {
         cwd: process.env.PWD
@@ -141,11 +141,6 @@ function safeParse(json) {
         console.log(ex);
         return null
     }
-}
-
-function getOrPost(route, cb) {
-    app.get(route, cb);
-    app.post(route, cb);
 }
 
 // for testing only
