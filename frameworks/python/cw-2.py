@@ -1,6 +1,6 @@
 # Not using a module for security reasons,
 # See https://github.com/Codewars/codewars-runner/commit/06a7c5a928c1a72c2e119921dcbfec71ed28ba1f#commitcomment-6903818
-class Test:
+class test:
     @staticmethod
     def formatMessage(message):
         return message.replace("\n", "\\n")
