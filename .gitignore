@@ -4,6 +4,7 @@
 /.vagrant/
 Solution.class
 Solution.java
+Solution.hs
 solution.rb
 TestFixture.class
 TestFixture.java
