@@ -1,6 +1,7 @@
 /node_modules
 /tmp
 /local_config.js
+/.vagrant/
 Solution.class
 Solution.java
 solution.rb
