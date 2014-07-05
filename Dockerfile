@@ -52,14 +52,14 @@ RUN npm -g install chai
 
 # Install Python 3
 
-# Install Java
-RUN apt-get install -y openjdk-6-jdk
-#### Install runtime
-##RUN apt-get install -y openjdk-6-jre-headless
-#### Install aptitude to download package
-##RUN apt-get install -y aptitude
-####
-##RUN aptitude download openjdk-6-jdk; dpkg -i --ignore-depends=openjdk-6-jre openjdk-6-jdk*.deb
+# Install Java 8
+# RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
+RUN add-apt-repository ppa:webupd8team/java 
+RUN apt-get update
+# http://askubuntu.com/a/190674
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
 
 # ADD cli-runner and install node deps
 ADD . /cli-runner
