@@ -175,29 +175,49 @@ describe('haskell runner', function () {
                 expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
                 done();
             });
-            it("should fail fast", function (done) {
-                runner.run({
-                    language: 'haskell',
-                    solution: 'x = 1',
-                    fixture: [
-                        'module Fast.Fail.Test where',
-                        'import Test.CodeWars',
-                        'import Main (x)',
-                        'main = test $ do',
-                        '  describe "x" $ do',
-                        '    it "is 2" $ do',
-                        '      x `shouldBe` 2',
-                        '    it "is 3" $ do',
-                        '      x `shouldBe` 3'
-                    ].join('\n')
-                }, function (buffer) {
-                    expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                    expect(buffer.stdout).to.contain('<IT::>is 2\n');
-                    expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
-                    expect(buffer.stdout).to.not.contain('<IT::>is 3\n');
-                    expect(buffer.stdout).to.not.contain('<FAILED::>expected: 3 but got: 1\n');
-                    done();
-                });
+        });
+        it("should fail fast", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: 'x = 1',
+                fixture: [
+                    'module Fast.Fail.Test where',
+                    'import Test.CodeWars',
+                    'import Main (x)',
+                    'main = test $ do',
+                    '  describe "x" $ do',
+                    '    it "is not really 2" $ do',
+                    '      x `shouldBe` 2',
+                    '    it "should never get here" $ do',
+                    '      x `shouldBe` 3'
+                ].join('\n')
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('<DESCRIBE::>x');
+                expect(buffer.stdout).to.contain('<IT::>is not really 2\n');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
+                expect(buffer.stdout).to.not.contain('<IT::>should never get here\n');
+                expect(buffer.stdout).to.not.contain('<FAILED::>expected: 3 but got: 1\n');
+                done();
+            });
+        });
+        it("should report exceptions as errors", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: 'x = head []',
+                fixture: [
+                    'module Fast.Fail.Test where',
+                    'import Test.CodeWars',
+                    'import Main (x)',
+                    'main = test $ do',
+                    '  describe "exception" $ do',
+                    '    it "should throw" $ do',
+                    '      x `shouldBe` 2'
+                ].join('\n')
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('<DESCRIBE::>exception');
+                expect(buffer.stdout).to.contain('<IT::>should throw\n');
+                expect(buffer.stdout).to.contain('<ERROR::>ErrorCall (Prelude.head: empty list)\n');
+                done();
             });
         });
     });
