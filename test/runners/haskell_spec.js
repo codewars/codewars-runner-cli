@@ -69,8 +69,8 @@ describe('haskell runner', function () {
         });
     });
 
-    describe( 'codewars test framework', function(){
-        it('should be able to run a basic test', function(done){
+    describe('codewars test framework', function () {
+        it('should be able to run a basic test', function (done) {
             runner.run({
                 language: 'haskell',
                 solution: 'module Foo where',
@@ -83,13 +83,14 @@ describe('haskell runner', function () {
                     '    it "returns the first element of a list" $ do',
                     '      head [23 ..] `shouldBe` (23 :: Int)'
                 ].join('\n')
-            }, function(buffer) {
+            }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
-                expect(buffer.stdout).to.contain('<PASSED::> - returns the first element of a list\n');
+                expect(buffer.stdout).to.contain('<IT::>returns the first element of a list\n');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
                 done();
             });
         });
-        it("should work even if test module name isn't specified", function(done){
+        it("should work even if test module name isn't specified", function (done) {
             runner.run({
                 language: 'haskell',
                 solution: 'module Foo where',
@@ -101,13 +102,14 @@ describe('haskell runner', function () {
                     '    it "returns the first element of a list" $ do',
                     '      head [23 ..] `shouldBe` (23 :: Int)'
                 ].join('\n')
-            }, function(buffer) {
+            }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
-                expect(buffer.stdout).to.contain('<PASSED::> - returns the first element of a list\n');
+                expect(buffer.stdout).to.contain('<IT::>returns the first element of a list\n');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
                 done();
             });
         });
-        it("should work be able to import the solution", function(done){
+        it("should work be able to import the solution", function (done) {
             runner.run({
                 language: 'haskell',
                 solution: [
@@ -124,13 +126,14 @@ describe('haskell runner', function () {
                     '    it "is 1" $ do',
                     '      x `shouldBe` (1 :: Int)'
                 ].join('\n')
-            }, function(buffer) {
+            }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                expect(buffer.stdout).to.contain('<PASSED::> - is 1\n');
+                expect(buffer.stdout).to.contain('<IT::>is 1\n');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
                 done();
             });
         });
-        it("should be able to import the solution even when solution module name is unspecified (the default is module name for the solution is 'Main')", function(done){
+        it("should be able to import the solution even when solution module name is unspecified (the default is module name for the solution is 'Main')", function (done) {
             runner.run({
                 language: 'haskell',
                 solution: [
@@ -147,11 +150,54 @@ describe('haskell runner', function () {
                     '    it "is 1" $ do',
                     '      x `shouldBe` (1 :: Int)'
                 ].join('\n')
-            }, function(buffer) {
-                console.log(buffer.stderr);
+            }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                expect(buffer.stdout).to.contain('<PASSED::> - is 1\n');
+                expect(buffer.stdout).to.contain('<IT::>is 1\n');
                 done();
+            });
+        });
+        it("should report when something is wrong", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: 'x = 1',
+                fixture: [
+                    'module Sad.Path.Test where',
+                    'import Test.CodeWars',
+                    'import Main (x)',
+                    'main = test $ do',
+                    '  describe "x" $ do',
+                    '    it "is 2" $ do',
+                    '      x `shouldBe` 2'
+                ].join('\n')
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('<DESCRIBE::>x');
+                expect(buffer.stdout).to.contain('<IT::>is 2\n');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
+                done();
+            });
+            it("should fail fast", function (done) {
+                runner.run({
+                    language: 'haskell',
+                    solution: 'x = 1',
+                    fixture: [
+                        'module Fast.Fail.Test where',
+                        'import Test.CodeWars',
+                        'import Main (x)',
+                        'main = test $ do',
+                        '  describe "x" $ do',
+                        '    it "is 2" $ do',
+                        '      x `shouldBe` 2',
+                        '    it "is 3" $ do',
+                        '      x `shouldBe` 3'
+                    ].join('\n')
+                }, function (buffer) {
+                    expect(buffer.stdout).to.contain('<DESCRIBE::>x');
+                    expect(buffer.stdout).to.contain('<IT::>is 2\n');
+                    expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
+                    expect(buffer.stdout).to.not.contain('<IT::>is 3\n');
+                    expect(buffer.stdout).to.not.contain('<FAILED::>expected: 3 but got: 1\n');
+                    done();
+                });
             });
         });
     });
