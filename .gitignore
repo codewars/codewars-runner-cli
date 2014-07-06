@@ -10,3 +10,6 @@ TestFixture.class
 TestFixture.java
 frameworks/java/CwRunListener.class
 frameworks/java/CwTestRunner.class
+.DS_Store
+*~
+*.pyc
