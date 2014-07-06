@@ -69,6 +69,11 @@ RUN mkdir ~/.lein && echo '{:user {:dependencies [[org.clojure/clojure "1.6.0"] 
 RUN echo '(defproject codewars "Docker")' > project.clj 
 RUN LEIN_ROOT=true lein deps
 
+# Install Haskell
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ghc cabal-install
+RUN cabal update
+RUN cabal install hspec
+
 # ADD cli-runner and install node deps
 ADD . /cli-runner
 WORKDIR /cli-runner
