@@ -61,6 +61,14 @@ RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-s
     echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 RUN apt-get install -y oracle-java8-installer
 
+# Install Clojure
+RUN curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/bin/lein
+RUN chmod a+x /usr/bin/lein
+# Add a few packages by default
+RUN mkdir ~/.lein && echo '{:user {:dependencies [[org.clojure/clojure "1.6.0"] [junit/junit "4.11"] [org.hamcrest/hamcrest-core "1.3"]]}}' > ~/.lein/profiles.clj
+RUN echo '(defproject codewars "Docker")' > project.clj 
+RUN LEIN_ROOT=true lein deps
+
 # ADD cli-runner and install node deps
 ADD . /cli-runner
 WORKDIR /cli-runner
