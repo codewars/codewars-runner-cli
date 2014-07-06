@@ -61,6 +61,11 @@ RUN apt-get install -y openjdk-6-jdk
 ####
 ##RUN aptitude download openjdk-6-jdk; dpkg -i --ignore-depends=openjdk-6-jre openjdk-6-jdk*.deb
 
+# Install Haskell
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ghc cabal-install
+RUN cabal update
+RUN cabal install hspec
+
 # ADD cli-runner and install node deps
 ADD . /cli-runner
 WORKDIR /cli-runner
