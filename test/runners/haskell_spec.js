@@ -69,7 +69,7 @@ describe('haskell runner', function () {
         });
     });
 
-    describe( 'hspec', function(){
+    describe( 'codewars test framework', function(){
         it('should be able to run a basic test', function(done){
             runner.run({
                 language: 'haskell',
@@ -104,6 +104,53 @@ describe('haskell runner', function () {
             }, function(buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
                 expect(buffer.stdout).to.contain('<PASSED::> - returns the first element of a list\n');
+                done();
+            });
+        });
+        it("should work be able to import the solution", function(done){
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'x :: Int',
+                    'x = 1'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (x)',
+                    'import Test.CodeWars',
+                    'main :: IO ()',
+                    'main = test $ do',
+                    '  describe "x" $ do',
+                    '    it "is 1" $ do',
+                    '      x `shouldBe` (1 :: Int)'
+                ].join('\n')
+            }, function(buffer) {
+                expect(buffer.stdout).to.contain('<DESCRIBE::>x');
+                expect(buffer.stdout).to.contain('<PASSED::> - is 1\n');
+                done();
+            });
+        });
+        it("should be able to import the solution even when solution module name is unspecified (the default is module name for the solution is 'Main')", function(done){
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'x :: Int',
+                    'x = 1'
+                ].join('\n'),
+                fixture: [
+                    'module Basic.Test where',
+                    'import Main (x)',
+                    'import Test.CodeWars',
+                    'main :: IO ()',
+                    'main = test $ do',
+                    '  describe "x" $ do',
+                    '    it "is 1" $ do',
+                    '      x `shouldBe` (1 :: Int)'
+                ].join('\n')
+            }, function(buffer) {
+                console.log(buffer.stderr);
+                expect(buffer.stdout).to.contain('<DESCRIBE::>x');
+                expect(buffer.stdout).to.contain('<PASSED::> - is 1\n');
                 done();
             });
         });
