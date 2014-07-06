@@ -44,11 +44,10 @@ specdoc {
    formatFailure (FailureRecord _ reason) = 
      unless (null err) $ writeLine err
      where
-       err = filter (/= '\n') $ 
-               either
-                (("<ERROR::>" ++) . formatException)
-                ("<FAILED::>" ++)
-                reason
+       err = either
+              (("<ERROR::>" ++) . formatException)
+              (("<FAILED::>" ++) . (filter (/= '\n')))
+              reason
 
 
 --formatFailure (FailureRecord path reason) =
