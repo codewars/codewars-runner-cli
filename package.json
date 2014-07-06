@@ -1,28 +1,29 @@
 {
-    "name": "codewars-runner",
-    "description": "Codewars.com code sandbox capabilities",
-    "version": "0.1.5",
-    "author": {
-        "name": "Jake Hoffner",
-        "email": "jake@codewars.com"
-    },
-    "repository": {
-        "type": "git",
-        "url": "http://github.com/codewars/codewars-runner.git"
-    },
-    "dependencies": {
-        "nomnom": "1.6.x",
-        "mocha": "1.19.x",
-        "chai": "1.9.x",
-        "express": "*",
-        "response-time": "*",
-        "connect-timeout": "*",
-        "body-parser": "*",
-        "dockerode": "2.0.x",
-        "memory-streams": "*",
-		"temporary": "*"
-    },
-    "engines" : {
-        "node": "0.10.x"
-    }
+  "name": "codewars-runner",
+  "description": "Codewars.com code sandbox capabilities",
+  "version": "0.1.5",
+  "author": {
+    "name": "Jake Hoffner",
+    "email": "jake@codewars.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/codewars/codewars-runner.git"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "chai": "1.9.x",
+    "connect-timeout": "*",
+    "dockerode": "2.0.x",
+    "express": "*",
+    "memory-streams": "*",
+    "mocha": "1.19.x",
+    "nomnom": "1.6.x",
+    "response-time": "*",
+    "temp": "^0.8.0",
+    "temporary": "*"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
 }

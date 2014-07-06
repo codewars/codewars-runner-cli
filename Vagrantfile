@@ -8,6 +8,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "codewars_runner_host"
   config.vm.box = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box" # 64 bit
 
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1536
+  end
+
   config.vm.provision "shell", path: 'setup/provision.sh'
 
   config.vm.provision "docker" do |d|
