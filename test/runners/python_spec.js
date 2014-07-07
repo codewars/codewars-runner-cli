@@ -15,7 +15,7 @@ describe( 'python runner', function(){
         it( 'should handle a basic assertion', function(done){
             runner.run({language: 'python',
                         solution: 'a = 1',
-                        fixture: 'Test.expect(a == 1)',
+                        fixture: 'test.expect(a == 1)',
                         testFramework: 'cw-2'},
                        function(buffer){
                 console.log(buffer);
@@ -26,7 +26,7 @@ describe( 'python runner', function(){
         it( 'should handle a failed assertion', function(done){
             runner.run({language: 'python',
                         solution: 'a = 1',
-                        fixture: 'Test.expect(a == 2)',
+                        fixture: 'test.expect(a == 2)',
                         testFramework: 'cw-2'},
                        function(buffer){
                 console.log(buffer);

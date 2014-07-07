@@ -6,9 +6,9 @@ You can run `node run --help` to view information about which arguments are supp
 
 ## Purpose
 
-The purpose of this project is to provide a low level ability to run "Kata". It provides a mechanism for executing different configurations of code using various languages and testing frameworks.
+The purpose of this project is to provide a low level ability to run 'Kata'. It provides a mechanism for executing different configurations of code using various languages and testing frameworks.
 
-Docker can be utilized in order to sandbox code execution. A server is provided that can accept "run" requests and execute them within a Docker container.
+Docker can be utilized in order to sandbox code execution. A server is provided that can accept 'run' requests and execute them within a Docker container.
 
 ## Supported Languages and Testing Frameworks
 
@@ -32,39 +32,48 @@ Docker can be utilized in order to sandbox code execution. A server is provided 
     - junit
 
 - C#
-    - Codewars
     - nunit (comming soon...)
-
+    - codewars
+    
 ## Examples:
 
 ### Basic Usage
 
-The "CLI" capabilities can be used without having to run Docker. As long as you have the language and frameworks installed on your host machine, you will be able to run the CLI tool standalone.
+The CLI capabilities can be used without having to run Docker. As long as you have the language and frameworks installed on your host machine, you will be able to run the CLI tool standalone.
 
 If you just wanted to execute some code and return its output, you can do so like the following:
 
 #### Ruby
 ```
-node run -l ruby -c "puts 123"
+node run -l ruby -c 'puts 123'
 ```
 
 #### JavaScript
 ```
-node run -l js -c "console.log(123)"
+node run -l js -c 'console.log(123)'
+```
+
+#### Python
+```
+node run -l py -c 'print 123'
 ```
 
 ### Kata Usage
-You can also provide a test fixture to be ran along with the code. The output returned is the same output that is parsed
-by Codewars to render its kata output.
+You can also provide a test fixture to be run along with the code. The output returned is the same output that is parsed by Codewars to render its kata output.
 
 #### Ruby
 ```
-node run -l ruby -c "a = 1" -f "Test.expect a == 1"
+node run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
 ```
 
 #### JavaScript
 ```
-node run -l js -c "a = 1" -f "Test.expect(a == 1)"
+node run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
+```
+
+#### Python
+```
+node run -l py -c 'a = 1' -f 'test.expect(a == 1)'
 ```
 
 ## Docker
@@ -79,14 +88,19 @@ docker build -t codewars/cli-runner .
 docker run --rm codewars/cli-runner --help
 ```
 
-#### Run JavaScript Kata
-```
-docker run --rm codewars/cli-runner run -l js -c "a = 1" -f "Test.expect(a == 1)"
-```
-
 #### Run Ruby Kata
 ```
-docker run --rm codewars/cli-runner run -l ruby -c "a = 1" -f "Test.expect a == 1"
+docker run --rm codewars/cli-runner run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
+```
+
+#### Run JavaScript Kata
+```
+docker run --rm codewars/cli-runner run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
+```
+
+#### Run Python Kata
+```
+docker run --rm codewars/cli-runner run -l py -c 'a = 1' -f 'test.expect(a == 1)'
 ```
 
 ### Server
