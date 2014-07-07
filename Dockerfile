@@ -48,7 +48,7 @@ RUN apt-get install -y mono-csharp-shell --fix-missing
 # Install Coffeescript
 RUN npm -g install coffee-script
 RUN npm -g install chai
-#RUN npm -g install mocha
+RUN npm -g install mocha
 
 # Install Python 3
 
