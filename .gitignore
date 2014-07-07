@@ -4,7 +4,10 @@
 Solution.class
 Solution.java
 solution.rb
+solution.py
+*.pyc
 TestFixture.class
 TestFixture.java
 frameworks/java/CwRunListener.class
 frameworks/java/CwTestRunner.class
+.DS_Store
