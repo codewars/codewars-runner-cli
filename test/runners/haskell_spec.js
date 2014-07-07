@@ -69,7 +69,7 @@ describe('haskell runner', function () {
         });
     });
 
-    describe('codewars test framework', function () {
+    describe('codewars test framework (hspec)', function () {
         it('should be able to run a basic test', function (done) {
             runner.run({
                 language: 'haskell',
@@ -173,6 +173,27 @@ describe('haskell runner', function () {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('<IT::>is 2\n');
                 expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
+                done();
+            });
+        });
+        it("should print as a side effect", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: 'x = do putStrLn "Test" ; return 1',
+                fixture: [
+                    'module PrintEffect where',
+                    'import Test.CodeWars',
+                    'import Main (x)',
+                    'main = test $ do',
+                    '  describe "x" $ do',
+                    '    it "prints and returns 1" $ do',
+                    '      xval <- x',
+                    '      xval `shouldBe` 1',
+                ].join('\n')
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('<DESCRIBE::>x');
+                expect(buffer.stdout).to.contain('Test\n<IT::>prints and returns 1\n');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
                 done();
             });
         });
