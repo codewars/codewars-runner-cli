@@ -15,3 +15,5 @@ frameworks/java/CwTestRunner.class
 .DS_Store
 *~
 *.pyc
+project.clj
+target/*
