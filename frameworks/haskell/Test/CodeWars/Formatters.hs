@@ -9,8 +9,6 @@ import Test.Hspec.Formatters ( Formatter (..)
                              , getRealTime
                              , getFailMessages
                              , formatException)
-import Data.Functor ((<$>))
-import Control.Applicative ((<*>))
 import Control.Monad (unless, join, forM_)
 import Text.Printf (printf)
 
@@ -48,6 +46,3 @@ specdoc {
               (("<ERROR::>" ++) . formatException)
               (("<FAILED::>" ++) . (filter (/= '\n')))
               reason
-
-
---formatFailure (FailureRecord path reason) =
