@@ -87,8 +87,8 @@ RUN printf '#!/bin/bash\njulia-noisy "$@" 2> >(grep -v "OpenBLAS : Your OS does 
 RUN chmod a+x /usr/bin/julia
 
 # ADD cli-runner and install node deps
-ADD . /cli-runner
-WORKDIR /cli-runner
+ADD . /codewars
+WORKDIR /codewars
 RUN npm install
 
 #timeout is a fallback in case an error with node
