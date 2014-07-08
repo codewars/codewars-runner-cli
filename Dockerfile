@@ -48,18 +48,31 @@ RUN apt-get install -y mono-csharp-shell --fix-missing
 # Install Coffeescript
 RUN npm -g install coffee-script
 RUN npm -g install chai
-#RUN npm -g install mocha
+RUN npm -g install mocha
 
 # Install Python 3
 
-# Install Java
-RUN apt-get install -y openjdk-6-jdk
-#### Install runtime
-##RUN apt-get install -y openjdk-6-jre-headless
-#### Install aptitude to download package
-##RUN apt-get install -y aptitude
-####
-##RUN aptitude download openjdk-6-jdk; dpkg -i --ignore-depends=openjdk-6-jre openjdk-6-jdk*.deb
+# Install Java 8
+# RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
+RUN add-apt-repository ppa:webupd8team/java 
+RUN apt-get update
+# http://askubuntu.com/a/190674
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
+
+# Install Clojure
+RUN curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/bin/lein
+RUN chmod a+x /usr/bin/lein
+# Add a few packages by default
+RUN mkdir ~/.lein && echo '{:user {:dependencies [[org.clojure/clojure "1.6.0"] [junit/junit "4.11"] [org.hamcrest/hamcrest-core "1.3"]]}}' > ~/.lein/profiles.clj
+RUN echo '(defproject codewars "Docker")' > project.clj 
+RUN LEIN_ROOT=true lein deps
+
+# Install Haskell
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ghc cabal-install
+RUN cabal update
+RUN cabal install hspec
 
 # ADD cli-runner and install node deps
 ADD . /cli-runner
