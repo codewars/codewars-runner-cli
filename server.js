@@ -63,7 +63,7 @@ app.all('/update', function(req, res)
         res.end(buffer.join(''));
     });
 
-    useTimeout(60000, res);
+    useTimeout(90000, res, buffer);
 });
 
 app.post('/run', function(req, res) {
@@ -90,10 +90,12 @@ app.post('/run', function(req, res) {
             console.info(stderr);
             error = error || {};
             res.end(JSON.stringify({
-                stdout: stdout,
-                stderr: stderr || error.reason,
                 statusCode: error.statusCode,
-                failed: true,
+                failed: {
+                    stdout: stdout,
+                    stderr: stderr,
+                    reason: error.reason
+                },
                 freeMem: os.freemem(),
                 v: config.version,
                 details: error.json
@@ -122,10 +124,11 @@ app.get('/status', function(req, res) {
     useTimeout(5000, res);
 });
 
-function useTimeout(timeout, res) {
+function useTimeout(timeout, res, buffer) {
     setTimeout(function() {
         res.end(JSON.stringify({
-            failed: true,
+            buffer: buffer && buffer.join(''),
+            timeout: true,
             reason: 'Response timed out, took longer than ' + timeout + 'ms'
         }));
     }, timeout);
