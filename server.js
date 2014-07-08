@@ -39,8 +39,9 @@ app.get('/build', function(req, res) {
 
 // updates to the latest code and docker images
 // responds to both get and post for backwards comparability and easier debugging.
-getOrPost('/update', function(req, res)
+app.all('/update', function(req, res)
 {
+    //TODO make this require somehwere better
     var updateSh = require('child_process').spawn('sh', [ 'setup/update.sh' ], {
         cwd: process.env.PWD
     });
@@ -61,6 +62,9 @@ getOrPost('/update', function(req, res)
     {
         buffer.push(code);
         res.end(buffer.join(''));
+        //now that the update is finished, reload the server
+        require('child_process').spawn('sh', ['setup/reload.sh']);
+        //this will kill us, so we don't need to do anything more
     });
 
     useTimeout(90000, res, buffer);
@@ -144,11 +148,6 @@ function safeParse(json) {
         console.log(ex);
         return null
     }
-}
-
-function getOrPost(route, cb) {
-    app.get(route, cb);
-    app.post(route, cb);
 }
 
 // for testing only
