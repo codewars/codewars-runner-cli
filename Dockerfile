@@ -93,4 +93,4 @@ RUN npm install
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
-#ENTRYPOINT ["timeout", "15", "node"]
+ENTRYPOINT ["timeout", "15", "node"]
