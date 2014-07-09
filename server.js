@@ -8,6 +8,15 @@ var express = require('express'),
 
 var app = express();
 
+//shutdown when instructed by gracefulreload
+process.on('message', function(msg) {
+    if (msg == 'shutdown') {
+        process.exit(0);
+    }
+});
+
+
+
 //app.use(require('response-time')(5));
 //app.use(require('connect-timeout')(10000));
 app.use(require('body-parser')());
