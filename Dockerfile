@@ -74,9 +74,21 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ghc cabal-install
 RUN cabal update
 RUN cabal install hspec
 
+# Install Julia
+# Julia is really slow, but v0.3 is okay (see http://stackoverflow.com/a/20566032)
+# In the future, don't use nightly builds, use releases
+RUN add-apt-repository ppa:staticfloat/julianightlies
+RUN add-apt-repository ppa:staticfloat/julia-deps
+RUN apt-get update
+RUN apt-get -y install julia
+# Nightly builds have a noisy OpenBLAS error, workaround
+RUN mv /usr/bin/julia /usr/bin/julia-noisy
+RUN printf '#!/bin/bash\njulia-noisy "$@" 2> >(grep -v "OpenBLAS : Your OS does not support AVX instructions." 1>&2)' > /usr/bin/julia
+RUN chmod a+x /usr/bin/julia
+
 # ADD cli-runner and install node deps
-ADD . /cli-runner
-WORKDIR /cli-runner
+ADD . /codewars
+WORKDIR /codewars
 RUN npm install
 
 #timeout is a fallback in case an error with node
