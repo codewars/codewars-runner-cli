@@ -95,25 +95,6 @@ class Test
       @@after_blocks << block
     end
 
-    def expect_tests_to_pass(message, &block)
-      begin
-        block.call
-      rescue Test::Error => ex
-        Test.expect(false, "Expected test cases to pass: #{(message and message.to_s) || ex.message}")
-      end
-    end
-
-    def expect_tests_to_fail(message, &block)
-      passed = false
-      begin
-        block.call
-      rescue Test::Error => ex
-        passed = true
-      end
-
-      Test.expect(passed, message || 'Expected tests to fail')
-    end
-
     def expect_error(message = nil, &block)
       passed = false
       begin
