@@ -63,7 +63,7 @@ app.all('/update', function(req, res)
         buffer.push(code);
         res.end(buffer.join(''));
         //now that the update is finished, reload the server
-        require('child_process').spawn('sh', ['setup/reload.sh']);
+        require('child_process').spawn('sh', ['setup/reload.sh'], {detached: true}).unref();
         //this will kill us, so we don't need to do anything more
     });
 
