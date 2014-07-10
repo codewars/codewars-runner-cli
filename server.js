@@ -8,6 +8,15 @@ var express = require('express'),
 
 var app = express();
 
+//shutdown when instructed by gracefulreload
+process.on('message', function(msg) {
+    if (msg == 'shutdown') {
+        process.exit(0);
+    }
+});
+
+
+
 //app.use(require('response-time')(5));
 //app.use(require('connect-timeout')(10000));
 app.use(require('body-parser')());
@@ -63,7 +72,7 @@ app.all('/update', function(req, res)
         buffer.push(code);
         res.end(buffer.join(''));
         //now that the update is finished, reload the server
-        require('child_process').spawn('sh', ['setup/reload.sh']);
+        require('child_process').spawn('sh', ['setup/reload.sh'], {detached: true}).unref();
         //this will kill us, so we don't need to do anything more
     });
 
