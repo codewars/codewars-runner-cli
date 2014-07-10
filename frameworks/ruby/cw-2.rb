@@ -154,7 +154,7 @@ class Test
     private
 
     def format_msg(msg)
-      msg.gsub("\n", "\\n")
+      msg.gsub("\n", "<:LF:>")
     end
 
     def wrap_error
