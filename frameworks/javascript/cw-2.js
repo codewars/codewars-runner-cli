@@ -36,7 +36,7 @@ try
     $$_SUCCESS__ = null;
     $STDOUT = [];
 
-    var _expect = function (passed, msg, options)
+    var _expect = function (passed, failMsg, options)
     {
         options = options || {};
         if (Object.__proto__.extraCredit || Object.prototype.extraCredit) throw 'extraCredit cannot be on the object prototype';
@@ -53,18 +53,18 @@ try
         }
         else
         {
-            msg = _message(msg) || 'Value is not what was expected';
+            failMsg = _message(failMsg) || 'Value is not what was expected';
             if (options.extraCredit)
             {
-                msg = (options.extraCredit !== true) ? _message(options.extraCredit) : null;
-                msg = combineMessages(["Test Missed", msg], ": ");
-                console.log("<MISSED::>" + msg);
+                failMsg = (options.extraCredit !== true) ? _message(options.extraCredit) : failMsg;
+                failMsg = combineMessages(["Test Missed", failMsg], ": ");
+                console.log("<MISSED::>" + Test.format(failMsg));
                 incorrect++;
             }
             else
             {
-                console.log("<FAILED::>" + Test.format(msg));
-                var error = new Test.Error(msg);
+                console.log("<FAILED::>" + Test.format(failMsg));
+                var error = new Test.Error(failMsg);
                 if (describing)
                 {
                     failed.push(error);
@@ -130,8 +130,9 @@ try
             {
                 out = obj && obj !== true ? JSON.stringify(obj, null, options.indent ? 4 : 0) : ('' + obj)
             }
-
-            return out.replace(new RegExp('\n', 'g'), '\\n');
+            // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
+            // the linebreak will be treated as a new data item.
+            return out.replace(new RegExp('\n', 'g'), '<:LF:>');
         },
         inspect: function (obj)
         {
