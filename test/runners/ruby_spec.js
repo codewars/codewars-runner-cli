@@ -15,7 +15,6 @@ describe( 'ruby runner', function(){
     describe('cw-2', function() {
         it( 'should handle a basic assertion', function(done){
             runner.run({language: 'ruby', solution: 'a = 1', fixture: 'Test.expect a == 1', testFramework: 'cw-2'}, function(buffer) {
-                console.log(buffer)
                 expect(buffer.stdout ).to.equal('<PASSED::>Test Passed\n');
                 done();
             });
@@ -67,7 +66,7 @@ describe( 'ruby runner', function(){
                         'end',
                     testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.contain('<ERROR::>');
-                    expect(buffer.stdout).to.contain('\\n');
+                    expect(buffer.stdout).to.contain('<:LF:>');
                     expect(buffer.stdout).to.contain('NoMethodError:');
                     expect(buffer.stdout).to.not.contain('from /cli-runner/');
                     expect(buffer.stdout).to.not.contain('-e:');
@@ -75,6 +74,28 @@ describe( 'ruby runner', function(){
                     expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                     done();
                 });
+            });
+
+            it('should prevent short circuiting', function(done){
+                runner.run({language: 'ruby',
+                        solution: [
+                            "def example",
+                            "   Test.expect(true);",
+                            "   raise 'early error'",
+                            "end"
+                        ].join("\n"),
+                        fixture: [
+                            'describe "test" do',
+                            '   it("test1") { example }',
+                            '   it("test2") { Test.expect(false)}',
+                            'end'
+                        ].join('\n'),
+                        testFramework: 'cw-2'}, function(buffer)
+                    {
+                        expect(buffer.stdout).to.contain('<ERROR::>');
+                        done();
+                    }
+                );
             });
         });
     });
@@ -119,6 +140,27 @@ describe( 'ruby runner', function(){
                     expect(buffer.stdout).to.contain('<DESCRIBE::>test');
                     expect(buffer.stdout).to.contain('<IT::>test1');
                     expect(buffer.stdout).to.contain('<IT::>test2');
+                    expect(buffer.stdout).to.contain('<FAILED::>');
+                    done();
+                }
+            );
+        });
+        it('should prevent short circuiting', function(done){
+            runner.run({language: 'ruby',
+                solution: [
+                    "def example",
+                    "   expect(true);",
+                    "   raise 'early error'",
+                    "end"
+                ].join("\n"),
+                fixture: [
+                    'describe "test" do',
+                    '   it("test1") { example }',
+                    '   it("test2") { expect(false)}',
+                    'end'
+                ].join('\n'),
+                testFramework: 'rspec'}, function(buffer)
+                {
                     expect(buffer.stdout).to.contain('<FAILED::>');
                     done();
                 }
