@@ -3,7 +3,7 @@ class CwRSpecFormatter
     @output = output
   end
   def formatMessage(s)
-    s.gsub("\n", "\\n")
+    s.gsub("\n", "<:LF:>")
   end
   RSpec::Core::Formatters.register self, :example_group_started, :example_started, :example_passed, :example_failed, :message
   def example_group_started(notification)

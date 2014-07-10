@@ -3,7 +3,7 @@
 class test:
     @staticmethod
     def formatMessage(message):
-        return message.replace("\n", "\\n")
+        return message.replace("\n", "<:LF:>")
 
     @staticmethod
     def expect(passed=None, message=None):
