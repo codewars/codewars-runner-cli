@@ -24,6 +24,6 @@ public class CwRunListener extends RunListener
     }
     private static String formatMessage(String s)
     {
-        return s.replaceAll("\n", "\\n");
+        return s.replaceAll("\n", "<:LF:>");
     }
 }
