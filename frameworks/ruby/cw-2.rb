@@ -154,7 +154,7 @@ class Test
     private
 
     def format_msg(msg)
-      msg.gsub("\n", "<:LF:>")
+      msg.gsub("\n", '<:LF:>')
     end
 
     def wrap_error
@@ -168,7 +168,11 @@ class Test
     end
 
     def handle_error(ex)
-      puts "<ERROR::>#{format_msg(ex.inspect)}\\n#{ex.backtrace.join("\\n")}"
+      if ex.is_a? Exception
+        puts "<ERROR::>#{format_msg(ex.inspect)}<:LF:>n#{ex.backtrace.join('<:LF:>')}"
+      else
+        puts "<ERROR::>#{format_msg(ex)}"
+      end
     end
 
   end
