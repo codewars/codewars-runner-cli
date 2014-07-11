@@ -4,7 +4,8 @@ var express = require('express'),
     config = require('./lib/config'),
     docker = require('./lib/docker'),
     exec = require('child_process').exec,
-    os = require('os');
+    os = require('os'),
+    key = require('./apikey');
 
 var app = express();
 
@@ -27,6 +28,23 @@ app.use(function(err, req, res, next) {
     res.send(500, { error: err })
 });
 
+app.use(function(req, res, next)
+{
+    if(req.method == 'GET')
+    {
+        next();
+        return;
+    }
+    var thiskey = req.body.key;
+    if(key && thiskey == key)
+    {
+        next();
+    }
+    else
+    {
+        res.send(403);
+    }
+});
 
 app.get('/', function(req, res) {
     res.type( "text/plain" );
@@ -37,7 +55,7 @@ app.get('/version', function(req, res) {
     res.end(config.version);
 });
 
-app.get('/build', function(req, res) {
+app.post('/build', function(req, res) {
     exec('node build', function(err, stdout, stderr) {
         res.end(JSON.stringify({
            stdout: stdout,
@@ -48,7 +66,7 @@ app.get('/build', function(req, res) {
 
 // updates to the latest code and docker images
 // responds to both get and post for backwards comparability and easier debugging.
-app.all('/update', function(req, res)
+app.post('/update', function(req, res)
 {
     //TODO make this require somehwere better
     var updateSh = require('child_process').spawn('sh', [ 'setup/update.sh' ], {
