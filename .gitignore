@@ -17,4 +17,3 @@ frameworks/java/CwTestRunner.class
 *.pyc
 project.clj
 target/*
-apikey.js
