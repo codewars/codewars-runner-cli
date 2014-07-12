@@ -1,7 +1,7 @@
 (ns clojure.test.codewars
   (:refer-clojure :exclude [time])
   (:require
-   [clojure.test :refer :all :exclude [run-all-tests]]
+   [clojure.test :refer :all :exclude [run-tests]]
    [clojure.stacktrace :as stack]))
 
 (defmulti codewars-report :type)
@@ -59,7 +59,7 @@
                    " msecs"))
      ret#))
 
-(defmacro run-all-tests []
+(defmacro run-tests []
   (binding [clojure.test/report
             clojure.test.codewars/codewars-report]
-    (time (clojure.test/run-all-tests))))
+    (time (clojure.test/run-tests))))
