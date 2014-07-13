@@ -13,11 +13,11 @@ Docker can be utilized in order to sandbox code execution. A server is provided 
 ## Supported Languages and Testing Frameworks
 
 - JavaScript
-	- mocha (comming soon...)
+	- mocha (coming soon...)
 	- codewars
 
 - CoffeeScript
-	- mocha (comming soon...)
+	- mocha (coming soon...)
 	- codewars
 
 - Ruby
@@ -32,7 +32,7 @@ Docker can be utilized in order to sandbox code execution. A server is provided 
 	- junit
 
 - C#
-	- nunit (comming soon...)
+	- nunit (coming soon...)
 	- codewars
 
 - Haskell
@@ -43,6 +43,9 @@ Docker can be utilized in order to sandbox code execution. A server is provided 
 
 - Julia
 	- [FactCheck](https://github.com/zachallaun/FactCheck.jl#usage)
+
+- Erlang
+    - (coming soon...)
 	
 ## Examples:
 
@@ -66,16 +69,19 @@ If you just wanted to execute some code and return its output, you can do so lik
   
 #### Haskell
 
-	node run -l hs -c 'main = putStr "123"'
+	node run -l hs -c 'main = putStrLn "123"'
   
 #### Clojure
 
-	node run -l clj -c '(print 123)'`
+	node run -l clj -c '(println 123)'`
 
 #### Julia
 
-	node run -l jl -c 'print(123)'
+	node run -l jl -c 'println(123)'
 
+#### Erlang
+
+	node run -l erl -c 'io:fwrite("123\n"), init:stop().'
 
 ### Kata Usage
 
