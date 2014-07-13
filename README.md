@@ -101,11 +101,13 @@ You can also provide a test fixture to be run along with the code. The output re
 
 	docker build -t codewars/cli-runner .
 
+#### Unit testing
+
+	docker run -i --entrypoint mocha codewars/cli-runner test/*
 	
 #### Run Help
 
 	docker run --rm codewars/cli-runner --help
-
 	
 #### Run Ruby Kata
 
