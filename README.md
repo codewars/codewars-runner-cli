@@ -13,28 +13,37 @@ Docker can be utilized in order to sandbox code execution. A server is provided 
 ## Supported Languages and Testing Frameworks
 
 - JavaScript
-    - mocha (comming soon...)
-    - codewars
+	- mocha (comming soon...)
+	- codewars
 
 - CoffeeScript
-    - mocha (comming soon...)
-    - codewars
+	- mocha (comming soon...)
+	- codewars
 
 - Ruby
-    - rspec
-    - codewars
+	- rspec
+	- codewars
 
 - Python
-    - unittest
-    - codewars
+	- unittest
+	- codewars
 
 - Java
-    - junit
+	- junit
 
 - C#
-    - nunit (comming soon...)
-    - codewars
-    
+	- nunit (comming soon...)
+	- codewars
+
+- Haskell
+	- [hspec](http://hspec.github.io)
+
+- Clojure
+	- [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html)
+
+- Julia
+	- [FactCheck](https://github.com/zachallaun/FactCheck.jl#usage)
+	
 ## Examples:
 
 ### Basic Usage
@@ -43,66 +52,76 @@ The CLI capabilities can be used without having to run Docker. As long as you ha
 
 If you just wanted to execute some code and return its output, you can do so like the following:
 
-#### Ruby
-```
-node run -l ruby -c 'puts 123'
-```
+#### Ruby 
+
+	node run -l ruby -c 'puts 123'
 
 #### JavaScript
-```
-node run -l js -c 'console.log(123)'
-```
+
+	node run -l js -c 'console.log(123)'
 
 #### Python
-```
-node run -l py -c 'print 123'
-```
+
+	node run -l py -c 'print 123'
+  
+#### Haskell
+
+	node run -l hs -c 'main = putStr "123"'
+  
+#### Clojure
+
+	node run -l clj -c '(print 123)'`
+
+#### Julia
+
+	node run -l jl -c 'print(123)'
+
 
 ### Kata Usage
+
 You can also provide a test fixture to be run along with the code. The output returned is the same output that is parsed by Codewars to render its kata output.
 
 #### Ruby
-```
-node run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
-```
+
+	node run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
+
 
 #### JavaScript
-```
-node run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
-```
+
+	node run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
 
 #### Python
-```
-node run -l py -c 'a = 1' -f 'test.expect(a == 1)'
-```
+
+	node run -l py -c 'a = 1' -f 'test.expect(a == 1)'
+
 
 ## Docker
 
 #### Build
-```
-docker build -t codewars/cli-runner .
-```
 
+	docker build -t codewars/cli-runner .
+
+	
 #### Run Help
-```
-docker run --rm codewars/cli-runner --help
-```
 
+	docker run --rm codewars/cli-runner --help
+
+	
 #### Run Ruby Kata
-```
-docker run --rm codewars/cli-runner run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
-```
 
+	docker run --rm codewars/cli-runner run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
+
+	
 #### Run JavaScript Kata
-```
-docker run --rm codewars/cli-runner run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
-```
 
+	docker run --rm codewars/cli-runner run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
+
+	
 #### Run Python Kata
-```
-docker run --rm codewars/cli-runner run -l py -c 'a = 1' -f 'test.expect(a == 1)'
-```
 
+	docker run --rm codewars/cli-runner run -l py -c 'a = 1' -f 'test.expect(a == 1)'
+
+	
 ### Server
 
 You can run a server which wraps the CLI and runs it within a Docker container. If you have Docker installed on your machine and the Codewars image built, all you need to do to start the server is run `node server`. You can then make posts requests to `localhost:8080/run` and provide the same arguments that you would for the CLI tool.
@@ -112,14 +131,13 @@ You can run a server which wraps the CLI and runs it within a Docker container. 
 > Version 1.6.3 or higher is required.
 
  A fully working environment is provided via Vagrant. These steps will get a working server running:
- ```
- vagrant up
- vagrant ssh
- cd /vagrant
- node build
- supervisor server.js
- ```
-
+ 
+	vagrant up
+ 	vagrant ssh
+ 	cd /vagrant
+ 	node build
+ 	supervisor server.js
+	
  You should now have a fully working server with Docker support. You can access the server using `localhost:8080`. You can post requests to `/run` with the same arguments that the CLI accepts.
 
 ### Notes about image versioning
@@ -128,28 +146,29 @@ The Docker images used by server.js are tagged within a version number. Some uti
 
 #### build.js
 
-simply run `node build` to build the latest versioned image
+Simply run `node build` to build the latest versioned image
 
 ### Droplet setup
-grab the files
-```
-cd /
-git clone https://github.com/entrefuse/codewars-runner
-cd /codewars-runner/setup
-```
-create a non-root user and give it permissions
-```
-sh create-user.sh
-```
-provision the machine
-```
-sh provision.sh
-```
-set up the production environment
-```
-sh prod.sh
-```
-set up the hourly docker restart
-```
-bash restarer.sh
-```
+
+- Grab the files
+
+	  cd /
+
+	  git clone https://github.com/entrefuse/codewars-runner
+	  cd /codewars-runner/setup
+
+- Create a non-root user and give it permissions
+
+	  sh create-user.sh
+
+- Provision the machine
+
+	  sh provision.sh
+
+- Set up the production environment
+
+	  sh prod.sh
+
+- Set up the hourly docker restart
+
+	  bash restarer.sh
