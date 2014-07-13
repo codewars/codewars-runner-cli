@@ -36,7 +36,7 @@ app.use(function(req, res, next)
         return;
     }
     var thiskey = req.body.key;
-    if(key && thiskey == key)
+    if(!key || thiskey == key)
     {
         next();
     }
