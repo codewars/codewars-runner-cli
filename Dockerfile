@@ -86,6 +86,9 @@ RUN mv /usr/bin/julia /usr/bin/julia-noisy
 RUN printf '#!/bin/bash\njulia-noisy "$@" 2> >(grep -v "OpenBLAS : Your OS does not support AVX instructions." 1>&2)' > /usr/bin/julia
 RUN chmod a+x /usr/bin/julia
 
+# Install erlang
+RUN apt-get install erlang
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 WORKDIR /codewars
