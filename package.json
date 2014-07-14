@@ -15,6 +15,7 @@
     "chai": "1.9.x",
     "connect-timeout": "*",
     "dockerode": "2.0.x",
+    "execSync": "^1.0.1-pre",
     "express": "*",
     "glob": "^4.0.3",
     "memory-streams": "*",
