@@ -87,7 +87,7 @@ RUN printf '#!/bin/bash\njulia-noisy "$@" 2> >(grep -v "OpenBLAS : Your OS does 
 RUN chmod a+x /usr/bin/julia
 
 # Install erlang
-RUN apt-get install erlang
+RUN apt-get -y install erlang
 
 # ADD cli-runner and install node deps
 ADD . /codewars
