@@ -15,7 +15,6 @@
     "chai": "1.9.x",
     "connect-timeout": "*",
     "dockerode": "2.0.x",
-    "execSync": "^1.0.1-pre",
     "express": "*",
     "glob": "^4.0.3",
     "memory-streams": "*",
@@ -23,7 +22,8 @@
     "nomnom": "1.6.x",
     "response-time": "*",
     "temp": "^0.8.0",
-    "temporary": "*"
+    "temporary": "*",
+    "exec-sync": "~0.1.6"
   },
   "engines": {
     "node": "0.10.x"
