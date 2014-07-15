@@ -5,7 +5,7 @@ def exit():
   return
 
 def formatMessage(message):
-  return string.replace(message, "\n", "\\n")
+  return string.replace(message, "\n", "<:LF:>")
 
 class CwTestResult(unittest.TestResult):
   def addSuccess(self, test):
