@@ -132,7 +132,7 @@ try
             }
             // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
             // the linebreak will be treated as a new data item.
-            return out.replace(new RegExp('\n', 'g'), '<:LF:>');
+            return out.replace(/\n/g, '<:LF:>');
         },
         inspect: function (obj)
         {
