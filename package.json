@@ -16,12 +16,12 @@
     "connect-timeout": "*",
     "dockerode": "2.0.x",
     "express": "*",
-    "glob": "^4.0.3",
+    "glob": "*",
     "memory-streams": "*",
     "mocha": "1.19.x",
     "nomnom": "1.6.x",
     "response-time": "*",
-    "temp": "^0.8.0",
+    "temp": "*",
     "temporary": "*"
   },
   "engines": {
