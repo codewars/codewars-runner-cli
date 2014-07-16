@@ -1,3 +1,5 @@
+Kernel.freeze
+
 class StandardError
   # cleans the backtrace so that it doesn't contain a ton of information that would likely confuse users.
   def set_backtrace(trace)
