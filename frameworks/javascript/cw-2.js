@@ -1,6 +1,8 @@
 
 try
 {
+    var util = require('util');
+
     var fnToString = Function.toString;
     Function.prototype.toString = function ()
     {
@@ -89,10 +91,7 @@ try
 
     function combineMessages(msgs, separator)
     {
-        return msgs.filter(function (m)
-        {
-            return m != null;
-        }).join(separator)
+        return msgs.filter(function (m){ return m != null;}).join(separator)
     }
 
     function _message(msg, prefix)
@@ -107,6 +106,21 @@ try
         }
         msg = prefix ? (prefix + ' - ' + msg) : msg;
         return msg || '';
+    }
+
+    // we use this instead of util.inspect so that we can support the indent option
+    function stringifyIgnoreCircular(obj, indent)
+    {
+        var cache = [];
+        return JSON.stringify(obj, function(key, value){
+            if (typeof value === 'object' && value !== null) {
+                // Circular reference found, discard key
+                if (cache.indexOf(value) !== -1) return "[Circular]";
+            }
+            // Store value in our collection
+            cache.push(value);
+            return value;
+        }, indent);
     }
 
     var Test = {
@@ -128,7 +142,21 @@ try
             }
             else
             {
-                out = obj && obj !== true ? JSON.stringify(obj, null, options.indent ? 4 : 0) : ('' + obj)
+                if (obj && obj !== true){
+
+                    // for backwards compatibility we will support the indent option
+                    if (options.indent || options.json)
+                    {
+                        out = stringifyIgnoreCircular(obj, options.indent ? 4 : 0)
+                    }
+                    else
+                    {
+                        out = util.inspect(obj, options);
+                    }
+                }
+                else{
+                    out = ('' + obj);
+                }
             }
             // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
             // the linebreak will be treated as a new data item.
