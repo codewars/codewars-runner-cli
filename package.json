@@ -22,8 +22,7 @@
     "nomnom": "1.6.x",
     "response-time": "*",
     "temp": "^0.8.0",
-    "temporary": "*",
-    "exec-sync": "~0.1.6"
+    "temporary": "*"
   },
   "engines": {
     "node": "0.10.x"
