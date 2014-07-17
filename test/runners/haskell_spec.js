@@ -85,8 +85,8 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
-                expect(buffer.stdout).to.contain('<IT::>returns the first element of a list\n');
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
+                expect(buffer.stdout).to.contain('<IT::>returns the first element of a list');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 done();
             });
         });
@@ -104,8 +104,8 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
-                expect(buffer.stdout).to.contain('<IT::>returns the first element of a list\n');
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
+                expect(buffer.stdout).to.contain('<IT::>returns the first element of a list');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 done();
             });
         });
@@ -128,8 +128,8 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                expect(buffer.stdout).to.contain('<IT::>is 1\n');
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
+                expect(buffer.stdout).to.contain('<IT::>is 1');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 done();
             });
         });
@@ -152,7 +152,7 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                expect(buffer.stdout).to.contain('<IT::>is 1\n');
+                expect(buffer.stdout).to.contain('<IT::>is 1');
                 done();
             });
         });
@@ -171,8 +171,8 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                expect(buffer.stdout).to.contain('<IT::>is 2\n');
-                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
+                expect(buffer.stdout).to.contain('<IT::>is 2');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1');
                 done();
             });
         });
@@ -192,8 +192,8 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                expect(buffer.stdout).to.contain('Test\n<IT::>prints and returns 1\n');
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
+                expect(buffer.stdout).to.contain('Test\n<IT::>prints and returns 1');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 done();
             });
         });
@@ -214,10 +214,10 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
-                expect(buffer.stdout).to.contain('<IT::>is not really 2\n');
-                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1\n');
-                expect(buffer.stdout).to.not.contain('<IT::>should never get here\n');
-                expect(buffer.stdout).to.not.contain('<FAILED::>expected: 3 but got: 1\n');
+                expect(buffer.stdout).to.contain('<IT::>is not really 2');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1');
+                expect(buffer.stdout).to.not.contain('<IT::>should never get here');
+                expect(buffer.stdout).to.not.contain('<FAILED::>expected: 3 but got: 1');
                 done();
             });
         });
@@ -236,8 +236,8 @@ describe('haskell runner', function () {
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>exception');
-                expect(buffer.stdout).to.contain('<IT::>should throw\n');
-                expect(buffer.stdout).to.contain('<ERROR::>ErrorCall (Prelude.head: empty list)\n');
+                expect(buffer.stdout).to.contain('<IT::>should throw');
+                expect(buffer.stdout).to.contain('<ERROR::>ErrorCall (Prelude.head: empty list)');
                 done();
             });
         });
