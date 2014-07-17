@@ -1,40 +1,55 @@
 (ns clojure.test.codewars
   (:refer-clojure :exclude [time])
   (:require
-   [clojure.test :refer :all :exclude [run-tests]]
+   [clojure.test :refer :all :exclude [run-tests with-test-out]]
+   [clojure.string]
    [clojure.stacktrace :as stack]))
+
+(defmacro with-test-out [& body]
+  `(->
+    (with-out-str ~@body)
+    (clojure.string/replace "\n" "<:LF:>\n")
+    (print)
+    clojure.test/with-test-out))
+
+(defn- print-context []
+  (when (seq *testing-contexts*)
+      (->> (testing-contexts-str) (str "<IT::>") println)))
+
+(defn- print-with-message [status {:keys [:message]}]
+  (if (string? message)
+    (println (str status message))
+    (println status)))
+
+(defn- expr-str [expression]
+  (if (instance? Throwable expression)
+    (with-out-str
+      (stack/print-cause-trace expression *stack-trace-depth*))
+    (pr-str expression)))
+
+(defn- print-expectations [{:keys [:expected :actual]}]
+  (println "expected:" (pr-str expected) "- actual:" (expr-str actual)))
 
 (defmulti codewars-report :type)
 
-(defmethod codewars-report :pass [m]
+(defmethod codewars-report :pass [_]
   (with-test-out
-    (when (seq *testing-contexts*)
-      (->> (testing-contexts-str) (str "<IT::>") println))
-    (-> "<PASSED::>Test Passed" println with-test-out)))
+    (print-context)
+    (println "<PASSED::>Test Passed")))
 
 (defmethod codewars-report :fail [m]
   (with-test-out
-    (when (seq *testing-contexts*)
-      (->> (testing-contexts-str) (str "<IT::>") println))
-    (print "<FAILED::>")
-    (when-let [message (:message m)] (print message "- "))
-    (print "expected:" (pr-str (:expected m)))
-    (println " actual:" (pr-str (:actual m))))
+    (print-context)
+    (print-with-message "<FAILED::>" m)
+    (print-expectations m))
   (flush)
   (System/exit 1))
 
 (defmethod codewars-report :error [m]
   (with-test-out
-    (when (seq *testing-contexts*)
-      (->> (testing-contexts-str) (str "<IT::>") println))
-    (print "<ERROR::>")
-    (when-let [message (:message m)] (print message "- "))
-    (print "expected:" (pr-str (:expected m)))
-    (println " actual: ")
-    (let [actual (:actual m)]
-      (if (instance? Throwable actual)
-        (stack/print-cause-trace actual *stack-trace-depth*)
-        (prn actual))))
+    (print-context)
+    (print-with-message "<ERROR::>" m)
+    (print-expectations m))
   (flush)
   (System/exit 1))
 
@@ -50,13 +65,12 @@
 (defmethod codewars-report :summary [_])
 
 (defmacro time
-  "Evaluates expr and prints the time it took.  Returns the value of expr."
   [expr]
   `(let [start# (System/nanoTime)
          ret# ~expr]
      (println (str "<COMPLETEDIN::>"
                    (/ (double (- (System/nanoTime) start#)) 1000000.0)
-                   " msecs"))
+                   " msecs <:LF:>"))
      ret#))
 
 (defmacro run-tests []

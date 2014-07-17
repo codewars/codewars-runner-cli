@@ -57,7 +57,7 @@ describe('clojure runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>add-1-to-1');
                 expect(buffer.stdout).to.contain('<IT::>arithmetic works');
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
                 done();
             });
@@ -74,7 +74,9 @@ describe('clojure runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>sad-path');
                 expect(buffer.stdout).to.contain('<IT::>won\'t work');
-                expect(buffer.stdout).to.contain('<FAILED::>bad math - expected: (= 2 1) actual: (not (= 2 1))\n');
+                expect(buffer.stdout).to.contain('<FAILED::>bad math');
+                expect(buffer.stdout).to.contain('expected: (= 2 1)');
+                expect(buffer.stdout).to.contain('actual: (not (= 2 1))');
                 done();
             });
         });
@@ -90,7 +92,7 @@ describe('clojure runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>printing');
                 expect(buffer.stdout).to.contain('yolo<IT::>foo/bar');
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
                 done();
             });
@@ -107,7 +109,9 @@ describe('clojure runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>exception');
                 expect(buffer.stdout).to.contain('<IT::>1 / 0');
-                expect(buffer.stdout).to.contain('<ERROR::>expected: (= 1 (/ 1 0)) actual: \njava.lang.ArithmeticException');
+                expect(buffer.stdout).to.contain('<ERROR::>');
+                expect(buffer.stdout).to.contain('expected: (= 1 (/ 1 0))');
+                expect(buffer.stdout).to.contain('actual: java.lang.ArithmeticException');
                 done();
             });
         });
@@ -126,7 +130,9 @@ describe('clojure runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>fast-fail');
                 expect(buffer.stdout).to.contain('<IT::>quit early');
-                expect(buffer.stdout).to.contain('<FAILED::>not true - expected: (= 2 1) actual: (not (= 2 1))\n');
+                expect(buffer.stdout).to.contain('<FAILED::>not true');
+                expect(buffer.stdout).to.contain('expected: (= 2 1)');
+                expect(buffer.stdout).to.contain('actual: (not (= 2 1))');
                 expect(buffer.stdout).to.not.contain("shouldn't happen");
                 expect(buffer.stdout).to.not.contain("can't get here");
                 done();
