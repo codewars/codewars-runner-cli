@@ -70,25 +70,14 @@ type Error <: Result
     meta::Dict
 end
 
-# Taken from Base.Test
-#
-# Allows Errors to be passed to `rethrow`:
-#
-#     try
-#         # ...
-#     catch e
-#         err = Error(expr, e, catch_backtrace(), Dict())
-#     end
-#
-#     # ...
-#     rethrow(err)
-#
-import Base.    error
-function showerror(io::IO, r::Error, backtrace)
-    bt = sprint(io->Base.show_backtrace(io, r.backtrace))
-    print(io, "$(format_assertion(r.expr))\n$(r.err)$(bt)")
+LF = "<:LF:>\n"
+
+function format_line(s...)
+    context = isempty(contexts) ? () : ("<IT::>$(contexts[end])",LF)
+    apply(string,tuple(context...,s...,LF))
 end
-showerror(io::IO, r::Error) = showerror(io, r, {})
+
+
 
 # A TestSuite collects the results of a series of tests, as well as some
 # information about the tests such as their file and description.
@@ -106,31 +95,6 @@ end
 
 pluralize(s::String, n::Number) = n == 1 ? s : string(s, "s")
 
-# Formats a FactCheck assertion (e.g. `fn(1) => 2`)
-#
-#     format_assertion(:(fn(1) => 2))
-#     # => ":(fn(1)) => 2"
-#
-function format_assertion(ex::Expr)
-    x, y = ex.args
-    "$(repr(x)) => $(repr(y))"
-end
-
-# Appends a line annotation to a string if the given Result has line information
-# in its `meta` dictionary.
-#
-#     format_line(Success(:(1 => 1), Dict()), "Success")
-#     # => "Success :: "
-#
-#     format_line(Success(:(1 => 1), {"line" => line_annotation}), "Success")
-#     # => "Success (line:10) :: "
-#
-function format_line(r::Result, s::String)
-    string(isempty(contexts) ? "" : "<IT::>$(contexts[end])\n", s)
-end
-
-format_value(r::Failure, s::String) = "$s [got $(repr(r.val))]"
-
 # Implementing Base.show(io::IO, t::SomeType) gives you control over the
 # printed representation of that type. For example:
 #
@@ -145,24 +109,27 @@ format_value(r::Failure, s::String) = "$s [got $(repr(r.val))]"
 #
 import Base.show
 
-function show(io::IO, f::Failure)
-    formatted = string("<FAILURE::>", format_assertion(f.expr))
-    formatted = format_line(f, formatted)
-    formatted = format_value(f,formatted)
-    print(io, formatted)
+function mistake(ex::Expr, actual)
+    x,y = ex.args
+    "$(repr(x)) - expected: $(repr(y)) actual: $(actual)$(LF)"
 end
 
+function show(io::IO, f::Failure)
+    print(io, format_line("<FAILURE::>", mistake(f.expr, f.val)))
+end
+
+import Base.error
 function show(io::IO, e::Error)
-    print(io, format_line(e, "<ERROR::>"))
-    showerror(io, e)
+    bt = replace(strip(sprint(io->Base.show_backtrace(io, e.backtrace)),'\n'), "\n", LF)
+    print(io, format_line("<ERROR::>", mistake(e.expr, e.err), bt))
 end
 
 function show(io::IO, s::Success)
-    print(io, format_line(s, "<PASSED::> $(format_assertion(s.expr))"))
+    print(io, format_line("<PASSED::>Test Passed"))
 end
 
 function format_suite(suite::TestSuite)
-    suite.desc != nothing ? "<DESCRIBE::>$(suite.desc)" : ""
+    suite.desc != nothing ? "<DESCRIBE::>$(suite.desc)$(LF)" : ""
 end
 
 # FactCheck core functions and macros
@@ -290,7 +257,7 @@ function facts(f::Function, desc)
     test_handler = make_handler(suite)
     push!(handlers, test_handler)
 
-    println(format_suite(suite))
+    print(format_suite(suite))
 
     f()
 
