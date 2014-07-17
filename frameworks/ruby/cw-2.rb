@@ -171,7 +171,7 @@ class Test
 
     def handle_error(ex)
       if ex.is_a? Exception
-        puts "<ERROR::>#{format_msg(ex.inspect)}<:LF:>n#{ex.backtrace.join('<:LF:>')}"
+        puts "<ERROR::>#{format_msg(ex.inspect)}<:LF:>\n#{ex.backtrace.join('<:LF:>')}"
       else
         puts "<ERROR::>#{format_msg(ex)}"
       end
