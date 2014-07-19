@@ -1,5 +1,6 @@
 package codewars.java;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -50,20 +51,20 @@ public class TempDir {
         });
     }
 
-    public static Path create(String dir, String prefix, String permissions) throws IOException {
+    public static File create(String dir, String prefix, String permissions) throws IOException {
         final Path tempDirPath = createTempDirectory(Paths.get(dir), prefix, posixPermissions(permissions));
         // TODO: check if permissions are null, and fall back to defaults set by umask
         deleteOnShutdown(tempDirPath);
-        return tempDirPath;
+        return tempDirPath.toFile();
     }
 
-    public static Path create(String prefix, String permissions) throws IOException {
+    public static File create(String prefix, String permissions) throws IOException {
         final Path tempDirPath = createTempDirectory(prefix, posixPermissions(permissions));
         deleteOnShutdown(tempDirPath);
-        return tempDirPath;
+        return tempDirPath.toFile();
     }
 
-    public static Path create(String prefix) throws IOException {
+    public static File create(String prefix) throws IOException {
         // TODO: get umask for user to figure out the default permissions here...
         return create(prefix, "rwx------");
     }
