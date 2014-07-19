@@ -18,18 +18,20 @@
                   (pr-str language)))))
 
 (defn- write-code! [language dir code]
-  ;; TODO: Check that file DNE before writing
-  (spit (io/file dir (infer/file-name "clojure" code))
-        code))
+  (let [base-name (infer/file-name "clojure" code)
+        file-name (io/file dir base-name)]
+    (if (.exists file-name)
+      (throw (UnsupportedOperationException.
+              (format "Could not write to file %s, because that file already exists.  Perhaps it already contains the setup or test fixture code?\ncode:\n%s" (pr-str base-name) code)))
+      (spit file-name code))))
 
 (defmethod handle "clojure"
   [{:keys [:setup :solution :fixture]}]
-  ;; TODO: TempDir should output a java.io.File
-  (let [dir (str (TempDir/create "clojure"))
+  (let [dir (TempDir/create "clojure")
         fixture-ns (->> fixture (infer/class-name "clojure") symbol)]
     (when setup (write-code! "clojure" dir setup))
-    (write-code! "clojure" dir solution)
     (write-code! "clojure" dir fixture)
+    (write-code! "clojure" dir solution)
     (pom/add-classpath dir)
     (require [fixture-ns])
     (codewars.clojure.test/run-tests fixture-ns)))
