@@ -6,26 +6,40 @@
            [java.net URLClassLoader]
            [javax.tools ToolProvider]
            [org.junit.runner JUnitCore]
-           [codewars.java CwRunListener]))
+           [codewars.java CwRunListener]
+           [java.io IOException]))
 
-(defn- write-code-and-load! [class-loader dir code]
-  (let [{:keys [:file-name :class-name]}
-        (util/write-code! "java" dir code)]
-    (-> (ToolProvider/getSystemJavaCompiler)
-        (.run nil nil nil
-              (into-array [(str file-name)])))
-    (Class/forName (str class-name) true class-loader)))
+(defn- compile! [& files]
+  ;; TODO: Add classpath option, other goodies
+  (let [compilation-result
+        (-> (ToolProvider/getSystemJavaCompiler)
+            (.run nil nil nil
+                  (into-array (map str files))))]
+    (if (zero? compilation-result)
+      0
+      (throw (IOException. "Java compilation error")))))
 
-(defmethod run "java"
-  [{:keys [:setup :fixture :solution]}]
-  (let [dir (TempDir/create "java")
-        class-loader (URLClassLoader/newInstance
-                      (into-array [(-> dir .toURI .toURL)]))
-        fixture-class (write-code-and-load!
-                       class-loader dir fixture)
-        runner (JUnitCore.)]
-    (when (not (nil? setup)) (write-code-and-load! class-loader dir setup))
-    (write-code-and-load! class-loader dir solution)
+(defn- load-class [dir class-name]
+  "Load a java class in a specified directory"
+  ;; TODO: Make the classpath include all the classes on the system classpath
+  (let [class-loader
+        (URLClassLoader/newInstance
+         (into-array [(-> dir .toURI .toURL)]))]
+    (Class/forName (name class-name) true class-loader)))
 
+(defn- run-junit-tests [fixture-class]
+  (let [runner (JUnitCore.)]
     (.addListener runner (CwRunListener.))
     (.run runner (into-array [fixture-class]))))
+
+(defmethod run "java"
+  [{:keys [:fixture :setup :solution]}]
+  (let [dir (TempDir/create "java")
+        fixture (util/write-code! "java" dir fixture)
+        setup (when (not (empty? setup)) (util/write-code! "java" dir setup))
+        solution (util/write-code! "java" dir solution)
+        files (for [{:keys [:file-name]} [fixture setup solution]
+                    :when (not (nil? file-name))]
+                file-name)]
+    (apply compile! files)
+    (->> fixture :class-name (load-class dir) run-junit-tests)))
