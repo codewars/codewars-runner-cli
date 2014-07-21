@@ -42,6 +42,7 @@
         (format "Could not write to file %s, because that file already exists.  Perhaps it already contains the setup or test fixture code?\ncode:\n%s" (pr-str base-name) code)))
       ;; else
       (do
+        (-> file-name .getParentFile .mkdirs)
         (spit file-name code)
         {:file-name file-name
          :class-name class-name}))))
