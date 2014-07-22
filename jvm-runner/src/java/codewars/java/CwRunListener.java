@@ -10,18 +10,18 @@ public class CwRunListener extends RunListener
     public void testFailure(Failure failure)
     {
         failed = true;
-        System.out.println(String.format("<FAILED::>%s", formatMessage(failure.getMessage())));
+        System.out.println(String.format("<FAILED::>%s<:LF:>", formatMessage(failure.getMessage())));
     }
     public void testStarted(Description description)
     {
-        System.out.println(String.format("<DESCRIBE::>%s", formatMessage(description.getDisplayName())));
+        System.out.println(String.format("<DESCRIBE::>%s<:LF:>", formatMessage(description.getDisplayName())));
         failed = false;
     }
     public void testFinished(Description description)
     {
         if(!failed)
         {
-            System.out.println("<PASSED::>Test Passed");
+            System.out.println("<PASSED::>Test Passed<:LF:>");
         }
     }
     private static String formatMessage(String s)
