@@ -1,5 +1,5 @@
 (ns codewars.runner.clojure
-  (:require [codewars.runner :refer [run]]
+  (:require [codewars.runner :refer [solution-only full-project]]
             [codewars.util :as util]
             [codewars.clojure.test]
             [clojure.java.io :as io]
@@ -26,16 +26,24 @@
     (let [classloaders (classloader-hierarchy)]
       (if-let [cl (last (filter dp/addable-classpath? classloaders))]
         (add-classpath jar-or-dir cl)
-        (throw (IllegalStateException. (str "Could not find a suitable classloader to modify from "
-                                            classloaders)))))))
+        (throw (IllegalStateException. (str "Could not find a suitable classloader to modify from " classloaders)))))))
 
+(defmethod solution-only "clojure"
+  [{:keys [:setup :solution]}]
+  (let [dir (TempDir/create "clojure")]
+    (when (not (empty? setup)) (util/write-code! "clojure" dir setup))
+    (add-classpath dir)
+    (->> solution
+         (util/write-code! "clojure" dir)
+         :class-name
+         require)))
 
-(defmethod run "clojure"
-  [{:keys [:setup :solution :fixture] :as opts}]
+(defmethod full-project "clojure"
+  [{:keys [:setup :solution :fixture]}]
   (let [dir (TempDir/create "clojure")
         {fixture-ns :class-name}
         (util/write-code! "clojure" dir fixture)]
-    (when setup (util/write-code! "clojure" dir setup))
+    (when (not (empty? setup)) (util/write-code! "clojure" dir setup))
     (util/write-code! "clojure" dir solution)
     (add-classpath dir)
     (require fixture-ns)
