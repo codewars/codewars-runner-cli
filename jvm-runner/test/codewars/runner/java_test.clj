@@ -1,10 +1,11 @@
 (ns codewars.runner.java-test
   (:require [clojure.test :refer :all]
             [codewars.core :refer [-main]]
-            [cheshire.core :as json]
-            [codewars.runner :refer [run]])
-  (:import [org.apache.commons.io.output WriterOutputStream]
-           [java.io PrintStream ByteArrayOutputStream]))
+            [cheshire.core :as json])
+  (:import [java.io PrintStream ByteArrayOutputStream]))
+
+(defn subseq? [a b]
+  (some #{a} (partition (count a) 1 b)))
 
 (defmacro with-java-out-str [& body]
   `(let [original-out# (PrintStream. (. System out))
@@ -39,3 +40,25 @@
        {:language "java"
         :solution "public class Hello {public static void main() {System.out.print(\"Hellooo!\");}}"})
       (is (= "Hellooo!" (with-java-out-str (-main)))))))
+
+(deftest java-test-fixture
+  (testing "-main can handle a junit test"
+    (with-in-str
+      (json/generate-string
+       {:language "java"
+        :solution "public class Solution {
+                   public Solution(){}
+                   public int testthing(){return 3;}}",
+        :fixture "import static org.junit.Assert.assertEquals;
+                  import org.junit.Test;
+                  import org.junit.runners.JUnit4;
+                  public class TestFixture {
+                     public TestFixture(){}
+                     @Test public void myTestFunction(){
+                        Solution s = new Solution();
+                         assertEquals(\"wow\", 3, s.testthing());
+                         System.out.println(\"test out\");}}"})
+      (let [test-out-string (with-java-out-str (-main))]
+        (is (.contains test-out-string "<DESCRIBE::>myTestFunction(TestFixture)"))
+        (is (.contains test-out-string "test out"))
+        (is (.contains test-out-string "<PASSED::>Test Passed<:LF:>"))))))
