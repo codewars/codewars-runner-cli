@@ -14,6 +14,36 @@ This will create a JAR file `target/jvm-runner-*-standalone.jar` relative to the
 
 The runner can be run via `lein` or via the compiled JAR.
 
+By design, the JVM runner accepts JSONs with the same API as the node.js runner.  These are handed as strings in _stdin_.
+
+JSONs should conform to the following (JSON schema)[2]:
+
+```json
+{
+    "title": "CodeWars Runner Schema",
+    "type": "object",
+    "properties": {
+	"language": {
+            "description": "The language the kata was written in",
+            "type": "string"
+	},
+        "solution": {
+            "description": "The codewars kata solution code",
+            "type": "string"
+        },
+        "fixture": {
+            "description": "The test suite for the solution code",
+            "type": "string"
+        },
+        "setup": {
+            "description": "Additional setup code",
+            "type": "string"
+        }
+    },
+    "required": ["language", "solution"]
+}
+```
+
 #### Clojure
 
 - Using leiningen, no test fixture
@@ -27,6 +57,25 @@ The runner can be run via `lein` or via the compiled JAR.
       ```bash
       java -jar target/jvm-runner-*-standalone.jar <<< \
       '{"language": "clojure", "solution": "(println \"42\")"}'
+      ```
+
+- Using leiningen, simple test fixture
+
+      ```bash
+      lein run <<< '{"language": "clojure", 
+                     "solution": "(ns a) (defn b [] 1)", 
+                     "fixture": "(ns test (:use [a] [clojure.test])) 
+                                 (deftest b-test (is (= 1 (b))))"}'
+      ```
+
+- Using JAR, simple test fixture
+
+      ```bash
+      java -jar target/jvm-runner-*-standalone.jar <<< \
+      '{"language": "clojure", 
+        "solution": "(ns a) (defn b [] 1)", 
+        "fixture": "(ns test (:use [a] [clojure.test])) 
+                    (deftest b-test (is (= 1 (b))))"}'
       ```
 
 #### Java
@@ -95,3 +144,4 @@ This will generate a `pom.xml` file suitable for use with maven and other tools 
 Copyright © 2014 Matthew Wampler-Doty
 
 [1]: http://leiningen.org/
+[2]: http://json-schema.org/
