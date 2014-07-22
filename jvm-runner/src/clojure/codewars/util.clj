@@ -25,6 +25,7 @@
   (let [{:keys [:extension]} (get language-data language)]
     (-> class-name
         name
+        (clojure.string/replace "-" "_")
         ;; TODO: not platform independent...
         (clojure.string/replace "." "/")
         (str "." extension)
