@@ -1,19 +1,8 @@
 (ns codewars.runner.java-test
   (:require [clojure.test :refer :all]
             [codewars.core :refer [-main]]
-            [cheshire.core :as json])
-  (:import [java.io PrintStream ByteArrayOutputStream]))
-
-(defn subseq? [a b]
-  (some #{a} (partition (count a) 1 b)))
-
-(defmacro with-java-out-str [& body]
-  `(let [original-out# (PrintStream. (. System out))
-         byte-out# (ByteArrayOutputStream.)]
-     (-> byte-out# (PrintStream.) System/setOut)
-     ~@body
-     (System/setOut original-out#)
-     (.toString byte-out#)))
+            [codewars.test.utils :refer [with-java-out-str]]
+            [cheshire.core :as json]))
 
 (deftest java-basic
   (testing "-main can handle a very basic java solution and fixture"
