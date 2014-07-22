@@ -74,8 +74,8 @@
   `(let [start# (System/nanoTime)
          ret# ~expr]
      (println (str "<COMPLETEDIN::>"
-                   (- (System/nanoTime) start#)
-                   " nanosecs<:LF:>"))
+                   (-> (System/nanoTime) (- start#) double (/ 1000000.0))
+                   " ms<:LF:>"))
      ret#))
 
 (defn run-tests [ & namespaces ]
