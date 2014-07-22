@@ -12,8 +12,8 @@
      (System/setOut original-out#)
      (.toString byte-out#)))
 
-(defmacro with-out-str-not-threadsafe
-  "A version of clojure.core/with-out-str that is not threadsafe"
+(defmacro with-out-str-not-thread-safe
+  "A version of clojure.core/with-out-str that is not thread-safe"
   [& body]
   `(let [s# (StringWriter.)]
      (with-redefs [*out* s#]

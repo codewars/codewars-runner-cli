@@ -1,9 +1,10 @@
 (ns codewars.runner.clojure-test
   (:require [clojure.test :refer :all]
-            [codewars.core :refer [-main]]
-            [codewars.test.utils :refer [with-out-str-not-threadsafe]]
+            [codewars.core :refer [-main] :as core]
+            [codewars.test.utils :refer [with-out-str-not-thread-safe]]
             [cheshire.core :as json]
-            [codewars.clojure.test]))
+            [codewars.clojure.test])
+  (:import [java.util.concurrent TimeoutException]))
 
 (deftest basic-clojure
   (testing "-main can handle a very basic clojure solution and fixture"
@@ -53,7 +54,7 @@
        {:language "clojure"
         :solution "(print \"Oh no, here it comes again\")"})
       (is (= "Oh no, here it comes again"
-             (with-out-str-not-threadsafe (-main)))))))
+             (with-out-str-not-thread-safe (-main)))))))
 
 (deftest clojure-solution-and-setup
   (testing "-main will just run solution code and read correctly from setup code"
@@ -63,7 +64,7 @@
         :setup "(ns heaven.and.hell) (defn first-track [] (print \"So it's on and on and on, oh it's on and on and on\"))"
         :solution "(require 'heaven.and.hell) (heaven.and.hell/first-track)"})
       (is (= "So it's on and on and on, oh it's on and on and on"
-             (with-out-str-not-threadsafe (-main)))))))
+             (with-out-str-not-thread-safe (-main)))))))
 
 (deftest clojure-solution-fixture-and-setup
   (testing "-main can handle a solution, fixture, and setup code in clojure"
@@ -79,3 +80,12 @@
                   (deftest maiden-rocks (is (= (maiden-greatest-hits/fear-of-the-dark) (fear.of.the.dark/lyric))))"})
       (is (= {:type :summary, :fail 0, :error 0, :pass 1, :test 1}
              (-main))))))
+
+(deftest clojure-timeout
+  (testing "-main will timeout if a kata solution takes too long"
+    (with-in-str
+      (json/generate-string
+       {:language "clojure"
+        :solution "(Thread/sleep 50000)"})
+      (with-redefs [core/fail #(throw %)]
+        (is (thrown? TimeoutException (-main)))))))
