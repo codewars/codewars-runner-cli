@@ -1,6 +1,7 @@
 (ns codewars.runner.clojure-test
   (:require [clojure.test :refer :all]
             [codewars.core :refer [-main]]
+            [codewars.test.utils :refer [with-out-str-not-threadsafe]]
             [cheshire.core :as json]
             [codewars.clojure.test]))
 
@@ -52,7 +53,7 @@
        {:language "clojure"
         :solution "(print \"Oh no, here it comes again\")"})
       (is (= "Oh no, here it comes again"
-             (with-out-str (-main)))))))
+             (with-out-str-not-threadsafe (-main)))))))
 
 (deftest clojure-solution-and-setup
   (testing "-main will just run solution code and read correctly from setup code"
@@ -62,7 +63,7 @@
         :setup "(ns heaven.and.hell) (defn first-track [] (print \"So it's on and on and on, oh it's on and on and on\"))"
         :solution "(require 'heaven.and.hell) (heaven.and.hell/first-track)"})
       (is (= "So it's on and on and on, oh it's on and on and on"
-             (with-out-str (-main)))))))
+             (with-out-str-not-threadsafe (-main)))))))
 
 (deftest clojure-solution-fixture-and-setup
   (testing "-main can handle a solution, fixture, and setup code in clojure"
