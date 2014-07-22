@@ -30,13 +30,12 @@
 
 (defmethod solution-only "clojure"
   [{:keys [:setup :solution]}]
-  (let [dir (TempDir/create "clojure")]
+  (let [dir (TempDir/create "clojure")
+        solution-file (io/file dir "solution.clj")]
     (when (not (empty? setup)) (util/write-code! "clojure" dir setup))
+    (spit solution-file solution)
     (add-classpath dir)
-    (->> solution
-         (util/write-code! "clojure" dir)
-         :class-name
-         require)))
+    (load-file (str solution-file))))
 
 (defmethod full-project "clojure"
   [{:keys [:setup :solution :fixture]}]

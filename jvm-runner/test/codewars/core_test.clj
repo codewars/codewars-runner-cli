@@ -26,15 +26,24 @@
       (is (= {:type :summary, :fail 0, :error 0, :pass 0, :test 0}
              (-main))))))
 
-(deftest basic-java
+(deftest java-basic
   (testing "-main can handle a very basic java solution and fixture"
-    (with-in-str (json/generate-string
-                  {:language "java"
-                   :solution "class Foo {}"
-                   :fixture "class Bar {}"})
+    (with-in-str
+      (json/generate-string
+       {:language "java"
+        :solution "class Foo {}"
+        :fixture "class Bar {}"})
       (is (= org.junit.runner.Result (class (-main)))))))
 
-(deftest simple-clojure
+(deftest java-solution-only
+  (testing "-main can handle a java solution without a fixture"
+    (with-in-str
+      (json/generate-string
+       {:language "java"
+        :solution "public class FooFighters {public static int main() {return 1;}}"})
+      (is (= 1 (-main))))))
+
+(deftest clojure-simple
   (testing "-main can handle a simple clojure solution and fixture"
     (with-in-str
       (json/generate-string
@@ -64,3 +73,23 @@
              (with-redefs
                [codewars.clojure.test/fail (constantly nil)]
                (-main)))))))
+
+
+(deftest clojure-solution-only
+  (testing "-main will just run solution code if a fixture is not present"
+    (with-in-str
+      (json/generate-string
+       {:language "clojure"
+        :solution "(print \"Oh no, here it comes again\")"})
+      (is (= "Oh no, here it comes again"
+             (with-out-str (-main)))))))
+
+(deftest clojure-solution-and-setup
+  (testing "-main will just run solution code and read correctly from setup code"
+    (with-in-str
+      (json/generate-string
+       {:language "clojure"
+        :setup "(ns heaven.and.hell) (defn first-track [] (print \"So it's on and on and on, oh it's on and on and on\"))"
+        :solution "(require 'heaven.and.hell) (heaven.and.hell/first-track)"})
+      (is (= "So it's on and on and on, oh it's on and on and on"
+             (with-out-str (-main)))))))
