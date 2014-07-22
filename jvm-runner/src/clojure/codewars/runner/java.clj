@@ -32,7 +32,18 @@
     (.addListener runner (CwRunListener.))
     (.run runner (into-array [fixture-class]))))
 
-(defmethod run "java"
+(defmethod solution-only "java"
+  [{:keys [:setup :solution]}]
+  (let [dir (TempDir/create "java")
+        setup (when (not (empty? setup)) (util/write-code! "java" dir setup))
+        solution (util/write-code! "java" dir solution)
+        files (for [{:keys [:file-name]} [setup solution]
+                    :when (not (nil? file-name))]
+                file-name)]
+    (apply compile! files)
+    (->> solution :class-name (load-class dir) .main)))
+
+(defmethod full-project "java"
   [{:keys [:fixture :setup :solution]}]
   (let [dir (TempDir/create "java")
         fixture (util/write-code! "java" dir fixture)
