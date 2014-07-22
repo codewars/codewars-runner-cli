@@ -10,18 +10,16 @@
            [java.io IOException]))
 
 (defn- compile! [& files]
-  ;; TODO: Add classpath option, other goodies
   (let [compilation-result
         (-> (ToolProvider/getSystemJavaCompiler)
-            (.run nil nil nil
-                  (into-array (map str files))))]
+            ;; TODO: write compilation errors somewhere?
+            (.run nil nil nil (into-array (map str files))))]
     (if (zero? compilation-result)
       0
       (throw (IOException. "Java compilation error")))))
 
 (defn- load-class [dir class-name]
   "Load a java class in a specified directory"
-  ;; TODO: Make the classpath include all the classes on the system classpath
   (let [class-loader
         (URLClassLoader/newInstance
          (into-array [(-> dir .toURI .toURL)]))]
