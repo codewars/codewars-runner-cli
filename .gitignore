@@ -17,3 +17,5 @@ frameworks/java/CwTestRunner.class
 *.pyc
 project.clj
 target/*
+.idea/
+.lein-repl-history
