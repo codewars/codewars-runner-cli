@@ -44,68 +44,61 @@ JSONs should conform to the following (JSON schema)[2]:
 }
 ```
 
+### Three Ways of Running the Runner
+
+1. Use `lein run`:
+
+```bash
+lein run <<< '{"language": "clojure", "solution": "(println 42)"}'
+```
+      
+2. Build an *uberjar* and run that with java:
+
+```bash
+lein do clean, uberjar
+TIMEOUT=2000 java -jar target/jvm-runner-*-standalone.jar <<< \
+'{"language": "clojure", "solution": "(println 42)"}'
+```
+
+3. Build the Docker container, and run that:
+
+```bash
+docker build -t codewars/jvm-runner .
+docker run -i -a stdin -a stdout -a stderr --rm codewars/jvm-runner <<< \
+'{"language": "clojure", "solution": "(println \"42\")"}'
+```
+
 #### Clojure
 
-- Using leiningen, no test fixture
+Examples:
 
-      ```bash
-      lein run <<< '{"language": "clojure", "solution": "(println \"42\")"}'
-      ```
+- No test fixture
 
-- Using JAR, no test fixture
+```bash
+lein run <<< '{"language": "clojure", "solution": "(println 42)"}'
+```
 
-      ```bash
-      java -jar target/jvm-runner-*-standalone.jar <<< \
-      '{"language": "clojure", "solution": "(println \"42\")"}'
-      ```
+- Simple test fixture
 
-- Using leiningen, simple test fixture
-
-      ```bash
-      lein run <<< '{"language": "clojure", 
-                     "solution": "(ns a) (defn b [] 1)", 
-                     "fixture": "(ns test (:use [a] [clojure.test])) 
-                                 (deftest b-test (is (= 1 (b))))"}'
-      ```
-
-- Using JAR, simple test fixture
-
-      ```bash
-      java -jar target/jvm-runner-*-standalone.jar <<< \
-      '{"language": "clojure", 
-        "solution": "(ns a) (defn b [] 1)", 
-        "fixture": "(ns test (:use [a] [clojure.test])) 
-                    (deftest b-test (is (= 1 (b))))"}'
-      ```
+```bash
+java -jar target/jvm-runner-*-standalone.jar <<< \
+'{"language": "clojure", 
+"solution": "(ns a) (defn b [] 1)", 
+"fixture": "(ns test (:use [a] [clojure.test])) 
+            (deftest b-test (is (= 1 (b))))"}'
+```
 
 #### Java
 
-- Using leiningen, no test fixture
+- No test fixture
 
-
-      ```bash
-      lein run <<< '{
-        "language": "java", 
-        "solution": 
-          "public class Solution { 
-             public static void main() {
-               System.out.println(\"42\");
-             }
-           }"}'
-       ```
-
-- Using JAR, no test fixture
-
-      ```bash
-      java -jar target/jvm-runner-*-standalone.jar <<< '{
-        "language": "java", 
-        "solution": 
-          "public class Solution { 
-             public static void main() {
-               System.out.println(\"42\");
-             }
-           }"}'
-      ```
+```bash
+lein run <<< '{
+  "language": "java", 
+  "solution": "public class Solution { 
+                 public static void main() {
+                   System.out.println(\"42\");}}"}'
+```
 
 #### Timeout
 
@@ -114,14 +107,14 @@ The JVM runner is programmed to exit after the code has run for a specified time
 	lein run <<< '{"language": "clojure", "solution": "(Thread/sleep 5000) (println :ok)"}'
 	# Exits with exit code 1 after ~2 seconds
 
-The default can be overidden with an environement variable like so:
+The default can be overidden with an environement variable:
 
 	TIMEOUT=10000 lein run <<< '{"language": "clojure", "solution": "(Thread/sleep 5000) (println :ok)"}'
 	# Exits with exit code 0 and prints ":ok"
+	
+Note that if you are not in this directory and running the *uberjar*, you will have to set the `TIMEOUT` environment variable manually.
 
 ## Testing
-
-Run:
 
 	lein test
 
@@ -138,6 +131,7 @@ It is often desirable to use an IDE like Eclipse or IntelliJ for Java developmen
 	lein pom
 
 This will generate a `pom.xml` file suitable for use with maven and other tools that plug into maven.
+
 
 ## License
 
