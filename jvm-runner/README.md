@@ -4,7 +4,7 @@ A codewars runner for JVM based languages.
 
 ## Building
 
-To compile, first make sure you have JDK ≥ 1.8.  Then type:
+To compile, first make sure you have JDK ≥ 1.8 and [leiningen](1) installed.  Then type:
 
 	lein uberjar
 
@@ -62,3 +62,6 @@ The runner can be run via `lein` or via the compiled JAR.
 ## License
 
 Copyright © 2014 Matthew Wampler-Doty
+
+-------------
+[1]: http://leiningen.org/
