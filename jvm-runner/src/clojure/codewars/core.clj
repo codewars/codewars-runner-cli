@@ -8,10 +8,16 @@
   (:import [java.util.concurrent TimeoutException])
   (:gen-class))
 
+(defn- fail [e]
+  (binding [*out* *err*]
+    (println (str "<ERROR::>" (.getMessage e) "<:LF:>")))
+  (System/exit 1))
+
 (defn -main
   "Listens to *in* for a JSON message, parses it and calls the appropriate runner"
   []
-  (let [t (-> env :timeout Integer/parseInt)
+  (let [ms (-> env :timeout Integer/parseInt)
         input (json/parse-stream *in* true)]
-    ;; TODO: handle exceptions and run System/exit
-      (with-timeout t (run input))))
+    (try
+      (with-timeout ms (run input))
+      (catch Exception e (fail e)))))

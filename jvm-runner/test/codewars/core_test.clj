@@ -1,6 +1,6 @@
 (ns codewars.core-test
   (:require [clojure.test :refer :all]
-            [codewars.core :refer [-main]]
+            [codewars.core :refer [-main] :as core]
             [cheshire.core :as json]
             [codewars.runner :refer [run]]))
 
@@ -13,4 +13,5 @@
 (deftest nonsense-language
   (testing "An illegal argument exception will be emitted by main if an invalid language is passed"
     (with-in-str "{\"language\": \"blorg\"}"
-      (is (thrown? IllegalArgumentException (-main))))))
+      (with-redefs [core/fail #(throw %)]
+        (is (thrown? IllegalArgumentException (-main)))))))
