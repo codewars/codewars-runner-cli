@@ -41,7 +41,11 @@
                     :when (not (nil? file-name))]
                 file-name)]
     (apply compile! files)
-    (->> solution :class-name (load-class dir) .main)))
+    (-> solution
+        :class-name
+        (->> (load-class dir))
+        (.getMethod "main" nil)
+        (.invoke nil nil))))
 
 (defmethod full-project "java"
   [{:keys [:fixture :setup :solution]}]
