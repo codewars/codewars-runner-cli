@@ -8,6 +8,10 @@
   (:import [java.util.concurrent TimeoutException])
   (:gen-class))
 
+(defn- flush-out [val]
+  (flush)
+  val)
+
 (defn- fail [e]
   (binding [*out* *err*]
     (println (str "<ERROR::>" (.getMessage e) "<:LF:>")))
@@ -19,5 +23,5 @@
   (let [ms (-> env :timeout Integer/parseInt)
         input (json/parse-stream *in* true)]
     (try
-      (with-timeout ms (run input))
+      (flush-out (with-timeout ms (run input)))
       (catch Exception e (fail e)))))
