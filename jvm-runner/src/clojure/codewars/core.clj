@@ -15,7 +15,7 @@
 
 (defn -main
   "Listens to *in* for a JSON message, parses it and calls the appropriate runner"
-  []
+  [& _]
   (let [ms (-> env :timeout Integer/parseInt)
         input (json/parse-stream *in* true)]
     (try
