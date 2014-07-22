@@ -57,7 +57,12 @@ The runner can be run via `lein` or via the compiled JAR.
              }
            }"}'
       ```
-      
+
+## Testing
+
+Simply run:
+
+	lein test      
 
 ## License
 
