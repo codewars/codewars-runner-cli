@@ -18,17 +18,23 @@ The runner can be run via `lein` or via the compiled JAR.
 
 - Using leiningen, no test fixture
 
+      ```bash
       lein run <<< '{"language": "clojure", "solution": "(println \"42\")"}'
+      ```
 
 - Using JAR, no test fixture
 
+      ```bash
       java -jar target/jvm-runner-*-standalone.jar <<< \
       '{"language": "clojure", "solution": "(println \"42\")"}'
+      ```
 
 #### Java
 
 - Using leiningen, no test fixture
 
+
+      ```bash
       lein run <<< '{
         "language": "java", 
         "solution": 
@@ -37,9 +43,11 @@ The runner can be run via `lein` or via the compiled JAR.
                System.out.println(\"42\");
              }
            }"}'
+       ```
 
 - Using JAR, no test fixture
 
+      ```bash
       java -jar target/jvm-runner-*-standalone.jar <<< '{
         "language": "java", 
         "solution": 
@@ -48,6 +56,7 @@ The runner can be run via `lein` or via the compiled JAR.
                System.out.println(\"42\");
              }
            }"}'
+      ```
       
 
 ## License
