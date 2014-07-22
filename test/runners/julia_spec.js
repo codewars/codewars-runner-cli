@@ -54,7 +54,7 @@ describe('julia runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Succeeding examples');
                 expect(buffer.stdout).to.contain('<IT::>are as they seem');
-                expect(buffer.stdout).to.contain('<PASSED::> 1 => 1');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 done();
             });
         });
@@ -80,7 +80,7 @@ describe('julia runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Can pull solution code');
                 expect(buffer.stdout).to.contain('<IT::>and it increments stuff');
-                expect(buffer.stdout).to.contain('<PASSED::> :(inc(1)) => 2');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 done();
             });
         });
@@ -91,8 +91,8 @@ describe('julia runner', function () {
                     'module Solution',
                     'export inc',
                     'function inc(x)',
-                        'println("Yolo")',
-                        'return x + 1',
+                    'println("Yolo")',
+                    'return x + 1',
                     'end',
                     'end'
                 ].join('\n'),
@@ -110,7 +110,7 @@ describe('julia runner', function () {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Can pull solution code');
                 expect(buffer.stdout).to.contain('Yolo\n');
                 expect(buffer.stdout).to.contain('<IT::>and it prints and increments stuff');
-                expect(buffer.stdout).to.contain('<PASSED::> :(inc(1)) => 2');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                 done();
             });
         });
@@ -133,7 +133,7 @@ describe('julia runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Bad times');
                 expect(buffer.stdout).to.contain('<IT::>are here to stay');
-                expect(buffer.stdout).to.contain('<FAILURE::>1 => 2 [got 1]');
+                expect(buffer.stdout).to.contain('<FAILURE::>1 - expected: 2 actual: 1');
                 done();
             });
         });
@@ -158,7 +158,7 @@ describe('julia runner', function () {
                 expect(buffer.stdout).to.contain('<IT::>This is unimaginable!');
                 expect(buffer.stdout).to.contain('<ERROR::>');
                 expect(buffer.stdout).to.contain('DomainError()');
-                expect(buffer.stdout).to.contain('\n in sqrt at math.jl');
+                expect(buffer.stdout).to.contain(' in sqrt at math.jl');
                 done();
             });
         });
