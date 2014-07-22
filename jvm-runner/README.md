@@ -63,5 +63,4 @@ The runner can be run via `lein` or via the compiled JAR.
 
 Copyright © 2014 Matthew Wampler-Doty
 
--------------
 [1]: http://leiningen.org/
