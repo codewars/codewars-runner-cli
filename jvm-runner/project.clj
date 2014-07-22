@@ -11,6 +11,7 @@
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
   :env {:timeout "2000"}
-  :profiles {:uberjar {:aot :all}
-             :env {:timeout "2000"}}
+  :profiles {:uberjar {:aot :all
+                       :omit-source true
+                       :javac-options ["-g:none"]}}
   :main codewars.core)
