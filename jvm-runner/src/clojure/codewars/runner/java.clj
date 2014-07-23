@@ -1,5 +1,5 @@
-(ns codewars.runner
-  (:require [codewars.runner :refer [run]]
+(ns codewars.runner.java
+  (:require [codewars.runner :refer [solution-only full-project]]
             [codewars.clojure.test]
             [clojure.java.io :as io]
             [codewars.util :refer [write-code!]])
