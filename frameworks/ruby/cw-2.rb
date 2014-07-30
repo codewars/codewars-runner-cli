@@ -1,4 +1,9 @@
-Kernel.freeze
+require 'json'
+require 'date'
+require 'forwardable'
+require 'delegate'
+require 'set'
+require 'uri'
 
 class StandardError
   # cleans the backtrace so that it doesn't contain a ton of information that would likely confuse users.
