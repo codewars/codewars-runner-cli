@@ -1,4 +1,4 @@
-(defproject jvm-runner "0.1.0-SNAPSHOT"
+(defproject jvm-runner "0.1.1"
   :description "JVM Runner for codewars"
   :url "http://www.codewars.com/"
   :javac-target "1.8"
@@ -11,4 +11,7 @@
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
   :env {:timeout "2000"}
+  :profiles {:uberjar {:aot :all
+                       :omit-source true
+                       :javac-options ["-g:none"]}}
   :main codewars.core)
