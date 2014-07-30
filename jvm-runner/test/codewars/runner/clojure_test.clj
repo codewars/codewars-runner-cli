@@ -86,6 +86,7 @@
     (with-in-str
       (json/generate-string
        {:language "clojure"
-        :solution "(Thread/sleep 50000)"})
+        :solution "(println \"...Sleeping deeply...\")
+                   (Thread/sleep 50000)"})
       (with-redefs [core/fail #(throw %)]
         (is (thrown? TimeoutException (-main)))))))
