@@ -34,6 +34,18 @@ describe( 'python runner', function(){
                 done();
             });
         });
+        it( 'should handle a basic setup', function(done){
+            runner.run({language: 'python',
+                    solution: 'a = 1',
+                    setup: 'b = 2',
+                    fixture: 'test.assert_equals(b, 2)',
+                    testFramework: 'cw-2'},
+                function(buffer){
+                    console.log(buffer);
+                    expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+                    done();
+                });
+        });
         it( 'should handle a failed assertion', function(done){
             runner.run({language: 'python',
                         solution: 'a = 1',
