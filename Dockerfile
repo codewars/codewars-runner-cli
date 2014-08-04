@@ -47,10 +47,21 @@ RUN apt-get install -y mono-csharp-shell --fix-missing
 
 # Install Coffeescript
 RUN npm -g install coffee-script
+
+# Install Node testing frameworks
 RUN npm -g install chai
 RUN npm -g install mocha
 
+# Install additional node frameworks
+RUN npm install immutable
+
+# Install Lua
+RUN apt-get install -y lua5.2
+
 # Install Python 3
+
+# Install Additional Python libraries
+RUN sudo apt-get install -y python-numpy python-scipy python-pandas
 
 # Install Java 8
 # RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
