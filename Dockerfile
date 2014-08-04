@@ -60,6 +60,9 @@ RUN apt-get install -y lua5.2
 
 # Install Python 3
 
+# Install Additional Python libraries
+RUN sudo apt-get install -y python-numpy python-scipy python-pandas
+
 # Install Java 8
 # RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
 RUN add-apt-repository ppa:webupd8team/java 
