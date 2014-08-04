@@ -40,7 +40,6 @@ RUN ln /usr/bin/ruby2.0 /usr/bin/ruby
 
 ## install bundler
 RUN gem2.0 install rspec --no-ri --no-rdoc
-#RUN gem2.0 install rspec-its --no-ri --no-rdoc
 
 #RUN gem install minitest --no-ri --no-rdoc
 
@@ -148,6 +147,8 @@ RUN npm install redis
 RUN gem2.0 install redis --no-ri --no-rdoc
 RUN pip install redis
 
+# Install Racket
+RUN apt-get -y install racket
 
 # ADD cli-runner and install node deps
 ADD . /codewars
