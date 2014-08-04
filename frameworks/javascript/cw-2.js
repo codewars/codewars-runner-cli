@@ -270,7 +270,8 @@ try
         // additional code is injected and line numbers will not match.
         trace: function (ex)
         {
-            return (ex.stack || ex.toString())
+            return (ex.stack || ex.toString() || '')
+                .toString()
                 // remove file names (ie: (/cli-runner/...))
                 .replace(/\s\(.*\)/g, '')
                 // remove at [eval] statements
