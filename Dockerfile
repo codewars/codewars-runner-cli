@@ -39,11 +39,20 @@ RUN rm /usr/bin/ruby
 RUN ln /usr/bin/ruby2.0 /usr/bin/ruby
 
 ## install bundler
-RUN gem install rspec --no-ri --no-rdoc
+RUN gem2.0 install rspec --no-ri --no-rdoc
+
 #RUN gem install minitest --no-ri --no-rdoc
+
+# Install additional gems
+
+RUN gem2.0 install rails --no-ri --no-rdoc
+#RUN gem2.0 install mongoid --no-ri --no-rdoc
 
 # Install Mono
 RUN apt-get install -y mono-csharp-shell --fix-missing
+
+# Install F#
+RUN apt-get install -y fsharp
 
 # Install Coffeescript
 RUN npm -g install coffee-script
@@ -99,6 +108,15 @@ RUN chmod a+x /usr/bin/julia
 
 # Install erlang
 RUN apt-get -y install erlang
+
+RUN apt-get -y install php5-cli
+
+# Install MongoDB
+#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
+#    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list && \
+#    apt-get update && \
+#    apt-get install mongodb-org
+
 
 # ADD cli-runner and install node deps
 ADD . /codewars
