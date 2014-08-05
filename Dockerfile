@@ -109,14 +109,8 @@ RUN chmod a+x /usr/bin/julia
 # Install erlang
 RUN apt-get -y install erlang
 
-# Install php
+# Install PHP
 RUN apt-get -y install php5-cli
-
-# Install Go
-RUN apt-get -y install golang
-
-# Install TypeScript
-RUN npm -g install typescript
 
 # Install MongoDB
 #RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
@@ -124,11 +118,20 @@ RUN npm -g install typescript
 #    apt-get update && \
 #    apt-get install mongodb-org
 
+# Install GoLang
+WORKDIR /tmp
+RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
+RUN ./godeb install 1.3
+RUN rm godeb
+
+# Install TypeScript
+RUN npm -g install typescript
 
 # ADD cli-runner and install node deps
 ADD . /codewars
 WORKDIR /codewars
 RUN npm install
+RUN mocha -t 5000 test/*
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
