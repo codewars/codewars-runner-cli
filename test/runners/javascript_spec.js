@@ -82,7 +82,7 @@ describe( 'javascript runner', function(){
                                     'it("test2", function(){ Test.expect(true)});})',
                                 testFramework: 'cw-2'}, function(buffer) {
                         expect(buffer.stdout).to.contain('<ERROR::>');
-                        expect(buffer.stdout).to.contain('\\n');
+                        expect(buffer.stdout).to.contain('<:LF:>');
                         expect(buffer.stdout).to.contain('ReferenceError:');
                         expect(buffer.stdout).to.not.contain('[eval]');
                         expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
@@ -96,7 +96,7 @@ describe( 'javascript runner', function(){
                                     'it("test2", function(){ Test.expect(true)});})',
                                 testFramework: 'cw-2'}, function(buffer) {
                         expect(buffer.stdout).to.contain('<ERROR::>');
-                        expect(buffer.stdout).to.contain('\\n');
+                        expect(buffer.stdout).to.contain('<:LF:>');
                         expect(buffer.stdout).to.contain('ReferenceError:');
                         expect(buffer.stdout).to.not.contain('[eval]');
                         expect(buffer.stdout).to.not.contain('Object.Test.handleError');
