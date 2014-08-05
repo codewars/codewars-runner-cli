@@ -45,11 +45,11 @@ class Test:
 
     @staticmethod
     def expect_error(message, function):
-        passed = false
+        passed = False
         try:
             function()
         except Exception:
-            passed = true
+            passed = True
 
         test.expect(passed, message)
 
