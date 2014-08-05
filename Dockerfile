@@ -109,6 +109,7 @@ RUN chmod a+x /usr/bin/julia
 # Install erlang
 RUN apt-get -y install erlang
 
+# Install PHP
 RUN apt-get -y install php5-cli
 
 # Install MongoDB
@@ -117,11 +118,17 @@ RUN apt-get -y install php5-cli
 #    apt-get update && \
 #    apt-get install mongodb-org
 
+# Install GoLang
+WORKDIR /tmp
+RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
+RUN ./godeb install 1.3
+RUN rm godeb
 
 # ADD cli-runner and install node deps
 ADD . /codewars
 WORKDIR /codewars
 RUN npm install
+RUN mocha -t 5000 test/*
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
