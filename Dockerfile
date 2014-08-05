@@ -124,6 +124,9 @@ RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
 RUN ./godeb install 1.3
 RUN rm godeb
 
+# Install TypeScript
+RUN npm -g install typescript
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 WORKDIR /codewars

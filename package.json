@@ -22,7 +22,8 @@
     "nomnom": "1.6.x",
     "response-time": "*",
     "temp": "*",
-    "temporary": "*"
+    "temporary": "*",
+    "cli-color": "*"
   },
   "engines": {
     "node": "0.10.x"
