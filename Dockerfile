@@ -109,7 +109,11 @@ RUN chmod a+x /usr/bin/julia
 # Install erlang
 RUN apt-get -y install erlang
 
+# Install php
 RUN apt-get -y install php5-cli
+
+# Install Go
+RUN apt-get -y install golang
 
 # Install MongoDB
 #RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
