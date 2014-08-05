@@ -115,7 +115,7 @@ RUN apt-get -y install php5-cli
 # Install Go
 RUN apt-get -y install golang
 
-# Install Coffeescript
+# Install TypeScript
 RUN npm -g install typescript
 
 # Install MongoDB
