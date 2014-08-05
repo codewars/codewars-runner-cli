@@ -1,6 +1,9 @@
 
 try
 {
+    // prevent anyone from peeking at the code we passed in
+    if (global.process) global.process.execArgv = null;
+
     var util = require('util');
 
     var fnToString = Function.toString;
@@ -108,22 +111,21 @@ try
         return msg || '';
     }
 
-    // we use this instead of util.inspect so that we can support the indent option
-    function stringifyIgnoreCircular(obj, indent)
-    {
-        var cache = [];
-        return JSON.stringify(obj, function(key, value){
-            if (typeof value === 'object' && value !== null) {
-                // Circular reference found, discard key
-                if (cache.indexOf(value) !== -1) return "[Circular]";
-            }
-            // Store value in our collection
-            cache.push(value);
-            return value;
-        }, indent);
-    }
-
     var Test = {
+        // we use this instead of util.inspect so that we can support the indent option and json options
+        stringify: function(obj, indent)
+        {
+            var cache = [];
+            return JSON.stringify(obj, function(key, value){
+                if (typeof value === 'object' && value !== null) {
+                    // Circular reference found, discard key
+                    if (cache.indexOf(value) !== -1) return "[Circular]";
+                }
+                // Store value in our collection
+                cache.push(value);
+                return value;
+            }, indent);
+        },
         // formats an value to be outputted. If a function is provided then it will be evaluated,
         // if an object is provided then it will JSONfied. By default
         // any line breaks will be replaced with <:BR:> so that the entire message is considered
@@ -147,7 +149,7 @@ try
                     // for backwards compatibility we will support the indent option
                     if (options.indent || options.json)
                     {
-                        out = stringifyIgnoreCircular(obj, options.indent ? 4 : 0)
+                        out = Test.stringify(obj, options.indent ? 4 : 0)
                     }
                     else
                     {
