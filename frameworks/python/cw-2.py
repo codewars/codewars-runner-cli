@@ -27,7 +27,8 @@ def assert_equals(actual, expected, message=None, allow_raise=True):
 
 
 def assert_not_equals(actual, expected, message=None, allow_raise=True):
-    equals_msg = "{0} should not equal {1}".format(repr(actual), repr(expected))
+    equals_msg = \
+        "{0} should not equal {1}".format(repr(actual), repr(expected))
     if message is None:
         message = equals_msg
     else:
