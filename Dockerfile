@@ -112,11 +112,6 @@ RUN apt-get -y install erlang
 # Install PHP
 RUN apt-get -y install php5-cli
 
-# Install MongoDB
-#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
-#    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list && \
-#    apt-get update && \
-#    apt-get install mongodb-org
 
 # Install GoLang
 WORKDIR /tmp
@@ -126,6 +121,31 @@ RUN rm godeb
 
 # Install TypeScript
 RUN npm -g install typescript
+
+# Install Pip
+RUN apt-get install python-pip
+
+# Install SQLITE
+RUN apt-get install -y sqlite
+
+# Install MongoDB
+RUN apt-get install -y mongodb-server && \
+    mkdir /data && \
+    mkdir /data/db
+
+# Install mongo packages for languages
+RUN npm install mongoose
+RUN npm install mongodb
+RUN pip install pymongo
+RUN gem2.0 install mongo --no-ri --no-rdoc
+
+# Install Redis
+RUN apt-get install -y redis-server
+
+# Install Redis Language packages
+RUN npm install redis
+RUN gem2.0 install redis --no-ri --no-rdoc
+RUN pip install redis
 
 # ADD cli-runner and install node deps
 ADD . /codewars
