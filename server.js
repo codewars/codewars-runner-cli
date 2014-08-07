@@ -5,7 +5,8 @@ var express = require('express'),
     docker = require('./lib/docker'),
     exec = require('child_process').exec,
     os = require('os'),
-    key = require('./apikey');
+    key = require('./apikey'),
+    bodyParser = require('body-parser');
 
 var app = express();
 
@@ -20,7 +21,8 @@ process.on('message', function(msg) {
 
 //app.use(require('response-time')(5));
 //app.use(require('connect-timeout')(10000));
-app.use(require('body-parser')({limit: '2mb'}));
+app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.urlencoded({limit: '1mb'}));
 
 app.use(function(err, req, res, next) {
     console.log( err );
