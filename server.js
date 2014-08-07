@@ -22,7 +22,7 @@ process.on('message', function(msg) {
 //app.use(require('response-time')(5));
 //app.use(require('connect-timeout')(10000));
 app.use(bodyParser.json({limit: '1mb'}));
-app.use(bodyParser.urlencoded({limit: '1mb'}));
+app.use(bodyParser.urlencoded({extended: true, limit: '1mb'}));
 
 app.use(function(err, req, res, next) {
     console.log( err );
