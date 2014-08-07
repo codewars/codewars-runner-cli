@@ -20,7 +20,7 @@ process.on('message', function(msg) {
 
 //app.use(require('response-time')(5));
 //app.use(require('connect-timeout')(10000));
-app.use(require('body-parser')());
+app.use(require('body-parser')({limit: '2mb'}));
 
 app.use(function(err, req, res, next) {
     console.log( err );
@@ -106,6 +106,20 @@ app.post('/run', function(req, res) {
     console.time(taggedImage);
     console.log(taggedImage);
 
+    // max arg size
+    var length = JSON.stringify(req.body).length
+    if ( length >= 130000)
+    {
+        console.log("Request body too large. Length = " + length);
+        res.end(JSON.stringify({
+            success: false,
+            stdout: '',
+            stderr: 'Request input too large: Try reducing size of code being sent to server.',
+            v: config.version
+        }));
+        return;
+    }
+
     docker.run(image, 'run', req.body, function(error, data, stdout, stderr){
         console.timeEnd(taggedImage);
 
@@ -118,6 +132,7 @@ app.post('/run', function(req, res) {
 
         } else {
             console.warn('stdout did not return valid data, going with stderr');
+            console.info(error);
             console.info(stderr);
             error = error || {};
             res.end(JSON.stringify({
