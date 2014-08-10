@@ -150,6 +150,9 @@ RUN pip install redis
 # Install Racket
 RUN apt-get -y install racket
 
+# Install SBCL (Steel Bank Common Lisp)
+RUN apt-get -y install sbcl
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 WORKDIR /codewars
