@@ -10,25 +10,23 @@ describe( 'racket runner', function(){
                 done();
             });
         });
+
         it('should handle setup code and imports', function (done) {
             runner.run({
                 language: 'racket',
                 setup: [
-                    'module constants',
-                    'export G',
-                    'const G = 6.67e-11 # Gravitational constant in m3 / kg s2',
-                    'end'
+                    '#lang racket/base',
+                    '(provide twice)',
+                    '(define (twice x) (+ x x))'
                 ].join('\n'),
                 solution: [
-                    'module Foo',
-                    'using constants',
-                    'println(G)',
-                    'end'
+                    "(print (twice 2))"
                 ].join('\n')
             }, function (buffer) {
-                expect(buffer.stdout).to.equal('6.67e-11\n');
+                expect(buffer.stdout).to.equal('4');
                 done();
             });
         });
-    });
+
+   });
 });
