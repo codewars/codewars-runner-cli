@@ -23,13 +23,6 @@ try
         }
     };
 
-    _setTimeout = setTimeout;
-    setTimeout = function (fn, timeout)
-    {
-        if (timeout > 50) throw 'setTimeout is restricted to no more than 50ms.';
-        return _setTimeout(fn, timeout)
-    }
-
     var methodCalls = {},
         describing = false,
         correct = 0,
