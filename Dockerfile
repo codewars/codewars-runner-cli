@@ -112,9 +112,9 @@ RUN apt-get -y install erlang
 # Install PHP
 RUN apt-get -y install php5-cli
 
-
 # Install GoLang
 WORKDIR /tmp
+# http://blog.labix.org/2013/06/15/in-flight-deb-packages-of-go
 RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
 RUN ./godeb install 1.3
 RUN rm godeb
@@ -155,6 +155,10 @@ RUN apt-get -y install sbcl
 
 # Install Tiny C Compiler
 RUN apt-get -y install tcc
+
+# Install CLANG 3.4
+RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
+RUN apt-get -y install clang-3.4 lldb-3.4
 
 # ADD cli-runner and install node deps
 ADD . /codewars
