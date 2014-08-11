@@ -6,7 +6,8 @@ var express = require('express'),
     exec = require('child_process').exec,
     os = require('os'),
     key = require('./apikey'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    spawn = require('child_process').spawn;
 
 var app = express();
 
@@ -71,7 +72,7 @@ app.post('/build', function(req, res) {
 app.post('/update', function(req, res)
 {
     //TODO make this require somehwere better
-    var updateSh = require('child_process').spawn('sh', [ 'setup/update.sh' ], {
+    var updateSh = spawn('sh', [ 'setup/update.sh' ], {
         cwd: process.env.PWD
     });
 
@@ -92,7 +93,7 @@ app.post('/update', function(req, res)
         buffer.push(code);
         res.end(buffer.join(''));
         //now that the update is finished, reload the server
-        require('child_process').spawn('sh', ['setup/reload.sh'], {detached: true}).unref();
+        spawn('sh', ['setup/reload.sh'], {detached: true}).unref();
         //this will kill us, so we don't need to do anything more
     });
 
