@@ -1,3 +1,3 @@
 #!/bin/sh
 
-pm2 gracefulReload all
+pm2 reload all
