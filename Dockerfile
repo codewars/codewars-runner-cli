@@ -153,6 +153,9 @@ RUN apt-get -y install racket
 # Install SBCL (Steel Bank Common Lisp)
 RUN apt-get -y install sbcl
 
+# Install Tiny C Compiler
+RUN apt-get -y install tcc
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 WORKDIR /codewars
