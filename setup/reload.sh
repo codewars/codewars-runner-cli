@@ -1,3 +1,4 @@
 #!/bin/sh
 
-pm2 reload all
+pm2 kill
+pm2 start server.js
