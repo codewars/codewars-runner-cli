@@ -31,23 +31,6 @@ CMD ["bash"]
 
 RUN apt-get update
 
-#Install ruby
-RUN apt-get install -y ruby2.0
-
-#link the ruby command to 2.0 because ubuntu is dumb
-RUN rm /usr/bin/ruby
-RUN ln /usr/bin/ruby2.0 /usr/bin/ruby
-
-## install bundler
-RUN gem2.0 install rspec --no-ri --no-rdoc
-
-#RUN gem install minitest --no-ri --no-rdoc
-
-# Install additional gems
-
-RUN gem2.0 install rails --no-ri --no-rdoc
-#RUN gem2.0 install mongoid --no-ri --no-rdoc
-
 # Install Mono
 RUN apt-get install -y mono-csharp-shell --fix-missing
 
@@ -125,8 +108,41 @@ RUN npm -g install typescript
 # Install Pip
 RUN apt-get install python-pip
 
+#Install ruby
+RUN apt-get install -y python-software-properties && \
+    apt-add-repository -y ppa:brightbox/ruby-ng && \
+    apt-get update && \
+    apt-get install -y ruby2.1 ruby2.1-dev && \
+    update-alternatives --remove ruby /usr/bin/ruby2.1 && \
+    update-alternatives --remove irb /usr/bin/irb2.1 && \
+    update-alternatives --remove gem /usr/bin/gem2.1 && \
+    update-alternatives \
+        --install /usr/bin/ruby ruby /usr/bin/ruby2.1 50 \
+        --slave /usr/bin/irb irb /usr/bin/irb2.1 \
+        --slave /usr/bin/rake rake /usr/bin/rake2.1 \
+        --slave /usr/bin/gem gem /usr/bin/gem2.1 \
+        --slave /usr/bin/rdoc rdoc /usr/bin/rdoc2.1 \
+        --slave /usr/bin/testrb testrb /usr/bin/testrb2.1 \
+        --slave /usr/bin/erb erb /usr/bin/erb2.1 \
+        --slave /usr/bin/ri ri /usr/bin/ri2.1 && \
+    update-alternatives --config ruby && \
+    update-alternatives --display ruby
+
+## install bundler
+RUN gem install rspec --no-ri --no-rdoc
+RUN gem install rspec-its --no-ri --no-rdoc
+
+#RUN gem install minitest --no-ri --no-rdoc
+
+# Install additional gems
+
+RUN gem install rails --no-ri --no-rdoc
+
 # Install SQLITE
-RUN apt-get install -y sqlite
+RUN apt-get install -y sqlite libsqlite3-dev
+
+RUN gem install sqlite3 --no-ri --no-rdoc
+RUN npm install sqlite3
 
 # Install MongoDB
 RUN apt-get install -y mongodb-server && \
@@ -137,14 +153,15 @@ RUN apt-get install -y mongodb-server && \
 RUN npm install mongoose
 RUN npm install mongodb
 RUN pip install pymongo
-RUN gem2.0 install mongo --no-ri --no-rdoc
+RUN gem install mongo --no-ri --no-rdoc
+RUN gem install mongoid --no-ri --no-rdoc
 
 # Install Redis
 RUN apt-get install -y redis-server
 
 # Install Redis Language packages
 RUN npm install redis
-RUN gem2.0 install redis --no-ri --no-rdoc
+RUN gem install redis --no-ri --no-rdoc
 RUN pip install redis
 
 # Install Racket
