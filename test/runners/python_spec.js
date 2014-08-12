@@ -1,12 +1,13 @@
 var expect = require('chai').expect;
 var runner = require('../../lib/runners/python');
 
+describe( 'python runner2', function(){
+    this.timeout(600);
 
-describe( 'python runner', function(){
     describe( '.run', function(){
         it( 'should handle basic code evaluation', function(done){
             runner.run({language: 'python', solution: 'print 42'}, function(buffer) {
-                expect(buffer.stdout ).to.equal('42\n');
+                expect(buffer.stdout).to.equal('42\n');
                 done();
             });
         });
@@ -19,6 +20,7 @@ describe( 'python runner', function(){
                         testFramework: 'cw-2'},
                        function(buffer){
                 console.log(buffer);
+
                 expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                 done();
             });
@@ -56,6 +58,19 @@ describe( 'python runner', function(){
                 expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
                 done();
             });
+        });
+
+        it( 'should handle a failed assertion', function(done){
+            runner.run({language: 'python',
+                    solution: 'a.fail()',
+                    testFramework: 'cw-2'},
+                function(buffer){
+                    console.log(buffer);
+                    expect(buffer.stderr).to.not.contain('File ');
+                    expect(buffer.stderr).to.not.contain(', line ');
+                    expect(buffer.stderr).to.not.contain('most recent call last');
+                    done();
+                });
         });
     });
     describe( 'unittest', function(){
