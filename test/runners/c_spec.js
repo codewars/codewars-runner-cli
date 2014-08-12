@@ -15,5 +15,23 @@ describe( 'c runner', function(){
                 done();
             });
         });
+        it('should handle setup code and imports', function (done) {
+            runner.run({
+                language: 'c',
+                setup: [
+                    'int square(int a) { return a * a ; }'
+                ].join('\n'),
+                solution: [
+                    '#include <stdio.h>',
+                    'int square(int);',
+                    'int main() {',
+                    '    printf("%i",square(5));',
+                    '}',
+                ].join('\n')
+            }, function (buffer) {
+                expect(buffer.stdout).to.equal('25');
+                done();
+            });
+        });
     });
 });
