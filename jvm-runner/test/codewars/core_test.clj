@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [codewars.core :refer [-main] :as core]
             [cheshire.core :as json]
-            [codewars.runner :refer [run]]))
+            [codewars.runners :refer [run]]))
 
 (deftest sanity-check
   (testing "-main is parsing JSONs from *in* and using handle to handle them"

@@ -5,6 +5,14 @@
 
 # Pull base image.
 FROM dockerfile/ubuntu
+
+# Set the env variables to non-interactive
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_PRIORITY critical
+ENV DEBCONF_NOWARNINGS yes
+ENV TERM linux
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
 RUN apt-get install -y python python-dev python-pip python-virtualenv
 
 # Define mountable directories.
@@ -64,16 +72,12 @@ RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-s
     echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 RUN apt-get install -y oracle-java8-installer
 
-# Install Clojure
+# Install Clojure (well, install Leiningen)
 RUN curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/bin/lein
 RUN chmod a+x /usr/bin/lein
-# Add a few packages by default
-RUN mkdir ~/.lein && echo '{:user {:dependencies [[org.clojure/clojure "1.6.0"] [junit/junit "4.11"] [org.hamcrest/hamcrest-core "1.3"]]}}' > ~/.lein/profiles.clj
-RUN echo '(defproject codewars "Docker")' > project.clj 
-RUN LEIN_ROOT=true lein deps
 
 # Install Haskell
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ghc cabal-install
+RUN apt-get install -y ghc cabal-install
 RUN cabal update
 RUN cabal install hspec
 
@@ -90,7 +94,10 @@ RUN printf '#!/bin/bash\njulia-noisy "$@" 2> >(grep -v "OpenBLAS : Your OS does 
 RUN chmod a+x /usr/bin/julia
 
 # Install erlang
-RUN apt-get -y install erlang
+RUN echo "deb http://packages.erlang-solutions.com/ubuntu trusty contrib" >> /etc/apt/sources.list
+RUN curl http://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | apt-key add -
+RUN apt-get update
+RUN apt-get -y install erlang-nox erlang-dev
 
 # Install PHP
 RUN apt-get -y install php5-cli
@@ -98,15 +105,13 @@ RUN apt-get -y install php5-cli
 # Install GoLang
 WORKDIR /tmp
 # http://blog.labix.org/2013/06/15/in-flight-deb-packages-of-go
-RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
-RUN ./godeb install 1.3
-RUN rm godeb
+RUN apt-get install -y golang
+#RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
+#RUN ./godeb install 1.3.1
+#RUN rm godeb
 
 # Install TypeScript
 RUN npm -g install typescript
-
-# Install Pip
-RUN apt-get install python-pip
 
 #Install ruby
 RUN apt-get install -y python-software-properties && \
@@ -135,7 +140,6 @@ RUN gem install rspec-its --no-ri --no-rdoc
 #RUN gem install minitest --no-ri --no-rdoc
 
 # Install additional gems
-
 RUN gem install rails --no-ri --no-rdoc
 
 # Install SQLITE
@@ -177,10 +181,21 @@ RUN apt-get -y install tcc
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
 RUN apt-get -y install clang-3.4 lldb-3.4
 
+# ADD codewarrior user
+RUN useradd -s /usr/sbin/nologin codewarrior
+
 # ADD cli-runner and install node deps
 ADD . /codewars
+
+# Build the jvm-runner
+WORKDIR /codewars/jvm-runner
+RUN LEIN_ROOT=true lein do clean, test, uberjar
+
 WORKDIR /codewars
 RUN npm install
+#USER codewarrior
+
+# Run the test suite to make sure this thing works
 RUN mocha -t 5000 test/*
 
 #timeout is a fallback in case an error with node

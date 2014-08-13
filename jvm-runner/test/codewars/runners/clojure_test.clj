@@ -1,4 +1,4 @@
-(ns codewars.runner.clojure-test
+(ns codewars.runners.clojure-test
   (:require [clojure.test :refer :all]
             [codewars.core :refer [-main] :as core]
             [codewars.test.utils :refer [with-out-str-not-thread-safe]]
