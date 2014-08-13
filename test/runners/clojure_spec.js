@@ -139,4 +139,26 @@ describe('clojure runner', function () {
             });
         });
     });
+    describe('potpourri', function () {
+        it('test framework should not think HOME is /root', function (done) {
+            runner.run({
+                language: 'clojure',
+                solution: '(print (System/getenv "HOME"))'
+            }, function (buffer) {
+                console.log(buffer.stderr);
+                expect(buffer.stdout).to.not.equal('/root');
+                done();
+            });
+        });
+//        it('test framework should be able to shell out and ask who the current user is', function (done) {
+//            runner.run({
+//                language: 'clojure',
+//                solution: '(use \'[clojure.java.shell :only [sh]]) (sh "whoami")'
+//            }, function (buffer) {
+//                console.log(buffer.stderr);
+//                expect(buffer.stdout).to.equal('/root');
+//                done();
+//            });
+//        });
+    });
 });
