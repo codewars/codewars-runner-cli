@@ -5,6 +5,14 @@
 
 # Pull base image.
 FROM dockerfile/ubuntu
+
+# Set the env variables to non-interactive
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_PRIORITY critical
+ENV DEBCONF_NOWARNINGS yes
+ENV TERM linux
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
 RUN apt-get install -y python python-dev python-pip python-virtualenv
 
 # Define mountable directories.
@@ -73,7 +81,7 @@ RUN echo '(defproject codewars "Docker")' > project.clj
 RUN LEIN_ROOT=true lein deps
 
 # Install Haskell
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ghc cabal-install
+RUN apt-get install -y ghc cabal-install
 RUN cabal update
 RUN cabal install hspec
 
@@ -90,7 +98,10 @@ RUN printf '#!/bin/bash\njulia-noisy "$@" 2> >(grep -v "OpenBLAS : Your OS does 
 RUN chmod a+x /usr/bin/julia
 
 # Install erlang
-RUN apt-get -y install erlang
+RUN echo "deb http://packages.erlang-solutions.com/ubuntu trusty contrib" >> /etc/apt/sources.list
+RUN curl http://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | apt-key add -
+RUN apt-get update
+RUN apt-get -y install erlang-nox erlang-dev
 
 # Install PHP
 RUN apt-get -y install php5-cli
@@ -104,9 +115,6 @@ RUN rm godeb
 
 # Install TypeScript
 RUN npm -g install typescript
-
-# Install Pip
-RUN apt-get install python-pip
 
 #Install ruby
 RUN apt-get install -y python-software-properties && \
@@ -135,7 +143,6 @@ RUN gem install rspec-its --no-ri --no-rdoc
 #RUN gem install minitest --no-ri --no-rdoc
 
 # Install additional gems
-
 RUN gem install rails --no-ri --no-rdoc
 
 # Install SQLITE
@@ -177,10 +184,14 @@ RUN apt-get -y install tcc
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
 RUN apt-get -y install clang-3.4 lldb-3.4
 
+# ADD codewarrior user
+RUN useradd -s /usr/sbin/nologin codewarrior
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 WORKDIR /codewars
 RUN npm install
+#USER codewarrior
 RUN mocha -t 5000 test/*
 
 #timeout is a fallback in case an error with node
