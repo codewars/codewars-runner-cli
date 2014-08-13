@@ -19,3 +19,11 @@
      (with-redefs [*out* s#]
        ~@body
        (str s#))))
+
+(defmacro with-err-str
+  "A version of clojure.core/with-out-str for *err*"
+  [& body]
+  `(let [s# (new java.io.StringWriter)]
+     (binding [*err* s#]
+       ~@body
+       (str s#))))
