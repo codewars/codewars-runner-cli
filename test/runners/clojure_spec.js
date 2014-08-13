@@ -150,15 +150,5 @@ describe('clojure runner', function () {
                 done();
             });
         });
-//        it('test framework should be able to shell out and ask who the current user is', function (done) {
-//            runner.run({
-//                language: 'clojure',
-//                solution: '(use \'[clojure.java.shell :only [sh]]) (sh "whoami")'
-//            }, function (buffer) {
-//                console.log(buffer.stderr);
-//                expect(buffer.stdout).to.equal('/root');
-//                done();
-//            });
-//        });
     });
 });
