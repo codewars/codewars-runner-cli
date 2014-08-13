@@ -16,7 +16,6 @@
     "connect-timeout": "*",
     "dockerode": "2.0.x",
     "express": "*",
-    "glob": "*",
     "memory-streams": "*",
     "mocha": "1.19.x",
     "nomnom": "1.6.x",
