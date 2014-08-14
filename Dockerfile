@@ -171,6 +171,9 @@ RUN apt-get -y install tcc
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
 RUN apt-get -y install clang-3.4 lldb-3.4
 
+# Install OCAML
+RUN apt-get -y install ocaml-nox
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 
