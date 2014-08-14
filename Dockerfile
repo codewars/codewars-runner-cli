@@ -141,8 +141,8 @@ RUN npm -g install sqlite3
 
 # Install MongoDB
 RUN apt-get install -y mongodb-server && \
-    mkdir /data && \
-    mkdir /data/db
+    mkdir -p /data/db && \
+    chown codewarrior:codewarrior /data/db
 
 # Install mongo packages for languages
 RUN npm -g install mongoose mongodb
