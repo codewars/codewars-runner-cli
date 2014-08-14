@@ -133,6 +133,19 @@ RUN gem install rspec-its --no-ri --no-rdoc
 # Install additional gems
 RUN gem install rails --no-ri --no-rdoc
 
+# Install Racket
+RUN apt-get -y install racket
+
+# Install SBCL (Steel Bank Common Lisp)
+RUN apt-get -y install sbcl
+
+# Install Tiny C Compiler
+RUN apt-get -y install tcc
+
+# Install CLANG 3.4
+RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
+RUN apt-get -y install clang-3.4 lldb-3.4
+
 # Install SQLITE
 RUN apt-get install -y sqlite libsqlite3-dev
 
@@ -157,19 +170,6 @@ RUN apt-get install -y redis-server
 RUN npm -g install redis
 RUN gem install redis --no-ri --no-rdoc
 RUN pip install redis
-
-# Install Racket
-RUN apt-get -y install racket
-
-# Install SBCL (Steel Bank Common Lisp)
-RUN apt-get -y install sbcl
-
-# Install Tiny C Compiler
-RUN apt-get -y install tcc
-
-# Install CLANG 3.4
-RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
-RUN apt-get -y install clang-3.4 lldb-3.4
 
 # ADD cli-runner and install node deps
 ADD . /codewars
