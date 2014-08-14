@@ -1,7 +1,7 @@
-(ns codewars.runner.java-test
+(ns codewars.runners.java-test
   (:require [clojure.test :refer :all]
-            [codewars.core :refer [-main]]
-            [codewars.test.utils :refer [with-java-out-str]]
+            [codewars.core :refer [-main] :as core]
+            [codewars.test.utils :refer :all]
             [cheshire.core :as json]))
 
 (deftest java-basic
@@ -20,7 +20,6 @@
        {:language "java"
         :solution "public class FooFighters {public static int main() {return 1;}}"})
       (is (= 1 (-main))))))
-
 
 (deftest java-solution-print
   (testing "-main can handle a java solution that prints to standard out"
@@ -89,6 +88,22 @@
         (is (.contains test-out-string "<5> but was:<3>"))
         (is (not (.contains test-out-string "Shouldn't get here")))
         (is (not (.contains test-out-string "<PASSED::>Test Passed<:LF:>")))))))
+
+(deftest java-bad-code
+  (testing "-main fails when code can't compile"
+    (with-in-str
+      (json/generate-string
+       {:language "java"
+        :solution "public class Solution {
+                     public static void main(String[] args){
+                       notdefinedgonnafail(\"42\");}}"})
+      (let [error-message
+            (with-redefs [core/fail #(-> % .getMessage)] (-main))]
+        (is (.contains error-message "error: cannot find symbol"))
+        (is (.contains error-message "notdefinedgonnafail(\"42\");"))
+        (is (.contains error-message "symbol:   method notdefinedgonnafail(String)"))
+        (is (.contains error-message "location: class Solution"))
+        (is (.contains error-message "1 error"))))))
 
 (deftest java-nine-yards
   (testing "-main can setup, solution, and test fixture code for java"

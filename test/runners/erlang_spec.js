@@ -29,6 +29,15 @@ describe('erlang runner', function () {
                 done();
             });
         });
+        it('should be running the most recent erlang version', function (done) {
+            runner.run({
+                language: 'erlang',
+                solution: 'io:fwrite(erlang:system_info(otp_release)), init:stop().'
+            }, function (buffer) {
+                expect(buffer.stdout).to.equal('17');
+                done();
+            });
+        });
     });
     describe('codewars test framework (eunit)', function () {
         it('should be able to run a basic test', function (done) {
