@@ -19,18 +19,19 @@ RUN chmod a+x /usr/bin/lein
 RUN LEIN_ROOT=true lein --version
 
 # ADD codewarrior user
-RUN useradd -s /usr/sbin/nologin codewarrior
+RUN useradd -s /usr/sbin/nologin -m -d /home/codewarrior -p codewarrior codewarrior
 
 # ADD cli-runner and install node deps
 ADD . /codewars-jvm
 WORKDIR /codewars-jvm
-RUN LEIN_ROOT=true lein do clean, test, uberjar
+RUN [ -e target/jvm-runner-0.1.1-standalone.jar ] || LEIN_ROOT=true lein do clean, test, uberjar
 
 # Set the user and workdir
 WORKDIR /tmp
 USER codewarrior
 
 # Run the uberjar
-# TODO: Infer the version number for this somehow
 ENV TIMEOUT 2000
+ENV USER codewarrior
+ENV HOME /home/codewarrior
 ENTRYPOINT ["java", "-jar", "/codewars-jvm/target/jvm-runner-0.1.1-standalone.jar"]
