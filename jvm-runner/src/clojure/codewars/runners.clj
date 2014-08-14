@@ -1,4 +1,4 @@
-(ns codewars.runner)
+(ns codewars.runners)
 
 (defmulti solution-only :language)
 (defmulti full-project :language)

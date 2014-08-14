@@ -139,4 +139,16 @@ describe('clojure runner', function () {
             });
         });
     });
+    describe('potpourri', function () {
+        it('test framework should not think HOME is /root', function (done) {
+            runner.run({
+                language: 'clojure',
+                solution: '(print (System/getenv "HOME"))'
+            }, function (buffer) {
+                console.log(buffer.stderr);
+                expect(buffer.stdout).to.not.equal('/root');
+                done();
+            });
+        });
+    });
 });

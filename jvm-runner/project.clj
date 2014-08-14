@@ -4,8 +4,8 @@
   :javac-target "1.8"
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [cheshire "5.3.1"]
-                 [org.tcrawley/dynapath "0.2.3"]
                  [junit/junit "4.11"]
+                 [org.codehaus.groovy/groovy-all "2.3.6"]
                  [environ "0.5.0"]]
   :plugins [[lein-environ "0.5.0"]]
   :source-paths      ["src/clojure"]
