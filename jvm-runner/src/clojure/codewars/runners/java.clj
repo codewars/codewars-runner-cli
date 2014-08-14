@@ -1,32 +1,35 @@
-(ns codewars.runner.java
-  (:require [codewars.runner :refer [solution-only full-project]]
+(ns codewars.runners.java
+  (:require [codewars.runners :refer [solution-only full-project]]
             [codewars.clojure.test]
             [clojure.java.io :as io]
             [codewars.util :refer [write-code!]])
   (:import [codewars.java TempDir]
            [java.net URLClassLoader]
            [javax.tools ToolProvider]
+           [java.io ByteArrayOutputStream]
            [org.junit.runner JUnitCore]
-           [codewars.java CwRunListener]
-           [java.io IOException]))
+           [codewars.java CwRunListener]))
 
 (defn- compile!
   "Compile files using the java compiler"
   [& files]
-  (let [compilation-result
-        (-> (ToolProvider/getSystemJavaCompiler)
-            ;; TODO: write compilation errors somewhere?
-            (.run nil nil nil (into-array (map str files))))]
+  (let [out-stream (ByteArrayOutputStream.)
+        err-stream (ByteArrayOutputStream.)
+        compilation-result
+        (. (ToolProvider/getSystemJavaCompiler)
+           run nil out-stream err-stream
+           (into-array (map str files)))]
+    (-> out-stream str print)
     (if (zero? compilation-result)
       0
-      (throw (IOException. "Java compilation error")))))
+      (throw (RuntimeException. (str err-stream))))))
 
 (defn- load-class
   "Load a java class in a specified directory"
   [dir class-name]
   (let [class-loader
         (URLClassLoader/newInstance
-         (into-array [(-> dir .toURI .toURL)]))]
+         (into-array [(io/as-url dir)]))]
     (Class/forName (name class-name) true class-loader)))
 
 (defn- run-junit-tests
