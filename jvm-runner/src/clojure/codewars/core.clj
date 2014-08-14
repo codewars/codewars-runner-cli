@@ -3,8 +3,9 @@
             [codewars.runners :refer [run]]
             [codewars.kill-switch :refer [with-timeout]]
             [environ.core :refer [env]]
-            [codewars.runners.java]
-            [codewars.runners.clojure])
+            [codewars.runners.groovy]
+            [codewars.runners.clojure]
+            [codewars.runners.java])
   (:import [java.util.concurrent TimeoutException])
   (:gen-class))
 

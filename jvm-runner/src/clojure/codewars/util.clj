@@ -5,8 +5,12 @@
   language-data
   {"clojure" {:pattern #"^\(ns\s+([A-Z|a-z](?:[a-z|A-Z|0-9|-]|\.[A-Z|a-z])*)\W"
               :extension "clj"}
+
    "java" {:pattern #"\bclass\s+([A-Z][a-z|A-Z|0-9|_]*)\W"
-           :extension "java"}})
+           :extension "java"}
+
+   "groovy" {:pattern #"^package\s+([a-z](?:[a-z|A-Z|0-9|-]|\.[a-z])*)\W"
+             :extension "groovy"}})
 
 (defn class-name
   "Infer the appropriate class or namespace name from code given a language"
