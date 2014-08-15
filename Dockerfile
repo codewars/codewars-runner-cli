@@ -96,10 +96,10 @@ RUN apt-get -y install php5-cli
 WORKDIR /tmp
 # http://blog.labix.org/2013/06/15/in-flight-deb-packages-of-go
 # This was cool but then it stopped working... that sucks... ~Matt
-#RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
-#RUN ./godeb install 1.3.1
-#RUN rm godeb
-RUN apt-get install -y golang
+RUN curl https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz | tar zxv
+RUN ./godeb install 1.3.1
+RUN rm godeb
+#RUN apt-get install -y golang
 
 # Install TypeScript
 RUN npm -g install typescript
@@ -144,14 +144,21 @@ RUN apt-get -y install tcc
 
 # Install CLANG 3.4
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
+RUN apt-get update
 RUN apt-get -y install clang-3.4 lldb-3.4
 
 # Install OCAML
 RUN apt-get -y install ocaml-nox
 
+# Install Rust 0.11
+# Workaround since the author of this PPA is Scandanavian, with a unicode name, and the tools hate this
+RUN add-apt-repository "deb http://ppa.launchpad.net/hansjorg/rust/ubuntu trusty main"
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BD6B6386
+RUN apt-get update
+RUN apt-get -y install rust-0.11
+
 # Install SQLITE
 RUN apt-get install -y sqlite libsqlite3-dev
-
 RUN gem install sqlite3 --no-ri --no-rdoc
 RUN npm -g install sqlite3
 
