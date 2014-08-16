@@ -8,39 +8,65 @@ describe('arm runner', function () {
             runner.run({language: 'arm',
                     solution: [
                         '.data',
-                        'msg:',
-                        '.ascii "Armed and dangerous :D"',
-                        'len = . - msg',
-                        '   .text',
+                        'message: .ascii "ARMed and dangerous :D"',
+                        'len = . - message',
+                        '.text',
+                        '.global _start',
                         '_start:',
-                        '   mov     $1, %rax',
-                        '   mov     $1, %rdi',
-                        '   mov     $message, %rsi',
-                        '   mov     $8, %rdx',
-                        '   syscall',
-                        '   mov     $60, %rax',
-                        '   xor     %rdi, %rdi',
-                        '   syscall'
+                        '   mov     %r0, $1',
+                        '   ldr     %r1, =message',
+                        '   ldr     %r2, =len',
+                        '   mov     %r7, $4',
+                        '   swi     $0',
+                        '   mov     %r0, $0',
+                        '   mov     %r7, $1',
+                        '   swi     $0'
                     ].join('\n')},
                 function (buffer) {
-                    expect(buffer.stdout).to.equal('PV = nRT');
+                    console.log(buffer);
+                    expect(buffer.stdout).to.equal('ARMed and dangerous :D');
+                    done();
+                });
+        });
+        it('should not use libc even with alternate spelling of global as globl', function (done) {
+            runner.run({language: 'arm',
+                    solution: [
+                        '.data',
+                        'message: .ascii "Tokyo dialect"',
+                        'len = . - message',
+                        '.text',
+                        '.globl _start',
+                        '_start:',
+                        '   mov     %r0, $1',
+                        '   ldr     %r1, =message',
+                        '   ldr     %r2, =len',
+                        '   mov     %r7, $4',
+                        '   swi     $0',
+                        '   mov     %r0, $0',
+                        '   mov     %r7, $1',
+                        '   swi     $0'
+                    ].join('\n')},
+                function (buffer) {
+                    console.log(buffer);
+                    expect(buffer.stdout).to.equal('Tokyo dialect');
                     done();
                 });
         });
         it('should handle basic code evaluation (with libc)', function (done) {
             runner.run({language: 'arm',
                     solution: [
-                        '   .global  main',
-                        '   .text',
+                        '.global  main',
                         'main:',
-                        '   mov     $message, %rdi',
-                        '   call    puts',
-                        '   ret',
-                        'message:',
-                        '   .asciz "arm works with libc, too"'
+                        '   push {ip, lr}',
+                        '   ldr  r0, =message',
+                        '   bl   puts',
+                        '   mov  r0, #0',
+                        '   pop  {ip, pc}',
+                        'message: .asciz "ARM works with libc, too"'
                     ].join('\n')},
                 function (buffer) {
-                    expect(buffer.stdout).to.equal('arm works with libc, too\n');
+                    console.log(buffer);
+                    expect(buffer.stdout).to.equal('ARM works with libc, too\n');
                     done();
                 });
         });
