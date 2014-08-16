@@ -203,7 +203,7 @@ RUN pip install redis
 RUN apt-get -y install nasm
 
 # ARM Assembly Emulation
-RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user-static
+RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 
 # ADD cli-runner and install node deps
 ADD . /codewars
