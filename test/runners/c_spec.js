@@ -33,5 +33,45 @@ describe( 'c runner', function(){
                 done();
             });
         });
+        describe('codewars test framework', function () {
+            it('should be able to run a basic test', function (done) {
+                runner.run({
+                    language: 'c',
+                    solution: [
+                        'int square(int a) { return a * a ; }'
+                    ].join('\n'),
+                    fixture: [
+                        '#include <test.h>',
+                        'int square(int);',
+                        'int main() {',
+                        '  ASSERT_EQUALS(25,square(5));',
+                        '}'
+                    ].join('\n')
+                }, function (buffer) {
+                    console.log(buffer);
+                    expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                    done();
+                });
+            });
+            it('should be able to run a basic test', function (done) {
+                runner.run({
+                    language: 'c',
+                    solution: [
+                        'int square(int a) { return a * a ; }'
+                    ].join('\n'),
+                    fixture: [
+                        '#include <test.h>',
+                        'int square(int);',
+                        'int main() {',
+                        '  ASSERT_EQUALS(25,square(5));',
+                        '}'
+                    ].join('\n')
+                }, function (buffer) {
+                    console.log(buffer);
+                    expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                    done();
+                });
+            });
+        });
     });
 });
