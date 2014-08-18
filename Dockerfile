@@ -134,6 +134,11 @@ RUN gem install rspec-its --no-ri --no-rdoc
 RUN gem install rails --no-ri --no-rdoc
 
 # Install Racket
+RUN echo \
+"Package: racket-doc\
+Pin: origin ''\
+Pin-Priority: -1" >> /etc/apt/preferences
+
 RUN apt-get -y install racket
 
 # Install SBCL (Steel Bank Common Lisp)
@@ -180,6 +185,25 @@ RUN apt-get install -y redis-server
 RUN npm -g install redis
 RUN gem install redis --no-ri --no-rdoc
 RUN pip install redis
+
+# CUDA 6
+#RUN wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1204/x86_64/cuda-repo-ubuntu1204_6.0-37_amd64.deb && \
+#    dpkg -i cuda-repo-ubuntu1204_6.0-37_amd64.deb && \
+#    rm cuda-repo-ubuntu1204_6.0-37_amd64.deb
+#RUN apt-get update
+#RUN apt-get install -y cuda-core-6-0
+# Install GPUOcelot
+#RUN apt-get -y install subversion
+#RUN svn checkout http://gpuocelot.googlecode.com/svn/trunk/ gpuocelot-read-only 
+#RUN apt-get -y install flex bison scons libboost-all-dev llvm llvm-dev freeglut3-dev libglew-dev 
+#RUN cd  gpuocelot-read-only && \
+#    ./build.py --install
+
+# NASM
+RUN apt-get -y install nasm
+
+# ARM Assembly Emulation
+RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 
 # ADD cli-runner and install node deps
 ADD . /codewars
