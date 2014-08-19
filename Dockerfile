@@ -134,10 +134,10 @@ RUN gem install rspec-its --no-ri --no-rdoc
 RUN gem install rails --no-ri --no-rdoc
 
 # Install Racket
-RUN echo \
-"Package: racket-doc\
-Pin: origin ''\
-Pin-Priority: -1" >> /etc/apt/preferences
+#RUN echo \
+#"Package: racket-doc\
+#Pin: origin ''\
+#Pin-Priority: -1" >> /etc/apt/preferences
 
 RUN apt-get -y install racket
 
