@@ -188,7 +188,7 @@ describe('haskell runner', function () {
                     '  describe "x" $ do',
                     '    it "prints and returns 1" $ do',
                     '      xval <- x',
-                    '      xval `shouldBe` 1',
+                    '      xval `shouldBe` 1'
                 ].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
@@ -238,6 +238,75 @@ describe('haskell runner', function () {
                 expect(buffer.stdout).to.contain('<DESCRIBE::>exception');
                 expect(buffer.stdout).to.contain('<IT::>should throw');
                 expect(buffer.stdout).to.contain('<ERROR::>ErrorCall (Prelude.head: empty list)');
+                done();
+            });
+        });
+    });
+    describe('potpourri', function () {
+        it('can handle SQLite interaction', function (done) {
+            runner.run({language: 'haskell',
+                solution: [
+                    '{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies #-}',
+                    '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts #-}',
+                    '{-# LANGUAGE NoMonomorphismRestriction #-}',
+                    'module Movies where',
+                    'import Database.Persist.Sqlite (runSqlite, runMigration)',
+                    'import Database.Persist.TH (mkPersist, mkMigrate, persistUpperCase, share, sqlSettings)',
+                    'share [mkPersist sqlSettings, mkMigrate "migrateTables"] [persistUpperCase|',
+                    'Movies',
+                    '   title    String',
+                    '   year     Int',
+                    '   rating   Int',
+                    '   deriving Eq Show',
+                    '|]',
+                    'mkMovieDB :: IO ()',
+                    'mkMovieDB = runSqlite "/tmp/movies.db" $ do',
+                    '  runMigration migrateTables',
+                    '  insertMany',
+                    '    [ Movies "Rise of the Planet of the Apes" 2011 77',
+                    '    , Movies "Dawn of the Planet of the Apes" 2014 91',
+                    '    , Movies "Alien" 1979 97',
+                    '    , Movies "Aliens" 1986 98',
+                    '    , Movies "Mad Max" 1979 95',
+                    '    , Movies "Mad Max 2: The Road Warrior" 1981 100',
+                    '    ]',
+                    '  return ()'
+                ].join('\n'),
+                fixture: [
+                    '{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies #-}',
+                    '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts #-}',
+                    '{-# LANGUAGE NoMonomorphismRestriction #-}',
+                    'import Test.CodeWars',
+                    'import Database.Persist',
+                    'import Control.Monad.IO.Class (MonadIO(liftIO))',
+                    'import Database.Persist.Sqlite (runSqlite)',
+                    'import Database.Persist.Sql (rawQuery)',
+                    'import Data.Conduit (($$), (=$))',
+                    'import Data.Conduit.List as CL',
+                    'import Data.Text (unpack)',
+
+                    'data Movie = Movie String Integer Integer deriving (Eq, Show)',
+
+                    'getMovies :: IO [Movie]',
+                    'getMovies = runSqlite "/tmp/movies.db" $ do',
+                    '  rawQuery "select Title, Year, Rating from Movies" [] $$ CL.map toMovie =$ consume',
+                    '  where',
+                    '    toMovie [PersistText title, PersistInt64 year, PersistInt64 rating] =',
+                    '      Movie (unpack title) (toInteger year) (toInteger rating)',
+
+                    'main :: IO ()',
+                    'main = test $ do',
+                    '  describe "/tmp/movies.db" $ do',
+                    '    it "contains the movies we expect" $ do',
+                    '      movies <- getMovies',
+                    '      liftIO $ movies `shouldBe` [ Movie "Rise of the Planet of the Apes" 2011 77',
+                    '                                 , Movie "Dawn of the Planet of the Apes" 2014 91',
+                    '                                 , Movie "Alien" 1979 97,Movie "Aliens" 1986 98',
+                    '                                 , Movie "Mad Max" 1979 95',
+                    '                                 , Movie "Mad Max 2: The Road Warrior" 1981 100]'
+                ].join('\n')
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('Test Passed');
                 done();
             });
         });
