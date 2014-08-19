@@ -18,3 +18,4 @@ frameworks/java/CwTestRunner.class
 target/*
 .idea/
 .lein-repl-history
+example.rb
