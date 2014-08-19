@@ -5,24 +5,6 @@ require 'delegate'
 require 'set'
 require 'uri'
 
-class StandardError
-  # cleans the backtrace so that it doesn't contain a ton of information that would likely confuse users.
-  def set_backtrace(trace)
-    trace = trace.map do |line|
-      # get rid of all of the from filename crap
-      line = line.gsub(/(from )*(.)*\//, '')
-      # completely strip out anything that is within the framework or main
-      if line =~ /(cw-2.rb|<main>)/
-        nil
-      # else strip any evaluation line numbers, as they will be different than the user's own code.
-      else
-        line.gsub(/-e:(\d)+:/, '')
-      end
-    end.compact
-    super(trace)
-  end
-end
-
 NameError
 class Test
 
