@@ -1,7 +1,9 @@
-{-# LANGUAGE NoMonomorphismRestriction #-}
-module Test.CodeWars (
-  -- CodeWars Specification system 
-  test
+{-# LANGUAGE NoMonomorphismRestriction, PackageImports #-}
+
+-- By using Package Qualified Imports, we can shadow HSpec with our own system
+module Test.Hspec (
+  -- CodeWars Specification system (shadows Hspec)
+  hspec
 
   -- HSpec
   , Spec
@@ -32,8 +34,8 @@ module Test.CodeWars (
   , errorCall
                      ) where
 
-import Test.Hspec 
-import Test.CodeWars.Runner (test)
+import "hspec" Test.Hspec hiding (hspec)
+import Test.CodeWars.Runner (hspec)
 import Test.QuickCheck hiding (reason)
 import Control.Exception (evaluate)
 import Test.HUnit (assertFailure)

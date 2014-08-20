@@ -76,9 +76,9 @@ describe('haskell runner', function () {
                 solution: 'module Foo where',
                 fixture: [
                     'module Basic.Test where',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'main :: IO ()',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "Prelude.head" $ do',
                     '    it "returns the first element of a list" $ do',
                     '      head [23 ..] `shouldBe` (23 :: Int)'
@@ -95,9 +95,9 @@ describe('haskell runner', function () {
                 language: 'haskell',
                 solution: 'module Foo where',
                 fixture: [
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'main :: IO ()',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "Prelude.head" $ do',
                     '    it "returns the first element of a list" $ do',
                     '      head [23 ..] `shouldBe` (23 :: Int)'
@@ -119,9 +119,9 @@ describe('haskell runner', function () {
                 ].join('\n'),
                 fixture: [
                     'import CodeWars.Solution (x)',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'main :: IO ()',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "x" $ do',
                     '    it "is 1" $ do',
                     '      x `shouldBe` (1 :: Int)'
@@ -143,9 +143,9 @@ describe('haskell runner', function () {
                 fixture: [
                     'module Basic.Test where',
                     'import Main (x)',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'main :: IO ()',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "x" $ do',
                     '    it "is 1" $ do',
                     '      x `shouldBe` (1 :: Int)'
@@ -162,9 +162,9 @@ describe('haskell runner', function () {
                 solution: 'x = 1',
                 fixture: [
                     'module Sad.Path.Test where',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'import Main (x)',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "x" $ do',
                     '    it "is 2" $ do',
                     '      x `shouldBe` 2'
@@ -182,9 +182,9 @@ describe('haskell runner', function () {
                 solution: 'x = do putStrLn "Test" ; return 1',
                 fixture: [
                     'module PrintEffect where',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'import Main (x)',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "x" $ do',
                     '    it "prints and returns 1" $ do',
                     '      xval <- x',
@@ -203,9 +203,9 @@ describe('haskell runner', function () {
                 solution: 'x = 1',
                 fixture: [
                     'module Fast.Fail.Test where',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'import Main (x)',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "x" $ do',
                     '    it "is not really 2" $ do',
                     '      x `shouldBe` 2',
@@ -227,9 +227,9 @@ describe('haskell runner', function () {
                 solution: 'x = head []',
                 fixture: [
                     'module Fast.Fail.Test where',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'import Main (x)',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "exception" $ do',
                     '    it "should throw" $ do',
                     '      x `shouldBe` 2'
@@ -277,7 +277,7 @@ describe('haskell runner', function () {
                     '{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies #-}',
                     '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts #-}',
                     '{-# LANGUAGE NoMonomorphismRestriction #-}',
-                    'import Test.CodeWars',
+                    'import Test.Hspec',
                     'import Database.Persist',
                     'import Control.Monad.IO.Class (MonadIO(liftIO))',
                     'import Database.Persist.Sqlite (runSqlite)',
@@ -297,7 +297,7 @@ describe('haskell runner', function () {
                     '      Movie (unpack title) (toInteger year) (toInteger rating)',
 
                     'main :: IO ()',
-                    'main = test $ do',
+                    'main = hspec $ do',
                     '  describe "/tmp/movies.db" $ do',
                     '    it "contains the movies we expect" $ do',
                     '      mkMoviesDB',
