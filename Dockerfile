@@ -203,6 +203,12 @@ RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 # Install Persistent Database support for Haskell
 RUN apt-get -y install libghc-zlib-dev && su codewarrior -c "cabal install esqueleto persistent-sqlite persistent-template"
 
+# Install Octave
+RUN apt-get -y install octave
+
+# Install pip3 and pymongo for Python3
+RUN apt-get -y install python3-pip && pip3 install pymongo
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 
