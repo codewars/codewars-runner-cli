@@ -6,9 +6,17 @@ describe( 'c# runner', function(){
     {
         it('should handle basic code evaluation', function (done)
         {
-            runner.run({language: 'csharp', solution: 'Console.WriteLine(1+1);'}, function (buffer)
+            runner.run({language: 'csharp', solution:
+            'public class Hello1\n' +
+            '{\n' +
+            '    public static void Main()\n' +
+            '    {\n' +
+            '        System.Console.WriteLine("Hello, World!");\n' +
+            '    }\n' +
+            '}\n'
+            }, function (buffer)
             {
-                expect(buffer.stdout).to.equal('2\n');
+                expect(buffer.stdout).to.equal('Hello, World!\n');
                 done();
             });
         });

@@ -1,0 +1,18 @@
+var expect = require('chai').expect;
+var http = require('http');
+
+functin defaultOpts()
+{
+    return
+    {
+        port: 8080,
+        path: '/run',
+        method: 'POST'
+    };
+}
+
+var options = defaultOpts();
+var request = http.request(options, function(response)
+{
+    response.on('data', function
+}
