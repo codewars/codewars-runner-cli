@@ -134,11 +134,6 @@ RUN gem install rspec-its --no-ri --no-rdoc
 RUN gem install rails --no-ri --no-rdoc
 
 # Install Racket
-#RUN echo \
-#"Package: racket-doc\
-#Pin: origin ''\
-#Pin-Priority: -1" >> /etc/apt/preferences
-
 RUN apt-get -y install racket
 
 # Install SBCL (Steel Bank Common Lisp)
@@ -204,6 +199,9 @@ RUN apt-get -y install nasm
 
 # ARM Assembly Emulation
 RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
+
+# Install Persistent Database support for Haskell
+RUN apt-get -y install libghc-zlib-dev && su codewarrior -c "cabal install esqueleto persistent-sqlite persistent-template"
 
 # ADD cli-runner and install node deps
 ADD . /codewars
