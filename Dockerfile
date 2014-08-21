@@ -18,12 +18,22 @@ RUN useradd codewarrior
 RUN rm -rf ~codewarrior && cp -a ~root ~codewarrior && chown -R codewarrior:codewarrior ~codewarrior
 RUN apt-get install -y python python-dev python-pip python-virtualenv
 
+RUN apt-get install -y python-software-properties
+
 # Define mountable directories.
 
 # Install Node.js
-RUN add-apt-repository ppa:chris-lea/node.js
-RUN apt-get update 
-RUN apt-get install -y nodejs
+RUN \
+  cd /tmp && \
+  wget http://nodejs.org/dist/node-latest.tar.gz && \
+  tar xvzf node-latest.tar.gz && \
+  rm -f node-latest.tar.gz && \
+  cd node-v* && \
+  GYP_DEFINES="v8_enable_disassembler=1 v8_object_print=1" && ./configure && \
+  CXX="g++ -Wno-unused-local-typedefs" make && \
+  CXX="g++ -Wno-unused-local-typedefs" make install && \
+  cd /tmp && \
+  rm -rf /tmp/node-v*
 RUN su codewarrior -c "echo '\n# Node.js\nexport PATH=\"/codewars/node_modules/.bin:$PATH\"' >> ~codewarrior/.bash_profile"
 
 # Define default command.
@@ -34,7 +44,8 @@ CMD ["bash"]
 RUN apt-get update
 
 # Install Mono
-RUN apt-get install -y mono-csharp-shell --fix-missing
+RUN apt-get install -y mono-mcs --fix-missing
+RUN su codewarrior -c "echo 'export MONO_PATH=\"/codewars/bin/csharp/:$MONO_PATH\"' >> ~codewarrior/.bash_profile"
 
 # Install F#
 RUN apt-get install -y fsharp
@@ -105,8 +116,7 @@ RUN rm godeb
 RUN npm -g install typescript
 
 #Install ruby
-RUN apt-get install -y python-software-properties && \
-    apt-add-repository -y ppa:brightbox/ruby-ng && \
+RUN apt-add-repository -y ppa:brightbox/ruby-ng && \
     apt-get update && \
     apt-get install -y ruby2.1 ruby2.1-dev && \
     update-alternatives --remove ruby /usr/bin/ruby2.1 && \
