@@ -1,0 +1,45 @@
+# BUILD-USING:    docker build -t codewars/runner-jvm .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-jvm --entrypoint=/bin/bash codewars/runner-jvm -s
+# RUN-USING:      docker run --rm --name=runner-jvm codewars/runner-jvm --help
+
+# Pull base image.
+FROM codewars/runner-base
+
+# Install Java 8
+# RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get update
+# http://askubuntu.com/a/190674
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
+
+# Install Clojure (well, install Leiningen)
+RUN curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/bin/lein
+RUN chmod a+x /usr/bin/lein
+
+
+# ADD cli-runner and install node deps
+ADD . /codewars
+
+# Build the jvm-runner
+WORKDIR /codewars/jvm-runner
+RUN [ -e target/jvm-runner-0.1.1-standalone.jar ] || LEIN_ROOT=true lein do clean, test, uberjar
+
+WORKDIR /codewars
+RUN npm install
+
+# Run the test suite to make sure this thing works
+
+USER codewarrior
+# Set environment variables
+ENV TIMEOUT 2000
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN mocha -t 5000 test/runners/java_spec.js \
+    test/runners/clojure_spec.js \
+    test/runners/groovy_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
