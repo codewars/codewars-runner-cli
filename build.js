@@ -1,18 +1,17 @@
 var docker = require('./lib/docker'),
+    util = require('./lib/util'),
+    config = require('./lib/config'),
     opts = require("nomnom")
         .options({
-            image: {
-                abbr: 'i',
-                help: 'The image to build'
-            },
-            file: {
-                abbr: 'f',
-                help: 'The file to use to build the file'
-            },
             push: {
                 abbr: 'p',
                 flag: true,
                 help: 'Provide if image should be pushed after being built'
+            },
+            base: {
+                abbr: 'b',
+                flag: true,
+                help: 'True if the base image should be built first'
             },
             version: {
                 abbr: 'v',
@@ -26,20 +25,35 @@ var docker = require('./lib/docker'),
         .help('This utility will rebuild the docker image for the latest version')
         .parse();
 
-console.log('Building image, this may take a while...');
-docker.build(opts.file, opts.image, function(err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-    console.log('Image name = ' + docker.taggedImage(opts.image));
 
-    if(opts.push) {
-        console.log('Pushing image...');
+docker.imageChain(opts._, function(name, image, next, end)
+{
+    console.log("Name = " + name);
+    console.log("Building " + image);
 
-        docker.push(opts.image, function(err, stdout, stderr) {
-            console.log(stdout);
-            console.log(stderr);
-            console.log('Image pushed');
-        });
-    }
+    docker.build(name, image, function (code)
+    {
+        console.log('Image name = ' + image);
+
+        if (opts.push)
+        {
+            console.log('Pushing image ' + image + ' ...');
+
+            docker.push(image, function (code)
+            {
+                console.log('Pushed ' + image);
+                next();
+            });
+        }
+        else
+        {
+            next();
+        }
+    });
+}).run(function()
+{
+    // cleanup any resources
+//    util.pipeSpawn('sh', ['setup/cleanup.sh']);
 });
+
 
