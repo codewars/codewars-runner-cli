@@ -1,0 +1,44 @@
+# BUILD-USING:    docker build -t codewars/runner-node .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-node --entrypoint=/bin/bash codewars/runner-node -s
+# RUN-USING:      docker run --rm --name=runner-node codewars/runner-node --help
+# EXAMPLE USAGE:  docker run --rm codewars/runner-node run -l javascript -c "console.log(1+1)"
+
+# Pull base image.
+FROM codewars/runner-base
+
+# Install Haxe
+RUN apt-get install -y haxe
+
+# Install Coffeescript
+RUN npm -g install coffee-script
+
+# Install TypeScript
+RUN npm -g install typescript
+
+RUN npm -g install chai mocha
+
+RUN npm -g install mongoose mongodb
+RUN npm -g install redis
+RUN npm -g install sqlite3
+RUN npm -g install elasticsearch
+RUN npm -g install zmq
+RUN npm -g install immutable
+
+# ADD cli-runner and install node deps
+ADD . /codewars
+
+WORKDIR /codewars
+RUN npm install
+
+# Run the test suite to make sure this thing works
+
+USER codewarrior
+# Set environment variables
+ENV TIMEOUT 2000
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN mocha -t 5000 test/runners/javascript_spec.js test/runners/coffeescript_spec.js test/runners/typescript_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
