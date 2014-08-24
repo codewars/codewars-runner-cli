@@ -1,0 +1,31 @@
+# BUILD-USING:    docker build -t codewars/runner-dotnet .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-dotnet --entrypoint=/bin/bash codewars/runner-dotnet -s
+# RUN-USING:      docker run --rm --name=runner-dotnet codewars/runner-dotnet --help
+
+# Pull base image.
+FROM codewars/runner-base
+
+# Install Mono
+RUN apt-get install -y mono-csharp-shell --fix-missing
+
+# Install F#
+RUN apt-get install -y fsharp
+
+# ADD cli-runner and install node deps
+ADD . /codewars
+
+WORKDIR /codewars
+RUN npm install
+
+# Run the test suite to make sure this thing works
+
+USER codewarrior
+# Set environment variables
+ENV TIMEOUT 2000
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN mocha -t 5000 test/runners/csharp_spec.js test/runners/fsharp_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]

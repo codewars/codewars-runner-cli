@@ -1,0 +1,51 @@
+# BUILD-USING:    docker build -t codewars/runner-func .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-func --entrypoint=/bin/bash codewars/runner-haskell -s
+# RUN-USING:      docker run --rm --name=runner-func codewars/runner-func --help
+
+# Pull base image.
+FROM codewars/runner-base
+
+# Install Racket
+RUN apt-get -y install racket
+
+# Install SBCL (Steel Bank Common Lisp)
+RUN apt-get -y install sbcl
+
+# Install OCAML
+RUN apt-get -y install ocaml-nox
+
+# Install Haskell
+RUN apt-get install -y ghc cabal-install
+RUN su codewarrior -c "cabal update"
+RUN su codewarrior -c "cd ~codewarrior ; cabal install hspec"
+
+# Install Persistent Database support for Haskell
+RUN apt-get -y install libghc-zlib-dev
+
+# TODO: fix
+RUN su codewarrior -c "cabal install esqueleto persistent-sqlite persistent-template"
+
+# ZMQ
+RUN su codewarrior -c "cabal install zeromq3-haskell"
+
+# ADD cli-runner and install node deps
+ADD . /codewars
+
+WORKDIR /codewars
+RUN npm install
+
+# Run the test suite to make sure this thing works
+
+USER codewarrior
+# Set environment variables
+ENV TIMEOUT 2000
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN mocha -t 5000 test/runners/haskell_spec.js \
+    test/runners/ocaml_spec.js \
+    test/runners/lisp_spec.js \
+    test/runners/racket_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
