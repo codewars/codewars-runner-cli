@@ -1,11 +1,46 @@
-var exec = require('child_process').exec,
+var util = require('./lib/util'),
     docker = require('./lib/docker'),
-    clc = require('cli-color');
+    config = require('./lib/config'),
+    opts = require("nomnom")
+        .options({
+            version: {
+                abbr: 'v',
+                flag: true,
+                help: 'Print version and exit',
+                callback: function () {
+                    return config.version
+                }
+            }
+        })
+        .help('This utility will test the specified docker image')
+        .parse();
 
 // i.e. docker run -i --entrypoint mocha codewars/cli-runner:0.1.22 --recursive -t 5000
-exec("docker run -i --entrypoint mocha " + docker.taggedImage() + " --recursive -t 5000", function(err, stdout, stderr)
+docker.imageChain(opts._, function(name, image, next)
 {
-    console.log(stdout);
-    console.log(clc.red(stderr));
-});
+    console.log("Testing " + image);
+
+    var args = ["run", "-i", "--entrypoint", "mocha", image, "-t", 5000],
+        specs;
+
+    // support the ability to test a specific language.
+    if (opts._.length == 1 && opts[0] != name)
+    {
+        specs = ["test/runners/" + opts._[0] + "_spec.js"];
+    }
+    else
+    {
+        specs = config.images[name].map(function (language)
+        {
+            return "test/runners/" + language + "_spec.js";
+        });
+    }
+
+    util.pipeSpawn("docker", args.concat(specs), function()
+    {
+        // Use a slight pause so that the results can be seen during multi-language tests
+        setTimeout(next, 1000);
+    });
+
+}).run();
 
