@@ -61,7 +61,7 @@ var config = require('./lib/config' ),
                 flag: true,
                 help: 'Print version and exit',
                 callback: function () {
-                    return config.version
+                    return config.version;
                 }
             }
         })
