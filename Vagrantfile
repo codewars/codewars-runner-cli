@@ -10,10 +10,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "shell", path: 'setup/provision.sh'
 
-  config.vm.provision "docker" do |d|
-    d.build_image "/vagrant", args: "-t codewars/cli-runner"
-  end
-
   config.vm.provider "virtualbox" do |v|
     v.memory = 1536
     v.name = "codewars_runner_host"
