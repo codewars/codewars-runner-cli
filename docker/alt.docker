@@ -47,6 +47,10 @@ RUN apt-get -y install rust-0.11
 RUN apt-get install -y lua5.2
 RUN apt-get install -y luarocks
 
+# Install Prolog
+#RUN apt-add-repository ppa:swi-prolog/stable && apt-get update
+#RUN apt-get install -y swi-prolog
+
 # Install ZMQ
 #RUN luarocks install https://raw.github.com/Neopallium/lua-zmq/master/rockspecs/lua-zmq-scm-1.rockspec
 RUN pecl install zmq-beta #php
