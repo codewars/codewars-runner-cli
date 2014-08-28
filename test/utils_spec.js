@@ -21,11 +21,12 @@ describe( 'parseBodyToArgs', function(){
         expect(args ).to.contain(' --solution "solution \\"a\\"');
     });
 
-});describe( 'parseBodyToArray', function(){
+});
+
+describe( 'parseBodyToArray', function(){
     it( 'should parse body into command line args array', function() {
         var body = {l: 'ruby', c: 'solution'}
         var args = parseBodyToArray(body);
-
 
         expect(args[0]).to.equal('-l')
         expect(args[1]).to.equal('ruby');
