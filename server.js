@@ -101,8 +101,8 @@ app.post('/update', function(req, res)
 });
 
 app.post('/run', function(req, res) {
-    var image = req.body.image,
-        taggedImage = docker.taggedImage(image);
+    var language = req.body.l || req.body.language,
+        taggedImage = docker.taggedImage(language);
 
     delete req.body.image;
 
@@ -123,7 +123,7 @@ app.post('/run', function(req, res) {
         return;
     }
 
-    docker.run(image, 'run', req.body, function(error, data, stdout, stderr){
+    docker.run(language, 'run', req.body, function(error, data, stdout, stderr){
         console.timeEnd(taggedImage);
 
         json = safeParse(stdout);
@@ -156,7 +156,7 @@ app.post('/run', function(req, res) {
 });
 
 app.get('/status', function(req, res) {
-    docker.run(null, 'run', {l: 'javascript', c: 'console.log(1+1)'}, function(err, data, stdout, stderr) {
+    docker.run('javascript', 'run', {l: 'javascript', c: 'console.log(1+1)'}, function(err, data, stdout, stderr) {
         res.end(JSON.stringify({
             healthy: stdout.indexOf('stdout":"2\\n",') > 0,
             freeMem: os.freemem(),
