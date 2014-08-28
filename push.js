@@ -19,8 +19,19 @@ var docker = require('./lib/docker'),
         .help('This utility will rebuild the docker image for the latest version')
         .parse();
 
-console.log('Pushing image, this may take a while...');
-docker.push(opts.image, function(code) {
-    console.log('Process finished');
-});
+// if no items where provided then push everything, including base
+//if (opts._.length == 0)
+//{
+//    opts._ = docker.imageNames();
+//    opts._.unshift('base');
+//}
+
+docker.imageChain(opts._, function(name, image, next)
+{
+    console.log("Pushing " + image);
+    docker.push(image, function(code) {
+        console.log("Push " + image + " finished with code " + code);
+        next();
+    });
+}).run();
 

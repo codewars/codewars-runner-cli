@@ -1,0 +1,59 @@
+# BUILD-USING:    docker build -t codewars/runner-base .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-base --entrypoint=/bin/bash codewars/runner-base -s
+# RUN-USING:      docker run --rm --name=runner-base codewars/runner-base --help
+
+# Pull base image.
+FROM dockerfile/ubuntu
+
+# Set the env variables to non-interactive
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_PRIORITY critical
+ENV DEBCONF_NOWARNINGS yes
+ENV TERM linux
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# ADD codewarrior user
+RUN useradd codewarrior
+RUN rm -rf ~codewarrior && cp -a ~root ~codewarrior && chown -R codewarrior:codewarrior ~codewarrior
+
+# Define default command.
+CMD ["bash"]
+
+# Append any relevant run args as per the help
+
+RUN apt-get update
+
+ENTRYPOINT ["timeout", "15", "node"]
+
+# Install Node.js (needed to run actual runner)
+RUN add-apt-repository ppa:chris-lea/node.js
+RUN apt-get update
+RUN apt-get install -y nodejs
+RUN su codewarrior -c "echo '\n# Node.js\nexport PATH=\"/codewars/node_modules/.bin:$PATH\"' >> ~codewarrior/.bash_profile"
+
+# Install Redis
+RUN apt-get install -y redis-server
+
+# Install MongoDB
+RUN apt-get install -y mongodb-server && \
+    mkdir -p /data/db && \
+    chown codewarrior:codewarrior /data/db
+
+# Install SQLITE
+RUN apt-get install -y sqlite libsqlite3-dev
+
+# Install ElasticSearch
+RUN wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.1.deb && \
+    dpkg -i elasticsearch-1.1.1.deb
+
+# Install RabitMQ
+RUN apt-get install -y rabbitmq-server
+
+# Install ZMQ
+RUN apt-get install -y libzmq3-dev
+
+# Install Python Basics
+RUN apt-get install -y python-software-properties
+
+# Install Node testing frameworks & additional frameworks
+RUN npm -g install chai mocha
