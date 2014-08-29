@@ -8,11 +8,6 @@ var docker = require('./lib/docker'),
                 flag: true,
                 help: 'Provide if image should be pushed after being built'
             },
-            base: {
-                abbr: 'b',
-                flag: true,
-                help: 'True if the base image should be built first'
-            },
             version: {
                 abbr: 'v',
                 flag: true,
