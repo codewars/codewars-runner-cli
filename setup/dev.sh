@@ -1,13 +1,16 @@
-#!/bin/sh
+#!/bin/bash -x
+set -euo pipefail
+IFS=$'\n\t'
 
-echo "Install server packages"
 cd /vagrant
 npm install
-
-echo "Install supervisor"
-sudo npm install supervisor -g
-
-echo "Install htop"
+npm install supervisor -g
+apt-get -y install docker.io
+ln -sf /usr/bin/docker.io /usr/local/bin/docker
+sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
+update-rc.d docker.io defaults
+usermod -a -G docker vagrant
 apt-get install htop
 
-node build
+su vagrant -c "node build base"
+su vagrant -c "node build"
