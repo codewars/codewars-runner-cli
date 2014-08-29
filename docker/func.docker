@@ -22,11 +22,11 @@ RUN su codewarrior -c "cd ~codewarrior ; cabal install hspec"
 # Install Persistent Database support for Haskell
 RUN apt-get -y install libghc-zlib-dev
 
-# TODO: fix
+WORKDIR /tmp
 RUN su codewarrior -c "cabal install esqueleto persistent-sqlite persistent-template"
 
 # ZMQ
-RUN su codewarrior -c "cabal install zeromq3-haskell"
+RUN su codewarrior -c "cabal install zeromq4-haskell"
 
 # ADD cli-runner and install node deps
 ADD . /codewars
