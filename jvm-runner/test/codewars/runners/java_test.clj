@@ -4,6 +4,7 @@
             [codewars.test.utils :refer :all]
             [cheshire.core :as json]))
 
+
 (deftest java-basic
   (testing "-main can handle a very basic java solution and fixture"
     (with-in-str
@@ -20,6 +21,7 @@
        {:language "java"
         :solution "public class FooFighters {public static int main() {return 1;}}"})
       (is (= 1 (-main))))))
+
 
 (deftest java-solution-print
   (testing "-main can handle a java solution that prints to standard out"
@@ -126,4 +128,23 @@
       (let [test-out-string (with-java-out-str (-main))]
         (is (.contains test-out-string "<DESCRIBE::>solutionAndSetupAndFixture(NineYards)<:LF:>"))
         (is (.contains test-out-string "test out"))
+        (is (.contains test-out-string "<PASSED::>Test Passed<:LF:>"))))))
+
+(deftest codewars-kumite-test
+  (testing "Can handle a simple static export"
+    (with-in-str
+      (json/generate-string
+       {:language "java"
+        :solution "public class Java {
+                     public static int multiply(int x, int y) { return x * y; } }"
+        :fixture "import org.junit.*;
+
+                  public class JavaTest{
+                    @Test
+                    public final void testMultiply() {
+                      Assert.assertEquals(\"The two values should multiply together\", 50, Java.multiply(10, 5));
+                    }
+                  }"})
+      (let [test-out-string (with-java-out-str (-main))]
+        (is (.contains test-out-string "<DESCRIBE::>testMultiply(JavaTest)<:LF:>"))
         (is (.contains test-out-string "<PASSED::>Test Passed<:LF:>"))))))
