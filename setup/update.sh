@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash -x
+set -euo pipefail
+IFS=$'\n\t'
 
 cd /codewars-runner
 git pull
