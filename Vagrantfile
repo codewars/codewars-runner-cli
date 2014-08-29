@@ -12,9 +12,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |v|
     v.memory = 1536
     v.name = "codewars_runner_host"
-    config.vm.provision "shell", path: 'setup/provision.sh'
-    config.vm.provision "shell", path: 'setup/dev.sh'
   end
+
+  config.vm.provision "shell", path: 'setup/provision.sh'
+  config.vm.provision "shell", path: 'setup/dev.sh'
 
   # Setting up a static network on 10.100.150.0 class C subnet
   # This is to make future expansion of the vagrant file to a small test cluster easier
