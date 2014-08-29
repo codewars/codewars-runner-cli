@@ -217,7 +217,7 @@ RUN npm install
 
 USER codewarrior
 # Set environment variables
-ENV TIMEOUT 2000
+ENV TIMEOUT 10000
 ENV USER codewarrior
 ENV HOME /home/codewarrior
 RUN mocha -t 5000 test/*
