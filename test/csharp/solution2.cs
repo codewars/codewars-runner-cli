@@ -10,7 +10,7 @@ public class Program{
 			si.FileName = "bash";
 			si.Arguments = "-c \"echo `ulimit -u`\"";
 			Console.WriteLine(System.Diagnostics.Process.Start(si).StandardOutput.ReadToEnd());
-		while (true)   {			
+		while (true)   {
 				Thread thread = new Thread(new ThreadStart(Program.Method));
 				thread.Start();
 		}
@@ -20,5 +20,3 @@ public class Program{
 			Console.WriteLine("Hello World");
 	}
 }
-
-Program.Main(null);
