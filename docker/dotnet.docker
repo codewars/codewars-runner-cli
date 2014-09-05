@@ -6,10 +6,26 @@
 FROM codewars/runner-base
 
 # Install Mono
-RUN apt-get install -y mono-csharp-shell --fix-missing
+RUN apt-get install -y mono-complete
 
 # Install F#
 RUN apt-get install -y fsharp
+
+# Install NuGet
+RUN mkdir -p /usr/local/share/mono/
+WORKDIR /usr/local/share/mono/
+RUN mozroots --import --sync
+RUN wget 'http://download-codeplex.sec.s-msft.com/Download/Release?ProjectName=nuget&DownloadId=835802&FileTime=130438931143730000&Build=20928' -O NuGet.exe
+
+RUN mono NuGet.exe update -self
+RUN mono NuGet.exe install xunit ; \
+    mono NuGet.exe install xunit.extensions ; \
+    mono NuGet.exe install ; \
+    mono NuGet.exe install NUnit ; \
+    mono NuGet.exe install NUnit.Runners ; \
+    mono NuGet.exe install log4net ; \
+    mono NuGet.exe install mongocsharpdriver ; \
+    mono NuGet.exe install System.Data.SQLite
 
 # ADD cli-runner and install node deps
 ADD . /codewars
@@ -24,7 +40,8 @@ USER codewarrior
 ENV TIMEOUT 2000
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/csharp_spec.js test/runners/fsharp_spec.js
+
+RUN mocha -t 10000 test/runners/{csharp,fsharp}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

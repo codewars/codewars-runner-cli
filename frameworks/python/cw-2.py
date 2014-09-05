@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 class AssertException(Exception):
     pass
 
@@ -8,10 +10,10 @@ def format_message(message):
 
 def expect(passed=None, message=None, allow_raise=False):
     if passed:
-        print "<PASSED::>Test Passed"
+        print("<PASSED::>Test Passed")
     else:
         message = message or "Value is not what was expected"
-        print "<FAILED::>{0}".format(message)
+        print("<FAILED::>{0}".format(message))
         if allow_raise:
             raise AssertException(message)
 
@@ -47,8 +49,8 @@ def expect_error(message, function):
 
 
 def describe(message):
-    print "<DESCRIBE::>{0}".format(format_message(message))
+    print("<DESCRIBE::>{0}".format(format_message(message)))
 
 
 def it(message):
-    print "<IT::>{0}".format(format_message(message))
+    print("<IT::>{0}".format(format_message(message)))
