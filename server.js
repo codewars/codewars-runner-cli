@@ -95,7 +95,7 @@ app.post('/update', function(req, res)
         //this will kill us, so we don't need to do anything more
     });
 
-    useTimeout(90000, res, buffer);
+    useTimeout(150000, res, buffer);
 });
 
 app.post('/run', function(req, res) {
