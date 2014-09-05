@@ -70,7 +70,7 @@ app.post('/build', function(req, res) {
 app.post('/update', function(req, res)
 {
     //TODO make this require somehwere better
-    var updateSh = spawn('bash', [ 'setup/update.sh' ], {
+    var updateSh = spawn('sh', [ 'setup/update.sh' ], {
         cwd: process.env.PWD
     });
 

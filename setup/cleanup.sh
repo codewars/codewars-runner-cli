@@ -1,6 +1,4 @@
-#!/bin/bash -x
-set -euo pipefail
-IFS=$'\n\t'
+#!/bin/sh
 
 echo "Cleaning up..."
 
