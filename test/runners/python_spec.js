@@ -5,8 +5,9 @@ describe('python runner', function () {
 
     describe('.run', function () {
         it('should handle basic code evaluation', function (done) {
-            runner.run({language: 'python', solution: 'print 42'}, function (buffer) {
-                expect(buffer.stdout).to.equal('42\n');
+            runner.run({language: 'python', solution: 'import sys; sys.stdout.write("42")'}, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.equal('42');
                 done();
             });
         });
@@ -21,16 +22,17 @@ describe('python runner', function () {
                 },
                 function (buffer) {
                     console.log(buffer);
-
                     expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                     done();
                 });
         });
         it('should handle a basic assert_equals', function (done) {
-            runner.run({language: 'python',
+            runner.run({
+                    language: 'python',
                     solution: 'a = 1',
                     fixture: 'test.assert_equals(a, 1)',
-                    testFramework: 'cw-2'},
+                    testFramework: 'cw-2'
+                },
                 function (buffer) {
                     console.log(buffer);
                     expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
@@ -38,11 +40,13 @@ describe('python runner', function () {
                 });
         });
         it('should handle a basic setup', function (done) {
-            runner.run({language: 'python',
+            runner.run({
+                    language: 'python',
                     solution: 'a = 1',
                     setup: 'b = 2',
                     fixture: 'test.assert_equals(b, 2)',
-                    testFramework: 'cw-2'},
+                    testFramework: 'cw-2'
+                },
                 function (buffer) {
                     console.log(buffer);
                     expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
@@ -50,10 +54,12 @@ describe('python runner', function () {
                 });
         });
         it('should handle a failed assertion', function (done) {
-            runner.run({language: 'python',
+            runner.run({
+                    language: 'python',
                     solution: 'a = 1',
                     fixture: 'test.expect(a == 2)',
-                    testFramework: 'cw-2'},
+                    testFramework: 'cw-2'
+                },
                 function (buffer) {
                     console.log(buffer);
                     expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
@@ -78,10 +84,11 @@ describe('python runner', function () {
         it('should handle a basic assertion', function (done) {
             runner.run({language: 'python',
                     solution: 'a = 1',
-                    fixture: 'class TestSequenceFunctions(unittest.TestCase):\n'
-                        + '  def test_assert(self):\n'
-                        + '    self.assertEqual(a, 1)\n'
-                        + '_testsuite = unittest.TestLoader().loadTestsFromTestCase(TestSequenceFunctions)',
+                    fixture: [
+                        'class Test(unittest.TestCase):',
+                        '  def test_assert(self):',
+                        '    self.assertEqual(a, 1)'
+                    ].join('\n'),
                     testFramework: 'unittest'},
                 function (buffer) {
                     console.log(buffer);
@@ -92,28 +99,31 @@ describe('python runner', function () {
         it('should handle a failed assetion', function (done) {
             runner.run({language: 'python',
                     solution: 'a = 1',
-                    fixture: 'class TestSequenceFunctions(unittest.TestCase):\n'
-                        + '  def test_assert(self):\n'
-                        + '    self.assertEqual(a, 2, "test failed")\n'
-                        + '_testsuite = unittest.TestLoader().loadTestsFromTestCase(TestSequenceFunctions)',
+                    fixture: [
+                        'class Test(unittest.TestCase):',
+                        '  def test_assert(self):',
+                        '    self.assertEqual(a, 2, "test failed")'
+                    ].join('\n'),
                     testFramework: 'unittest'},
                 function (buffer) {
                     console.log(buffer);
-                    expect(buffer.stdout).to.equal('<FAILED::>test failed\n');
+                    expect(buffer.stdout).to.contain('<FAILED::>');
+                    expect(buffer.stdout).to.contain('test failed');
                     done();
                 });
         });
         it('should handle a failed assetion', function (done) {
             runner.run({language: 'python',
                     solution: 'a = 1',
-                    fixture: 'class TestSequenceFunctions(unittest.TestCase):\n'
-                        + '  def test_assert(self):\n'
-                        + '    raise StandardError("exception")\n'
-                        + '_testsuite = unittest.TestLoader().loadTestsFromTestCase(TestSequenceFunctions)',
+                    fixture: [
+                        'class Test(unittest.TestCase):',
+                        '  def test_assert(self):',
+                        '    raise Exception("exceptions are my favorite, I always throw them")'
+                    ].join('\n'),
                     testFramework: 'unittest'},
                 function (buffer) {
                     console.log(buffer);
-                    expect(buffer.stdout).to.equal('<ERROR::>Unhandled Exception: exception\n');
+                    expect(buffer.stdout).to.equal('<ERROR::>Unhandled Exception: exceptions are my favorite, I always throw them\n');
                     done();
                 });
         });
@@ -126,12 +136,13 @@ describe('python runner', function () {
                     setup: [
                         'import subprocess',
                         'import re',
+                        'import sys',
                         'mongod = subprocess.Popen("mongod", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)',
+                        'is_waiting = re.compile(r".*waiting for connections on port 27017")',
                         'while True:',
-                        '  l = mongod.stdout.readline()',
-                        '  m = re.match(r".*waiting for connections on port 27017", l)',
-                        '  if m:',
-                        '    print l',
+                        '  l = mongod.stdout.readline().decode("utf-8")',
+                        '  if is_waiting.match(l):',
+                        '    sys.stdout.write(l + "\\n")',
                         '    break'
                     ].join('\n'),
                     solution: [
