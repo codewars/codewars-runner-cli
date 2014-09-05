@@ -25,7 +25,6 @@ docker.imageChain(opts._, function(name, image, next, end)
 {
     console.log("Name = " + name);
     console.log("Building " + image);
-
     docker.build(name, image, function (code)
     {
         console.log('Image name = ' + image);
