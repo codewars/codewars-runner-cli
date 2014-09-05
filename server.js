@@ -5,9 +5,9 @@ var express = require('express'),
     docker = require('./lib/docker'),
     exec = require('child_process').exec,
     os = require('os'),
-    key = require('./apikey'),
     bodyParser = require('body-parser'),
-    spawn = require('child_process').spawn;
+    spawn = require('child_process').spawn,
+    Chain = require('./lib/chain');
 
 var app = express();
 
@@ -17,8 +17,6 @@ process.on('message', function(msg) {
         process.exit(0);
     }
 });
-
-
 
 //app.use(require('response-time')(5));
 //app.use(require('connect-timeout')(10000));
@@ -39,7 +37,7 @@ app.use(function(req, res, next)
         return;
     }
     var thiskey = req.body.key;
-    if(!key || thiskey == key)
+    if(!config.apiKey || thiskey == config.apiKey)
     {
         next();
     }
@@ -171,6 +169,56 @@ app.get('/status', function(req, res) {
     });
 
     useTimeout(5000, res);
+});
+app.get('/status/full', function(req, res) {
+    var result = {
+        freeMem: os.freemem(),
+        version: config.version,
+        runners: {},
+        failed: [],
+        healthy: true
+    }
+
+    // TODO: add additional runners
+    var args = {
+        'ruby': {l: 'ruby', c: 'p 1+1'},
+        'node': {l: 'javascript', c: 'console.log(1+2)'},
+        'python': {l: 'python', c: 'print 1+3'},
+        'func': {l: 'haskell', c: 'main = putStrLn "5"'},
+        'alt': {l: 'lua', c: 'print(1+5)'}
+    }
+
+    var chain = new Chain();
+    Object.keys(args).forEach(function(runner)
+    {
+        chain.push(function(next)
+        {
+            docker.run(runner, 'run', args[runner], function(err, data, stdout, stderr)
+            {
+                if (err || stderr)
+                {
+                    result.failed.push(runner);
+                    result.healthy = false;
+                }
+
+                result.runners[runner] = {
+                    error: err && err.toString(),
+                    data: data,
+                    stdout: stdout,
+                    stderr: stderr
+                };
+
+                next();
+            });
+        });
+    });
+
+    chain.run(function()
+    {
+        res.end(JSON.stringify(result));
+    });
+
+    useTimeout(30000, res);
 });
 
 function useTimeout(timeout, res, buffer) {
