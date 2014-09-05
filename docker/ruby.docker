@@ -54,6 +54,8 @@ RUN gem install googlecharts --no-ri --no-rdoc
 RUN gem install ffi-rzmq --no-ri --no-rdoc
 RUN gem install bunny --no-ri --no-rdoc
 RUN gem install amqp --no-ri --no-rdoc
+RUN gem install functional-ruby --no-ri --no-rdoc
+RUN gem install concurrent-ruby --no-ri --no-rdoc
 #RUN gem install gruff --no-ri --no-rdoc
 #RUN gem install chartkick --no-ri --no-rdoc
 
