@@ -1,22 +1,21 @@
 # BUILD-USING:    docker build -t codewars/runner-python .
 # TEST-USING:     docker run --rm -i -t --name=test-runner-python --entrypoint=/bin/bash codewars/runner-python -s
 # RUN-USING:      docker run --rm --name=runner-python codewars/runner-python --help
-# EXAMPLE USAGE:  docker run --rm codewars/runner-python run -l python -c "print(1+1)"
+# EXAMPLE USAGE:  docker run --rm codewars/runner-python run -l python -c "print 1+1 "
+#                 docker run --rm codewars/runner-python run -l python3 -c "print(1+1)"
 
 # Pull base image.
 FROM codewars/runner-base
 
-# Install Python 3
-
 # Install Additional Python libraries
-RUN sudo apt-get install -y python-pip
-RUN sudo apt-get install -y python-numpy python-scipy python-pandas python-pip
+RUN sudo apt-get install -y python-pip python-numpy python-scipy python-pandas
+
+# Install Python 3
+RUN sudo apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
 
 # Install Packages
-RUN pip install pymongo
-RUN pip install redis
-RUN pip install pyzmq
-
+RUN pip install pymongo redis pyzmq
+RUN pip3 install pymongo redis pyzmq
 
 # ADD cli-runner and install node deps
 ADD . /codewars
@@ -28,10 +27,10 @@ RUN npm install
 
 USER codewarrior
 # Set environment variables
-ENV TIMEOUT 2000
+
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/python_spec.js
+RUN mocha -t 5000 test/runners/{python,python3}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

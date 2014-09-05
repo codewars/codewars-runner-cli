@@ -1,23 +1,18 @@
+from __future__ import print_function
 import unittest
-import string
-
-def exit():
-  return
 
 def formatMessage(message):
-  return string.replace(message, "\n", "<:LF:>")
+  return "{0}".format(message).replace("\n", "<:LF:>")
 
 class CwTestResult(unittest.TestResult):
   def addSuccess(self, test):
-    print "<PASSED::>Test Passed"
+    print("<PASSED::>Test Passed")
     super(CwTestResult, self).addSuccess(test)
 
   def addFailure(self, test, err):
-    print "<FAILED::>" + formatMessage(err[1].message)
+    print("<FAILED::>" + formatMessage(err[1]))
     super(CwTestResult, self).addFailure(test, err)
 
   def addError(self, test, err):
-    print "<ERROR::>Unhandled Exception: "  + formatMessage(err[1].message)
-    super(CwTestResult, self).addError(test, error)
-
-
+    print("<ERROR::>Unhandled Exception: " + formatMessage(err[1]))
+    super(CwTestResult, self).addError(test, err)
