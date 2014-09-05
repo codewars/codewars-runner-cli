@@ -21,11 +21,12 @@ RUN mono NuGet.exe update -self
 RUN mono NuGet.exe install xunit ; \
     mono NuGet.exe install xunit.extensions ; \
     mono NuGet.exe install ; \
-    mono NuGet.exe install NUnit ; \
-    mono NuGet.exe install NUnit.Runners ; \
     mono NuGet.exe install log4net ; \
     mono NuGet.exe install mongocsharpdriver ; \
     mono NuGet.exe install System.Data.SQLite
+
+RUN mono NuGet.exe install NUnit ; \
+    mono NuGet.exe install NUnit.Runners ; \
 
 # ADD cli-runner and install node deps
 ADD . /codewars
