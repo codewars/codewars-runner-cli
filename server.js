@@ -91,7 +91,7 @@ app.post('/update', function(req, res)
         buffer.push(code);
         res.end(buffer.join(''));
         //now that the update is finished, reload the server
-        spawn('sh', ['setup/reload.sh'], {detached: true}).unref();
+        spawn('bash', ['setup/reload.sh'], {detached: true}).unref();
         //this will kill us, so we don't need to do anything more
     });
 
@@ -218,7 +218,7 @@ app.get('/status/full', function(req, res) {
         res.end(JSON.stringify(result));
     });
 
-    useTimeout(30000, res);
+    useTimeout(15000, res);
 });
 
 function useTimeout(timeout, res, buffer) {
