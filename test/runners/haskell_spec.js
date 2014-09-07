@@ -84,6 +84,7 @@ describe('haskell runner', function () {
                     '      head [23 ..] `shouldBe` (23 :: Int)'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
                 expect(buffer.stdout).to.contain('<IT::>returns the first element of a list');
                 expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
@@ -103,6 +104,7 @@ describe('haskell runner', function () {
                     '      head [23 ..] `shouldBe` (23 :: Int)'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
                 expect(buffer.stdout).to.contain('<IT::>returns the first element of a list');
                 expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
@@ -127,6 +129,7 @@ describe('haskell runner', function () {
                     '      x `shouldBe` (1 :: Int)'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('<IT::>is 1');
                 expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
@@ -151,6 +154,7 @@ describe('haskell runner', function () {
                     '      x `shouldBe` (1 :: Int)'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('<IT::>is 1');
                 done();
@@ -170,9 +174,10 @@ describe('haskell runner', function () {
                     '      x `shouldBe` 2'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('<IT::>is 2');
-                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2\n but got: 1');
                 done();
             });
         });
@@ -191,6 +196,7 @@ describe('haskell runner', function () {
                     '      xval `shouldBe` 1'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('Test\n<IT::>prints and returns 1');
                 expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
@@ -213,9 +219,10 @@ describe('haskell runner', function () {
                     '      x `shouldBe` 3'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('<IT::>is not really 2');
-                expect(buffer.stdout).to.contain('<FAILED::>expected: 2 but got: 1');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2\n but got: 1');
                 expect(buffer.stdout).to.not.contain('<IT::>should never get here');
                 expect(buffer.stdout).to.not.contain('<FAILED::>expected: 3 but got: 1');
                 done();
@@ -235,14 +242,298 @@ describe('haskell runner', function () {
                     '      x `shouldBe` 2'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>exception');
                 expect(buffer.stdout).to.contain('<IT::>should throw');
                 expect(buffer.stdout).to.contain('<ERROR::>ErrorCall (Prelude.head: empty list)');
                 done();
             });
         });
+        it("should be able to hide a module from the solution code", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'x :: Int',
+                    'x = 1'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (x)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a module (happy path)" $ do',
+                    '    it "Data.Monoid is hidden" $ do',
+                    '      hidden $ Module \"Data.Monoid\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Data.Monoid is hidden');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                done();
+            });
+        });
+        it("should fail if a module which is supposed to be hidden is not", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Data.Monoid',
+                    'x :: Int',
+                    'x = 1'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (x)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a module (sad path)" $ do',
+                    '    it "Data.Monoid is not hidden!" $ do',
+                    '      hidden $ Module \"Data.Monoid\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Data.Monoid is not hidden!');
+                expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Data.Monoid');
+                done();
+            });
+        });
+        it("should recognize when things are hidden from a particular module", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Data.List hiding (reverse)',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function (happy path)" $ do',
+                    '    it "Data.List.reverse is hidden" $ do',
+                    '      hidden $ FromModule \"Data.List\" \"reverse\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Data.List.reverse is hidden');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                done();
+            });
+        });
+        it("should fail when a symbol from a module that ought to be hidden is not", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Data.List (intercalate)',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function (sad path)" $ do',
+                    '    it "Data.List.intercalate is not hidden!" $ do',
+                    '      hidden $ FromModule \"Data.List\" \"intercalate\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Data.List.intercalate is not hidden!');
+                expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Data.List.intercalate');
+                done();
+            });
+        });
+        it("should fail when a symbol from a module that ought to be hidden is not because the whole module was imported", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Data.List',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function (sad path)" $ do',
+                    '    it "Data.List.intercalate is not hidden, because the whole module was imported!" $ do',
+                    '      hidden $ FromModule \"Data.List\" \"intercalate\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Data.List.intercalate is not hidden, because the whole module was imported!');
+                expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Data.List.intercalate');
+                done();
+            });
+        });
+        it("should fail when a symbol from a module that ought to be hidden is not because it wasn't hidden properly", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Data.List hiding (reverse)',
+                    'import Control.Monad hiding ((=<<))',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function (sad path)" $ do',
+                    '    it "Control.Monad.>=> is not hidden, because we forgot!" $ do',
+                    '      hidden $ FromModule \"Control.Monad\" \">=>\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Control.Monad.>=> is not hidden, because we forgot!');
+                expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Control.Monad.>=>');
+                done();
+            });
+        });
+        it("should fail when a function is hidden once in a module, but later imported", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Data.List hiding (reverse)',
+                    'import Control.Monad hiding ((>=>))',
+                    'import Control.Monad ((>=>))',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function (sad path)" $ do',
+                    '    it "Control.Monad.>=> is not hidden, because we imported it after all!" $ do',
+                    '      hidden $ FromModule \"Control.Monad\" \">=>\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Control.Monad.>=> is not hidden, because we imported it after all!');
+                expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Control.Monad.>=>');
+                done();
+            });
+        });
+        it("should fail when a function is hidden once in a module, but later imported as qualified", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Data.List hiding (reverse)',
+                    'import Control.Monad hiding ((>=>))',
+                    'import qualified Control.Monad as WhatMonadRhymesWith',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function (sad path)" $ do',
+                    '    it "Control.Monad.>=> is not hidden, because we imported Control.Monad qualified!" $ do',
+                    '      hidden $ FromModule \"Control.Monad\" \">=>\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Control.Monad.>=> is not hidden, because we imported Control.Monad qualified!');
+                expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Control.Monad.>=>');
+                done();
+            });
+        });
+        it("should be able to hide Prelude functions", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'import Prelude hiding (reverse)',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function from Prelude (happy path)" $ do',
+                    '    it "Prelude.reverse is hidden" $ do',
+                    '      hidden $ FromModule \"Prelude\" \"reverse\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Prelude.reverse is hidden');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                done();
+            });
+        });
+        it("should detect when we failed to hide a Prelude function", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'module CodeWars.Solution where',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'import CodeWars.Solution (reverse)',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function from Prelude (sad path)" $ do',
+                    '    it "Prelude.reverse is NOT hidden!" $ do',
+                    '      hidden $ FromModule \"Prelude\" \"reverse\"'
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Prelude.reverse is NOT hidden!');
+                expect(buffer.stdout).to.contain('<FAILED::>');
+                done();
+            });
+        });
+        it("should detect when we hid a Prelude function, even when we forgot to say our module name", function (done) {
+            runner.run({
+                language: 'haskell',
+                solution: [
+                    'import Prelude hiding (reverse)',
+                    'reverse :: [a] -> [a]',
+                    'reverse = foldl (flip (:)) []'
+                ].join('\n'),
+                fixture: [
+                    'module Default.Module.Name.Is.Main.Test where',
+                    'import qualified Main',
+                    'import Test.Hspec',
+                    'main :: IO ()',
+                    'main = hspec $ do',
+                    '  describe "Testing BlackListing a particular function from Prelude, when module name is not specified (happy path)" $ do',
+                    '    it "Prelude.reverse is indeed hidden" $ do',
+                    '      hidden [FromModule \"Prelude\" \"reverse\"]',
+                    '  describe "Main.reverse reverses a thing" $ do',
+                    '    it "Main.reverse is functionally the same as Prelude.reverse" $ do',
+                    '      let testInput = [1..10]',
+                    '      Main.reverse testInput `shouldBe` reverse testInput',
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer);
+                expect(buffer.stdout).to.contain('Prelude.reverse is indeed hidden');
+                expect(buffer.stdout).to.contain('Main.reverse is functionally the same as Prelude.reverse');
+                expect(buffer.stdout).to.contain('<PASSED::>');
+                done();
+            });
+        });
     });
-    describe('potpourri', function () {
+    describe('haskell', function () {
         it('can handle SQLite interaction', function (done) {
             runner.run({language: 'haskell',
                 solution: [
@@ -309,6 +600,7 @@ describe('haskell runner', function () {
                     '                                 , Movie "Mad Max 2: The Road Warrior" 1981 100]'
                 ].join('\n')
             }, function (buffer) {
+                console.log(buffer);
                 expect(buffer.stdout).to.contain('Test Passed');
                 done();
             });
