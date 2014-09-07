@@ -45,6 +45,6 @@ specdoc {
      unless (null err) $ writeLine err
      where
        err = either
-              (("<ERROR::>" ++) . formatException)
-              (("<FAILED::>" ++) . (filter (/= '\n')))
+              ((printf "<ERROR::>%s<:LF:>") . formatException)
+              (printf "<FAILED::>%s<:LF:>")
               reason
