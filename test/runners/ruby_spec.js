@@ -111,6 +111,19 @@ describe('ruby runner', function () {
                 }
             );
         });
+        it('should support let', function (done) {
+            runner.run({language: 'ruby',
+                    solution: 'a = 1',
+                    fixture: ['describe "test" do',
+                        'let(:b) { a }',
+                        'it("test2") { expect(b).to eq(1)}',
+                        'end'].join('\n'),
+                    testFramework: 'rspec'}, function (buffer) {
+                    expect(buffer.stdout).to.equal('<DESCRIBE::>test\n<IT::>test2\n<PASSED::>Test Passed\n');
+                    done();
+                }
+            );
+        });
         it('should handle a basic failed assertion', function (done) {
             runner.run({language: 'ruby',
                     solution: 'a = 1',
