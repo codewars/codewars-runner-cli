@@ -14,9 +14,10 @@ frameworks/java/CwRunListener.class
 frameworks/java/CwTestRunner.class
 .DS_Store
 *~
-*.pyc
 target/*
 .idea/
 .lein-repl-history
 example.rb
 Dockerfile
+*.o
+*.hi
