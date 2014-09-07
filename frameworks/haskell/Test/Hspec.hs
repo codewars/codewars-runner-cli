@@ -32,10 +32,16 @@ module Test.Hspec (
   , anyIOException
   , anyArithException
   , errorCall
+
+  -- BlackList import declarations
+  , Hidden (..)
+  , BlackList
+  , hidden
                      ) where
 
 import "hspec" Test.Hspec hiding (hspec)
 import Test.CodeWars.Runner (hspec)
+import Test.CodeWars.BlackList (Hidden (..), BlackList, hidden)
 import Test.QuickCheck hiding (reason)
 import Control.Exception (evaluate)
 import Test.HUnit (assertFailure)
