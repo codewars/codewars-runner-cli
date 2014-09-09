@@ -34,7 +34,6 @@ RUN npm install
 
 USER codewarrior
 # Set environment variables
-ENV TIMEOUT 2000
 ENV USER codewarrior
 ENV HOME /home/codewarrior
 RUN mocha -t 5000 test/runners/javascript_spec.js test/runners/coffeescript_spec.js test/runners/typescript_spec.js
