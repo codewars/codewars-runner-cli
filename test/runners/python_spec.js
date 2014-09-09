@@ -1,8 +1,7 @@
 var expect = require('chai').expect;
 var runner = require('../../lib/runners/python');
 
-describe('python runner2', function () {
-    this.timeout(600);
+describe('python runner', function () {
 
     describe('.run', function () {
         it('should handle basic code evaluation', function (done) {

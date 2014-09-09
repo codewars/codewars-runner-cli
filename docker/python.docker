@@ -27,6 +27,7 @@ RUN npm install
 
 USER codewarrior
 # Set environment variables
+
 ENV USER codewarrior
 ENV HOME /home/codewarrior
 RUN mocha -t 5000 test/runners/{python,python3}_spec.js
