@@ -8,11 +8,6 @@ var docker = require('./lib/docker'),
                 flag: true,
                 help: 'Provide if image should be pushed after being built'
             },
-            base: {
-                abbr: 'b',
-                flag: true,
-                help: 'True if the base image should be built first'
-            },
             version: {
                 abbr: 'v',
                 flag: true,
@@ -30,7 +25,6 @@ docker.imageChain(opts._, function(name, image, next, end)
 {
     console.log("Name = " + name);
     console.log("Building " + image);
-
     docker.build(name, image, function (code)
     {
         console.log('Image name = ' + image);
