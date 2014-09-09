@@ -22,3 +22,4 @@ class CwRSpecFormatter
     @output.puts formatMessage(notification.message)
   end
 end
+
