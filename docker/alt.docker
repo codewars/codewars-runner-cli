@@ -64,8 +64,11 @@ RUN git checkout tags/v1.0.0-rc2
 RUN make install
 RUN rm -rf /tmp/elixir
 
-# Elixir needs a UTF-8 local
+# Elixir needs a UTF-8 locale
 RUN apt-get install -y locales && dpkg-reconfigure locales && locale-gen en_US.UTF-8
+
+# Install GNU R
+RUN apt-get install -y r-base
 
 # ADD cli-runner and install node deps
 ADD . /codewars
@@ -82,7 +85,7 @@ ENV HOME /home/codewarrior
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-RUN mocha -t 5000 test/runners/{go,php,erlang,elixir,julia,rust,go,lua,perl}_spec.js
+RUN mocha -t 5000 test/runners/{go,php,erlang,elixir,julia,rust,go,lua,perl,r}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
