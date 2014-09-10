@@ -23,7 +23,7 @@ specdoc {
     unless (n == 0) newParagraph
     writeLine $ join ["<DESCRIBE::>", name]
 
-, exampleGroupDone = writeLine "<COMPLETEDIN::>"
+, exampleGroupDone = writeLine "\n<COMPLETEDIN::>"
 
 , exampleSucceeded = \(_, requirement) -> do
     writeLine $ join ["<IT::>", requirement]
