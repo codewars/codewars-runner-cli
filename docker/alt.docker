@@ -56,16 +56,17 @@ RUN apt-get install -y luarocks
 RUN pecl install zmq-beta #php
 RUN apt-get install -y libzeromq-perl #perl
 
-# Install elixir
+# Install Elixir
+# Elixir needs a UTF-8 locale
+RUN apt-get install -y locales && dpkg-reconfigure locales && locale-gen en_US.UTF-8
 WORKDIR /tmp
 RUN git clone https://github.com/elixir-lang/elixir.git
 WORKDIR /tmp/elixir
-RUN git checkout tags/v1.0.0-rc2
+RUN git checkout tags/v1.0.0
 RUN make install
 RUN rm -rf /tmp/elixir
 
-# Elixir needs a UTF-8 locale
-RUN apt-get install -y locales && dpkg-reconfigure locales && locale-gen en_US.UTF-8
+
 
 # Install GNU R
 RUN apt-get install -y r-base
