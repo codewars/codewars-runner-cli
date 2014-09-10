@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", path: 'setup/dev.sh'
 
   config.vm.provider "virtualbox" do |v|
-    v.memory = 1536
+    v.memory = 2056
     v.name = "codewars_runner_host"
   end
 
