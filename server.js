@@ -185,7 +185,9 @@ app.get('/status/full', function(req, res) {
         'node': {l: 'javascript', c: 'console.log(1+2)'},
         'python': {l: 'python', c: 'print 1+3'},
         'func': {l: 'haskell', c: 'main = putStrLn "5"'},
-        'alt': {l: 'lua', c: 'print(1+5)'}
+        'alt': {l: 'lua', c: 'print(1+5)'},
+        'jvm': {l: 'clojure', c: '(println "7")'},
+        'systems': {l: 'bash', c: 'echo 8'}
     }
 
     var chain = new Chain();
