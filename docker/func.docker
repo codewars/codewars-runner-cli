@@ -33,6 +33,9 @@ RUN su codewarrior -c "cabal install zeromq4-haskell"
 RUN apt-get install -y happy
 RUN su codewarrior -c "cabal install haskell-src-exts"
 
+# Lens for haskell
+RUN su codewarrior -c "cabal install lens"
+
 # ADD cli-runner and install node deps
 ADD . /codewars
 
