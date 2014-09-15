@@ -10,20 +10,24 @@ import Test.Hspec.Formatters ( Formatter (..)
 import qualified Test.Hspec.Formatters (writeLine)
 import Control.Monad (unless, join, forM_)
 import Text.Printf (printf)
+import Data.List (intercalate)
+import Data.List.Split (splitOn)
 
 writeLine :: String -> FormatM ()
-writeLine s = Test.Hspec.Formatters.writeLine $ join [s, "<:LF:>"]
+writeLine s = Test.Hspec.Formatters.writeLine
+              $ intercalate "<:LF:>"
+              $ splitOn "\n" s
 
 codewars :: Formatter
 codewars = do
 specdoc {
-  headerFormatter = return (),
-  exampleGroupStarted = \n _ name -> do
-   -- separate groups with an empty line
+  headerFormatter = return ()
+, exampleGroupStarted = \n _ name -> do
+    -- separate groups with an empty line
     unless (n == 0) newParagraph
     writeLine $ join ["<DESCRIBE::>", name]
 
-, exampleGroupDone = writeLine "\n<COMPLETEDIN::>"
+, exampleGroupDone = Test.Hspec.Formatters.writeLine "<COMPLETEDIN::>"
 
 , exampleSucceeded = \(_, requirement) -> do
     writeLine $ join ["<IT::>", requirement]
@@ -45,6 +49,6 @@ specdoc {
      unless (null err) $ writeLine err
      where
        err = either
-              ((printf "<ERROR::>%s<:LF:>") . formatException)
-              (printf "<FAILED::>%s<:LF:>")
+              ((printf "<ERROR::>%s") . formatException)
+              (printf "<FAILED::>%s")
               reason
