@@ -115,6 +115,46 @@ describe('clojure runner', function () {
                 done();
             });
         });
+        it('should handle a typical kata', function (done) {
+            runner.run({
+                language: 'clojure',
+                solution: [
+                    '(ns last (:refer-clojure :exclude [last]))',
+                    '(defn last [lst] (reduce #(do %2) lst))'
+                ].join('\n'),
+                fixture: [
+                    '(ns last-test',
+                    '  (:require [clojure.test :refer :all]',
+                    '            [last :as last])',
+                    '  (:refer-clojure :exclude [last]))',
+                    '(defn- last [lst] (reduce #(do %2) lst))',
+                    '(with-redefs',
+                    '  [clojure.core/last',
+                    '   (fn [& _] ',
+                    '     (throw (Exception. "Sorry! The last built-in is disabled for this kata!")))',
+                    '   clojure.core/take-last',
+                    '   (fn [& _] ',
+                    '     (throw (Exception. "Sorry! The take-last built-in is disabled for this kata!")))]',
+                    '  (deftest test-last-function',
+                    '    (let [input1 [1 9 13 1 99 9 9 13]',
+                    '          input2 (repeatedly (+ 5 (rand-int 10)) #(rand-int 100))',
+                    '          input3 "foop"]',
+                    '      (testing (prn-str input1)',
+                    '        (is (= (last/last input1) 13)))',
+                    '      (testing (prn-str input2)',
+                    '        (is (= (last/last input2) (last input2))))',
+                    '      (testing (str "String: " (prn-str input3))',
+                    '        (is (= (last/last input3) (last input3)))))))'
+
+                ].join('\n')
+            }, function (buffer) {
+                console.log(buffer.stderr);
+                expect(buffer.stdout).to.contain('<DESCRIBE::>test-last-function');
+                expect(buffer.stdout).to.contain('<IT::>[1 9 13 1 99 9 9 13]');
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                done();
+            });
+        });
         it('should fail fast', function (done) {
             runner.run({
                 language: 'clojure',
@@ -124,7 +164,7 @@ describe('clojure runner', function () {
                     '(deftest fast-fail',
                     '  (testing "quit early" (is (= 2 1) "not true"))',
                     '  (testing "shouldn\'t happen" (is (= 3 1) "can\'t get here"))',
-                ')'
+                    ')'
                 ].join('\n')
             }, function (buffer) {
                 console.log(buffer.stderr);

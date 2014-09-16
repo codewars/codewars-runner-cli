@@ -51,7 +51,10 @@ instance BlackList Hidden where
   hidden h = do
     decls <- solutionImportDeclarations
     let declCode = intercalate "\n" $ map prettyPrint decls
-    let errorMessage = printf "Import declarations must hide %s:\n\n%s" (show h) declCode
+    let mustHideMessage = printf "Import declarations must hide %s" (show h)
+    let errorMessage = if (declCode /= "")
+                       then join [mustHideMessage, ":\n\n", declCode]
+                       else mustHideMessage
     assertBool errorMessage $ importDeclarationsHide decls h
 
 instance BlackList [Hidden] where

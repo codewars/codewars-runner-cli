@@ -177,7 +177,8 @@ describe('haskell runner', function () {
                 console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('<IT::>is 2');
-                expect(buffer.stdout).to.contain('<FAILED::>expected: 2\n but got: 1');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2');
+		expect(buffer.stdout).to.contain('but got: 1');
                 done();
             });
         });
@@ -222,7 +223,8 @@ describe('haskell runner', function () {
                 console.log(buffer);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>x');
                 expect(buffer.stdout).to.contain('<IT::>is not really 2');
-                expect(buffer.stdout).to.contain('<FAILED::>expected: 2\n but got: 1');
+                expect(buffer.stdout).to.contain('<FAILED::>expected: 2');
+		expect(buffer.stdout).to.contain('but got: 1');
                 expect(buffer.stdout).to.not.contain('<IT::>should never get here');
                 expect(buffer.stdout).to.not.contain('<FAILED::>expected: 3 but got: 1');
                 done();
