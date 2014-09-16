@@ -16,7 +16,9 @@
   (println (str "<ERROR::>" (.getMessage e) "<:LF:>"))
   (let [sw (java.io.StringWriter.)]
     (.printStackTrace e (java.io.PrintWriter. sw))
-    (println (str sw)))
+    (-> (str sw)
+        (clojure.string/replace "\n" "<:LF:>")
+        println))
   (System/exit 1))
 
 (defn -main
