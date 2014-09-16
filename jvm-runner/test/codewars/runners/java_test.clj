@@ -19,7 +19,7 @@
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "public class FooFighters {public static int main() {return 1;}}"})
+        :solution "class FooFighters { static int main(String [] args) {return 1;} }"})
       (is (= 1 (-main))))))
 
 
@@ -28,7 +28,7 @@
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "public class Hello {public static void main() {System.out.print(\"Hellooo!\");}}"})
+        :solution "public class Hello {public static void main(String[] args) {System.out.print(\"Hellooo!\");}}"})
       (is (= "Hellooo!" (with-java-out-str (-main)))))))
 
 (deftest java-setup-code
@@ -39,8 +39,8 @@
         :setup "import java.lang.String;
                 public class Beatles {public static String sayHello() {
                   return \"Hello, hello!\";}}"
-        :solution "public class HelloAgain {
-                     public static void main() {
+        :solution "class HelloAgain {
+                     static void main(String[] args) {
                          System.out.print(Beatles.sayHello());}}"})
       (is (= "Hello, hello!" (with-java-out-str (-main)))))))
 
