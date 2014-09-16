@@ -8,8 +8,8 @@
 (defmacro with-test-out [& body]
   `(->
     (with-out-str ~@body)
-    (clojure.string/replace "\n" "<:LF:>\n")
-    (print)
+    (clojure.string/replace "\n" "<:LF:>")
+    (println)
     clojure.test/with-test-out))
 
 (defn- print-context []
