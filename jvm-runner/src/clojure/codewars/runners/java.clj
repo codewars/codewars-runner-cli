@@ -57,8 +57,9 @@
     (-> solution
         :class-name
         (->> (load-class dir))
-        (.getMethod "main" nil)
-        (.invoke nil nil))))
+        (.getDeclaredMethod "main" (into-array [(Class/forName "[Ljava.lang.String;")]))
+        (doto (.setAccessible true))
+        (.invoke nil (into-array [(into-array String [])])))))
 
 (defmethod full-project "java"
   [{:keys [:fixture :setup :solution]}]
