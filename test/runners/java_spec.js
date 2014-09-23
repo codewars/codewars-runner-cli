@@ -7,10 +7,10 @@ describe('java runner', function () {
         it('should handle basic code evaluation', function (done) {
             runner.run({language: 'java',
                 solution: [
-                    'public class Solution {',
-                    '  public static void main(){',
+                    'class Solution {',
+                    '   static void main(String[] args){',
                     '        System.out.println("42");',
-                    '    }',
+                    '   }',
                     '}'].join('\n')
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('42\n');
@@ -24,9 +24,6 @@ describe('java runner', function () {
                 solution: 'public class Solution {\n'
                     + '    public Solution(){}\n'
                     + '    public int testthing(){return 3;}\n'
-                    + '    public static void main(String[] args){\n'
-                    + '        System.out.println("42");\n'
-                    + '    }\n'
                     + '}\n',
                 fixture: 'import static org.junit.Assert.assertEquals;\n'
                     + 'import org.junit.Test;\n'
@@ -49,9 +46,6 @@ describe('java runner', function () {
                 solution: 'public class Solution {\n'
                     + '    public Solution(){}\n'
                     + '    public int testthing(){return 3;}\n'
-                    + '    public static void main(String[] args){\n'
-                    + '        System.out.println("42");\n'
-                    + '    }\n'
                     + '}\n',
                 fixture: 'import static org.junit.Assert.assertEquals;\n'
                     + 'import org.junit.Test;\n'
