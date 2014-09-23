@@ -18,14 +18,15 @@ RUN apt-get install -y oracle-java8-installer
 RUN curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/bin/lein
 RUN chmod a+x /usr/bin/lein
 RUN mkdir ~/.lein
-RUN echo '{:user {:dependencies [\
+RUN echo '{:user {\
+:dependencies [\
   [org.clojure/clojure "1.6.0"] \
   [cheshire "5.3.1"] \   
   [korma "0.3.0"] \
   [com.h2database/h2 "1.3.170"] \
   [org.xerial/sqlite-jdbc "3.7.15-M1"] \
   [com.novemberain/monger "2.0.0"] \
-  [com.taoensso/carmine "2.7.0"] \
+  [com.taoensso/carmine "2.7.0" :exclusions [org.clojure/clojure]] \
   [org.clojure/core.async "0.1.346.0-17112a-alpha"] \
   [org.clojure/test.check "0.5.9"] \
   [prismatic/schema "0.2.6"] \
@@ -41,7 +42,11 @@ RUN echo '{:user {:dependencies [\
   [junit/junit "4.11"] \
   [org.codehaus.groovy/groovy-all "2.3.6"] \
   [environ "0.5.0"] \
-] :plugins [[lein-exec "0.3.4"]]}}' > ~/.lein/profiles.clj
+] \
+:plugins [ \
+  [lein-exec "0.3.4"] \ 
+  [lein-environ "0.5.0"] \
+]}}' > ~/.lein/profiles.clj
 RUN LEIN_ROOT=true lein exec -e '(prn :ok)'
 
 # Install scala
@@ -71,4 +76,4 @@ RUN mocha -t 10000 test/runners/{java,clojure,groovy,scala}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
-ENTRYPOINT ["timeout", "15", "node\"]
+ENTRYPOINT ["timeout", "15", "node"]

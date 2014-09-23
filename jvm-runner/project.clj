@@ -8,7 +8,7 @@
                  [com.h2database/h2 "1.3.170"] ; In Memory Database
                  [org.xerial/sqlite-jdbc "3.7.15-M1"] ; SQLite
                  [com.novemberain/monger "2.0.0"] ; Monger
-                 [com.taoensso/carmine "2.7.0"] ; Carmine
+                 [com.taoensso/carmine "2.7.0" :exclusions [org.clojure/clojure]] ; Carmine
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"] ; Go-Routines
                  [org.clojure/test.check "0.5.9"] ; Generative Testing
                  [prismatic/schema "0.2.6"] ; Schema Verification
