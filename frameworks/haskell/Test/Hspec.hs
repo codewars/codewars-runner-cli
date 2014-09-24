@@ -9,6 +9,14 @@ module Test.Hspec (
   , Spec
   , describe
   , it
+  , context
+  , example
+  , pending
+  , pendingWith
+  , before
+  , after
+  , around
+  , parallel
 
   -- QuickCheck
   , property
