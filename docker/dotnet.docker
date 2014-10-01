@@ -25,8 +25,9 @@ RUN mono NuGet.exe install xunit ; \
     mono NuGet.exe install mongocsharpdriver ; \
     mono NuGet.exe install System.Data.SQLite
 
-RUN mono NuGet.exe install NUnit ; \
-    mono NuGet.exe install NUnit.Runners ; \
+# this is currently breaking the build
+#RUN mono NuGet.exe install NUnit ; \
+#    mono NuGet.exe install NUnit.Runners ; \
 
 # ADD cli-runner and install node deps
 ADD . /codewars
