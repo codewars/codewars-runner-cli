@@ -187,7 +187,8 @@ app.get('/status/full', function(req, res) {
         'func': {l: 'haskell', c: 'main = putStrLn "5"'},
         'alt': {l: 'lua', c: 'print(1+5)'},
         'jvm': {l: 'clojure', c: '(println "7")'},
-        'systems': {l: 'bash', c: 'echo 8'}
+        'systems': {l: 'bash', c: 'echo 8'},
+        'dotnet': {l: 'csharp', c: 'Console.WriteLine(9);'}
     }
 
     var chain = new Chain();
