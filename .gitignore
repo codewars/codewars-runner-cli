@@ -2,6 +2,8 @@
 /tmp
 /local_config.js
 /.vagrant/
+/frameworks/php/vendor/*
+!/frameworks/php/vendor/empty
 Solution.class
 Solution.java
 Solution.hs

@@ -1,0 +1,10 @@
+{
+    "minimum-stability": "dev",
+    "config": {
+        "vendor-dir": "frameworks/php/vendor",
+        "preferred-install": "source"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.3.*"
+    }
+}
