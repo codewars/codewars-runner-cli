@@ -1,6 +1,5 @@
-var expect = require('chai').expect;
-var runner = require('../../lib/runners/haskell');
-
+var expect = require('chai').expect,
+    runner = require('../../lib/runners/haskell');
 
 describe('haskell runner', function () {
     describe('.run', function () {
@@ -540,8 +539,8 @@ describe('haskell runner', function () {
             runner.run({language: 'haskell',
                 solution: [
                     '{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies #-}',
-                    '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts #-}',
-                    '{-# LANGUAGE NoMonomorphismRestriction #-}',
+                    '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts, MultiParamTypeClasses #-}',
+                    '{-# LANGUAGE NoMonomorphismRestriction, GeneralizedNewtypeDeriving #-}',
                     'module Movies where',
                     'import Database.Persist (insertMany)',
                     'import Database.Persist.Sqlite (runSqlite, runMigration)',
