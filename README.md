@@ -103,31 +103,31 @@ You can also provide a test fixture to be run along with the code. The output re
 
 ## Docker
 
-#### Build
+#### Pull
 
-	docker build -t codewars/cli-runner .
+	docker pull codewars/codewars-runner
 
 #### Unit testing
 
-	docker run -i --entrypoint mocha codewars/cli-runner test/*
+	docker run -i --entrypoint mocha codewars/codewars-runner test/*
 	
 #### Run Help
 
-	docker run --rm codewars/cli-runner --help
+	docker run --rm codewars/codewars-runner --help
 	
 #### Run Ruby Kata
 
-	docker run --rm codewars/cli-runner run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
+	docker run --rm codewars/codewars-runner run -l ruby -c 'a = 1' -f 'Test.expect a == 1'
 
 	
 #### Run JavaScript Kata
 
-	docker run --rm codewars/cli-runner run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
+	docker run --rm codewars/codewars-runner run -l js -c 'a = 1' -f 'Test.expect(a == 1)'
 
 	
 #### Run Python Kata
 
-	docker run --rm codewars/cli-runner run -l py -c 'a = 1' -f 'test.expect(a == 1)'
+	docker run --rm codewars/codewars-runner run -l py -c 'a = 1' -f 'test.expect(a == 1)'
 
 	
 ### Server
