@@ -2,7 +2,11 @@
 try
 {
     // prevent anyone from peeking at the code we passed in
-    if (global.process) global.process.execArgv = null;
+    if (global.process)
+    {
+        global.process.execArgv = null;
+        global.process._eval = null;
+    }
 
     var util = require('util');
 
