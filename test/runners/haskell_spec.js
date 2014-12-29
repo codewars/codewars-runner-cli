@@ -1,6 +1,5 @@
-var expect = require('chai').expect;
-var runner = require('../../lib/runners/haskell');
-
+var expect = require('chai').expect,
+    runner = require('../../lib/runners/haskell');
 
 describe('haskell runner', function () {
     describe('.run', function () {
@@ -540,8 +539,8 @@ describe('haskell runner', function () {
             runner.run({language: 'haskell',
                 solution: [
                     '{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies #-}',
-                    '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts #-}',
-                    '{-# LANGUAGE NoMonomorphismRestriction #-}',
+                    '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts, MultiParamTypeClasses #-}',
+                    '{-# LANGUAGE NoMonomorphismRestriction, GeneralizedNewtypeDeriving #-}',
                     'module Movies where',
                     'import Database.Persist (insertMany)',
                     'import Database.Persist.Sqlite (runSqlite, runMigration)',
@@ -577,21 +576,35 @@ describe('haskell runner', function () {
                     'import Database.Persist.Sql (rawQuery)',
                     'import Data.Conduit (($$), (=$))',
                     'import Data.Conduit.List as CL',
-                    'import Data.Text (unpack)',
+                    'import Data.Text (pack, unpack)',
                     'import Movies (mkMoviesDB)',
+                    'import Control.Monad (when)',
+                    'import System.Posix.Files (fileExist)',
+                    'import System.Directory (removeFile)',
 
                     'data Movie = Movie String Integer Integer deriving (Eq, Show)',
 
+                    'moviesDBFileName :: String',
+                    'moviesDBFileName = "/tmp/movies.db"',
+
                     'getMovies :: IO [Movie]',
-                    'getMovies = runSqlite "/tmp/movies.db" $ do',
+                    'getMovies = runSqlite (pack moviesDBFileName) $ do',
                     '  rawQuery "select Title, Year, Rating from Movies" [] $$ CL.map toMovie =$ consume',
                     '  where',
                     '    toMovie [PersistText title, PersistInt64 year, PersistInt64 rating] =',
                     '      Movie (unpack title) (toInteger year) (toInteger rating)',
 
+                    'deleteIfExists :: String -> IO ()',
+                    'deleteIfExists fileName = do',
+                    '  exists <- fileExist fileName',
+                    '  when exists $ removeFile fileName',
+
                     'main :: IO ()',
                     'main = hspec $ do',
-                    '  describe "/tmp/movies.db" $ do',
+                    '  describe "/tmp/movies.db" ',
+                    '  $ before (deleteIfExists moviesDBFileName)',
+                    '  $ after (deleteIfExists moviesDBFileName)',
+                    '  $ do',
                     '    it "contains the movies we expect" $ do',
                     '      mkMoviesDB',
                     '      movies <- getMovies',
