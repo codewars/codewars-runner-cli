@@ -1,0 +1,44 @@
+# BUILD-USING:    docker build -t codewars/runner-systems .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-systems --entrypoint=/bin/bash codewars/runner-systems -s
+# RUN-USING:      docker run --rm --name=runner-systems codewars/runner-systems --help
+
+
+# Pull base image.
+FROM codewars/runner-base
+
+# Install Tiny C Compiler
+RUN apt-get -y install tcc
+
+# Install CLANG 3.4
+RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
+RUN apt-get update
+RUN apt-get -y install clang-3.4 lldb-3.4
+
+# NASM
+RUN apt-get -y install nasm
+
+# ARM Assembly Emulation
+RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
+
+# ADD cli-runner and install node deps
+ADD . /codewars
+
+WORKDIR /codewars
+RUN npm install
+
+# Run the test suite to make sure this thing works
+
+USER codewarrior
+# Set environment variables
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN mocha -t 5000 test/runners/c_spec.js \
+    test/runners/cpp_spec.js \
+    test/runners/bash_spec.js \
+    test/runners/arm_spec.js \
+    test/runners/gas_spec.js \
+    test/runners/nasm_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
