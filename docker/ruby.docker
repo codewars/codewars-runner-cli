@@ -1,0 +1,79 @@
+# BUILD-USING:    docker build -t codewars/runner-ruby .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-ruby --entrypoint=/bin/bash codewars/runner-ruby -s
+# RUN-USING:      docker run --rm --name=runner-ruby codewars/runner-ruby --help
+# EXAMPLE USAGE:  docker run --rm codewars/runner-ruby run -l ruby -c "puts 1+1"
+
+# Pull base image.
+FROM codewars/runner-base
+
+#Install ruby
+RUN apt-add-repository -y ppa:brightbox/ruby-ng && \
+    apt-get update && \
+    apt-get install -y ruby2.1 ruby2.1-dev && \
+    update-alternatives --remove ruby /usr/bin/ruby2.1 && \
+    update-alternatives --remove irb /usr/bin/irb2.1 && \
+    update-alternatives --remove gem /usr/bin/gem2.1 && \
+    update-alternatives \
+        --install /usr/bin/ruby ruby /usr/bin/ruby2.1 50 \
+        --slave /usr/bin/irb irb /usr/bin/irb2.1 \
+        --slave /usr/bin/rake rake /usr/bin/rake2.1 \
+        --slave /usr/bin/gem gem /usr/bin/gem2.1 \
+        --slave /usr/bin/rdoc rdoc /usr/bin/rdoc2.1 \
+        --slave /usr/bin/testrb testrb /usr/bin/testrb2.1 \
+        --slave /usr/bin/erb erb /usr/bin/erb2.1 \
+        --slave /usr/bin/ri ri /usr/bin/ri2.1 && \
+    update-alternatives --config ruby && \
+    update-alternatives --display ruby
+
+## install Rspec
+RUN gem install rspec --no-ri --no-rdoc
+RUN gem install rspec-its --no-ri --no-rdoc
+
+#RUN gem install minitest --no-ri --no-rdoc
+
+# Install additional gems
+RUN gem install pry --no-ri --no-rdoc
+RUN gem install capybara --no-ri --no-rdoc
+RUN gem install rails --no-ri --no-rdoc
+RUN gem install concerning --no-ri --no-rdoc
+RUN gem install celluloid --no-ri --no-rdoc
+RUN gem install sinatra --no-ri --no-rdoc
+RUN gem install eventmachine --no-ri --no-rdoc
+RUN gem install timers --no-ri --no-rdoc
+RUN gem install factory_girl --no-ri --no-rdoc
+RUN gem install mongo --no-ri --no-rdoc
+RUN gem install mongoid --no-ri --no-rdoc
+RUN gem install redis --no-ri --no-rdoc
+RUN gem install elasticsearch --no-ri --no-rdoc
+RUN gem install nokogiri --no-ri --no-rdoc
+RUN gem install sequel --no-ri --no-rdoc
+RUN gem install webmock --no-ri --no-rdoc
+RUN gem install timecop --no-ri --no-rdoc
+RUN gem install ruby-graphviz --no-ri --no-rdoc
+RUN gem install googlecharts --no-ri --no-rdoc
+RUN gem install ffi-rzmq --no-ri --no-rdoc
+RUN gem install bunny --no-ri --no-rdoc
+RUN gem install amqp --no-ri --no-rdoc
+RUN gem install functional-ruby --no-ri --no-rdoc
+RUN gem install concurrent-ruby --no-ri --no-rdoc
+#RUN gem install gruff --no-ri --no-rdoc
+#RUN gem install chartkick --no-ri --no-rdoc
+
+# ADD cli-runner and install node deps
+ADD . /codewars
+
+WORKDIR /codewars
+RUN npm install
+
+# Run the test suite to make sure this thing works
+
+USER codewarrior
+# Set environment variables
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+
+RUN mocha -t 5000 test/runners/ruby_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
