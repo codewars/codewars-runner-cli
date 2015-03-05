@@ -1,0 +1,1 @@
+Console.WriteLine(new System.IO.StreamReader(System.Net.HttpWebRequest.Create("http://www.google.com").GetResponse().GetResponseStream()).ReadToEnd());
