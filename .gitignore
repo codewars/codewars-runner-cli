@@ -21,3 +21,4 @@ example.rb
 Dockerfile
 *.o
 *.hi
+examples/rust/target/debug

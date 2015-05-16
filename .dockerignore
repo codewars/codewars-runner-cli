@@ -19,3 +19,4 @@ example.rb
 /server.js
 /push.js
 /README.md
+examples/rust/target/debug

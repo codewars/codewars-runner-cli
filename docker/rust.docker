@@ -1,0 +1,23 @@
+# BUILD-USING:    docker build -t codewars/runner-rust .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-rust --entrypoint=/bin/bash codewars/runner-rust -s
+# RUN-USING:      docker run --rm --name=runner-rust codewars/runner-rust --help
+
+# Pull base image.
+FROM codewars/runner-base
+
+# Install Rust Compiler
+RUN $ curl -sSf https://static.rust-lang.org/rustup.sh | sh
+
+ADD . /codewars
+WORKDIR /codewars
+
+USER codewarrior
+# Set environment variables
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+
+RUN cargo test
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
