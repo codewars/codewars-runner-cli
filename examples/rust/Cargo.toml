@@ -1,0 +1,4 @@
+[package]
+name = "codewars_problem"
+version = "0.1.0"
+authors = ["adam.copp@gmail.com"]
