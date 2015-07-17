@@ -9,6 +9,7 @@ try
     }
 
     var util = require('util');
+	var deepEquals = require('lodash').isEqual;
 
     var fnToString = Function.toString;
     Function.prototype.toString = function ()
@@ -317,6 +318,32 @@ try
                 Test.expect(true, null, options);
             }
         },
+		assertDeepEquals: function (actual, expected, msg, options) {
+			if (deepEquals(actual, expected))
+            {
+                options = options || {};
+                options.successMsg = options.successMsg || 'Value deep equals ' + Test.inspect(expected);
+                Test.expect(true, null, options);
+            }
+            else
+            {
+                msg = _message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg);
+                Test.expect(false, msg, options);
+            }
+		},
+		assertNotDeepEquals: function (actual, expected, msg, options) {
+			if (!deepEquals(actual, expected))
+            {
+                options = options || {};
+                options.successMsg = options.successMsg || 'Value not deep equals ' + Test.inspect(expected);
+                Test.expect(true, null, options);
+            }
+            else
+            {
+                msg = _message('Value should not deep equal ' + Test.inspect(actual), msg);
+                Test.expect(false, msg, options);
+            }
+		},
         assertNotEquals: function (a, b, msg, options)
         {
             if (a === b)
