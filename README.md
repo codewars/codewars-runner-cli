@@ -1,14 +1,45 @@
-# runner
+# About
 
-This project is both a command-line utility and server, used by [Codewars](http://www.codewars.com) to execute small sets of code within various languages, using various testing frameworks.
+This project is used by [Codewars](http://www.codewars.com) and [Strive](https://www.strive.co) to execute small sets of code within various languages, using various testing frameworks.
+Each time code is ran, it is executed within a Docker container in order to secure unsafe code execution.  
 
-You can run `node run --help` to view information about which arguments are supported.
 
 ## Purpose
 
-The purpose of this project is to provide a low level ability to run 'Kata'. It provides a mechanism for executing different configurations of code using various languages and testing frameworks.
+The purpose of this project is to provide a low level ability to run user submitted code. It provides a mechanism for executing different configurations of code using various languages and testing frameworks.
 
-Docker can be utilized in order to sandbox code execution. A server is provided that can accept 'run' requests and execute them within a Docker container.
+Docker is utilized in order to sandbox code execution. All execution is done within Docker, with a Node CLI app contained within each container
+that manages the code execution and returns the result via stdout. 
+ 
+## Basic Usage
+
+Within each Docker image, there is a copy of the Node executable and a `run` script. That script accepts multiple options
+for executing code. For example to run a simple javascript script which would output `2`:
+
+```
+node run -l javascript -c "console.log(1+1)"
+```
+
+Because everything runs inside of Docker, you would not run Node directly from your host but instead via a Docker run command.
+To do this, you would need to choose the right Docker image for the language you wish to execute. 
+
+```
+docker run --rm codewars/node-runner run -l javascript -c "console.log('I ran inside of Docker using NodeJS')"
+docker run --rm codewars/ruby-runner run -l ruby -c "puts 'I ran inside of Docker using Ruby'"
+```
+
+### Integrated Test Suites
+The most significant aspect of this project is that integrated test support is built-in to many languages. This is how
+Codewars and Strive work, instead of testing STDOUT of a program, the code that is being ran is also tested using tradation
+code testing methods. 
+
+Here is a very simple example of running tests using the simplified CW testing framework. 
+
+```
+docker run --rm codewars/node-runner run -l javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)" 
+```
+
+Which would output `<PASSED::>Test Passed: Value == 1` to STDOUT.
 
 ## Language Support Status 
 
@@ -64,12 +95,50 @@ have to worry about having any of the project dependencies loaded directly on yo
 Run the following command:
 
 ```
-docker run -it --rm --entrypoint bash -v $(pwd)/lib:/runner/lib -v $(pwd)/frameworks:/runner/frameworks -v $(pwd)/test:/runner/test codewars/node-runner
+docker run -it --rm --entrypoint bash -v $(pwd)/lib:/runner/lib -v $(pwd)/examples:/runner/examples -v $(pwd)/frameworks:/runner/frameworks -v $(pwd)/test:/runner/test codewars/node-runner
 ```
 
 This will create a new container and send you into the instance with your project's lib and test directories mounted
 as volumes. Mounting as a volume allows you to change files on your local machine and have those changes available to you
 from within the container.
 
-> We do not mount the entire directory because that would overwrite things such as your node_modules directory. If you need
+**Notice**: We did not mount the entire directory because that would overwrite things such as your node_modules directory. If you need
 to update these you should `make node` the image to ensure you are always testing against the correct packages.
+
+If you already have Node installed on your host machine, you can just manage your node_module packages locally for an easier development
+flow. This would allow you to just mount your entire source directory. 
+In this case you would run `npm install` and then `docker run -it --rm --entrypoint bash -v $(pwd):/runner codewars/node-runner`.
+
+## Test Suite Output Format
+
+A custom and very basic format is used for sending data out of the CLI tool. All formatted data is returned via STDOUT. 
+If you do nothing but write normal strings to STDOUT, then codewars.com will display each line as you would expect, unformatted (except of course, <br> tags will replace /n).
+
+A small subset of commands is supported that can be used to format output. They are:
+
+<DESCRIBE::>
+<IT::>
+<PASSED::>
+<FAILED::>
+<ERROR::>
+Prefixing a new line with these commands will cause that line to be formatted. Since each new STDOUT line is considered a new peace of data, if you wish to format multiple lines as one item (such as a multi line "passed" message), then you must replace all \n line feed characters with the <:LF:> token.
+
+For example, in Ruby, if you wanted to write a multi-line passed message:
+
+```ruby
+def passed(msg)
+  puts "<PASSED::>#{msg.gsub("/n", "<:LF:>")}"
+end
+```
+
+### Why the custom format?
+
+Getting different test suites in different languages to all play together with the same format can be tricky. In many cases, 
+customizing the test suite output is very limited (sometimes requiring hacking). Because of this, using formats such as 
+XML and JSON are complicated because its not always possibly to correctly close out the data format when a program raises an exception. 
+
+The format choosen was originally done so that at any point in time the program could exit while still having readable data.
+Other formats, such as TAP (Test Anything Protocol) could also be an option. However another requirement that we had when
+designing the format was to have it be incredibly simple yet flexible, so that Codewars.com could support more than simply
+outputing test results. With the current format there is nothing stopping you from outputing HTML, JS canvas code, etc in order
+to create a rich and even interactive test result output.  

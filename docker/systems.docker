@@ -27,7 +27,7 @@ RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 ADD . /runner
 
 WORKDIR /runner
-RUN npm install
+RUN npm install --production
 
 # Run the test suite to make sure this thing works
 

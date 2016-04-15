@@ -21,7 +21,7 @@ RUN apt-get install -y fsharp
 ADD . /runner
 
 WORKDIR /runner
-RUN npm install
+RUN npm install --production
 
 # Run the test suite to make sure this thing works
 
