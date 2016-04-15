@@ -1,0 +1,42 @@
+junit:
+  reference:
+    initial: |-
+      public class Person {
+        String name;
+
+          public Person(String personName) {
+                  // TODO: Program Constructor
+          }
+
+          public String greet(String yourName) {
+                  // TODO: Write a greeting string
+          }
+      }
+
+    answer: |-
+      public class Person {
+        String name;
+
+          public Person(String personName) {
+                  name = personName;
+          }
+
+          public String greet(String yourName) {
+                  return String.format("Konbanwa!  My name is %s.  It is nice to meet you, %s!", this.name, yourName);
+          }
+      }
+
+    fixture: |-
+      import org.junit.Test;
+      import static org.junit.Assert.assertEquals;
+      import org.junit.runners.JUnit4;
+
+
+      public class PersonTest {
+          @Test
+          public void testGreet() {
+              Person shoki = new Person("Shoki, the Demon Queller");
+              assertEquals("Konbanwa!  My name is Shoki, the Demon Queller.  It is nice to meet you, Sun Wukong, the Monkey King!",
+                           shoki.greet("Sun Wukong, the Monkey King"));
+          }
+      }

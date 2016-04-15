@@ -1,0 +1,107 @@
+cw-2:
+  bug fixes:
+    initial: |-
+      class Person
+        attr_reader :name
+        def initialize(name)
+          name = name
+        end
+
+        def greet
+          "Hello my name is #{name}"
+        end
+      end
+    answer: |-
+      class Person
+        attr_reader :name
+        def initialize(name)
+          @name = name
+        end
+
+        def greet
+          "Hello my name is #{name}"
+        end
+      end
+
+    fixture: |-
+      jack = Person.new("Jack")
+      jill = Person.new("Jill")
+
+      Test.expect(jack.name == "Jack", "person.name method does not have a valid value")
+
+      Test.expect(jack.greet == "Hello my name is Jack")
+      Test.expect(jill.greet == "Hello my name is Jill")
+
+  algorithms:
+    initial: |-
+      # return the two oldest/oldest ages within the array of ages passed in.
+      # it should return the two ages as a sorted array, youngest age first
+      def two_oldest_ages(ages)
+      end
+
+    answer: |-
+      def two_oldest_ages(ages)
+        oldest = 0
+        next_oldest = 0;
+        ages.each do |age|
+          if age > oldest
+            next_oldest = oldest
+            oldest = age
+          elsif age > next_oldest
+            next_oldest = age
+          end
+        end
+        [next_oldest, oldest]
+
+
+    fixture: |-
+      results1 = two_oldest_ages [1,5,87,45,8,8]
+      results2 = two_oldest_ages [6,5,83,5,3,18]
+
+      Test.expect(results1[0] == 45)
+      Test.expect(results1[1] == 87)
+
+      Test.expect(results2[0] == 18)
+      Test.expect(results2[1] == 83)
+
+  refactoring:
+    initial: |-
+      # TODO: This method needs to be called multiple times for the same person (myName).
+      # It would be nice if we didnt have to always pass in myName every time we needed to great someone.
+
+      def greet(myName, yourName)
+        "Hello #{yourName}, my name is #{myName}"
+      end
+
+    answer: |-
+      class Person
+        def initialize(name)
+          @name = name
+        end
+
+        def greet(yourName)
+          "Hello #{yourName}, my name is #{@name}"
+        end
+      end
+
+    fixture: |-
+      jack = Person.new("Jack")
+      jill = Person.new("Jill")
+
+      Test.expect(jack.greet("Jill") == "Hello Jill, my name is Jack")
+      Test.expect(jack.greet("Mary") == "Hello Mary, my name is Jack")
+
+      Test.expect(jill.greet("Jack") == "Hello Jack, my name is Jill")
+
+  reference:
+    initial: |-
+      websites = []
+
+    answer: |-
+      # add the values "codewars" to the websites array
+      websites << 'codewars'
+
+    fixture: |-
+      Test.expect(websites.length > 0, 'The array is still empty')
+      Test.expect(websites.length == 1, 'The array contains too many values')
+      Test.expect(websites[0] == 'codewars', 'The array does not contain the correct value "codewars"')

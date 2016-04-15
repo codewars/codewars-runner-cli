@@ -1,8 +1,8 @@
 (ns codewars.runners)
 
-(defmulti solution-only :language)
+(defmulti code-only :language)
 (defmulti full-project :language)
-(defmethod solution-only :default
+(defmethod code-only :default
   [{:keys [:language]}]
   (throw (IllegalArgumentException.
           (format "Language %s is not implemented"
@@ -15,8 +15,8 @@
                   (pr-str language)))))
 
 (defn run
-  "Run solution code or a test-fixture."
+  "Run code or a test-fixture."
   [opts]
   (if (nil? (:fixture opts))
-    (solution-only opts)
+    (code-only opts)
     (full-project opts)))

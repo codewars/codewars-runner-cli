@@ -11,11 +11,9 @@ TestFixture.java
 .idea/
 target/*
 .lein-repl-history
-example.rb
-/setup
-/examples
-/test
 /pull.js
 /server.js
 /push.js
 /README.md
+node_modules/*
+docker/*

@@ -1,45 +1,50 @@
 (ns codewars.runners.java-test
   (:require [clojure.test :refer :all]
             [codewars.core :refer [-main] :as core]
-            [codewars.test.utils :refer :all]
+            [codewars.utils :refer :all]
             [cheshire.core :as json]))
 
-
 (deftest java-basic
-  (testing "-main can handle a very basic java solution and fixture"
+  (testing "-main can handle a very basic java code and fixture"
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "class Foo {}"
+        :code "class Foo {}"
         :fixture "class Bar {}"})
       (is (= org.junit.runner.Result (class (-main)))))))
 
-(deftest java-solution-only
-  (testing "-main can handle a java solution without a fixture"
+(deftest java-code-only
+  (testing "-main can handle a java code without a fixture"
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "class FooFighters { static int main(String [] args) {return 1;} }"})
-      (is (= 1 (-main))))))
+        :code "class FooFighters { static int main(String [] args) {return 1;} }"})
+      (is (= 1 (-main))))
+   (with-in-str
+      (json/generate-string
+       {:language "java"
+        :code "package bar.baz ; class FooFighters { static int main(String [] args) {return 7;} }"})
+      (is (= 7 (-main))))))
 
 
-(deftest java-solution-print
-  (testing "-main can handle a java solution that prints to standard out"
+
+(deftest java-code-print
+  (testing "-main can handle a java code that prints to standard out"
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "public class Hello {public static void main(String[] args) {System.out.print(\"Hellooo!\");}}"})
+        :code "public class Hello {public static void main(String[] args) {System.out.print(\"Hellooo!\");}}"})
       (is (= "Hellooo!" (with-java-out-str (-main)))))))
 
 (deftest java-setup-code
-  (testing "-main can handle a java solution and setup code"
+  (testing "-main can handle a java code and setup code"
     (with-in-str
       (json/generate-string
        {:language "java"
         :setup "import java.lang.String;
                 public class Beatles {public static String sayHello() {
                   return \"Hello, hello!\";}}"
-        :solution "class HelloAgain {
+        :code "class HelloAgain {
                      static void main(String[] args) {
                          System.out.print(Beatles.sayHello());}}"})
       (is (= "Hello, hello!" (with-java-out-str (-main)))))))
@@ -49,8 +54,8 @@
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "public class Solution {
-                   public Solution(){}
+        :code "public class Code {
+                   public Code(){}
                    public int testthing(){return 3;}}",
         :fixture "import static org.junit.Assert.assertEquals;
                   import org.junit.Test;
@@ -58,7 +63,7 @@
                   public class TestFixture {
                      public TestFixture(){}
                      @Test public void myTestFunction(){
-                        Solution s = new Solution();
+                        Code s = new Code();
                          assertEquals(\"wow\", 3, s.testthing());
                          System.out.println(\"test out\");}}"})
       (let [test-out-string (with-java-out-str (-main))]
@@ -71,7 +76,7 @@
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "public class Foo {
+        :code "public class Foo {
                      public Foo(){}
                      public int testthing(){return 3;}
                      public static void main(String[] args){System.out.println(\"42\");}}"
@@ -96,7 +101,7 @@
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "public class Solution {
+        :code "public class Code {
                      public static void main(String[] args){
                        notdefinedgonnafail(\"42\");}}"})
       (let [error-message
@@ -104,16 +109,16 @@
         (is (.contains error-message "error: cannot find symbol"))
         (is (.contains error-message "notdefinedgonnafail(\"42\");"))
         (is (.contains error-message "symbol:   method notdefinedgonnafail(String)"))
-        (is (.contains error-message "location: class Solution"))
+        (is (.contains error-message "location: class Code"))
         (is (.contains error-message "1 error"))))))
 
 (deftest java-nine-yards
-  (testing "-main can setup, solution, and test fixture code for java"
+  (testing "-main can setup, code, and test fixture code for java"
     (with-in-str
       (json/generate-string
        {:language "java"
         :setup "public class Setupp { public static int three() {return 3;}}"
-        :solution "public class Sollution {
+        :code "public class Sollution {
                    public Sollution(){}
                    public int testthingy(){return Setupp.three();}}",
         :fixture "import static org.junit.Assert.assertEquals;
@@ -121,21 +126,22 @@
                   import org.junit.runners.JUnit4;
                   public class NineYards {
                      public NineYards(){}
-                     @Test public void solutionAndSetupAndFixture(){
+                     @Test public void codeAndSetupAndFixture(){
                          Sollution s = new Sollution();
                          assertEquals(\"wow\", 3, s.testthingy());
                          System.out.println(\"test out\");}}"})
       (let [test-out-string (with-java-out-str (-main))]
-        (is (.contains test-out-string "<DESCRIBE::>solutionAndSetupAndFixture(NineYards)<:LF:>"))
+        (is (.contains test-out-string "<DESCRIBE::>codeAndSetupAndFixture(NineYards)<:LF:>"))
         (is (.contains test-out-string "test out"))
         (is (.contains test-out-string "<PASSED::>Test Passed<:LF:>"))))))
+
 
 (deftest codewars-kumite-test
   (testing "Can handle a simple static export"
     (with-in-str
       (json/generate-string
        {:language "java"
-        :solution "public class Java {
+        :code "public class Java {
                      public static int multiply(int x, int y) { return x * y; } }"
         :fixture "import org.junit.*;
 

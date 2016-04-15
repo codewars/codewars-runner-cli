@@ -9,8 +9,7 @@
   `(->
     (with-out-str ~@body)
     (clojure.string/replace "\n" "<:LF:>")
-    (println)
-    clojure.test/with-test-out))
+    (println)))
 
 (defn- print-context []
   (when (seq *testing-contexts*)

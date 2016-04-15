@@ -1,26 +1,23 @@
-# BUILD-USING:    docker build -t codewars/runner-python .
-# TEST-USING:     docker run --rm -i -t --name=test-runner-python --entrypoint=/bin/bash codewars/runner-python -s
-# RUN-USING:      docker run --rm --name=runner-python codewars/runner-python --help
-# EXAMPLE USAGE:  docker run --rm codewars/runner-python run -l python -c "print 1+1 "
-#                 docker run --rm codewars/runner-python run -l python3 -c "print(1+1)"
+# EXAMPLE USAGE:  docker run --rm codewars/python-runner run -l python -c "print 1+1 "
+#                 docker run --rm codewars/python-runner run -l python3 -c "print(1+1)"
 
 # Pull base image.
-FROM codewars/runner-base
+FROM codewars/base-runner
 
 # Install Additional Python libraries
-RUN sudo apt-get install -y python-pip python-numpy python-scipy python-pandas
+RUN apt-get install -y python-pip python-numpy python-scipy python-pandas
 
 # Install Python 3
-RUN sudo apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
+RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
 
 # Install Packages
-RUN pip install pymongo redis pyzmq
-RUN pip3 install pymongo redis pyzmq
+RUN pip install pymongo redis
+RUN pip3 install pymongo redis
 
 # ADD cli-runner and install node deps
-ADD . /codewars
+ADD . /runner
 
-WORKDIR /codewars
+WORKDIR /runner
 RUN npm install
 
 # Run the test suite to make sure this thing works

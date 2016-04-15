@@ -1,0 +1,102 @@
+cw-2:
+  algorithms:
+    initial: |-
+      // return the two oldest/oldest ages within the array of ages passed in.
+      // it should return the two ages as a sorted array, youngest age first
+      function twoOldestAges(ages){
+
+      }
+
+    answer: |-
+      function twoOldestAges(ages){
+        var oldest = 0, nextOldest;
+        for(var i = 0;i < ages.length;i++){
+          var age = ages[i];
+          if (age > oldest){
+            nextOldest = oldest;
+            oldest = age;
+          }
+          else if(age > nextOldest){
+            nextOldest = age;
+          }
+        }
+        return [nextOldest, oldest];
+      }
+
+    fixture: |-
+      Test.describe("twoOldestAges([1,5,87,45,8,8])", function() {
+        var results1 = twoOldestAges([1, 5, 87, 45, 8, 8]);
+        Test.it("Should return something that isn't falsy", function() {
+          Test.expect(results1, "Something is wrong, twoOldestAges([1,5,87,45,8,8]) has no results!");
+        });
+        Test.it("Should return [45,87]", function() {
+          Test.assertEquals(results1[0], 45, "twoOldestAges([1,5,87,45,8,8]) should return 45 as the second highest result");
+          Test.assertEquals(results1[1], 87, "twoOldestAges([1,5,87,45,8,8]) should return 87 as the second highest result");
+        });
+      });
+
+      Test.describe("twoOldestAges([6,5,83,5,3,18])", function() {
+        var results2 = twoOldestAges([6, 5, 83, 5, 3, 18]);
+        Test.assertSimilar(results2, [18, 83]);
+      });
+
+  bug fixes:
+    initial: |-
+      function Person(name){
+       this.name = name
+      }
+
+      //TODO: The greet function is not returning the expected value.
+      Person.prototype.greet = function(){
+        return "Hello my name is " + name
+      }
+
+    answer: |-
+      function Person(name){
+        this.name = name
+      }
+
+      Person.prototype.greet = function(){
+         return "Hello my name is " + this.name;
+      }
+
+    fixture: |-
+      var jack = new Person("Jack");
+      var jill = new Person("Jill");
+
+      Test.expect(jack.name == "Jack", "person.name does not have a valid value");
+
+      Test.expect(jack.greet, "greet method does not exist on the Person instance");
+      Test.expect(jack.greet() === "Hello my name is Jack");
+      Test.expect(jill.greet() === "Hello my name is Jill");
+
+  refactoring:
+    initial: |-
+      // TODO: This method needs to be called multiple times for the same person (myName).
+      // It would be nice if we didnt have to always pass in myName every time we needed to great someone.
+
+      function greet(myName, yourName){
+        return "Hello " + yourName + ", my name is " + myName;
+      }
+
+    answer: |-
+      function Person(name){
+        this.name = name
+      }
+
+      Person.prototype.greet = function(yourName){
+        return "Hello " + yourName + ", my name is " + this.name
+      }
+
+  reference:
+    initial: |-
+      var websites = [];
+
+    answer: |-
+      // add the values "codewars" to the websites array
+      var websites = ['codewars'];
+
+    fixture: |-
+      Test.expect(websites.length > 0, 'The array is still empty')
+      Test.expect(websites.length == 1, 'The array contains too many values')
+      Test.expect(websites[0] == 'codewars', 'The array does not contain the correct value "codewars"')

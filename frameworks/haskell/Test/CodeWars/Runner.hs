@@ -6,7 +6,7 @@ import Test.CodeWars.Formatters (codewars)
 import qualified System.Exit
 import Control.Monad (unless)
 import "hspec" Test.Hspec (Spec)
-import "hspec" Test.Hspec.Runner ( hspecWith
+import "hspec" Test.Hspec.Runner ( hspecWithResult
                                  , defaultConfig
                                  , Config
                                    ( configFormatter
@@ -15,10 +15,10 @@ import "hspec" Test.Hspec.Runner ( hspecWith
 
 hspec :: Spec -> IO ()
 hspec spec = withArgs [] $ do
-    r <- hspecWith config spec
+    r <- hspecWithResult config spec
     unless (summaryFailures r == 0)
       System.Exit.exitFailure
     where
       config =
-        defaultConfig { configFormatter = codewars
+        defaultConfig { configFormatter = Just codewars
                       , configFastFail = True}

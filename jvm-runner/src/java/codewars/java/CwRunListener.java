@@ -10,7 +10,11 @@ public class CwRunListener extends RunListener
     public void testFailure(Failure failure)
     {
         failed = true;
-        System.out.println(String.format("<FAILED::>%s<:LF:>", formatMessage(failure.getMessage())));
+        String msg = failure.getMessage();
+        if (msg == null) {
+            msg = "Unknown Test Failure";
+        }
+        System.out.println(String.format("<FAILED::>%s<:LF:>", formatMessage(msg)));
     }
     public void testStarted(Description description)
     {
@@ -23,9 +27,14 @@ public class CwRunListener extends RunListener
         {
             System.out.println("<PASSED::>Test Passed<:LF:>");
         }
+        System.out.println("<COMPLETEDIN::>");
     }
     private static String formatMessage(String s)
     {
+        if(s == null){
+            s = "";
+        }
+
         return s.replaceAll("\n", "<:LF:>");
     }
 }

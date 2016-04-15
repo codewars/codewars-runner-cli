@@ -3,7 +3,7 @@
 # RUN-USING:      docker run --rm --name=runner-func codewars/runner-func --help
 
 # Pull base image.
-FROM codewars/runner-base
+FROM codewars/base-runner
 
 # Install Racket
 RUN apt-get -y install racket
@@ -14,32 +14,40 @@ RUN apt-get -y install sbcl
 # Install OCAML
 RUN apt-get -y install ocaml-nox
 
+# Needed to run add-apt-repository
+RUN apt-get -y install software-properties-common
+
 # Install Haskell
-RUN apt-get install -y ghc cabal-install
-RUN su codewarrior -c "cabal update"
-RUN su codewarrior -c "cd ~codewarrior ; cabal install hspec"
+## ensure locale is set during build
+ENV LANG C.UTF-8
 
-# Install Persistent Database support for Haskell
-RUN apt-get -y install libghc-zlib-dev
+RUN apt-get -y install libghc-zlib-dev happy
 
-WORKDIR /tmp
-RUN su codewarrior -c "cabal install esqueleto persistent-sqlite persistent-template"
+RUN echo 'deb http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' > /etc/apt/sources.list.d/ghc.list && \
+    echo 'deb http://download.fpcomplete.com/debian/jessie stable main'| tee /etc/apt/sources.list.d/fpco.list && \
+    # hvr keys
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286 && \
+    # fpco keys
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C5705533DA4F78D8664B5DC0575159689BEFB442 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends cabal-install-1.22 ghc-7.10.3 happy-1.19.5 alex-3.1.4 \
+            stack zlib1g-dev libtinfo-dev libsqlite3-0 libsqlite3-dev ca-certificates g++ && \
+    rm -rf /var/lib/apt/lists/*
 
-# ZMQ
-RUN apt-get install -y pkg-config
-RUN su codewarrior -c "cabal install zeromq4-haskell"
+ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/1.22/bin:/opt/ghc/7.10.3/bin:/opt/happy/1.19.5/bin:/opt/alex/3.1.4/bin:$PATH
 
-# Support hidding modules/built-ins
-RUN apt-get install -y happy
-RUN su codewarrior -c "cabal install haskell-src-exts"
-
-# Lens for haskell
-RUN su codewarrior -c "cabal install lens"
+# Install Haskell Packages
+RUN apt-get -y install libghc-zlib-dev pkg-config happy
+RUN cabal update
+RUN cabal install hspec
+RUN cabal install haskell-src-exts lens
+RUN cabal install esqueleto persistent-sqlite persistent-template
+RUN cabal install split ifelse
 
 # ADD cli-runner and install node deps
-ADD . /codewars
+ADD . /runner
 
-WORKDIR /codewars
+WORKDIR /runner
 RUN npm install
 
 # Run the test suite to make sure this thing works
@@ -48,7 +56,7 @@ USER codewarrior
 # Set environment variables
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/{haskell,ocaml,lisp,racket}_spec.js
+#RUN mocha -t 5000 test/runners/{haskell,ocaml,lisp,racket}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

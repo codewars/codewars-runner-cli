@@ -4,10 +4,13 @@
 
 
 # Pull base image.
-FROM codewars/runner-base
+FROM codewars/base-runner
 
 # Install Tiny C Compiler
 RUN apt-get -y install tcc
+
+# Needed to run add-apt-repository
+RUN apt-get -y install software-properties-common
 
 # Install CLANG 3.4
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
@@ -21,9 +24,9 @@ RUN apt-get -y install nasm
 RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 
 # ADD cli-runner and install node deps
-ADD . /codewars
+ADD . /runner
 
-WORKDIR /codewars
+WORKDIR /runner
 RUN npm install
 
 # Run the test suite to make sure this thing works
@@ -32,12 +35,7 @@ USER codewarrior
 # Set environment variables
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/c_spec.js \
-    test/runners/cpp_spec.js \
-    test/runners/bash_spec.js \
-    test/runners/arm_spec.js \
-    test/runners/gas_spec.js \
-    test/runners/nasm_spec.js
+RUN mocha -t 5000 test/runners/{gas,nasm,arm,cpp}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

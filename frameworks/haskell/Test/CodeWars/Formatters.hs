@@ -22,10 +22,10 @@ codewars :: Formatter
 codewars = do
 specdoc {
   headerFormatter = return ()
-, exampleGroupStarted = \n _ name -> do
+, exampleGroupStarted = \nesting name -> do
     -- separate groups with an empty line
-    unless (n == 0) newParagraph
-    writeLine $ join ["<DESCRIBE::>", name]
+    -- TODO: Handel nesting
+    writeLine $ join $ ["<DESCRIBE::>", name]
 
 , exampleGroupDone = Test.Hspec.Formatters.writeLine "<COMPLETEDIN::>"
 
@@ -45,7 +45,7 @@ specdoc {
     writeLine $ printf "<COMPLETEDIN::>%1.4f seconds" time
 } where
    formatFailure :: FailureRecord -> FormatM ()
-   formatFailure (FailureRecord _ reason) =
+   formatFailure (FailureRecord {failureRecordMessage = reason}) =
      unless (null err) $ writeLine err
      where
        err = either

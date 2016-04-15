@@ -1,13 +1,36 @@
-# BUILD-USING:    docker build -t codewars/runner-node .
-# TEST-USING:     docker run --rm -i -t --name=test-runner-node --entrypoint=/bin/bash codewars/runner-node -s
-# RUN-USING:      docker run --rm --name=runner-node codewars/runner-node --help
-# EXAMPLE USAGE:  docker run --rm codewars/runner-node run -l javascript -c "console.log(1+1)"
+# RUN-USING:      docker run --rm --name=node codewars/node-runner --help
+# EXAMPLE USAGE:  docker run --rm codewars/node-runner run -l javascript -c "console.log(1+1)"
 
 # Pull base image.
-FROM codewars/runner-base
+FROM codewars/base-runner
 
-# Install Haxe
-RUN apt-get install -y haxe
+# Install additional libraries
+# HACK: installing globallying and then linking has a less buggy experience.
+# NOTE: we dont configure these via package.json in order to prevent having to re-install them on each code change
+RUN npm link chai
+RUN npm install immutable -gq; npm link immutable
+RUN npm install deku -gq; npm link deku
+RUN npm install quickcheck -gq; npm link quickcheck
+RUN npm install should -gq; npm link should
+RUN npm install expect -gq; npm link expect
+RUN npm install chai-spies -gq; npm link chai-spies
+RUN npm install chai-stats -gq; npm link chai-stats
+RUN npm install chai-factories -gq; npm link chai-factories
+RUN npm install chai-things -gq; npm link chai-things
+RUN npm install chai-fuzzy -gq; npm link chai-fuzzy
+RUN npm install chai-interface -gq; npm link chai-interface
+RUN npm install chai-change -gq; npm link chai-change
+RUN npm install chai-subset -gq; npm link chai-subset
+RUN npm install rx -gq; npm link rx
+RUN npm install baconjs -gq; npm link baconjs
+RUN npm install lodash -gq; npm link lodash
+RUN npm install react -gq; npm link react
+RUN npm install react-dom -gq; npm link react-dom
+RUN npm install mongoose -gq; npm link mongoose
+RUN npm install mongodb -gq; npm link mongodb
+RUN npm install redis -gq; npm link redis
+RUN npm install sqlite3 -gq; npm link sqlite3
+RUN npm install elasticsearch -gq; npm link elasticsearch
 
 # Install Coffeescript
 RUN npm -g install coffee-script
@@ -15,28 +38,36 @@ RUN npm -g install coffee-script
 # Install TypeScript
 RUN npm -g install typescript
 
-RUN npm -g install chai mocha
+# install TypeScript type definitions
+RUN npm install -gq typings; npm link typings
 
-RUN npm -g install mongoose mongodb
-RUN npm -g install redis
-RUN npm -g install sqlite3
-RUN npm -g install elasticsearch
-RUN npm -g install zmq
-RUN npm -g install immutable
+RUN typings install node --ambient
+RUN typings install mocha --ambient
+RUN typings install mocha-node --ambient
+RUN typings install chai --ambient
+RUN typings install react --ambient
+RUN typings install lodash --ambient
+RUN typings install baconjs --ambient
+RUN typings install rx --ambient
+RUN typings install mongoose --ambient
+RUN typings install redis --ambient
 
 # ADD cli-runner and install node deps
-ADD . /codewars
+ADD . /runner
 
-WORKDIR /codewars
+WORKDIR /runner
 RUN npm install
+RUN npm install --only=dev
+RUN npm dedupe # needed to fix slow babeljs performance
+ENV NODE_PATH /usr/lib/node_modules
 
-# Run the test suite to make sure this thing works
-
-USER codewarrior
 # Set environment variables
+USER codewarrior
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/javascript_spec.js test/runners/coffeescript_spec.js test/runners/typescript_spec.js
+
+# Run the test suite to make sure this thing works
+#RUN mocha -t 5000 test/runners/{javascript,coffeescript,typescript}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

@@ -1,0 +1,58 @@
+{
+  "name": "runner",
+  "description": "Codewars.com code sandbox capabilities",
+  "version": "0.1.6",
+  "author": {
+    "name": "Jake Hoffner",
+    "email": "jake@codewars.com"
+  },
+  "scripts": {
+    "osx-test": "./node_modules/.bin/mocha -t 5000 test/runners/{objc,swift}_spec",
+    "js-test": "mocha -t 5000 test/runners/javascript_spec",
+    "ts-test": "./node_modules/.bin/mocha -t 5000 test/runners/typescript_spec",
+    "cs-test": "./node_modules/.bin/mocha -t 5000 test/runners/csharp_spec",
+    "ruby-test": "./node_modules/.bin/mocha -t 5000 test/runners/ruby_spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/codewars/runner.git"
+  },
+  "dependencies": {
+    "chai": "1.9.x",
+    "lodash": "^2.4.1",
+    "mocha": "1.19.x",
+    "nomnom": "1.6.x",
+    "temp": "*",
+    "asyncawait": "*",
+    "bluebird": "*",
+    "js-yaml": "*",
+    "mocha-reporter": "git://github.com/codewars/mocha-reporter"
+  },
+  "devDependencies": {
+    "babel-core": "6.7.x",
+    "babel-runtime": "6.6.x",
+    "babel-preset-stage-1": "6.5.x",
+    "babel-preset-react": "6.5.x",
+    "babel-plugin-transform-runtime": "6.7.*",
+    "babel-plugin-check-es2015-constants": "*",
+    "babel-plugin-transform-es2015-arrow-functions": "*",
+    "babel-plugin-transform-es2015-block-scoped-functions": "*",
+    "babel-plugin-transform-es2015-block-scoping": "*",
+    "babel-plugin-transform-es2015-classes": "*",
+    "babel-plugin-transform-es2015-computed-properties": "*",
+    "babel-plugin-transform-es2015-destructuring": "*",
+    "babel-plugin-transform-es2015-duplicate-keys": "*",
+    "babel-plugin-transform-es2015-for-of": "*",
+    "babel-plugin-transform-es2015-function-name": "*",
+    "babel-plugin-transform-es2015-literals": "*",
+    "babel-plugin-transform-es2015-object-super": "*",
+    "babel-plugin-transform-es2015-parameters": "*",
+    "babel-plugin-transform-es2015-shorthand-properties": "*",
+    "babel-plugin-transform-es2015-spread": "*",
+    "babel-plugin-transform-es2015-sticky-regex": "*",
+    "babel-plugin-transform-es2015-template-literals": "*",
+    "babel-plugin-transform-es2015-typeof-symbol": "*",
+    "babel-plugin-transform-es2015-unicode-regex": "*",
+    "babel-plugin-transform-regenerator": "*"
+  }
+}

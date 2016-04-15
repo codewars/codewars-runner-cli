@@ -1,0 +1,48 @@
+hspec:
+  reference:
+    initial: |-
+      module Oldest where
+
+      -- | Return the two oldest/oldest ages within the array of ages passed in.
+      --   it should return the two ages as a sorted array, youngest age first
+      twoOldestAges :: [Integer] -> (Integer,Integer)
+      -- TODO: Write me
+
+    answer: |-
+      module Oldest where
+      import Data.List (sort)
+
+      -- | Return the two oldest/oldest ages within the array of ages passed in.
+      --   it should return the two ages as a sorted array, youngest age first
+      twoOldestAges :: [Integer] -> (Integer,Integer)
+      twoOldestAges ages =
+        let [b,a] = take 2 $ reverse $ sort $ ages
+        in (a,b)
+
+    fixture: |-
+      module Oldest.Test where
+      import Oldest
+      import Test.Hspec
+      import Text.Printf
+
+      -- Codewars wraps HSpec: http://hspec.github.io/
+      main = hspec $ do
+        -- hspec lets you test your code in blocks, like RSpec
+        describe "twoOldestAges" $ do
+          -- hspec supports nested describe blocks
+          describe (show input1) $ do
+            -- Individual tests are specified with 'it'
+            it (printf "should return %s given %s as input" (show expected1) (show input1))
+            $ do
+              let (a,b) = twoOldestAges input1
+              -- You can test multiple things in an individual test if you want
+              a `shouldBe` fst expected1
+              b `shouldBe` snd expected1
+          describe (show input2) $ do
+            it (printf "should return %s given %s as input" (show expected2) (show input2))
+            $ do twoOldestAges input2 `shouldBe` expected2
+        where
+          input1 = [1,5,87,45,8,8]
+          expected1 = (45,87)
+          input2 = [6,5,83,5,3,18]
+          expected2 = (18,83)

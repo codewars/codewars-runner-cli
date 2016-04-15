@@ -1,0 +1,19 @@
+version: '2'
+services:
+  base:
+    build:
+      context: .
+      dockerfile: base.docker
+    image: codewars/base-runner
+
+  ruby:
+    build:
+      context: .
+      dockerfile: ruby.docker
+    image: codewars/ruby-runner
+
+  node:
+    build:
+      context: .
+      dockerfile: node.docker
+    image: codewars/node-runner

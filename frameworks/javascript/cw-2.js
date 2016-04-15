@@ -9,6 +9,7 @@ try
     }
 
     var util = require('util');
+    var deepEquals = require('lodash').isEqual;
 
     var fnToString = Function.toString;
     Function.prototype.toString = function ()
@@ -303,32 +304,48 @@ try
         {
             this.assertNotEquals(this.inspect(actual), this.inspect(expected), msg, options)
         },
-        assertEquals: function (actual, expected, msg, options)
-        {
-            if (actual !== expected)
-            {
+        assertEquals: function (actual, expected, msg, options) {
+            if (actual !== expected) {
                 msg = _message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg);
                 Test.expect(false, msg, options);
             }
-            else
-            {
+            else {
                 options = options || {};
                 options.successMsg = options.successMsg || 'Value == ' + Test.inspect(expected);
                 Test.expect(true, null, options);
             }
         },
-        assertNotEquals: function (a, b, msg, options)
-        {
-            if (a === b)
-            {
+        assertNotEquals: function (a, b, msg, options) {
+            if (a === b) {
                 msg = _message('Not Expected: ' + Test.inspect(a), msg);
                 Test.expect(false, msg, options);
             }
-            else
-            {
+            else {
                 options = options || {};
                 options.successMsg = options.successMsg || 'Value != ' + Test.inspect(b);
                 Test.expect(true, null, options);
+            }
+        },
+        assertDeepEquals: function (actual, expected, msg, options) {
+            if (deepEquals(actual, expected)) {
+                options = options || {};
+                options.successMsg = options.successMsg || 'Value deep equals ' + Test.inspect(expected);
+                Test.expect(true, null, options);
+            }
+            else {
+                msg = _message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg);
+                Test.expect(false, msg, options);
+            }
+        },
+		    assertNotDeepEquals: function (actual, expected, msg, options) {
+            if (!deepEquals(actual, expected)) {
+                options = options || {};
+                options.successMsg = options.successMsg || 'Value not deep equals ' + Test.inspect(expected);
+                Test.expect(true, null, options);
+            }
+            else {
+                msg = _message('Value should not deep equal ' + Test.inspect(actual), msg);
+                Test.expect(false, msg, options);
             }
         },
         expectNoError: function (msg, fn)
@@ -401,6 +418,14 @@ try
         sample: function (array)
         {
             return array[~~(array.length * Math.random())]
+        },
+        escapeHtml: function (html) {
+            return String(html)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         },
         Error: function (message)
         {

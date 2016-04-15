@@ -1,0 +1,14 @@
+{
+  "ambientDependencies": {
+    "baconjs": "registry:dt/baconjs#0.7.0+20160209151603",
+    "chai": "registry:dt/chai#3.4.0+20160216071402",
+    "lodash": "registry:dt/lodash#3.10.0+20160308151359",
+    "mocha": "registry:dt/mocha#2.2.5+20151023103246",
+    "mocha-node": "registry:dt/mocha-node#2.2.5+20150623123832",
+    "mongoose": "registry:dt/mongoose#3.8.5+20160209123716",
+    "node": "registry:dt/node#4.0.0+20160226132328",
+    "react": "registry:dt/react#0.14.0+20160302224448",
+    "redis": "registry:dt/redis#0.12.1+20160303114034",
+    "rx": "registry:dt/rx#2.5.3+20150720134954"
+  }
+}

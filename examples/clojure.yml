@@ -1,0 +1,32 @@
+'clojure.test':
+  reference:
+    initial: |-
+      (ns oldest)
+      (defn two-oldest-ages
+       "Returns the two oldest ages"
+       ;; TODO: Program me
+       )
+
+    answer: |-
+      (ns oldest)
+      (defn two-oldest-ages
+        "Returns the two oldest ages"
+        [ages]
+        (->> ages
+             sort
+             reverse
+             (take 2)
+             reverse))
+
+    fixture: |-
+      (ns oldest-test
+        (:require [clojure.test :refer :all]
+                  [oldest :refer [two-oldest-ages]]))
+
+      (deftest basic-test
+       (let [input1 [1 5 87 45 8 8]
+             input2 [6 5 83 5 3 18]]
+       (testing (str "input1: " input1)
+         (is (= (two-oldest-ages input1) [45 87])))
+       (testing (str "input2: " input2)
+         (is (= (two-oldest-ages input2) [18 83])))))

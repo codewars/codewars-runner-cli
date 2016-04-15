@@ -1,0 +1,135 @@
+cw-2:
+  algorithms:
+    initial: |-
+      # return the two oldest/oldest ages within the array of ages passed in.
+      # it should return the two ages as a sorted array, youngest age first
+      def two_oldest_ages(ages):
+        # TODO: complete
+
+    answer: |-
+      def two_oldest_ages(ages):
+        oldest = 0
+        next_oldest = 0;
+        for age in ages:
+          if age > oldest:
+            next_oldest = oldest
+            oldest = age
+          elif age > next_oldest:
+            next_oldest = age
+
+        return [next_oldest, oldest]
+
+    fixture: |-
+      # some example data
+      results1 = two_oldest_ages([1,5,87,45,8,8])
+      results2 = two_oldest_ages([6,5,83,5,3,18])
+
+      # NOTE: You can use Test or test, whichever you prefer.
+
+      # Use "describe" to label your test suite.
+      Test.describe("two_oldest_ages:")
+
+      # Use "it" to identify the conditions you are testing for
+      Test.it("should return the second oldest age first")
+      # using assert_equals will report the invalid values to the user
+      Test.assert_equals(results1[0], 45)
+      # using expect will just give a user a generic error message, unless you provide a message
+      Test.expect(results2[0] == 18, "Number is not the second oldest")
+
+      # its best practice to test for multiple groups of tests, using it calls.
+      Test.it("should return the oldest age last")
+
+      Test.assert_equals(results1[1], 87)
+      Test.expect(results2[1] == 83, "Number is not the oldest")
+
+  bug fixes:
+    initial: |-
+      def add(a, b):
+        a + b
+
+    answer: |-
+      def add(a, b):
+        return a + b
+
+    fixture: |-
+      # Use "describe" to define the test suite
+      test.describe('add method')
+
+      # Use "it" to indicate a condition you are testing for
+      test.it('should add both arguments and return')
+
+      # "assert_equals" will return information about what values were
+      # expect if the assertion fails. This can be very useful to other
+      # users trying to pass the kata.
+      test.assert_equals(add(1,2), 3)
+
+      # "expect" is a lower level assertion that will allow you to test
+      # anything. It just needs a boolean result. You should pass a message
+      # as the second parameter so that if the assertion fails the user
+      # will be giving some useful information.
+      test.expect(add(1,1) == 2, "add(1,1) should == 2")
+
+  refactoring:
+    initial: |-
+      # refactor this method into a Person class with its own greet method
+      def greet(you, me):
+        return "Hello {0}, my name is {1}".format(you, me)
+
+    answer: |-
+      class Person:
+        def __init__(self, name):
+          self.name = name
+
+        def greet(self, name):
+          return "Hello {0}, my name is {1}".format(name, self.name)
+
+    fixture: |-
+      # Use "describe" to define the test suite
+      test.describe('Person')
+
+      jack = Person('Jack')
+
+      # Use "it" to indicate a condition you are testing for
+      test.it('should have a name')
+
+      # "assert_equals" will return information about what values were
+      # expect if the assertion fails. This can be very useful to other
+      # users trying to pass the kata.
+      test.assert_equals(jack.name, "Jack")
+
+
+      test.it("should greet Jill")
+
+      test.assert_equals(jack.greet("Jill"), "Hello Jill, my name is Jack")
+
+      test.it("should greet other people as well")
+
+      # unlike "assert_equals", "expect" is a lower level assertion that
+      # takes a boolean to determine if it passes. If it fails it will
+      # output the message that you give it, or a generic one. It is a good
+      # idea to provide a custom error message to help users pass the kata
+      test.expect(jack.greet("Jane") == "Hello Jane, my name is Jack", "Jack apparently is only able to greet Jane")
+
+  reference:
+    initial: |-
+      # create an array called websites that has "codewars" as its only value
+
+    answer: |-
+      websites = ['codewars']
+
+    fixture: |-
+      # Use test.describe (or Test.describe) to describe your test suite
+      test.describe("websites")
+
+      # Use "it" calls to describe the specific test case
+      test.it("should have the value 'codewars' inside of it")
+
+      # assert equals will pass if both items equal each other (using ==). If
+      # the test fails, assert_equals will output a descriptive message indicating
+      # what the values were expected to be.
+      test.assert_equals(['codewars'], websites)
+
+      # you can also use the lower level test.expect. If you use test.expect directly then
+      # you should provide a custom error message, as the default one will be pretty useless
+      # to users trying to pass the kata.
+      test.expect(['codewars'] == websites, 'Array does not have correct value')
