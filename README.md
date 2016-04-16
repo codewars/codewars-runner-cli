@@ -3,13 +3,14 @@
 This project is used by [Codewars](http://www.codewars.com) and [Strive](https://www.strive.co) to execute small sets of code within various languages, using various testing frameworks.
 Each time code is ran, it is executed within a Docker container in order to secure unsafe code execution.  
 
-
-## Purpose
-
-The purpose of this project is to provide a low level ability to run user submitted code. It provides a mechanism for executing different configurations of code using various languages and testing frameworks.
-
-Docker is utilized in order to sandbox code execution. All execution is done within Docker, with a Node CLI app contained within each container
+All execution is done within Docker, with a Node CLI app contained within each container
 that manages the code execution and returns the result via stdout. 
+
+## Contributions
+
+This project has been open-sourced so that the Codewars and Strive community can contribute support for new languages and
+frameworks. See the Language Support Status section for more information regarding which languages are currently supported
+and where their Codewars/Strive support has been added. 
  
 ## Basic Usage
 
@@ -30,7 +31,7 @@ docker run --rm codewars/ruby-runner run -l ruby -c "puts 'I ran inside of Docke
 
 ### Integrated Test Suites
 The most significant aspect of this project is that integrated test support is built-in to many languages. This is how
-Codewars and Strive work, instead of testing STDOUT of a program, the code that is being ran is also tested using tradation
+Codewars and Strive work, instead of testing STDOUT of a program, the code that is being ran is also tested using tradational
 code testing methods. 
 
 Here is a very simple example of running tests using the simplified CW testing framework. 
