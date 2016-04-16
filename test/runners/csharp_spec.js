@@ -37,8 +37,9 @@ describe( 'c# runner', function() {
                 code: 'namespace Bank { using System; using System.Drawing; public class Account { private decimal balance; public void Deposit(decimal amount) { Console.WriteLine("slorgs"); balance += amount; } public void Withdraw(decimal amount) { balance -= Amount; } public void TransferFunds(Account destination, decimal amount) { } public decimal Balance { get { return balance; } } } } ',
                 fixture: 'namespace Bank { using NUnit.Framework; [TestFixture] public class AccountTest { [Test] public void TransferFunds() { Account source = new Account(); source.Deposit(200m); Account destination = new Account(); destination.Deposit(150m); source.TransferFunds(destination, 100m); Assert.AreEqual(250m, destination.Balance); Assert.AreEqual(100m, source.Balance); } [Test] public void CheckFunds() { Account source = new Account(); source.Deposit(200m); Account destination = new Account(); destination.Deposit(150m); Assert.AreEqual(200m, source.Balance); } } } ' }, function (buffer)
             {
-                //console.log(buffer);
+                console.log(buffer);
                 expect(buffer.stdout).to.not.contain("lib/runners/csharp.js");
+                expect(buffer.stderr).to.contain("does not exist in the current context");
                 done();
             });
         });
