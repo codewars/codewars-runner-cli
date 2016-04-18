@@ -50,14 +50,14 @@ Many languages are currently supported in various states of completeness. This l
 
 **Legend:** `!!!` = Failing Specs, `???` = Status is unknown, `*` = Any
 
-| Language       | solutionOnly | testSuite      | Codewars     | Strive         | Docker Image   | Examples     | Notes                                                                   |
+| Language       | solutionOnly | testIntegration| Codewars     | Strive         | Docker Image   | Examples     | Notes                                                                   |
 |----------------|--------------|----------------|--------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
-| Assembly (GAS) | ✓!!!         |                |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
+| Assembly (GAS) | !!!          |                |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Bash           | ✓            |                | Kumite Only  |                | *              |              |                                                                         |
-| C              | ✓!!!         | !!!            |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
+| C              | !!!          | !!!            |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Clojure        | ✓            | clojure.test   | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
 | CoffeeScript   | ✓            | cw-2           | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
-| C++            | ✓            |                |              |                | systems-runner |              |                                                                         |
+| C++            | ✓            | !!!            |              |                | systems-runner |              | Failing specs, systems image has also been temporarily removed          |
 | C#             | ✓            | nunit          | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
 | Elixir         | ✓            |                |              |                | erlang-runner  |              |                                                                         |
 | Erlang         | ✓            |                |              |                | erlang-runner  |              |                                                                         |
