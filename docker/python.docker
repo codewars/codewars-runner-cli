@@ -14,6 +14,10 @@ RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
 RUN pip install pymongo redis
 RUN pip3 install pymongo redis
 
+# Install TensorFlow for deep learning capabilities (CPU support only)
+RUN pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.8.0rc0-cp27-none-linux_x86_64.whl
+RUN pip3 install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.8.0rc0-cp34-cp34m-linux_x86_64.whl
+
 # ADD cli-runner and install node deps
 ADD . /runner
 

@@ -35,7 +35,7 @@ USER codewarrior
 # Set environment variables
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/{gas,nasm,arm,cpp}_spec.js
+RUN mocha -t 5000 test/runners/{gas,arm,cpp}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
