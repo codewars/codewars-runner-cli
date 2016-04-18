@@ -1,5 +1,7 @@
 # About
 
+[![Build Status](https://travis-ci.org/Codewars/codewars-runner-cli.svg?branch=master)](https://travis-ci.org/Codewars/codewars-runner-cli)
+
 This project is used by [Codewars](http://www.codewars.com) and [Strive](https://www.strive.co) to execute small sets of code within various languages, using various testing frameworks.
 Each time code is ran, it is executed within a Docker container in order to secure unsafe code execution.  
 
@@ -10,7 +12,7 @@ that manages the code execution and returns the result via stdout.
 
 This project has been open-sourced so that the Codewars and Strive communites can contribute support for new languages and
 frameworks. See the Language Support Status section for more information regarding which languages are currently supported
-and where their Codewars/Strive support has been added. 
+and where their Codewars/Strive support has been added.
  
 ## Basic Usage
 
@@ -51,7 +53,7 @@ Many languages are currently supported in various states of completeness. This l
 | Language       | solutionOnly | testSuite      | Codewars     | Strive         | Docker Image   | Examples     | Notes                                                                   |
 |----------------|--------------|----------------|--------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
 | Assembly (GAS) | ✓            |                |              |                | systems-runner |              |                                                                         |
-| Bash           | ✓            |                | Kumite       |                | *              |              |                                                                         |
+| Bash           | ✓            |                | Kumite Only  |                | *              |              |                                                                         |
 | C              | ✓            | !!!            | ?            |                | systems-runner |              |                                                                         |
 | Clojure        | ✓            | clojure.test   | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
 | CoffeeScript   | ✓            | cw-2           | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
@@ -65,7 +67,7 @@ Many languages are currently supported in various states of completeness. This l
 | Haskell        | ✓            | hspec!!!       | hspec        | hspec          | func-runner    | hspec        | An older version is running on CW & Strive that is fully functional     |
 | Java           | ✓            | junit          | Yes          | Yes            | jvm-runner     | junit        |                                                                         |
 | JavaScript     | ✓            | cw-2, mocha    | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| Julia          | ✓!!!         | Failing        |              |                |                |              |                                                                         |
+| Julia          | ✓!!!         | !!!            |              |                |                |              |                                                                         |
 | Lisp           | ✓            |                | Kumite Only  |                | func-runner    |              |                                                                         |
 | Lua            | ✓            |                | Kumite Only  |                | alt-runner     |              |                                                                         |
 | ObjC           | ???          | ???            |              |                |                |              |                                                                         |
