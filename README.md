@@ -21,7 +21,7 @@ for executing code. For example to run a simple javascript script which would ou
 node run -l javascript -c "console.log(1+1)"
 ```
 
-Because everything runs inside of Docker, you would not run Node directly from your host but instead via a Docker run command.
+Because everything runs inside of Docker, you would normally not run Node directly from your host but instead via a Docker run command.
 To do this, you would need to choose the right Docker image for the language you wish to execute. 
 
 ```
@@ -126,11 +126,12 @@ If you do nothing but write normal strings to STDOUT, then codewars.com will dis
 
 A small subset of commands is supported that can be used to format output. They are:
 
-- <DESCRIBE::>
-- <IT::>
-- <PASSED::>
-- <FAILED::>
-- <ERROR::>
+- `<DESCRIBE::>`
+- `<IT::>`
+- `<PASSED::>`
+- `<FAILED::>`
+- `<ERROR::>`
+- `<:LF:>`
 
 Prefixing a new line with these commands will cause that line to be formatted. 
 Since each new STDOUT line is considered a new peace of data, if you wish to format multiple lines as one 
