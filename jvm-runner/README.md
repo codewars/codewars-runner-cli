@@ -1,6 +1,7 @@
 # JVM-runner
 
-A codewars runner for JVM based languages.
+A codewars runner for JVM based languages. The advantage of using this runner is that it handles warming up the JVM for
+faster execution times.
 
 ## Building
 
@@ -23,10 +24,10 @@ JSONs should conform to the following (JSON schema)[2]:
     "title": "CodeWars Runner Schema",
     "type": "object",
     "properties": {
-	"language": {
-            "description": "The language the kata was written in",
-            "type": "string"
-	},
+        "language": {
+                "description": "The language the kata was written in",
+                "type": "string"
+        },
         "solution": {
             "description": "The codewars kata solution code",
             "type": "string"

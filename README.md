@@ -52,9 +52,9 @@ Many languages are currently supported in various states of completeness. This l
 
 | Language       | solutionOnly | testSuite      | Codewars     | Strive         | Docker Image   | Examples     | Notes                                                                   |
 |----------------|--------------|----------------|--------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
-| Assembly (GAS) | ✓            |                |              |                | systems-runner |              |                                                                         |
+| Assembly (GAS) | ✓!!!         |                |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Bash           | ✓            |                | Kumite Only  |                | *              |              |                                                                         |
-| C              | ✓            | !!!            | ?            |                | systems-runner |              |                                                                         |
+| C              | ✓!!!         | !!!            |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Clojure        | ✓            | clojure.test   | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
 | CoffeeScript   | ✓            | cw-2           | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
 | C++            | ✓            |                |              |                | systems-runner |              |                                                                         |
