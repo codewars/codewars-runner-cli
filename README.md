@@ -162,7 +162,7 @@ docker-compose run typescript_test
 ## Test Suite Output Format
 
 A custom and very basic format is used for sending data out of the CLI tool. All formatted data is returned via STDOUT. 
-If you do nothing but write normal strings to STDOUT, then codewars.com will display each line as you would expect, unformatted (except of course, <br> tags will replace /n).
+If you do nothing but write normal strings to STDOUT, then codewars.com will display each line as you would expect, unformatted.
 
 A small subset of commands is supported that can be used to format output. They are:
 
@@ -171,7 +171,6 @@ A small subset of commands is supported that can be used to format output. They 
 - `<PASSED::>`
 - `<FAILED::>`
 - `<ERROR::>`
-- `<:LF:>`
 
 Prefixing a new line with these commands will cause that line to be formatted. 
 Since each new STDOUT line is considered a new peace of data, if you wish to format multiple lines as one 
