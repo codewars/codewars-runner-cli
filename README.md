@@ -20,15 +20,32 @@ Within each Docker image, there is a copy of the Node executable and a `run` scr
 for executing code. For example to run a simple javascript script which would output `2`:
 
 ```
+# this is how you run the Node CLI. For this to work you would have to be bash into the correct Docker image
 node run -l javascript -c "console.log(1+1)"
 ```
 
 Because everything runs inside of Docker, you would normally not run Node directly from your host but instead via a Docker run command.
-To do this, you would need to choose the right Docker image for the language you wish to execute. 
+To do this, you would either bash into the corret Docker image like so:
 
 ```
+# direct Docker call:
+docker run --rm -it codewars/node-runner bash
+
+# alternatively you can use the provided Docker Compose configuration:
+docker-compose run node-runner
+```
+
+Or you could choose to execute the code outside of Docker by creating a container that will remove itself after it executes: 
+
+```
+
+# direct Docker call:
 docker run --rm codewars/node-runner run -l javascript -c "console.log('I ran inside of Docker using NodeJS')"
 docker run --rm codewars/ruby-runner run -l ruby -c "puts 'I ran inside of Docker using Ruby'"
+
+# alternatively you can use the provided Docker Compose configuration:
+docker-compose run javascript -c "console.log('I ran inside of Docker using NodeJS')"
+docker-compose run ruby -c "puts 'I ran inside of Docker using Ruby'"
 ```
 
 ### Integrated Test Suites
@@ -39,7 +56,11 @@ code testing methods.
 Here is a very simple example of running tests using the simplified CW testing framework. 
 
 ```
-docker run --rm codewars/node-runner run -l javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)" 
+# manually running docker
+docker run --rm codewars/node-runner run -l javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)"
+
+# using docker compose
+docker-compose run javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)"
 ```
 
 Which would output `<PASSED::>Test Passed: Value == 1` to STDOUT.
@@ -98,7 +119,15 @@ have to worry about having any of the project dependencies loaded directly on yo
 Run the following command:
 
 ```
-docker run -it --rm --entrypoint bash -v $(pwd)/lib:/runner/lib -v $(pwd)/examples:/runner/examples -v $(pwd)/frameworks:/runner/frameworks -v $(pwd)/test:/runner/test codewars/node-runner
+docker run \
+    -it \
+    --rm \
+    --entrypoint bash \
+    -v $(pwd)/lib:/runner/lib \
+    -v $(pwd)/examples:/runner/examples \
+    -v $(pwd)/frameworks:/runner/frameworks \
+    -v $(pwd)/test:/runner/test \
+    codewars/node-runner
 ```
 
 This will create a new container and send you into the instance with your project's lib and test directories mounted
@@ -108,9 +137,15 @@ from within the container.
 **Notice**: We did not mount the entire directory because that would overwrite things such as your node_modules directory. If you need
 to update these you should `make {image_you_want_to_update}` the image to ensure you are always testing against the correct packages.
 
-If you already have Node installed on your host machine, you can just manage your node_module packages locally for an easier development
-flow. This would allow you to just mount your entire source directory. 
-In this case you would run `npm install` and then `docker run -it --rm --entrypoint bash -v $(pwd):/runner codewars/node-runner`.
+### Docker Compose
+We mentioned before that you also have the option of using Docker Compose to run the CLI tool. We have setup the `docker-compose.yml`
+file to provide very useful pre-configured services for making development easier. Instead of having to issue the long command
+mentioned above, you can simply run `docker-compose run node_runner` to bash into a fresh container with your local volumes already mounted.
+ 
+All of the docker compose services are setup to mount volumes for easier developer, so that is the recommended way of 
+interacting with the codebase. You should note though that the compose file is unable to build images due to how
+the directory structure is layed out, so you have to first `make {runner_name}` the image before you can run it. Otherwise
+it will pull down the latest copy from Docker Hub.
 
 ### Running Tests
 
@@ -119,6 +154,9 @@ Once you are in the Docker image, you can run tests as a part of your developmen
 ```
 # inside of container
 mocha test/runners/typescript_spec.js
+
+# or from outside the container
+docker-compose run typescript_test
 ```
 
 ## Test Suite Output Format
@@ -167,11 +205,12 @@ state so not all steps may be needed in your case
 
 1. Install the language and its related packages on one of the Docker images. We have grouped many of the Docker images
 together so if that grouping makes sense then add it there, otherwise you will need to create a new docker image within
-the docker folder and add that image to the Makefile. 
-2. Add a new runner script within `lib/runners`. More details about this script later on.
-3. Add a new runner spec within `test/runners`. You will also need to add the runner spec to the Docker image so that
+the docker folder
+1. Add the newly created docker file to the Make and docker-compose files (if applicable)
+1. Add a new runner script within `lib/runners`. More details about this script later on.
+1. Add a new runner spec within `test/runners`. You will also need to add the runner spec to the Docker image so that
 it is tested as a part of the build process.
-4. Add a new examples yml file within the `examples` folder. These are the code examples that are used on Codewars.com
+1. Add a new examples yml file within the `examples` folder. These are the code examples that are used on Codewars.com
 when a user clicks the "Insert Example" button within the kata editor. There is also a helper available for running your examples
 as a part of the test suite.
 

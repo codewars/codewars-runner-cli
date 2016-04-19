@@ -1,5 +1,5 @@
 {
-  "name": "runner",
+  "name": "codewars-runner-cli",
   "description": "Codewars.com code sandbox capabilities",
   "version": "0.1.6",
   "author": {
