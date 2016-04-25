@@ -20,7 +20,7 @@ Within each Docker image, there is a copy of the Node executable and a `run` scr
 for executing code. For example to run a simple javascript script which would output `2`:
 
 ```
-# this is how you run the Node CLI. For this to work you would have to be bash into the correct Docker image
+# this is how you run the Node CLI. For this to work you would have to bash into the correct Docker image
 node run -l javascript -c "console.log(1+1)"
 ```
 
@@ -38,7 +38,6 @@ docker-compose run node-runner
 Or you could choose to execute the code outside of Docker by creating a container that will remove itself after it executes: 
 
 ```
-
 # direct Docker call:
 docker run --rm codewars/node-runner run -l javascript -c "console.log('I ran inside of Docker using NodeJS')"
 docker run --rm codewars/ruby-runner run -l ruby -c "puts 'I ran inside of Docker using Ruby'"
@@ -142,7 +141,7 @@ We mentioned before that you also have the option of using Docker Compose to run
 file to provide very useful pre-configured services for making development easier. Instead of having to issue the long command
 mentioned above, you can simply run `docker-compose run node_runner` to bash into a fresh container with your local volumes already mounted.
  
-All of the docker compose services are setup to mount volumes for easier developer, so that is the recommended way of 
+All of the docker compose services are setup to mount volumes to make development easier, so that is the recommended way of 
 interacting with the codebase. You should note though that the compose file is unable to build images due to how
 the directory structure is layed out, so you have to first `make {runner_name}` the image before you can run it. Otherwise
 it will pull down the latest copy from Docker Hub.
