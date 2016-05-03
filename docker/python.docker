@@ -31,7 +31,7 @@ USER codewarrior
 
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/{python,python3}_spec.js
+RUN mocha -t 5000 test/runners/python_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

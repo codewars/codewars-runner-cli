@@ -17,7 +17,7 @@ function iterateCodeExamples(language, cb)  {
     }
 }
 
-module.exports.assertCodeExamples = function(language) {
+module.exports.assertCodeExamples = function(language, version) {
     describe('example challenges', function() {
         iterateCodeExamples(language, function (framework, name, example) {
             it ('should define an initial code block', function() {
@@ -27,6 +27,7 @@ module.exports.assertCodeExamples = function(language) {
             it ('should have a passing ' + name + ' example', function(done) {
                 runner.run({
                     language: language,
+                    languageVersion: version,
                     setup: example.setup,
                     code: example.answer,
                     fixture: example.fixture,

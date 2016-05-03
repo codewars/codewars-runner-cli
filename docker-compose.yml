@@ -7,6 +7,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
+      - ./tsconfig.json:/runner/tsconfig.json
     entrypoint: ''
     command: bash
 
@@ -50,6 +51,16 @@ services:
     entrypoint: ''
     command: bash
 
+  haskell-runner:
+    image: codewars/haskell-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   systems-runner:
     image: codewars/systems-runner
     volumes:
@@ -81,7 +92,7 @@ services:
     command: bash
 
   dotnet-runner:
-    image: codewars/alt-runner
+    image: codewars/dotnet-runner
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -134,6 +145,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
+      - ./tsconfig.json:/runner/tsconfig.json
     entrypoint: 'node run -l typescript'
 
   typescript_test:
@@ -200,7 +212,7 @@ services:
     entrypoint: 'mocha -t 5000 test/runners/ruby_spec.js'
 
   haskell:
-    image: codewars/func-runner
+    image: codewars/haskell-runner
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -209,7 +221,7 @@ services:
     entrypoint: 'node run -l haskell'
 
   haskell_test:
-    image: codewars/func-runner
+    image: codewars/haskell-runner
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples

@@ -11,6 +11,27 @@ describe( 'javascript runner', function(){
                 done();
             });
         });
+        it( 'should handle JSON.stringify ', function(done){
+            runner.run({language: 'javascript', code: 'console.log(JSON.stringify({a: 1}))'}, function(buffer) {
+                console.log(buffer.stderr);
+                expect(buffer.stdout).to.contain('{"a":1}');
+                done();
+            });
+        });
+
+        it( 'should be able to handle large output data', function(done) {
+            runner.run({
+                language: 'javascript',
+                code: `
+                    for(i = 0;i < 9999; i++){
+                        console.log(i * 10);
+                    }
+                `
+            }, function(buffer) {
+                expect(buffer.stderr).to.equal('');
+                done();
+            });
+        });
         it( 'should handle es6 code evaluation', function(done){
             runner.run({language: 'javascript', code: 'let a = 42; console.log(42);'}, function(buffer) {
                 expect(buffer.stdout).to.equal('42\n');
@@ -18,14 +39,42 @@ describe( 'javascript runner', function(){
             });
         });
 
-        it( 'should handle bad syntax', function(done){
-            runner.run({language: 'javascript', code: 'var a = function(){returns 42;};\na();'}, function(buffer) {
+        it( 'should handle bad babel syntax', function(done){
+            runner.run({language: 'javascript', languageVersion: '6.x/babel', code: 'var a = function(){returns 42;};\na();'}, function(buffer) {
                 expect(buffer.stderr).to.contain('kata: Unexpected token:27');
                 done();
             });
         });
+
         it( 'should handle react syntax', function(done){
-            runner.run({language: 'javascript', code: 'var React = require("react");var ReactDOM = require("react-dom/server");var div = <div><h3>Test</h3></div>;console.log(ReactDOM.renderToStaticMarkup(div));'}, function(buffer) {
+            runner.run({
+                language: 'javascript',
+                languageVersion: '6.0.0/babel',
+                code: `
+                    var React = require("react");
+                    var ReactDOM = require("react-dom/server");
+                    var div = <div><h3>Test</h3></div>;
+                    console.log(ReactDOM.renderToStaticMarkup(div));
+                `
+            },
+            function(buffer) {
+                expect(buffer.stdout).to.contain('<div><h3>Test</h3></div>');
+                done();
+            });
+        });
+
+        it( 'should handle react syntax using 0.10.x', function(done){
+            runner.run({
+                language: 'javascript',
+                languageVersion: '0.10.x/babel',
+                code: `
+                    var React = require("react");
+                    var ReactDOM = require("react-dom/server");
+                    var div = <div><h3>Test</h3></div>;
+                    console.log(ReactDOM.renderToStaticMarkup(div));
+                `
+            },
+            function(buffer) {
                 expect(buffer.stdout).to.contain('<div><h3>Test</h3></div>');
                 done();
             });
@@ -65,7 +114,7 @@ describe( 'javascript runner', function(){
             it( 'should handle failures', function(done){
                 runner.run({
                     language: 'javascript',
-                    code: 'a = {b: 2};',
+                    code: 'var a = {b: 2};',
                     fixture: 'var assert = require("chai").assert;describe("test", function(){describe("failures", function(){it("should be 1", function(){assert.equal(1, a.b);})})});',
                     testFramework: 'mocha_bdd'},
                     function(buffer) {
@@ -76,7 +125,7 @@ describe( 'javascript runner', function(){
             it( 'should handle errors', function(done){
                 runner.run({
                     language: 'javascript',
-                    code: 'a = {b: 2};',
+                    code: 'var a = {b: 2};',
                     fixture: 'describe("test", function(){describe("failures", function(){it("should be 1", function(){throw new Error("test error");})})});',
                     testFramework: 'mocha_bdd'},
                     function(buffer) {
@@ -101,8 +150,19 @@ describe( 'javascript runner', function(){
             it( 'should handle failures', function(done){
                 runner.run({
                         language: 'javascript',
-                        code: 'a = {b: 2};',
+                        code: 'var a = {b: 2};',
                         fixture: 'var assert = require("assert"); suite("test", function(){suite("failures", function(){test("should be 1", function(){assert.equal(1, a.b);})})});',
+                        testFramework: 'mocha_tdd'},
+                    function(buffer) {
+                        expect(buffer.stdout).to.contain('<FAILED::>');
+                        done();
+                    });
+            });
+            it( 'should handle chai failures', function(done){
+                runner.run({
+                        language: 'javascript',
+                        code: 'var a = {b: 2};',
+                        fixture: 'var assert = require("chai").assert; suite("test", function(){suite("failures", function(){test("should be 1", function(){assert.equal(1, a.b);})})});',
                         testFramework: 'mocha_tdd'},
                     function(buffer) {
                         expect(buffer.stdout).to.contain('<FAILED::>');
@@ -112,7 +172,7 @@ describe( 'javascript runner', function(){
             it( 'should handle errors', function(done){
                 runner.run({
                         language: 'javascript',
-                        code: 'a = {b: 2};',
+                        code: 'var a = {b: 2};',
                         fixture: 'suite("test", function(){suite("failures", function(){test("should be 1", function(){throw new Error("test error");})})});',
                         testFramework: 'mocha_tdd'},
                     function(buffer) {
@@ -124,7 +184,26 @@ describe( 'javascript runner', function(){
 
         describe('cw-2', function() {
             it( 'should handle outputting objects', function(done){
-                runner.run({language: 'javascript', code: 'a = {b: 2};', fixture: 'Test.expect(false, a);', testFramework: 'cw-2'}, function(buffer) {
+                runner.run({
+                    language: 'javascript',
+                    code: 'var a = {b: 2};',
+                    fixture: 'Test.expect(false, a);',
+                    testFramework: 'cw-2'
+                }, function(buffer) {
+                    expect(buffer.stdout).to.contain('{ b: 2 }');
+                    expect(buffer.stdout).to.contain('<FAILED::>');
+                    done();
+                });
+            });
+            it( 'should handle outputting objects with 0.10.33', function(done){
+                // only 0.10.33 allows us to declare a without var
+                runner.run({
+                    language: 'javascript',
+                    languageVersion: '0.10.33',
+                    code: 'a = {b: 2};',
+                    fixture: 'Test.expect(false, a);',
+                    testFramework: 'cw-2'
+                }, function(buffer) {
                     expect(buffer.stdout).to.contain('{ b: 2 }');
                     expect(buffer.stdout).to.contain('<FAILED::>');
                     done();
@@ -132,7 +211,7 @@ describe( 'javascript runner', function(){
             });
 
             it('should handle a basic assertion', function(done){
-                runner.run({language: 'javascript', code: 'a = 1', fixture: 'Test.expect(a == 1);', testFramework: 'cw-2'}, function(buffer) {
+                runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 1);', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                     done();
                 });
@@ -146,7 +225,7 @@ describe( 'javascript runner', function(){
             });
 
             it('should handle a basic failed test', function(done){
-                runner.run({language: 'javascript', code: 'a = 1', fixture: 'Test.expect(a == 2)', testFramework: 'cw-2'}, function(buffer) {
+                runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 2)', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
                     done();
                 });

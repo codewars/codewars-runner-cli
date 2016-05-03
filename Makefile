@@ -19,7 +19,7 @@ ${CONTAINERS}: base
 # Push docker containers to registry
 push_to_registry:
 	docker push $(HOSTNAME)/base-runner
-	echo $(patsubst %, $(HOSTNAME)/%-runner, $(CONTAINERS)) | xargs -n 1 docker push 
+	echo $(patsubst %, $(HOSTNAME)/%-runner, $(CONTAINERS)) | xargs -n 1 docker push
 
 # Remove docker processes that have exited cleanly
 docker_rm_exited:
@@ -27,6 +27,7 @@ docker_rm_exited:
 
 # Cleanup temporary images that are no longer used
 docker_rmi_temporary:
+	docker rm $(docker ps -a)
 	docker rmi $(docker images -q -f dangling=true)
 
 # Kill all of the in-flight and exited docker containers
@@ -36,7 +37,7 @@ docker_rm:
 
 # Kill all docker images
 docker_rmi: docker_rm
-	[ ! -n "$(shell docker images -q)" ] || docker images -q | xargs -n 1 docker rmi -f 
+	[ ! -n "$(shell docker images -q)" ] || docker images -q | xargs -n 1 docker rmi -f
 
 clean: docker_rm_exited docker_rmi_temporary
 

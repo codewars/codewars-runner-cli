@@ -17,6 +17,10 @@ var run = require('./lib/runner').run,
                 abbr: 'l',
                 help: 'The language to execute the code in'
             },
+            languageVersion: {
+                abbr: 'lv',
+                help: 'The language version that should be used'
+            },
             testFramework: {
                 abbr: 't',
                 full: 'test-framework',

@@ -4,33 +4,10 @@
 # Pull base image.
 FROM codewars/base-runner
 
-# Install additional libraries
-# HACK: installing globallying and then linking has a less buggy experience.
-# NOTE: we dont configure these via package.json in order to prevent having to re-install them on each code change
-RUN npm link chai
-RUN npm install immutable -gq; npm link immutable
-RUN npm install deku -gq; npm link deku
-RUN npm install quickcheck -gq; npm link quickcheck
-RUN npm install should -gq; npm link should
-RUN npm install expect -gq; npm link expect
-RUN npm install chai-spies -gq; npm link chai-spies
-RUN npm install chai-stats -gq; npm link chai-stats
-RUN npm install chai-factories -gq; npm link chai-factories
-RUN npm install chai-things -gq; npm link chai-things
-RUN npm install chai-fuzzy -gq; npm link chai-fuzzy
-RUN npm install chai-interface -gq; npm link chai-interface
-RUN npm install chai-change -gq; npm link chai-change
-RUN npm install chai-subset -gq; npm link chai-subset
-RUN npm install rx -gq; npm link rx
-RUN npm install baconjs -gq; npm link baconjs
-RUN npm install lodash -gq; npm link lodash
-RUN npm install react -gq; npm link react
-RUN npm install react-dom -gq; npm link react-dom
-RUN npm install mongoose -gq; npm link mongoose
-RUN npm install mongodb -gq; npm link mongodb
-RUN npm install redis -gq; npm link redis
-RUN npm install sqlite3 -gq; npm link sqlite3
-RUN npm install elasticsearch -gq; npm link elasticsearch
+# Install Node manager so that we can have multiple versions of node
+RUN npm -g install n
+RUN n 0.10.33
+RUN n 6.0.0
 
 # Install Coffeescript
 RUN npm -g install coffee-script
@@ -38,8 +15,18 @@ RUN npm -g install coffee-script
 # Install TypeScript
 RUN npm -g install typescript
 
+COPY package.json package.json
+RUN npm install
+RUN npm install --only=dev
+
+
+# Install additional libraries
+# NOTE: due to this issue https://github.com/npm/npm/issues/9863 we need to install everything at once, which sucks
+# because we lose the ability to quickly add new ones as a new layer
+# NOTE: we dont configure these via package.json in order to prevent having to re-install them on each code change
+
 # install TypeScript type definitions
-RUN npm install -gq typings; npm link typings
+RUN npm install -gq typings
 
 RUN typings install node --ambient
 RUN typings install mocha --ambient
@@ -59,7 +46,7 @@ WORKDIR /runner
 RUN npm install
 RUN npm install --only=dev
 RUN npm dedupe # needed to fix slow babeljs performance
-ENV NODE_PATH /usr/lib/node_modules
+ENV NODE_PATH /usr/lib/node_modules:/runner/node_modules
 
 # Set environment variables
 USER codewarrior
@@ -67,7 +54,7 @@ ENV USER codewarrior
 ENV HOME /home/codewarrior
 
 # Run the test suite to make sure this thing works
-#RUN mocha -t 5000 test/runners/{javascript,coffeescript,typescript}_spec.js
+RUN mocha -t 5000 test/runners/{javascript,coffeescript,typescript}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

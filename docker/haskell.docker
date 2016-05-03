@@ -1,0 +1,49 @@
+# BUILD-USING:    docker build -t codewars/runner-func .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-func --entrypoint=/bin/bash codewars/runner-haskell -s
+# RUN-USING:      docker run --rm --name=runner-func codewars/runner-func --help
+
+# Pull base image.
+FROM codewars/base-runner
+
+# Install Haskell
+## ensure locale is set during build
+ENV LANG C.UTF-8
+
+RUN apt-get -y install libghc-zlib-dev happy
+
+# Needed to run add-apt-repository
+RUN apt-get -y install software-properties-common
+
+# Install Haskell
+RUN add-apt-repository ppa:hvr/ghc
+RUN apt-get update
+RUN apt-get install -y ghc-7.6.3 cabal-install
+RUN su codewarrior -c "cd ; cabal update"
+RUN su codewarrior -c "cd ; cabal install cabal"
+RUN echo 'remote-repo: stackage:http://www.stackage.org/lts-1.15' >> /home/codewarrior/.cabal/config
+RUN su codewarrior -c "cd ; cabal update"
+RUN su codewarrior -c "cd ; cabal install cabal"
+
+# Install Haskell Packages
+RUN apt-get -y install libghc-zlib-dev pkg-config happy
+RUN su codewarrior -c "cd ; cabal install split ifelse"
+RUN su codewarrior -c "cd ; cabal install esqueleto persistent-sqlite persistent-template"
+RUN su codewarrior -c "cd ; cabal install haskell-src-exts lens"
+RUN su codewarrior -c "cd ; cabal install hspec-2.1.0 hspec-core-2.1.0 hspec-discover-2.1.0"
+# ADD cli-runner and install node deps
+ADD . /runner
+
+WORKDIR /runner
+RUN npm install --production
+
+# Run the test suite to make sure this thing works
+
+USER codewarrior
+# Set environment variables
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN mocha -t 5000 test/runners/haskell_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]

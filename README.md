@@ -6,7 +6,7 @@ This project is used by [Codewars](http://www.codewars.com) and [Strive](https:/
 Each time code is ran, it is executed within a Docker container in order to secure unsafe code execution.  
 
 All execution is done within Docker, with a Node CLI app contained within each container
-that manages the code execution and returns the result via stdout. 
+that manages the code execution for that specific language environment and returns the result via stdout. 
 
 ## Contributions
 
@@ -71,39 +71,42 @@ Many languages are currently supported in various states of completeness. This l
 
 **Legend:** `!!!` = Failing Specs, `???` = Status is unknown, `*` = Any
 
-| Language       | Basic Run    | Test Integration | Codewars     | Strive         | Docker Image   | Examples     | Notes                                                                   |
-|----------------|--------------|------------------|--------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
-| Assembly (GAS) | !!!          |                  |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
-| Bash           | ✓            |                  | Kumite Only  |                | *              |              |                                                                         |
-| C              | !!!          | !!!              |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
-| Clojure        | ✓            | clojure.test     | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
-| CoffeeScript   | ✓            | cw-2             | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
-| C++            | ✓            | !!!              |              |                | systems-runner |              | Failing specs, systems image has also been temporarily removed          |
-| C#             | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
-| Elixir         | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
-| Erlang         | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
-| F#             | ✓            |                  | Kumite Only  |                | dotnet-runner  |              |                                                                         |
-| Go             | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
-| Groovy         | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
-| Haskell        | ✓            | hspec!!!         | hspec        | hspec          | func-runner    | hspec        | An older version is running on CW & Strive that is fully functional     |
-| Java           | ✓            | junit            | Yes          | Yes            | jvm-runner     | junit        |                                                                         |
-| JavaScript     | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| Julia          | ✓!!!         | !!!              |              |                |                |              |                                                                         |
-| Lisp           | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
-| Lua            | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
-| ObjC           | ???          | ???              |              |                |                |              |                                                                         |
-| OCAML          | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
-| Perl           | ✓            |                  | Kumite Only  |                | *              |              |                                                                         |
-| Php            | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
-| Python 2       | ✓            | cw-2, unittest   | cw-2         | cw-2, unittest | python-runner  | cw-2         |                                                                         |
-| Python 3       | ✓            | cw-2, unittest   |              | cw-2, unittest | python-runner  | cw-2         |                                                                         |
-| R              | ✓            |                  |              |                | alt-runner     |              |                                                                         |
-| Racket         | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
-| Ruby           | ✓            | cw-2, rspec      | cw-2         | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
-| Rust           | ✓            |                  |              |                |                |              |                                                                         |
-| Scala          | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
-| Swift          | ???          | ???              |              |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
-| TypeScript     | ✓            | mocha            | Kumite Only  |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
+| Language       | Version       | Basic Run    | Test Integration | Codewars     | Strive         | Docker Image   | Examples     | Notes                                                                   |
+|----------------|---------------|--------------|------------------|--------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
+| Assembly (GAS) |               | !!!          |                  |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
+| Bash           |               | ✓            |                  | Kumite Only  |                | *              |              |                                                                         |
+| C              |               | !!!          | !!!              |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
+| Clojure        |               | ✓            | clojure.test     | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
+| CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
+| C++            |               | ✓            | !!!              |              |                | systems-runner |              | Failing specs, systems image has also been temporarily removed          |
+| C#             | Mono 4.2.3    | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
+| Elixir         |               | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
+| Erlang         |               | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
+| F#             | 4.0           | ✓            |                  | Kumite Only  |                | dotnet-runner  |              |                                                                         |
+| Go             |               | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
+| Groovy         |               | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
+| Haskell        |               | ✓            | hspec!!!         | hspec        | hspec          | haskell-runner | hspec        | An older version is running on CW & Strive that is fully functional     |
+| Java           | 1.8.0_91      | ✓            | junit            | Yes          | Yes            | jvm-runner     | junit        |                                                                         |
+| JavaScript     | 0.10.33       | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| JavaScript     | 0.10.33/Babel | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| JavaScript     | 6.0.0         | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| JavaScript     | 6.0.0/Babel   | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| Julia          |               | ✓!!!         | !!!              |              |                |                |              |                                                                         |
+| Lisp           |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
+| Lua            |               | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
+| ObjC           |               | ???          | ???              |              |                |                |              |                                                                         |
+| OCAML          |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
+| Perl           |               | ✓            |                  | Kumite Only  |                | *              |              |                                                                         |
+| Php            |               | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
+| Python         | 2.7.6         | ✓            | cw-2, unittest   | cw-2         | cw-2, unittest | python-runner  | cw-2         |                                                                         |
+| Python         | 3.4.3         | ✓            | cw-2, unittest   |              | cw-2, unittest | python-runner  | cw-2         |                                                                         |
+| R              |               | ✓            |                  |              |                | alt-runner     |              |                                                                         |
+| Racket         |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
+| Ruby           | 2.3.0         | ✓            | cw-2, rspec      | cw-2         | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
+| Rust           |               | ✓            |                  |              |                |                |              |                                                                         |
+| Scala          |               | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
+| Swift          |               | ???          | ???              |              |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
+| TypeScript     | 1.8.10        | ✓            | mocha            | Kumite Only  |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
 
 ## Setup
 
@@ -111,7 +114,7 @@ You should have Docker installed, if not do that first. Before you can run any o
 environments you will need to build the proper Docker image. To get started lets work with the
 node image.
 
-Run `make base node` to build the base and node images. This will take a few minutes.
+Run `make node` to build the base and node images. This will take a few minutes.
 
 Once you image is built, you can create a container to work within it. Doing this means you do not
 have to worry about having any of the project dependencies loaded directly on your machine.
@@ -199,7 +202,7 @@ to create a rich and even interactive test result output.
   
 ## How to add a new language
 
-> Note: These steps will assuming adding a completely new language to the project. Many languages are currently in an incomplete
+> Note: These steps all assume you are adding a completely new language to the project. Many languages are currently in an incomplete
 state so not all steps may be needed in your case
 
 1. Install the language and its related packages on one of the Docker images. We have grouped many of the Docker images
@@ -232,9 +235,8 @@ Each of these strategies is passed in a `run` method which is used to ultimately
 There is currently no way of handling language/package versioning well. This is largely caused by the Node CLI tool having to be 
 baked in to the Docker container. A more ideal solution would involve keeping the CLI outside of Docker (or within its own sibling container)
 and communicating to language specific containers. This would allow us to easily swap out container versions that have no
-dependencies on the CLI codebase. However this would involve having to create a shared volume so that files can be passed in
-to each language container, which has security implications. Upgrading to this newer paradigm and resolving any security concerns
-is the next big phase of this project. Remember - this project is ran on production servers running user submitted code.
+dependencies on the CLI codebase. This would involve having to utilize the `docker cp` command to copy
+files to the docker container in order to be compiled. Upgrading to this newer paradigm is the next big phase of this project. 
 
 ### Ability to send input parameters and return data
 
