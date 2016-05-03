@@ -81,6 +81,7 @@ cw-2:
       websites = []
 
     answer: |-
+
       # add the values "codewars" to the websites array
       websites = ["codewars"]
 
