@@ -3,6 +3,8 @@ var runner = require('../runner');
 
 
 describe( 'typescript runner', function(){
+    runner.assertCodeExamples('typescript');
+
     describe( '.run', function(){
         it( 'should handle basic code evaluation', function(done){
             runner.run({language: 'typescript', code: 'console.log(42)'}, function(buffer) {

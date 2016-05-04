@@ -1,0 +1,43 @@
+mocha:
+  algorithms:
+    initial: |-
+      // return the two oldest/oldest ages within the array of ages passed in.
+      // it should return the two ages as a sorted array, youngest age first
+      export function twoOldestAges(ages){
+
+      }
+
+    answer: |-
+      export function twoOldestAges(ages: Array<number>): Array<number>{
+        var oldest = 0, nextOldest;
+        for(var i = 0;i < ages.length;i++){
+          var age = ages[i];
+          if (age > oldest){
+            nextOldest = oldest;
+            oldest = age;
+          }
+          else if(age > nextOldest){
+            nextOldest = age;
+          }
+        }
+        return [nextOldest, oldest];
+      }
+
+    fixture: |-
+      // import the type of assertion library you wish to use (Chai recommended)
+      import {assert} from "chai";
+
+      // We are using Mocha BDD:
+
+      describe("twoOldestAges([1,5,87,45,8,8])", function() {
+        // anything exported from the solution has automatically been imported for you already as "solution"
+        var results1 = solution.twoOldestAges([1, 5, 87, 45, 8, 8]);
+
+        it("Should return something that isn't falsy", function() {
+          assert.equal(!!results1, true, "Expected function to return a value")
+        });
+
+        it("Should return [45,87]", function() {
+          assert.deepEqual(results1, [45, 87]);
+        });
+      });
