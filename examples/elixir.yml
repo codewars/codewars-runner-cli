@@ -1,0 +1,121 @@
+ex_unit:
+  algorithms:
+    initial: |-
+      defmodule AgeUtils do
+        # return the two oldest/oldest ages within the array of ages passed in.
+        # it should return the two ages as a sorted array, youngest age first
+        def two_oldest_ages(ages) when is_list(ages) do
+          
+        end
+      end
+
+    answer: |-
+      defmodule AgeUtils do
+        def two_oldest_ages(ages) when is_list(ages) do
+          ages |> Enum.sort |> Enum.reverse |> Enum.take(2) |> Enum.reverse
+        end
+      end
+
+    fixture: |-
+      defmodule TestAgeUtils do
+        use ExUnit.Case
+
+        test "returns correct ages for different lists" do
+          results1 = AgeUtils.two_oldest_ages([1,5,87,45,8,8])
+          results2 = AgeUtils.two_oldest_ages([6,5,83,5,3,18])
+
+          assert results1 == [45, 87]
+          assert results2 == [18, 83]
+        end
+      end
+
+  bug fixes:
+    initial: |-
+      defmodule Person do
+        defstruct name: nil
+
+        #TODO: The greet function is not returning the expected value.
+        def greet(person) when is_map(person) do
+          "Hello my name is #{person["name"]}"
+        end
+      end
+
+    answer: |-
+      defmodule Person do
+        defstruct name: nil
+
+        def greet(person) when is_map(person) do
+          "Hello my name is #{person.name}"
+        end
+      end
+
+    fixture: |-
+      defmodule TestPerson do
+        use ExUnit.Case
+
+        test "greets any proper Person" do
+          jack = %Person{name: "Jack"}
+          jill = %Person{name: "Jill"}
+
+          assert Person.greet(jack) == "Hello my name is Jack"
+          assert Person.greet(jill) == "Hello my name is Jill"
+        end
+      end
+
+  refactoring:
+    initial: |-
+      defmodule Person do
+        defstruct name: nil
+
+        # TODO: This method needs to be called multiple times for the same person (my_name).
+        # It would be nice if we didnt have to always pass in my_name every time we needed to great someone.
+        def greet(my_name, your_name) do
+          "Hello #{your_name}, my name is #{my_name}"
+        end
+      end
+
+    answer: |-
+      defmodule Person do
+        defstruct name: nil
+
+        def greet(person, your_name) do
+          "Hello #{your_name}, my name is #{person.name}"
+        end
+      end
+
+    fixture: |-
+      defmodule TestPerson do
+        use ExUnit.Case
+
+        test "greets any proper Person" do
+          jack = %Person{name: "Jack"}
+          jill = %Person{name: "Jill"}
+
+          assert Person.greet(jack, "Jill") == "Hello Jill, my name is Jack"
+          assert Person.greet(jack, "Mary") == "Hello Mary, my name is Jack"
+          assert Person.greet(jill, "Jack") == "Hello Jack, my name is Jill"
+        end
+      end
+
+  reference:
+    initial: |-
+      defmodule WebSite do
+        def websites, do: []
+      end
+
+    answer: |-
+      defmodule WebSite do
+        # add the values "codewars" to the websites list
+        def websites, do: ["codewars"]
+      end
+
+    fixture: |-
+      defmodule TestWebSite do
+        use ExUnit.Case
+
+        test "websites returns proper list" do
+          assert is_list(WebSite.websites) == true
+          assert length(WebSite.websites) == 1
+          assert WebSite.websites == ["codewars"]
+        end
+      end
