@@ -1,9 +1,9 @@
-(defproject jvm-runner "0.1.1"
+(defproject jvm-runner "0.1.2"
   :description "JVM Runner for codewars"
   :url "http://www.codewars.com/"
   :javac-target "1.8"
   :dependencies
-  [[org.clojure/clojure "1.6.0"]
+  [[org.clojure/clojure "1.8.0"]
    [cheshire "5.3.1"] ; JSON
    [junit/junit "4.11"] ; JUnit
    [org.codehaus.groovy/groovy-all "2.3.6"] ; Groovy
