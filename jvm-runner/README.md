@@ -5,7 +5,7 @@ faster execution times.
 
 ## Building
 
-To compile, first make sure you have JDK ≥ 1.8 and [leiningen](1) installed.  Then type:
+To compile, first make sure you have JDK ≥ 1.8 and [leiningen][1] installed.  Then type:
 
 	lein uberjar
 
@@ -17,7 +17,7 @@ The runner can be run via `lein` or via the compiled JAR.
 
 By design, the JVM runner accepts JSONs with the same API as the node.js runner.  These are handed as strings in _stdin_.
 
-JSONs should conform to the following (JSON schema)[2]:
+JSONs should conform to the following [JSON schema][2]:
 
 ```json
 {
