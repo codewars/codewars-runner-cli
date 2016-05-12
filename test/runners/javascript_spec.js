@@ -4,7 +4,7 @@ var expect = require('chai').expect,
 describe( 'javascript runner', function(){
     describe( '.run', function(){
         runner.assertCodeExamples('javascript');
-
+        
         it( 'should handle basic code evaluation', function(done){
             runner.run({language: 'javascript', code: 'console.log(42)'}, function(buffer) {
                 expect(buffer.stdout).to.equal('42\n');
@@ -17,6 +17,33 @@ describe( 'javascript runner', function(){
                 expect(buffer.stdout).to.contain('{"a":1}');
                 done();
             });
+        });
+        
+        it( 'should be able to access solution.txt', function(done) {
+            runner.run({
+                language: 'javascript',
+                code: `
+                    console.log(1+4);
+                    console.log(require('fs').readFileSync('/home/codewarrior/solution.txt', 'utf8'));
+                `
+            }, function(buffer) {
+                expect(buffer.stdout).to.contain("5");
+                expect(buffer.stdout).to.contain("1+4");
+                done();
+            });
+        });
+        it( 'should allow a shell script to be ran', function(done) {
+            runner.run({
+                language: 'javascript',
+                shell: 'echo "test 123" >> /home/codewarrior/test.txt ; ls',
+                code: `
+                    console.log(require('fs').readFileSync('/home/codewarrior/test.txt', 'utf8'));
+                `
+            }, function(buffer) {
+                expect(buffer.stdout).to.contain("test 123");
+                expect(buffer.shellResult.stdout.length).to.be.gt(0);
+                done();
+            });            
         });
 
         it( 'should be able to handle large output data', function(done) {
