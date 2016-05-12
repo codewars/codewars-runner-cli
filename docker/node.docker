@@ -15,10 +15,6 @@ RUN npm -g install coffee-script
 # Install TypeScript
 RUN npm -g install typescript
 
-COPY package.json package.json
-RUN npm install
-RUN npm install --only=dev
-
 
 # Install additional libraries
 # NOTE: due to this issue https://github.com/npm/npm/issues/9863 we need to install everything at once, which sucks
@@ -39,13 +35,15 @@ RUN typings install rx --ambient
 RUN typings install mongoose --ambient
 RUN typings install redis --ambient
 
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install && npm install --only=dev && npm dedupe
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
 # ADD cli-runner and install node deps
 ADD . /runner
 
 WORKDIR /runner
-RUN npm install
-RUN npm install --only=dev
-RUN npm dedupe # needed to fix slow babeljs performance
 ENV NODE_PATH /usr/lib/node_modules:/runner/node_modules
 
 # Set environment variables

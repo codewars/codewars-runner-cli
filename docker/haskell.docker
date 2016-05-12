@@ -30,11 +30,14 @@ RUN su codewarrior -c "cd ; cabal install split ifelse"
 RUN su codewarrior -c "cd ; cabal install esqueleto persistent-sqlite persistent-template"
 RUN su codewarrior -c "cd ; cabal install haskell-src-exts lens"
 RUN su codewarrior -c "cd ; cabal install hspec-2.1.0 hspec-core-2.1.0 hspec-discover-2.1.0"
-# ADD cli-runner and install node deps
-ADD . /runner
 
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+ADD . /runner
 WORKDIR /runner
-RUN npm install --production
 
 # Run the test suite to make sure this thing works
 

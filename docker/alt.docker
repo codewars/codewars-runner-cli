@@ -25,6 +25,11 @@ RUN apt-get install -y luarocks
 # Install GNU R
 RUN apt-get install -y r-base
 
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
 # ADD cli-runner and install node deps
 ADD . /runner
 

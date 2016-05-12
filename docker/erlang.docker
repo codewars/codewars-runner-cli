@@ -36,11 +36,15 @@ RUN /usr/local/bin/mix local.hex --force && \
 
 WORKDIR /
 
-# ADD cli-runner and install node deps
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+# ADD cli-runner
 ADD . /runner
 
 WORKDIR /runner
-RUN npm install
 
 # Run the test suite to make sure this thing works
 

@@ -23,11 +23,15 @@ RUN apt-get -y install nasm
 # ARM Assembly Emulation
 RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
 # ADD cli-runner and install node deps
 ADD . /runner
 
 WORKDIR /runner
-RUN npm install --production
 
 # Run the test suite to make sure this thing works
 

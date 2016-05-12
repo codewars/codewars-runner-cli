@@ -27,6 +27,11 @@ RUN apt-get install -y scala
 RUN curl http://downloads.typesafe.com/scala/2.11.2/scala-2.11.2.deb > /tmp/scala-2.11.2.deb
 RUN dpkg -i /tmp/scala-2.11.2.deb && rm /tmp/scala-2.11.2.deb
 
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
 # ADD cli-runner and install node deps
 ADD . /runner
 
