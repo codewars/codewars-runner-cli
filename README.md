@@ -49,8 +49,8 @@ docker-compose run ruby -c "puts 'I ran inside of Docker using Ruby'"
 
 ### Integrated Test Suites
 The most significant aspect of this project is that integrated test support is built-in to many languages. This is how
-Codewars and Strive work, instead of testing STDOUT of a program, the code that is being ran is also tested using tradational
-code testing methods. 
+Codewars and Strive work, instead of testing STDOUT of a program, the executed code is tested using traditional
+code testing methods, with unit-tests and language-specific testing frameworks. 
 
 Here is a very simple example of running tests using the simplified CW testing framework. 
 
