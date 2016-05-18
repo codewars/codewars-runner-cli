@@ -4,36 +4,24 @@
 # Pull base image.
 FROM codewars/base-runner
 
+# Install additional libraries
+# NOTE: due to this issue https://github.com/npm/npm/issues/9863 we need to install everything at once, which sucks
+# because we lose the ability to quickly add new ones as a new layer
+# NOTE: we dont configure these via package.json in order to prevent having to re-install them on each code change
+
 # Install Node manager so that we can have multiple versions of node
 RUN npm -g install n
 RUN n 0.10.33
 RUN n 6.0.0
+
+# install TypeScript type definitions
+RUN npm install -gq typings
 
 # Install Coffeescript
 RUN npm -g install coffee-script
 
 # Install TypeScript
 RUN npm -g install typescript
-
-
-# Install additional libraries
-# NOTE: due to this issue https://github.com/npm/npm/issues/9863 we need to install everything at once, which sucks
-# because we lose the ability to quickly add new ones as a new layer
-# NOTE: we dont configure these via package.json in order to prevent having to re-install them on each code change
-
-# install TypeScript type definitions
-RUN npm install -gq typings
-
-RUN typings install node --ambient
-RUN typings install mocha --ambient
-RUN typings install mocha-node --ambient
-RUN typings install chai --ambient
-RUN typings install react --ambient
-RUN typings install lodash --ambient
-RUN typings install baconjs --ambient
-RUN typings install rx --ambient
-RUN typings install mongoose --ambient
-RUN typings install redis --ambient
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
@@ -52,7 +40,9 @@ ENV USER codewarrior
 ENV HOME /home/codewarrior
 
 # Run the test suite to make sure this thing works
-RUN mocha -t 5000 test/runners/{javascript,coffeescript,typescript}_spec.js
+RUN mocha -t 5000 test/runners/javascript_spec.js
+RUN mocha -t 5000 test/runners/coffeescript_spec.js
+RUN mocha -t 5000 test/runners/typescript_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

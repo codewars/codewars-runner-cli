@@ -201,7 +201,7 @@ The following is a full example of what the output might look like, that support
 <PASSED::>Test Passed
 <COMPLETEDIN::>23
 <IT::>It should return "foo" 
-This is some direct output
+This is some direct output (i.e. console.log("..."))
 <FAILED::>Expected "foo" but instead got ""
 <COMPLETEDIN::>10
 <DESCRIBE::>This is a nested describe
@@ -214,6 +214,11 @@ This is some direct output
 
 > Notice how there are 3 `<COMPLETEDIN::>` statements at the end. The first one completes the last IT
 statement, the 2nd completes the nested DESCRIBE and the 3rd completes the top level "Foo" DESCRIBE.
+
+#### <COMPLETEDIN::> Details
+
+The value of COMPLETEDIN should be time spent executing the related statement, in milliseconds. It is not required
+to support time. `<COMPLETEDIN::>` is valid on its own, and in that case it is only used to terminate the current statement. 
 
 ### Why the custom format?
 
