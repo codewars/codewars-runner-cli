@@ -173,6 +173,7 @@ A small subset of commands is supported that can be used to format output. They 
 - `<PASSED::>`
 - `<FAILED::>`
 - `<ERROR::>`
+- `<COMPLETEDIN::>`
 
 Prefixing a new line with these commands will cause that line to be formatted. 
 Since each new STDOUT line is considered a new peace of data, if you wish to format multiple lines as one 
@@ -185,6 +186,34 @@ def passed(msg)
   puts "<PASSED::>#{msg.gsub("\n", "<:LF:>")}"
 end
 ```
+
+### Nested Describes
+
+Some test frameworks support nested levels of describes. In order for our output to support multiple levels, 
+you must also use the `<COMPLETEDIN::>` token, which acts as a terminator for the current item. This should be used 
+to terminate both `<DESCRIBE::>` and `<IT::>` statements.
+
+The following is a full example of what the output might look like, that supports nested describes:
+
+```
+<DESCRIBE::>Foo
+<IT::>It should return a string
+<PASSED::>Test Passed
+<COMPLETEDIN::>23
+<IT::>It should return "foo" 
+This is some direct output
+<FAILED::>Expected "foo" but instead got ""
+<COMPLETEDIN::>10
+<DESCRIBE::>This is a nested describe
+<IT::>Should not be null
+<PASSED::>Test Passed
+<COMPLETEDIN::>20
+<COMPLETEDIN::>22
+<COMPLETEDIN::>100
+```
+
+> Notice how there are 3 `<COMPLETEDIN::>` statements at the end. The first one completes the last IT
+statement, the 2nd completes the nested DESCRIBE and the 3rd completes the top level "Foo" DESCRIBE.
 
 ### Why the custom format?
 
