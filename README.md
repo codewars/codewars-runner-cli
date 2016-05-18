@@ -79,7 +79,7 @@ Many languages are currently supported in various states of completeness. This l
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
 | C++            |               | ✓            | !!!              |              |                | systems-runner |              | Failing specs, systems image has also been temporarily removed          |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
-| Elixir         | 1.2.4         | ✓            | exunit           |              |                | erlang-runner  |              |                                                                         |
+| Elixir         | 1.2.4         | ✓            | exunit           | exunit       |                | erlang-runner  |              |                                                                         |
 | Erlang         |               | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
 | F#             | 4.0           | ✓            |                  | Kumite Only  |                | dotnet-runner  |              |                                                                         |
 | Go             | 1.3.1         | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
@@ -105,7 +105,7 @@ Many languages are currently supported in various states of completeness. This l
 | Rust           |               | ✓            |                  |              |                |                |              |                                                                         |
 | Scala          | 2.11.2        | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
 | Swift          |               | ???          | ???              |              |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
-| TypeScript     | 1.8.10        | ✓            | mocha            | Kumite Only  |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
+| TypeScript     | 1.8.10        | ✓            | mocha            | mocha        |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
 
 ## Setup
 

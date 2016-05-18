@@ -4,7 +4,7 @@ var expect = require('chai').expect,
 describe( 'javascript runner', function(){
     describe( '.run', function(){
         runner.assertCodeExamples('javascript');
-        
+
         it( 'should handle basic code evaluation', function(done){
             runner.run({language: 'javascript', code: 'console.log(42)'}, function(buffer) {
                 expect(buffer.stdout).to.equal('42\n');
@@ -18,7 +18,7 @@ describe( 'javascript runner', function(){
                 done();
             });
         });
-        
+
         it( 'should be able to access solution.txt', function(done) {
             runner.run({
                 language: 'javascript',
@@ -43,7 +43,7 @@ describe( 'javascript runner', function(){
                 expect(buffer.stdout).to.contain("test 123");
                 expect(buffer.shellResult.stdout.length).to.be.gt(0);
                 done();
-            });            
+            });
         });
 
         it( 'should be able to handle large output data', function(done) {
@@ -80,8 +80,9 @@ describe( 'javascript runner', function(){
                 code: `
                     var React = require("react");
                     var ReactDOM = require("react-dom/server");
+                    let render = (el) => ReactDOM.renderToStaticMarkup(el); 
                     var div = <div><h3>Test</h3></div>;
-                    console.log(ReactDOM.renderToStaticMarkup(div));
+                    console.log(render(div));
                 `
             },
             function(buffer) {
@@ -97,8 +98,9 @@ describe( 'javascript runner', function(){
                 code: `
                     var React = require("react");
                     var ReactDOM = require("react-dom/server");
+                    let render = (el) => ReactDOM.renderToStaticMarkup(el); 
                     var div = <div><h3>Test</h3></div>;
-                    console.log(ReactDOM.renderToStaticMarkup(div));
+                    console.log(render(div));
                 `
             },
             function(buffer) {
@@ -106,6 +108,7 @@ describe( 'javascript runner', function(){
                 done();
             });
         });
+        
         it( 'should load libraries', function(done){
             runner.run({language: 'javascript', code: 'var _ = require("lodash");console.log(_.map([1], n => n * 2));'}, function(buffer) {
                 expect(buffer.stdout).to.contain('[ 2 ]');
