@@ -25,6 +25,9 @@ describe( 'typescript runner', function(){
                         export var a:B = {b: 3};
                     `,
                     fixture: `
+                        /// <reference path="/runner/typings/mocha/index.d.ts" />
+                        /// <reference path="/runner/typings/chai/index.d.ts" />
+                        import solution = require('./solution');
                         import {assert} from "chai";
                         describe("test", function(){
                             it("should be 3", function(){
@@ -41,7 +44,18 @@ describe( 'typescript runner', function(){
             runner.run({
                     language: 'typescript',
                     code: 'export var a = {b: 2};',
-                    fixture: 'import {assert} from "chai";describe("test", function(){describe("failures", function(){it("should be 1", function(){assert.equal(1, solution.a.b);})})});',
+                    fixture: `
+                      /// <reference path="/runner/typings/mocha/index.d.ts" />
+                      /// <reference path="/runner/typings/chai/index.d.ts" />
+                      import solution = require("./solution");
+                      import {assert} from "chai";
+                      describe("test", function(){
+                        describe("failures", function(){
+                          it("should be 1", function(){
+                            assert.equal(1, solution.a.b);
+                        })
+                      })
+                    });`,
                     testFramework: 'mocha_bdd'},
                 function(buffer) {
                     expect(buffer.stdout).to.contain('<FAILED::>');
@@ -52,7 +66,19 @@ describe( 'typescript runner', function(){
             runner.run({
                     language: 'typescript',
                     code: 'export var a = {b: 2};',
-                    fixture: 'import {assert} from "chai"; describe("test", function(){describe("failures", function(){it("should be 1", function(){throw new Error("test error");})})});',
+                    fixture: `
+                      /// <reference path="/runner/typings/mocha/index.d.ts" />
+                      /// <reference path="/runner/typings/chai/index.d.ts" />
+                      import solution = require("./solution");
+                      import {assert} from "chai"; 
+                      describe("test", function(){
+                        describe("failures", function(){
+                            it("should be 1", function(){
+                                throw new Error("test error");
+                            })
+                        })
+                      });
+                    `,
                     testFramework: 'mocha_bdd'},
                 function(buffer) {
                     expect(buffer.stdout).to.contain('<ERROR::>');
