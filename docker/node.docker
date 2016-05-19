@@ -31,6 +31,9 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 # ADD cli-runner and install node deps
 ADD . /runner
 
+# add typings into a cleaner path for inclusion
+ADD typings/main/ambient /runner/typings
+
 WORKDIR /runner
 ENV NODE_PATH /usr/lib/node_modules:/runner/node_modules
 

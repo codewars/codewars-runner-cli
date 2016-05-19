@@ -17,19 +17,6 @@ ${CONTAINERS}: base
 	cp docker/$@.docker ./Dockerfile
 	docker build -t $(HOSTNAME)/$@-runner .
 
-# Push docker containers to registry
-push_to_registry:
-	docker push $(HOSTNAME)/base-runner
-	echo $(patsubst %, $(HOSTNAME)/%-runner, $(CONTAINERS)) | xargs -n 1 docker push
-
-# Remove docker processes that have exited cleanly
-docker_rm_exited:
-	[ ! -n "$(shell docker ps -a | grep Exit | cut -d ' ' -f 1)" ] || echo $(shell docker ps -a | grep Exit | cut -d ' ' -f 1) | xargs -n 1 docker rm -f
-
-# Cleanup temporary images that are no longer used
-docker_rmi_temporary:
-	docker rm $(docker ps -a)
-	docker rmi $(docker images -q -f dangling=true)
 
 # Kill all of the in-flight and exited docker containers
 docker_rm:

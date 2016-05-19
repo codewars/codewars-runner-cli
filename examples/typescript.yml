@@ -24,6 +24,10 @@ mocha:
       }
 
     fixture: |-
+      /// <reference path="/runner/typings/node/index.d.ts" />
+      /// <reference path="/runner/typings/mocha/index.d.ts" />
+      /// <reference path="/runner/typings/chai/index.d.ts" />
+      import solution = require('./solution')
       // import the type of assertion library you wish to use (Chai recommended)
       import {assert} from "chai";
 
