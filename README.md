@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/Codewars/codewars-runner-cli.svg?branch=master)](https://travis-ci.org/Codewars/codewars-runner-cli)
 
 This project is used by [Codewars](http://www.codewars.com) and [Strive](https://www.strive.co) to execute small sets of code within various languages, using various testing frameworks.
-Each time code is ran, it is executed within a Docker container in order to secure unsafe code execution.  
+Each time code is run, it is executed within a Docker container in order to secure unsafe code execution.  
 
 All execution is done within Docker, with a Node CLI app contained within each container
 that manages the code execution for that specific language environment and returns the result via stdout. 
@@ -25,7 +25,7 @@ node run -l javascript -c "console.log(1+1)"
 ```
 
 Because everything runs inside of Docker, you would normally not run Node directly from your host but instead via a Docker run command.
-To do this, you would either bash into the corret Docker image like so:
+To do this, you would either bash into the correct Docker image like so:
 
 ```
 # direct Docker call:
@@ -48,11 +48,11 @@ docker-compose run ruby -c "puts 'I ran inside of Docker using Ruby'"
 ```
 
 ### Integrated Test Suites
-The most significant aspect of this project is that integrated test support is built-in to many languages. This is how
+The most significant aspect of this project is that integrated test support is built in to many languages. This is how
 Codewars and Strive work, instead of testing STDOUT of a program, the executed code is tested using traditional
 code testing methods, with unit-tests and language-specific testing frameworks. 
 
-Here is a very simple example of running tests using the simplified CW testing framework. 
+Here is a very simple example of running tests using the simplified Codewars testing framework. 
 
 ```
 # manually running docker
@@ -146,7 +146,7 @@ mentioned above, you can simply run `docker-compose run node_runner` to bash int
  
 All of the docker compose services are setup to mount volumes to make development easier, so that is the recommended way of 
 interacting with the codebase. You should note though that the compose file is unable to build images due to how
-the directory structure is layed out, so you have to first `make {runner_name}` the image before you can run it. Otherwise
+the directory structure is laid out, so you have to first `make {runner_name}` the image before you can run it. Otherwise
 it will pull down the latest copy from Docker Hub.
 
 ### Running Tests
