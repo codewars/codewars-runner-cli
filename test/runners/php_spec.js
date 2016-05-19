@@ -4,6 +4,8 @@ var runner = require('../runner');
 
 describe( 'php runner', function(){
     describe( '.run', function(){
+        runner.assertCodeExamples('php');
+
         it( 'should handle basic code evaluation', function(done){
             runner.run({language: 'php', solution: 'echo 42 . PHP_EOL;'}, function(buffer) {
                 expect(buffer.stdout).to.equal('42\n');
