@@ -15,23 +15,23 @@ ENV PATH $DART_SDK/bin:$PATH
 ENV USER codewarrior
 ENV HOME /home/codewarrior
 
-# Setup runner
+# Copy package json to tmp
 ADD package.json /tmp/package.json
+
+# Do npm install in tmp along with dart package setup
+# and pub get etc
 RUN \
   cd /tmp && npm install --production && \
-  mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner
-ADD . /runner
-
-# Make a dart specific dirs then do some pub setup
-RUN \
-  mkdir -p /runner/dart/bin /runner/dart/test && \
-  cd /runner/dart && \
+  mkdir -p /runner && cp -a /tmp/node_modules /runner && \
+  mkdir -p /tmp/dart && \
+  chmod 0777 /tmp/dart && \
   pub global activate den && \
   ~/.pub-cache/bin/den spec --force && \
   ~/.pub-cache/bin/den install test matcher && \
   pub get
+
+# ADD cli-runner
+ADD . /runner
 
 # Working dir is /runner
 WORKDIR /runner
