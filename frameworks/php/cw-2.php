@@ -52,8 +52,8 @@ try {
       /* If message is blank, set default message */
       if (!$msg) $msg = "should pass all tests below";
 
-      /* "if" blocks must be nested within "describe" blocks */
-      if (!$this->describing) throw new Exception("\"if\" blocks must be called within \"describe\" blocks");
+      /* "it" blocks must be nested within "describe" blocks */
+      if (!$this->describing) throw new Exception("\"it\" blocks must be called within \"describe\" blocks");
 
       /* Format "it" block */
       echo "<IT::>$msg\n";
