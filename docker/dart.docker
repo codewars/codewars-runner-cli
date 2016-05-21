@@ -24,11 +24,12 @@ RUN \
   cd /tmp && npm install --production && \
   mkdir -p /runner && cp -a /tmp/node_modules /runner && \
   mkdir -p /tmp/dart && \
-  chmod 0777 /tmp/dart && \
+  chmod 0777 /tmp/dart && cd /tmp/dart && \
   pub global activate den && \
   ~/.pub-cache/bin/den spec --force && \
   ~/.pub-cache/bin/den install test matcher && \
-  pub get
+  pub get && \
+  chown -R codewarrior:codewarrior /home/codewarrior/.pub-cache/*
 
 # ADD cli-runner
 ADD . /runner
@@ -39,5 +40,4 @@ WORKDIR /runner
 # Codewarrior...
 USER codewarrior
 
-# TODO: Bring this in when done
-# RUN mocha -t 10000 test/runners/dart_spec.js
+RUN mocha -t 10000 test/runners/dart_spec.js
