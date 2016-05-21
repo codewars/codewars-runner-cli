@@ -63,7 +63,7 @@ describe('dart runner', function() {
         done();
       });
     });
-
+    
     it('should handle basic tests', function(done) {
       runner.run({
         language: 'dart',
@@ -74,7 +74,8 @@ describe('dart runner', function() {
           });`,
         testFramework: 'test'
       }, function(buffer) {
-        expect(buffer.stdout).to.contain(`All tests passed`);
+        expect(buffer.stdout).to.contain(`<IT::>function returns 50`);
+        expect(buffer.stdout).to.contain(`<PASSED::>Test Passed`);
         done();
       });
     });
@@ -83,14 +84,50 @@ describe('dart runner', function() {
       runner.run({
         language: 'dart',
         setup: `import 'dart:async';`,
-        code: `testFunction() => new Future.value(50);`,
+        code: `
+          testFunction() => new Future.value(50);
+          otherFunction() => 32;
+          `,
         fixture: `
           test('function returns 50', () async {
             expect(await testFunction(), equals(50));
-          });`,
+          });
+
+          test('other function returns 32', () {
+            expect(otherFunction(), equals(32));
+          });
+          `,
         testFramework: 'test'
       }, function(buffer) {
-        expect(buffer.stdout).to.contain(`All tests passed`);
+        expect(buffer.stdout).to.contain(`<IT::>function returns 50`);
+        expect(buffer.stdout).to.contain(`<PASSED::>Test Passed`);
+        expect(buffer.stdout).to.contain(`<IT::>other function returns 32`);
+        expect(buffer.stdout).to.not.contain(`<FAILED::>Test Failed`);
+        done();
+      });
+    });
+
+    it('should handle errors in testIntegration', function(done) {
+      runner.run({
+        language: 'dart',
+        setup: `import 'dart:async';`,
+        code: `
+          testFunction() => new Future.value(50);
+          otherFunction() => 32;
+          `,
+        fixture: `
+          test('function returns 50, () async {
+            expect(await testFunction(), equals(50));
+          });
+
+          test('other function returns 32', () {
+            expect(otherFunction(), equals(32));
+          });
+          `,
+        testFramework: 'test'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.contain(`unterminated string literal`);
         done();
       });
     });
