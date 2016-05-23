@@ -32,22 +32,6 @@ describe('dart runner', function() {
       });
     });
 
-    it('should error when trying to add imports to the code section', function(done) {
-      runner.run({
-        language: 'dart',
-        code: `
-          import 'dart:async';
-          main() async {
-            var str = await new Future.value('Bam');
-            print(str);
-          }
-        `
-      }, function(buffer) {
-        expect(buffer.stderr).to.contain(`unexpected token 'import'`);
-        done();
-      });
-    });
-
     it('should allow imports inside setup', function(done) {
       runner.run({
         language: 'dart',
@@ -128,25 +112,6 @@ describe('dart runner', function() {
       }, function(buffer) {
         expect(buffer.stdout).to.contain(`<ERROR::>`);
         expect(buffer.stdout).to.contain(`unterminated string literal`);
-        done();
-      });
-    });
-
-    it('should error for spec when trying to add imports to the code section', function(done) {
-      runner.run({
-        language: 'dart',
-        code: `
-          import 'dart:async';
-          testFunction() async => 50;
-        `,
-        fixture: `
-          test('function returns 50', () {
-            expect(testFunction(), equals(50));
-          });`,
-        testFramework: 'test'
-      }, function(buffer) {
-        expect(buffer.stdout).to.contain(`<ERROR::>`);
-        expect(buffer.stdout).to.contain(`unexpected token 'import'`);
         done();
       });
     });
