@@ -32,6 +32,7 @@ clean: docker_rm_exited docker_rmi_temporary
 deep-clean: docker_rmi
 
 pull:
+	docker pull codewars/base-runner
 	docker pull codewars/ruby-runner
 	docker pull codewars/node-runner
 	docker pull codewars/python-runner
