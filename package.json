@@ -53,7 +53,6 @@
     "expect": "^1.18.0",
     "immutable": "^3.8.1",
     "limdu": "^0.8.0",
-    "lodash": "^2.4.2",
     "mongodb": "^2.1.18",
     "mongoose": "^4.4.14",
     "natural": "^0.4.0",
