@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "chai": "1.9.x",
-    "lodash": "^2.4.1",
+    "lodash": "*",
     "mocha": "1.19.x",
     "nomnom": "1.6.x",
     "temp": "*",
@@ -52,6 +52,7 @@
     "elasticsearch": "^11.0.1",
     "expect": "^1.18.0",
     "immutable": "^3.8.1",
+    "limdu": "^0.8.0",
     "lodash": "^2.4.2",
     "mongodb": "^2.1.18",
     "mongoose": "^4.4.14",
