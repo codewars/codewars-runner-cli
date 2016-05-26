@@ -29,7 +29,7 @@ var run = require('./lib/runner').run,
             shell: {
                 abbr: 'sh',
                 help: 'An optional shell script which will be ran within the sandbox environment before the code is executed'
-            }
+            },
             timeout: {
                 help: 'The timeout to be used for running the code. If not specified a language specific default will be used'
             },
