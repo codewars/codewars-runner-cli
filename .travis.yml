@@ -1,6 +1,8 @@
 sudo: required
 
 language: node_js
+node_js:
+  - "5.8"
 
 services:
   - docker
