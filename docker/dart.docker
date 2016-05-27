@@ -1,0 +1,43 @@
+FROM codewars/base-runner
+
+# Setup the pre-requisites / install dart TODO: REMOVE GIT
+RUN \
+  apt-get -q update && apt-get install --no-install-recommends -y -q ca-certificates apt-transport-https && \
+  curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+  curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list && \
+  apt-get update && \
+  apt-get install dart && \
+  rm -rf /var/lib/apt/lists/*
+
+# Setup dart envs
+ENV DART_SDK /usr/lib/dart
+ENV PATH $DART_SDK/bin:$PATH
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+
+# Copy package json to tmp
+ADD package.json /tmp/package.json
+
+# Do npm install in tmp along with dart package setup
+# and pub get etc
+RUN \
+  cd /tmp && npm install --production && \
+  mkdir -p /runner && cp -a /tmp/node_modules /runner && \
+  mkdir -p /tmp/dart && \
+  chmod 0777 /tmp/dart && cd /tmp/dart && \
+  pub global activate den && \
+  ~/.pub-cache/bin/den spec --force && \
+  ~/.pub-cache/bin/den install test matcher && \
+  pub get && \
+  chown -R codewarrior:codewarrior /home/codewarrior/.pub-cache/*
+
+# ADD cli-runner
+ADD . /runner
+
+# Working dir is /runner
+WORKDIR /runner
+
+# Codewarrior...
+USER codewarrior
+
+RUN mocha -t 10000 test/runners/dart_spec.js
