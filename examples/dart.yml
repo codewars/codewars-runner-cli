@@ -1,0 +1,89 @@
+test:
+  algorithms:
+    initial: |-
+      // Return the two oldest/oldest ages within the array of ages passed in.
+      // it should return the two ages as a sorted array, youngest age first
+      twoOldestAges(ages){
+      	// Your code here...
+      }
+
+    answer: |-
+      twoOldestAges(ages){
+        var oldest = 0, nextOldest;
+
+        for(var i = 0;i < ages.length;i++) {
+          var age = ages[i];
+          if (age > oldest){
+            nextOldest = oldest;
+            oldest = age;
+          }
+          else if(age > nextOldest){
+            nextOldest = age;
+          }
+        }
+        return [nextOldest, oldest];
+      }
+
+    fixture: |-
+      test('Should return [45,87]', () {
+        expect(twoOldestAges([1, 5, 87, 45, 8, 8]),equals([45,87]));
+      });
+
+  bug fixes:
+    initial: |-
+      class Person {
+        String _name;
+        Person(this._name);
+
+        //TODO: The greet method is not returning the expected value.
+        greet() => 'Hello my name is _name';
+      }
+
+    answer: |-
+      class Person {
+        String _name;
+        Person(this._name);
+
+        //TODO: The greet method is not returning the expected value.
+        greet() => 'Hello my name is $_name';
+      }
+
+    fixture: |-
+      test('Greet is correct', () {
+        var jack = new Person('Jack');
+        var jill = new Person('Jill');
+
+        expect(jack.greet(),equals('Hello my name is Jack'));
+        expect(jill.greet(),equals('Hello my name is Jill'));
+      });
+
+  refactoring:
+    initial: |-
+      // TODO: This method needs to be called multiple times for the same person (myName).
+      // It would be nice if we didnt have to always pass in myName every time we needed to great someone.
+      greet(myName, yourName) {
+        return 'Hello $yourName, my name is $myName';
+      }
+
+    answer: |-
+      class Person {
+        var _name;
+        Person(this._name);
+
+        greet(yourName) => 'Hello $yourName, my name is $_name';
+      }
+
+  reference:
+    initial: |-
+      var websites = [];
+
+    answer: |-
+      // add the values "codewars" to the websites array
+      var websites = ['codewars'];
+
+    fixture: |-
+      test('Codewars is in the array', () {
+        expect(websites.length, greaterThan(0));
+        expect(websites.length, equals(1));
+        expect(websites[0], equals('codewars'));
+      });
