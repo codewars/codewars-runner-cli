@@ -77,6 +77,7 @@ Many languages are currently supported in various states of completeness. This l
 | C              |               | !!!          | !!!              |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
+| CSS            |               | ???          |  ???             |              |                |                |              |                                                                         |
 | C++            |               | ✓            | !!!              |              |                | systems-runner |              | Failing specs, systems image has also been temporarily removed          |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit       |                | erlang-runner  |              |                                                                         |
@@ -104,6 +105,7 @@ Many languages are currently supported in various states of completeness. This l
 | Ruby           | 2.3.0         | ✓            | cw-2, rspec      | cw-2         | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
 | Rust           |               | ✓            |                  |              |                |                |              |                                                                         |
 | Scala          | 2.11.2        | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
+| Scss/Sass      |                |  ???         | ???              |              |                |                |              |                                                                         |
 | Swift          |               | ???          | ???              |              |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
 | TypeScript     | 1.8.10        | ✓            | mocha            | mocha        |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
 
@@ -254,7 +256,7 @@ as a part of the test suite.
 
 The runner script is responsible for outputing a `run` method. This method utilizes the shovel helper which will handle
 all of the inter-process communication for you. The shovel config accepts strategies to determine how to handle running
-the code based off of the options passed in. There are currently two types of strategies. 
+the code based on the options passed in. There are currently two types of strategies. 
 
 - `solutionOnly`: Code is simply executed and its STDOUT returned. There is no test integration.
 - `testIntegration`: Code is executed within a configurable test suite and the test output is returned via STDOUT.
