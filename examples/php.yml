@@ -1,0 +1,47 @@
+phpunit:
+  bug fixes:
+    initial: |-
+      multiply(a, b) {
+        a * b
+      }
+    answer: |-
+      function multiply($a, $b) {
+        return $a * $b;
+      }
+    fixture: |-
+      $test->describe("The 'multiply' function", function () {
+        global $test;
+        $test->it("should pass all the tests provided", function () {
+          global $test;
+          $test->assert_equals(multiply(1, 1), 1);
+          $test->assert_equals(multiply(2, 3), 6);
+          $test->assert_equals(multiply(3, 2), 6);
+          $test->assert_equals(multiply(3, 5), 15);
+          $test->assert_equals(multiply(5, 3), 15);
+          $test->assert_equals(multiply(4, 7), 28);
+          $test->assert_equals(multiply(7, 4), 28);
+        });
+      });
+  reference:
+    initial: |-
+      multiply(a, b) {
+        a * b
+      }
+    answer: |-
+      function multiply($a, $b) {
+        return $a * $b;
+      }
+    fixture: |-
+      $test->describe("The 'multiply' function", function () {
+        global $test;
+        $test->it("should pass all the tests provided", function () {
+          global $test;
+          $test->assert_equals(multiply(1, 1), 1);
+          $test->assert_equals(multiply(2, 3), 6);
+          $test->assert_equals(multiply(3, 2), 6);
+          $test->assert_equals(multiply(3, 5), 15);
+          $test->assert_equals(multiply(5, 3), 15);
+          $test->assert_equals(multiply(4, 7), 28);
+          $test->assert_equals(multiply(7, 4), 28);
+        });
+      });
