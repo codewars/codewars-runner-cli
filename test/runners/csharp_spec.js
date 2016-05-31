@@ -17,6 +17,18 @@ describe( 'c# runner', function() {
             });
         });
 
+        it('should handle setup', function (done) {
+            runner.run({language: 'csharp',
+                setup: 'public class Preloaded { public static string hello = "Hello, World!"; }',
+                code: 'public class Hello1 { public static void Main() { System.Console.WriteLine(Preloaded.hello);}}'
+            }, function (buffer)
+            {
+                //console.log(buffer);
+                expect(buffer.stdout).to.contain('Hello, World!\n');
+                done();
+            });
+        });
+
         it('should handle basic nunit tests', function (done) {
             runner.run({ language: 'csharp',
                 code: 'namespace Bank { using System; public class Account { private decimal balance; public void Deposit(decimal amount) { Console.WriteLine("slorgs"); balance += amount; } public void Withdraw(decimal amount) { balance -= amount; } public void TransferFunds(Account destination, decimal amount) { } public decimal Balance { get { return balance; } } } } ',
