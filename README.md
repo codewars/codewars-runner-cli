@@ -80,6 +80,7 @@ Many languages are currently supported in various states of completeness. This l
 | CSS            |               | ???          |  ???             |              |                |                |              |                                                                         |
 | C++            |               | ✓            | !!!              |              |                | systems-runner |              | Failing specs, systems image has also been temporarily removed          |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
+| Dart           | 1.16.1        | ✓            | test             |              |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit       |                | erlang-runner  |              |                                                                         |
 | Erlang         |               | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
 | F#             | 4.0           | ✓            |                  | Kumite Only  |                | dotnet-runner  |              |                                                                         |
