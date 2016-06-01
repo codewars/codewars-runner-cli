@@ -35,11 +35,14 @@ describe('cpp runner', function () {
             var code = `
                 int main() {
                     fudge();
+                    doubleFudge();
                 }
             `;
 
             runner.run({language: 'cpp', code: code}, function (buffer) {
                 expect(buffer.stderr).to.contain("use of undeclared identifier 'fudge'");
+                expect(buffer.stderr).to.contain("use of undeclared identifier 'doubleFudge'");
+                expect(buffer.stderr).to.contain("2 errors generated.");
                 done();
             });
         });
