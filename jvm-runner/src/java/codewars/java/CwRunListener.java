@@ -7,21 +7,18 @@ import org.junit.runner.Description;
 public class CwRunListener extends RunListener
 {
     private boolean failed;
-    public void testFailure(Failure failure)
+    public void testFailure(final Failure failure)
     {
         failed = true;
-        String msg = failure.getMessage();
-        if (msg == null) {
-            msg = "Unknown Test Failure";
-        }
-        System.out.println(String.format("<FAILED::>%s<:LF:>", formatMessage(msg)));
+        final String msg = failure.getMessage();
+        System.out.println(String.format("<FAILED::>%s<:LF:>", formatMessage(msg != null && msg.length() > 0 ? msg : "Unknown Test Failure")));
     }
-    public void testStarted(Description description)
+    public void testStarted(final Description description)
     {
         System.out.println(String.format("<DESCRIBE::>%s<:LF:>", formatMessage(description.getDisplayName())));
         failed = false;
     }
-    public void testFinished(Description description)
+    public void testFinished(final Description description)
     {
         if(!failed)
         {
@@ -29,12 +26,11 @@ public class CwRunListener extends RunListener
         }
         System.out.println("<COMPLETEDIN::>");
     }
-    private static String formatMessage(String s)
+    private static String formatMessage(final String s)
     {
         if(s == null){
-            s = "";
+            return "";
         }
-
         return s.replaceAll("\n", "<:LF:>");
     }
 }
