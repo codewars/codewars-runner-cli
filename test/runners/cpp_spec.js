@@ -31,6 +31,19 @@ describe('cpp runner', function () {
             });
         });
 
+        it('should handle compile errors', function (done) {
+            var code = `
+                int main() {
+                    fudge();
+                }
+            `;
+
+            runner.run({language: 'cpp', code: code}, function (buffer) {
+                expect(buffer.stderr).to.contain("use of undeclared identifier 'fudge'");
+                done();
+            });
+        });
+
         it('should handle setup code and imports', function (done) {
             runner.run({
                 language: 'cpp',
