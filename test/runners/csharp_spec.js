@@ -23,7 +23,6 @@ describe( 'c# runner', function() {
                 code: 'public class Hello1 { public static void Main() { System.Console.WriteLine(Preloaded.hello);}}'
             }, function (buffer)
             {
-                //console.log(buffer);
                 expect(buffer.stdout).to.contain('Hello, World!\n');
                 done();
             });

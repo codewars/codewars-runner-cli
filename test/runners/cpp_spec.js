@@ -39,7 +39,6 @@ describe('cpp runner', function () {
                 `,
                 code: `
                     #include <iostream>
-                    int square(int);
                     int main() {
                         std::cout << square(6);
                     }
@@ -64,7 +63,6 @@ describe('cpp runner', function () {
                 `,
                 code: `
                     #include <iostream>
-                    #include "setup.cpp"
                     int main() {
                         pizza p;
                         std::cout << p.tastes();
@@ -185,7 +183,11 @@ describe('cpp runner', function () {
                         };
                     `
                 }, function(buffer) {
-                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    expect(buffer.stdout).to.contain('<DESCRIBE::>two_oldest_ages_test');
+                    expect(buffer.stdout).to.contain('<IT::>should_return_the_oldest');
+                    expect(buffer.stdout).to.contain('<PASSED::>should_return_the_oldest');
+                    expect(buffer.stdout).to.contain('<IT::>thing_inherit_from_base');
+                    expect(buffer.stdout).to.contain('<PASSED::>thing_inherit_from_base');
                     done();
                 });
             })
@@ -228,7 +230,12 @@ describe('cpp runner', function () {
                         };
                     `
                 }, function(buffer) {
-                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    expect(buffer.stdout).to.contain('<DESCRIBE::>entity');
+                    expect(buffer.stdout).to.contain('<DESCRIBE::>player');
+                    expect(buffer.stdout).to.contain('<IT::>should_run_at_speed_5');
+                    expect(buffer.stdout).to.contain('<PASSED::>should_run_at_speed_5');
+                    expect(buffer.stdout).to.contain('<IT::>should_run_at_speed_10');
+                    expect(buffer.stdout).to.contain('<PASSED::>should_run_at_speed_10');
                     done();
                 });
             })
@@ -245,7 +252,6 @@ describe('cpp runner', function () {
                         };
                     `,
                     code: `
-                        #include "setup.cpp"
                         class Thing: public Base
                         {
                         public:
@@ -269,7 +275,11 @@ describe('cpp runner', function () {
                         };
                     `
                 }, function(buffer) {
-                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    expect(buffer.stdout).to.contain('<DESCRIBE::>inheritance_tests');
+                    expect(buffer.stdout).to.contain('<IT::>should_access_the_base_var');
+                    expect(buffer.stdout).to.contain('<PASSED::>should_access_the_base_var');
+                    expect(buffer.stdout).to.contain('<IT::>thing_inherit_from_base');
+                    expect(buffer.stdout).to.contain('<PASSED::>thing_inherit_from_base');
                     done();
                 });
             })

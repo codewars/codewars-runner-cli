@@ -10,8 +10,8 @@ class CodewarsListener: public TestListener
 		std::cout << "<COMPLETEDIN::>" << std::endl;
 
 	}
-	virtual void SpecRunStarting(const ContextBase& ctx, const std::string&) {
-		std::cout << "<DESCRIBE::>" <<  ctx.Name() << std::endl;
+	virtual void SpecRunStarting(const ContextBase& ctx, const std::string& str) {
+		std::cout << "<IT::>" <<  str << std::endl;
 
 	}
 	virtual void SpecSucceeded(const ContextBase&, const std::string& str) {
