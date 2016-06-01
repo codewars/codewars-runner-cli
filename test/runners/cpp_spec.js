@@ -148,6 +148,132 @@ describe('cpp runner', function () {
                 });
             });
 
+            it('should work with the example two oldest ages', function(done) {
+                runner.run({
+                    language: 'cpp',
+                    code: `
+                        #include <list>
+                        #include <iostream>
+                        using namespace std;
+
+                        list<int> two_oldest_ages(list<int> ages) {
+                            int oldest = 0, nextOldest;
+                            for(auto& age:ages) {
+                                if(age > oldest) {
+                                    nextOldest = oldest;
+                                    oldest = age;
+                                }
+                                else if(age > nextOldest) {
+                                    nextOldest = age;
+                                }
+                            }
+                            return list<int> {nextOldest, oldest};
+                        }
+                    `,
+                    fixture: `
+                        list<int> results = two_oldest_ages({ 1, 5, 87, 45, 8, 8 });
+                        Describe(two_oldest_ages_test)
+                        {
+                            It(should_return_the_oldest) 
+                            {
+                                Assert::That(results.front(), Equals(45));
+                            }
+                            It(thing_inherit_from_base)
+                            {
+                                Assert::That(results.back(), Equals(87));
+                            }
+                        };
+                    `
+                }, function(buffer) {
+                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    done();
+                });
+            })
+
+            it('should work with the virtual bug fix example', function(done) {
+                runner.run({
+                    language: 'cpp',
+                    code: `
+                        struct Entity {
+                            int run() {
+                                return speed();
+                            }
+                            virtual int speed() {
+                                return 5;
+                            }
+                        };
+
+                        struct Player: public Entity {
+                            virtual int speed() {
+                                return 10;
+                            }
+                        };
+                    `,
+                    fixture: `
+                        Entity e;
+                        Player p;
+
+                        Describe(entity)
+                        {
+                            It(should_run_at_speed_5) {
+                                Assert::That(e.run(), Equals(5));
+                            }
+                        };
+
+                        Describe(player)
+                        {
+                            It(should_run_at_speed_10) {
+                                Assert::That(p.run(), Equals(10));
+                            }
+                        };
+                    `
+                }, function(buffer) {
+                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    done();
+                });
+            })
+
+            it('should handle inheritance like a champ', function(done) {
+                runner.run({
+                    language: 'cpp',
+                    setup: `
+                        class Base 
+                        {
+                        public: 
+                            virtual int big_number() = 0;
+                            int member_var = 42;
+                        };
+                    `,
+                    code: `
+                        #include "setup.cpp"
+                        class Thing: public Base
+                        {
+                        public:
+                            int big_number() {
+                                return 4200 + member_var;
+                            }
+                        };
+                    `,
+                    fixture: `
+                        Thing t;
+                        Describe(inheritance_tests)
+                        {
+                            It(should_access_the_base_var) 
+                            {
+                                Assert::That(t.member_var, Equals(42));
+                            }
+                            It(thing_inherit_from_base)
+                            {
+                                Assert::That(t.big_number(), Equals(4242));
+                            }
+                        };
+                    `
+                }, function(buffer) {
+                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    done();
+                });
+            })
+
         });
 
     });

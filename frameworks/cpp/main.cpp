@@ -15,11 +15,11 @@ class CodewarsListener: public TestListener
 
 	}
 	virtual void SpecSucceeded(const ContextBase&, const std::string& str) {
-		std::cout << "<PASSED::>" << str << std::endl;
-
+		std::cout << "<PASSED::>" << str << std::endl << "<COMPLETEDIN::>" << std::endl;
 	}
+
 	virtual void SpecFailed(const ContextBase&, const std::string& str) {
-		std::cout << "<FAILED::>" << str << std::endl;
+		std::cout << "<FAILED::>" << str << std::endl << "<COMPLETEDIN::>" << std::endl;
 	}
 };
 
