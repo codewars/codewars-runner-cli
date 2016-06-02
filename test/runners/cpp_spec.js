@@ -31,6 +31,21 @@ describe('cpp runner', function () {
             });
         });
 
+        it('should handle C++14 digit seperators', function (done) {
+            var code = `
+                #include "iostream"
+                int main() {
+                    int x = 10'000'000;
+                    std::cout << x << std::endl;
+                }
+            `;
+
+            runner.run({language: 'cpp', code: code}, function (buffer) {
+                expect(buffer.stdout).to.equal("10000000\n");
+                done();
+            });
+        });
+
         it('should handle compile errors', function (done) {
             var code = `
                 int main() {
