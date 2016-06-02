@@ -133,7 +133,7 @@ describe('cpp runner', function () {
                     `
                 }, function(buffer) {
                     expect(buffer.stdout).to.contain('<FAILED::>');
-                    expect(buffer.stdout).to.contain('Expected:');
+                    expect(buffer.stdout).to.contain('Expected: equal to 2<LF::>Actual: 1');
                     done();
                 });
             });
@@ -143,7 +143,7 @@ describe('cpp runner', function () {
                     language: 'cpp',
                     code: `
                         unsigned int NumberOne() {
-                            std::cout << "Hello Codewars!";
+                            std::cout << "Hello Codewars!" << std::endl;
                             return 1;
                         }
                     `,

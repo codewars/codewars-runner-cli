@@ -1,4 +1,5 @@
 
+
 class CodewarsListener: public TestListener 
 {
 	virtual void TestRunStarting() {}
@@ -15,11 +16,23 @@ class CodewarsListener: public TestListener
 
 	}
 	virtual void SpecSucceeded(const ContextBase&, const std::string& str) {
-		std::cout << "<PASSED::>" << str << std::endl << "<COMPLETEDIN::>" << std::endl;
+		std::cout << "<PASSED::>" << format(str) << std::endl << "<COMPLETEDIN::>" << std::endl;
 	}
 
 	virtual void SpecFailed(const ContextBase&, const std::string& str) {
-		std::cout << "<FAILED::>" << str << std::endl << "<COMPLETEDIN::>" << std::endl;
+		std::cout << "<FAILED::>" << format(str) << std::endl << "<COMPLETEDIN::>" << std::endl;
+	}
+
+	std::string format(const std::string &str) {
+		std::string new_line = "\n";
+		std::string line_feed = "<LF::>";
+		std::string new_string = str;
+		size_t start_pos = 0;
+		while((start_pos = new_string.find(new_line, start_pos)) != std::string::npos) {
+	        new_string.replace(start_pos, new_line.length(), line_feed);
+	        start_pos += line_feed.length();
+		}
+		return new_string;
 	}
 };
 
