@@ -77,8 +77,7 @@ Many languages are currently supported in various states of completeness. This l
 | C              |               | !!!          | !!!              |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
-| C++            | 14            | ✓            | igloo            |              |                | systems-runner |                         
-|                                                                         |
+| C++            | 14            | ✓            | igloo            |              |                | systems-runner |              |                                                                         |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit       |                | erlang-runner  |              |                                                                         |
 | Erlang         |               | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
