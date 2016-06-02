@@ -6,7 +6,7 @@ Code is executed within a Dockerized Ubuntu 14.04 container.
 
 The Glorious Glasgow Haskell Compilation System, version 7.6.3
 
-Testing is done using hspec-meta-1.10.0.
+Testing is done using [hspec-meta-1.10.0](https://hackage.haskell.org/package/hspec-meta-1.10.0).
 
 ## Packages
 
