@@ -25,7 +25,7 @@ class CodewarsListener: public TestListener
 
 	std::string format(const std::string &str) {
 		std::string new_line = "\n";
-		std::string line_feed = "<LF::>";
+		std::string line_feed = "<:LF:>";
 		std::string new_string = str;
 		size_t start_pos = 0;
 		while((start_pos = new_string.find(new_line, start_pos)) != std::string::npos) {

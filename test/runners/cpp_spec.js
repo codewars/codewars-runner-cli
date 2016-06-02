@@ -148,7 +148,7 @@ describe('cpp runner', function () {
                     `
                 }, function(buffer) {
                     expect(buffer.stdout).to.contain('<FAILED::>');
-                    expect(buffer.stdout).to.contain('Expected: equal to 2<LF::>Actual: 1');
+                    expect(buffer.stdout).to.contain('Expected: equal to 2<:LF:>Actual: 1');
                     done();
                 });
             });
