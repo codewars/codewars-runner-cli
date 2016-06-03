@@ -7,21 +7,24 @@
 FROM codewars/base-runner
 
 # Install Tiny C Compiler
-RUN apt-get -y install tcc
+# RUN apt-get -y install tcc
 
 # Needed to run add-apt-repository
 RUN apt-get -y install software-properties-common
 
-# Install CLANG 3.4
+# Install CLANG 3.6
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
 RUN apt-get update
-RUN apt-get -y install clang-3.4 lldb-3.4
+RUN apt-get -y install clang-3.6 lldb-3.6
+
+# Install libc++
+RUN apt-get -y install libc++-dev
 
 # NASM
-RUN apt-get -y install nasm
+# RUN apt-get -y install nasm
 
 # ARM Assembly Emulation
-RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
+# RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
@@ -39,7 +42,8 @@ USER codewarrior
 # Set environment variables
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/{gas,arm,nasm,cpp,c}_spec.js
+#RUN mocha -t 5000 test/runners/{gas,arm,nasm,cpp,c}_spec.js
+RUN mocha -t 5000 test/runners/cpp_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

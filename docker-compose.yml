@@ -275,6 +275,24 @@ services:
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/clojure_spec.js'
 
+  cpp:
+    image: codewars/systems-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'node run -l cpp'
+
+  cpp_test:
+    image: codewars/systems-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/cpp_spec.js'
+
   csharp:
     image: codewars/dotnet-runner
     volumes:
