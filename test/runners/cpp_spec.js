@@ -8,7 +8,6 @@ describe('cpp runner', function () {
                 #include <iostream>
                 int main() { 
                     printf("Hello World");
-                    return 0;
                 }
            `;
 
@@ -39,7 +38,6 @@ describe('cpp runner', function () {
                 int main() {
                     int x = 10'000'000;
                     std::cout << x << std::endl;
-                    return x;
                 }
             `;
 
