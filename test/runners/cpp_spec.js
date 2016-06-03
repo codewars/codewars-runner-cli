@@ -7,10 +7,7 @@ describe('cpp runner', function () {
             var code = `
                 #include <iostream>
                 int main() { 
-                    std::cout << "Hello World" << std::endl;
-                    std::cout << "Hello World" << std::endl; 
-                    std::cout << "Hello World" << std::endl;
-                    std::cout << "Hello World" << std::endl;
+                    printf("Hello World");
                 }
            `;
 
