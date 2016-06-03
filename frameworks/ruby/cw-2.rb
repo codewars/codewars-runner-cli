@@ -128,6 +128,10 @@ class Test
       end
     end
 
+    def fail(msg = nil)
+      Test.expect(false, msg)
+    end
+
     def random_letter
       ('a'..'z').to_a.sample
     end
