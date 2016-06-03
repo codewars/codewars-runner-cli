@@ -12,13 +12,13 @@ FROM codewars/base-runner
 # Needed to run add-apt-repository
 RUN apt-get -y install software-properties-common
 
-# Install CLANG 3.4
+# Install CLANG 3.6
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
 RUN apt-get update
-RUN apt-get -y install clang-3.4 lldb-3.4
+RUN apt-get -y install clang-3.6 lldb-3.6
 
-# Install libc++ 
-# RUN apt-get -y install libc++-dev
+# Install libc++
+RUN apt-get -y install libc++-dev
 
 # NASM
 # RUN apt-get -y install nasm

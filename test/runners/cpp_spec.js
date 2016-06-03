@@ -6,12 +6,13 @@ describe('cpp runner', function () {
         it('should handle basic code evaluation', function (done) {
             var code = `
                 #include <iostream>
-                int main()
-                { std::cout << "\\\"Within C++, there is a much smaller and cleaner language struggling to get out.\\\" - Bjarn Stroustrup"; }
+                int main() { 
+                    std::cout << "Hello World"; 
+                }
            `;
 
             runner.run({language: 'cpp', code: code}, function (buffer) {
-                expect(buffer.stdout).to.equal("\"Within C++, there is a much smaller and cleaner language struggling to get out.\" - Bjarn Stroustrup");
+                expect(buffer.stdout).to.equal("Hello World");
                 done();
             });
         });
@@ -31,20 +32,20 @@ describe('cpp runner', function () {
             });
         });
 
-        // it('should handle C++14 digit seperators', function (done) {
-        //     var code = `
-        //         #include "iostream"
-        //         int main() {
-        //             int x = 10'000'000;
-        //             std::cout << x << std::endl;
-        //         }
-        //     `;
+        it('should handle C++14 digit seperators', function (done) {
+            var code = `
+                #include <iostream>
+                int main() {
+                    int x = 10'000'000;
+                    std::cout << x << std::endl;
+                }
+            `;
 
-        //     runner.run({language: 'cpp', code: code}, function (buffer) {
-        //         expect(buffer.stdout).to.equal("10000000\n");
-        //         done();
-        //     });
-        // });
+            runner.run({language: 'cpp', code: code}, function (buffer) {
+                expect(buffer.stdout).to.equal("10000000\n");
+                done();
+            });
+        });
 
         it('should handle compile errors', function (done) {
             var code = `
