@@ -12,10 +12,10 @@ FROM codewars/base-runner
 # Needed to run add-apt-repository
 RUN apt-get -y install software-properties-common
 
-# Install CLANG 3.6
+# Install CLANG 3.4
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa
 RUN apt-get update
-RUN apt-get -y install clang-3.6 lldb-3.6
+RUN apt-get -y install clang-3.4 lldb-3.4
 
 # Install libc++ 
 # RUN apt-get -y install libc++-dev
