@@ -1,0 +1,90 @@
+igloo:
+  algorithms:
+    initial: |-
+      #include <list>
+      using namespace std;
+      // return the two oldest/oldest ages within the array of ages passed in.
+      // it should return the two ages as a sorted array, youngest age first
+      list<int> two_oldest_ages(list<int> ages) {
+
+      }
+
+    answer: |-
+      #include <list>
+      #include <iostream>
+      using namespace std;
+      list<int> two_oldest_ages(list<int> ages) {
+          int oldest = 0, nextOldest;
+          for(auto& age:ages) {
+              if(age > oldest) {
+                  nextOldest = oldest;
+                  oldest = age;
+              }
+              else if(age > nextOldest) {
+                  nextOldest = age;
+              }
+          }
+          return list<int> {nextOldest, oldest};
+      }
+
+    fixture: |-
+      list<int> results = two_oldest_ages({ 1, 5, 87, 45, 8, 8 });
+      Describe(two_oldest_ages_test)
+      {
+          It(should_return_the_oldest) 
+          {
+              Assert::That(results.front(), Equals(45));
+          }
+          It(thing_inherit_from_base)
+          {
+              Assert::That(results.back(), Equals(87));
+          }
+      };
+
+  bug fixes:
+    initial: |-
+      struct Entity {
+          int run() {
+            return speed;
+          }
+          int speed = 5;
+      };
+
+      // TODO: player.run() returning 5 instead of 10!
+      struct Player: public Entity {
+          int speed = 10;
+      };
+
+    answer: |-
+      struct Entity {
+          int run() {
+              return speed();
+          }
+          virtual int speed() {
+              return 5;
+          }
+      };
+
+      struct Player: public Entity {
+          virtual int speed() {
+              return 10;
+          }
+      };
+
+    fixture: |-
+      Entity e;
+      Player p;
+
+      Describe(entity)
+      {
+          It(should_run_at_speed_5) {
+              Assert::That(e.run(), Equals(5));
+          }
+      };
+
+      Describe(player)
+      {
+          It(should_run_at_speed_10) {
+              Assert::That(p.run(), Equals(10));
+          }
+      };
