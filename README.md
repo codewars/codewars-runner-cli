@@ -93,6 +93,7 @@ Many languages are currently supported in various states of completeness. This l
 | JavaScript     | 6.0.0         | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
 | JavaScript     | 6.0.0/Babel   | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
 | Julia          |               | ✓!!!         | !!!              |              |                |                |              |                                                                         |
+| Kotlin         |               | ???          |                  |              |                |                |              |                                                                         |
 | Lisp           |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
 | Lua            |               | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
 | ObjC           |               | ???          | ???              |              |                |                |              |                                                                         |
