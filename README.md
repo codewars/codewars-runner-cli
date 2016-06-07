@@ -77,8 +77,8 @@ Many languages are currently supported in various states of completeness. This l
 | C              |               | !!!          | !!!              |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
+| C++            | 14            | ✓            | igloo            |              |                | systems-runner |              |                                                                         |
 | CSS            |               | ???          |  ???             |              |                |                |              |                                                                         |
-| C++            |               | ✓            | !!!              |              |                | systems-runner |              | Failing specs, systems image has also been temporarily removed          |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
 | Dart           | 1.16.1        | ✓            | test             |              |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit       |                | erlang-runner  |              |                                                                         |
@@ -106,7 +106,7 @@ Many languages are currently supported in various states of completeness. This l
 | Ruby           | 2.3.0         | ✓            | cw-2, rspec      | cw-2         | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
 | Rust           |               | ✓            |                  |              |                |                |              |                                                                         |
 | Scala          | 2.11.2        | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
-| Scss/Sass      |                |  ???         | ???              |              |                |                |              |                                                                         |
+| Scss/Sass      |               |  ???         | ???              |              |                |                |              |                                                                         |
 | Swift          |               | ???          | ???              |              |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
 | TypeScript     | 1.8.10        | ✓            | mocha            | mocha        |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
 
