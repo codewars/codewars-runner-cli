@@ -93,6 +93,7 @@ Many languages are currently supported in various states of completeness. This l
 | JavaScript     | 6.0.0         | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
 | JavaScript     | 6.0.0/Babel   | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
 | Julia          |               | ✓!!!         | !!!              |              |                |                |              |                                                                         |
+| Kotlin         |               | ???          |                  |              |                |                |              |                                                                         |
 | Lisp           |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
 | Lua            |               | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
 | ObjC           |               | ???          | ???              |              |                |                |              |                                                                         |
@@ -145,7 +146,7 @@ to update these you should `make {image_you_want_to_update}` the image to ensure
 ### Docker Compose
 We mentioned before that you also have the option of using [Docker Compose](https://docs.docker.com/compose/) to run the CLI tool. We have setup the `docker-compose.yml`
 file to provide very useful pre-configured services for making development easier. Instead of having to issue the long command
-mentioned above, you can simply run `docker-compose run node_runner` to bash into a fresh container with your local volumes already mounted.
+mentioned above, you can simply run `docker-compose run node-runner` to bash into a fresh container with your local volumes already mounted.
  
 All of the docker compose services are setup to mount volumes to make development easier, so that is the recommended way of 
 interacting with the codebase. You should note though that the compose file is unable to build images due to how
