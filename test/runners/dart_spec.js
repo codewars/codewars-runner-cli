@@ -91,6 +91,31 @@ describe('dart runner', function() {
       });
     });
 
+    it('should handle invalid code', function(done) {
+      runner.run({
+        language: 'dart',
+        setup: `import 'dart:async';`,
+        code: `
+          class Person {
+            String firstName;
+            String lastName;
+
+            Person(this.firstName,this.lastName
+          }
+          `,
+        fixture: `
+          test('function returns 50, () async {
+            expect(new Person('Bill','Smith'), new isInstanceOf<Person>());
+          });
+          `,
+        testFramework: 'test'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.contain(`unbalanced`);
+        done();
+      });
+    });
+
     it('should handle errors in testIntegration', function(done) {
       runner.run({
         language: 'dart',
