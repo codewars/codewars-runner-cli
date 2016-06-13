@@ -104,7 +104,7 @@ describe('dart runner', function() {
           }
           `,
         fixture: `
-          test('function returns 50, () async {
+          test('can create a new Person object, () async {
             expect(new Person('Bill','Smith'), new isInstanceOf<Person>());
           });
           `,
@@ -137,6 +137,25 @@ describe('dart runner', function() {
       }, function(buffer) {
         expect(buffer.stdout).to.contain(`<ERROR::>`);
         expect(buffer.stdout).to.contain(`unterminated string literal`);
+        done();
+      });
+    });
+
+    it('should be a simple failed test example', function(done) {
+      runner.run({
+        language: 'dart',
+        setup: `import 'dart:async';`,
+        code: `
+          returnFive() => 5;
+          `,
+        fixture: `
+        test('Should fail', () {
+          expect(returnFive(), equals(4));
+        });
+          `,
+        testFramework: 'test'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<FAILED::>`);
         done();
       });
     });
