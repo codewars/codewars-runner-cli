@@ -35,13 +35,13 @@
       (json/generate-string
        {:language "groovy"
         :code "class Greeter { static greet = { name -> 'Hello '+name } }"
-        :fixture "class MyTestCase extends GroovyTestCase { void testGreet(){def result = Greeter.greet('Ruslan');assert result == 'Hello Ruslan'}}"}
+        :fixture "class MyTestCase extends GroovyTestCase { void testGreet(){def result = Greeter.greet('Ruslan');assert result == 'Hello Ruslan';println 'Lets sum'}}"}
       )
       ;(with-java-out-str (run-all-tests))
   
-     (let [test-out-string (with-java-out-str (-main))]
+     (let [test-out-string (groovy-java-fixt (-main))]
         (is (.contains test-out-string "<DESCRIBE::>testGreet(MyTestCase)"))
-        ;(is (.contains test-out-string "test out"))
+        (is (.contains test-out-string "Lets sum"))
         (is (.contains test-out-string "<PASSED::>Test Passed<:LF:>"))
      )
 
