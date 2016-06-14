@@ -1,4 +1,4 @@
-phpunit:
+cw-2:
   bug fixes:
     initial: |-
       multiply(a, b) {
@@ -22,7 +22,8 @@ phpunit:
           $test->assert_equals(multiply(7, 4), 28);
         });
       });
-  reference:
+phpunit:
+  bug fixes:
     initial: |-
       multiply(a, b) {
         a * b
@@ -32,16 +33,15 @@ phpunit:
         return $a * $b;
       }
     fixture: |-
-      $test->describe("The 'multiply' function", function () {
-        global $test;
-        $test->it("should pass all the tests provided", function () {
-          global $test;
-          $test->assert_equals(multiply(1, 1), 1);
-          $test->assert_equals(multiply(2, 3), 6);
-          $test->assert_equals(multiply(3, 2), 6);
-          $test->assert_equals(multiply(3, 5), 15);
-          $test->assert_equals(multiply(5, 3), 15);
-          $test->assert_equals(multiply(4, 7), 28);
-          $test->assert_equals(multiply(7, 4), 28);
-        });
-      });
+      class MultiplyFunction extends TestCase
+      {
+          public function testMultiply() {
+            $this->assertEquals(multiply(1, 1), 1);
+            $this->assertEquals(multiply(2, 3), 6);
+            $this->assertEquals(multiply(3, 2), 6);
+            $this->assertEquals(multiply(3, 5), 15);
+            $this->assertEquals(multiply(5, 3), 15);
+            $this->assertEquals(multiply(4, 7), 28);
+            $this->assertEquals(multiply(7, 4), 28);
+          }
+      }

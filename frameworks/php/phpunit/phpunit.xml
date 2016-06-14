@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+     backupStaticAttributes="false"
+
+     cacheTokens="false"
+     colors="false"
+     convertErrorsToExceptions="true"
+     convertNoticesToExceptions="true"
+     convertWarningsToExceptions="true"
+     forceCoversAnnotation="false"
+     mapTestClassNameToCoveredClassName="false"
+     printerClass="PHPUnit_TextUI_ResultPrinter"
+
+     processIsolation="false"
+     stopOnError="false"
+     stopOnFailure="false"
+     stopOnIncomplete="false"
+     stopOnSkipped="false"
+     testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
+
+     strict="false"
+     verbose="false"
+    >
+
+
+    <listeners>
+        <listener class="CodewarsListener" file="CodewarsListener.php">
+        </listener>
+    </listeners>
+</phpunit>
