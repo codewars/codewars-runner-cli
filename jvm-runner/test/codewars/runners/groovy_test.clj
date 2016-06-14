@@ -39,7 +39,7 @@
       )
       ;(with-java-out-str (run-all-tests))
   
-     (let [test-out-string (groovy-java-fixt (-main))]
+     (let [test-out-string (with-java-out-str (-main))]
         (is (.contains test-out-string "<DESCRIBE::>testGreet(MyTestCase)"))
         (is (.contains test-out-string "Lets sum"))
         (is (.contains test-out-string "<PASSED::>Test Passed<:LF:>"))
