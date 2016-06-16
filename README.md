@@ -113,7 +113,7 @@ Many languages are currently supported in various states of completeness. This l
 
 ## Setup
 
-You should have Docker installed, if not do that first. Before you can run any of the code
+You should have [Docker](https://www.docker.com/) installed, if not do that first. Before you can run any of the code
 environments you will need to build the proper Docker image. To get started lets work with the
 node image.
 
@@ -144,7 +144,7 @@ from within the container.
 to update these you should `make {image_you_want_to_update}` the image to ensure you are always testing against the correct packages.
 
 ### Docker Compose
-We mentioned before that you also have the option of using Docker Compose to run the CLI tool. We have setup the `docker-compose.yml`
+We mentioned before that you also have the option of using [Docker Compose](https://docs.docker.com/compose/) to run the CLI tool. We have setup the `docker-compose.yml`
 file to provide very useful pre-configured services for making development easier. Instead of having to issue the long command
 mentioned above, you can simply run `docker-compose run node-runner` to bash into a fresh container with your local volumes already mounted.
  
