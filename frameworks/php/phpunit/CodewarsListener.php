@@ -5,29 +5,29 @@
     {
         public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
         {
-            $message = preg_replace('/\n/g', '<:LF:>', $e->getMessage());
+            $message = preg_replace('/\n/', '<:LF:>', $e->getMessage());
             printf("<FAILED::>%s\n", $message);
         }
 
         public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
         {
-            $message = preg_replace('/\n/g', '<:LF:>', $e->getMessage());
+            $message = preg_replace('/\n/', '<:LF:>', $e->getMessage());
             printf("<FAILED::>%s\n", $message);
         }
 
         public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
         {
-            // printf("Test '%s' is incomplete.\n", $test->getName());
+            // see https://phpunit.de/manual/current/en/incomplete-and-skipped-tests.html
         }
 
         public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
         {
-            // printf("Test '%s' is deemed risky.\n", $test->getName());
+            // see https://phpunit.de/manual/current/en/risky-tests.html
         }
 
         public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
         {
-            // printf("Test '%s' has been skipped.\n", $test->getName());
+            // see https://phpunit.de/manual/current/en/incomplete-and-skipped-tests.html
         }
 
         public function startTest(PHPUnit_Framework_Test $test)

@@ -25,6 +25,18 @@ describe( 'php runner', function(){
             });
         });
 
+        it( 'should handle thrown exceptions', function(done){
+            runner.run({
+            	language: 'php', 
+            	solution: `
+        			throw new Exception('Rawr!');
+        		`
+        	}, function(buffer) {
+                expect(buffer.stderr).to.contain('Rawr!');
+                done();
+            });
+        });
+
         it( 'should handle undefined functions', function(done){
             runner.run({
             	language: 'php', 
@@ -133,6 +145,23 @@ describe( 'php runner', function(){
 	                done();
 	            });
         	});
+
+	        it( 'should handle thrown exceptions', function(done){
+		        runner.run({
+	                language: 'php',
+	                code: `
+	                	$pizza = 'yummy';
+	                `,
+	                fixture: `
+	                	throw new Exception('Roffle!');
+	                `,
+	                testFramework: 'cw-2'
+	            },
+	            function(buffer) {
+	                expect(buffer.stderr).to.contain('Roffle!');
+	                done();
+	            });
+	        });
         });
 
         describe('phpunit', function() {
@@ -235,6 +264,28 @@ describe( 'php runner', function(){
 	                done();
 	            });
         	});
+
+	        it( 'should handle thrown exceptions', function(done){
+		        runner.run({
+	                language: 'php',
+	                code: `
+	                	$pizza = 'yummy';
+	                `,
+	                fixture: `
+			            class TheConstantMethod extends TestCase
+			            {
+		                	public function testConstantMethod() {
+		                		throw new Exception('Waffles!');
+		                	}
+			            }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('Waffles!');
+	                done();
+	            });
+	        });
     	});
 
     });
