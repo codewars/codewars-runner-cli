@@ -116,6 +116,23 @@ describe( 'php runner', function(){
 	                done();
 	            });
         	});
+
+        	it('should handle bad assertions', function(done) {
+		        runner.run({
+	                language: 'php',
+	                code: `
+						const CONSTANT = 42;
+	                `,
+	                fixture: `
+	                	$test->assert_equals(CONSTANT, 'apples');
+	                `,
+	                testFramework: 'cw-2'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('<FAILED::>');
+	                done();
+	            });
+        	});
         });
 
         describe('phpunit', function() {
@@ -139,6 +156,82 @@ describe( 'php runner', function(){
 	            },
 	            function(buffer) {
 	                expect(buffer.stdout).to.contain('<PASSED::>');
+	                done();
+	            });
+        	});
+
+        	it('should be able to reference preloaded code', function(done) {
+		        runner.run({
+	                language: 'php',
+	                setup: `
+	                	class SomeClass
+						{
+						    const CONSTANT = 42;
+						}
+	                `,
+	                code: `
+					    function theConstant() {
+					        return SomeClass::CONSTANT;
+					    }
+	                `,
+	                fixture: `
+			            class TheConstantMethod extends TestCase
+			            {
+		                	public function testConstantMethod() {
+	                			$this->assertEquals(theConstant(), SomeClass::CONSTANT);
+		                	}
+			            }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('<PASSED::>');
+	                done();
+	            });
+        	});
+
+        	it('should handle failed tests', function(done) {
+		        runner.run({
+	                language: 'php',
+	                code: `
+				      function double($a) {
+				        return $a * 2;
+				      }
+	                `,
+	                fixture: `
+			            class TheConstantMethod extends TestCase
+			            {
+		                	public function testConstantMethod() {
+	                			$this->assertEquals(double(1), 6);
+		                	}
+			            }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('<FAILED::>');
+	                done();
+	            });
+        	});
+
+        	it('should handle bad assertions', function(done) {
+		        runner.run({
+	                language: 'php',
+	                code: `
+						const CONSTANT = 42;
+	                `,
+	                fixture: `
+			            class TheConstantMethod extends TestCase
+			            {
+		                	public function testConstantMethod() {
+	                			$this->assertEquals(CONSTANT, 'apples');
+		                	}
+			            }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('<FAILED::>');
 	                done();
 	            });
         	});
