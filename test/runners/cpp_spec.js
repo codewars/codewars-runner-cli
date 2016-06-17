@@ -224,7 +224,7 @@ describe('cpp runner', function () {
                 });
             })
 
-            it('should only display errors once if others pass', function(done) {
+            it('should only display errors once', function(done) {
                 runner.run({
                     language: 'cpp',
                     code: `
