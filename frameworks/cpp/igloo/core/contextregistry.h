@@ -104,8 +104,11 @@ namespace igloo {
             }
             else
             {
-              // testListener.SpecFailed(context, specName);
-              testListener.SpecFailed(context, results.FailedTests().front().GetErrorMessage());
+              for(auto& result:results.FailedTests()) {
+                if(result.GetSpecName() == specName) {
+                  testListener.SpecFailed(context, specName, result);
+                }
+              }
             }
           }
         }
