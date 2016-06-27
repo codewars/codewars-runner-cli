@@ -64,11 +64,11 @@ namespace igloo {
         }
       }
 
-      void SpecFailed(const ContextBase& context, const std::string& specName)
+      void SpecFailed(const ContextBase& context, const std::string& specName, const FailedTestResult& result)
       {
         for(TestListeners::const_iterator it = listeners_.begin(); it != listeners_.end(); it++)
         {
-          (*it)->SpecFailed(context, specName);
+          (*it)->SpecFailed(context, specName, result);
         }
       }
 

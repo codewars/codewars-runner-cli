@@ -26,7 +26,7 @@ namespace igloo {
         // std::cout << ".";
       }
 
-      virtual void SpecFailed(const ContextBase& , const std::string& )
+      virtual void SpecFailed(const ContextBase& , const std::string&, const FailedTestResult& )
       {
         // std::cout << "F";
       }
