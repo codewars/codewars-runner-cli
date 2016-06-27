@@ -1,4 +1,4 @@
-phpunit:
+cw-2:
   bug fixes:
     initial: |-
       multiply(a, b) {
@@ -22,7 +22,43 @@ phpunit:
           $test->assert_equals(multiply(7, 4), 28);
         });
       });
-  reference:
+  algorithms:
+    initial: |-
+      // return the two oldest/oldest ages within the array of ages passed in.
+      // it should return the two ages as a sorted array, youngest age first
+      function twoOldestAges(ages){
+
+      }
+    answer: |-
+      function twoOldestAges($ages){
+        $oldest = 0;
+        $nextOldest;
+        for($i = 0; $i < count($ages); $i++){
+          $age = $ages[$i];
+          if ($age > $oldest){
+            $nextOldest = $oldest;
+            $oldest = $age;
+          }
+          elseif ($age > $nextOldest){
+            $nextOldest = $age;
+          }
+        }
+        return [$nextOldest, $oldest];
+      }
+    fixture: |-
+      $test->describe("The 'twoOldestAges' function", function () {
+        global $test;
+        $test->it("should pass all the tests provided", function () {
+          global $test;
+          $results1 = twoOldestAges([1, 5, 87, 45, 8, 8]);
+          $test->assert_equals($results1[0], 45);
+          $test->assert_equals($results1[1], 87);
+          $results2 = twoOldestAges([6, 5, 83, 5, 3, 18]);
+          $test->assert_similar($results2, [18, 83]);
+        });
+      });
+phpunit:
+  bug fixes:
     initial: |-
       multiply(a, b) {
         a * b
@@ -32,16 +68,49 @@ phpunit:
         return $a * $b;
       }
     fixture: |-
-      $test->describe("The 'multiply' function", function () {
-        global $test;
-        $test->it("should pass all the tests provided", function () {
-          global $test;
-          $test->assert_equals(multiply(1, 1), 1);
-          $test->assert_equals(multiply(2, 3), 6);
-          $test->assert_equals(multiply(3, 2), 6);
-          $test->assert_equals(multiply(3, 5), 15);
-          $test->assert_equals(multiply(5, 3), 15);
-          $test->assert_equals(multiply(4, 7), 28);
-          $test->assert_equals(multiply(7, 4), 28);
-        });
-      });
+      class MultiplyFunction extends TestCase
+      {
+          public function testMultiply() {
+            $this->assertEquals(multiply(1, 1), 1);
+            $this->assertEquals(multiply(2, 3), 6);
+            $this->assertEquals(multiply(3, 2), 6);
+            $this->assertEquals(multiply(3, 5), 15);
+            $this->assertEquals(multiply(5, 3), 15);
+            $this->assertEquals(multiply(4, 7), 28);
+            $this->assertEquals(multiply(7, 4), 28);
+          }
+      }
+  algorithms:
+    initial: |-
+      // return the two oldest/oldest ages within the array of ages passed in.
+      // it should return the two ages as a sorted array, youngest age first
+      function twoOldestAges(ages){
+
+      }
+    answer: |-
+      function twoOldestAges($ages){
+        $oldest = 0;
+        $nextOldest;
+        for($i = 0; $i < count($ages); $i++){
+          $age = $ages[$i];
+          if ($age > $oldest){
+            $nextOldest = $oldest;
+            $oldest = $age;
+          }
+          elseif ($age > $nextOldest){
+            $nextOldest = $age;
+          }
+        }
+        return [$nextOldest, $oldest];
+      }
+    fixture: |-
+      class TwoOldestAgesFunction extends TestCase
+      {
+          public function testAlgorithm() {
+            $results1 = twoOldestAges([1, 5, 87, 45, 8, 8]);
+            $this->assertEquals($results1[0], 45);
+            $this->assertEquals($results1[1], 87);
+            $results2 = twoOldestAges([6, 5, 83, 5, 3, 18]);
+            $this->assertEquals($results2, [18, 83]);
+          }
+      }

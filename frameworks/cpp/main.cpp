@@ -11,16 +11,16 @@ class CodewarsListener: public TestListener
 		std::cout << "<COMPLETEDIN::>" << std::endl;
 
 	}
-	virtual void SpecRunStarting(const ContextBase& ctx, const std::string& str) {
-		std::cout << "<IT::>" <<  str << std::endl;
+	virtual void SpecRunStarting(const ContextBase& ctx, const std::string& specName) {
+		std::cout << "<IT::>" <<  specName << std::endl;
 
 	}
-	virtual void SpecSucceeded(const ContextBase&, const std::string& str) {
-		std::cout << "<PASSED::>" << format(str) << std::endl << "<COMPLETEDIN::>" << std::endl;
+	virtual void SpecSucceeded(const ContextBase&, const std::string& specName) {
+		std::cout << "<PASSED::>" << "Test Passed" << std::endl << "<COMPLETEDIN::>" << std::endl;
 	}
 
-	virtual void SpecFailed(const ContextBase&, const std::string& str) {
-		std::cout << "<FAILED::>" << format(str) << std::endl << "<COMPLETEDIN::>" << std::endl;
+	virtual void SpecFailed(const ContextBase&, const std::string& specName, const FailedTestResult& result) {
+		std::cout << "<FAILED::>" << format(result.GetErrorMessage()) << std::endl << "<COMPLETEDIN::>" << std::endl;
 	}
 
 	std::string format(const std::string &str) {
