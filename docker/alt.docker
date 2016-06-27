@@ -2,7 +2,15 @@
 FROM codewars/base-runner
 
 # Install PHP
-RUN apt-get -y install php-pear php5-dev libcurl3-openssl-dev
+RUN apt-get install software-properties-common -y
+RUN add-apt-repository ppa:ondrej/php
+RUN sudo apt-get update
+RUN apt-get install php7.0 php7.0-xml -y --force-yes
+
+RUN curl -OL https://phar.phpunit.de/phpunit.phar \
+	&& chmod 755 phpunit.phar \
+	&& mv phpunit.phar /usr/local/bin/ \
+	&& ln -s /usr/local/bin/phpunit.phar /usr/local/bin/phpunit
 
 # Install GoLang
 WORKDIR /tmp
@@ -42,7 +50,8 @@ USER codewarrior
 # Set environment variables
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t 3000 test/runners/{php,go,r,lua}_spec.js
+# RUN mocha -t 3000 test/runners/{php,go,r,lua}_spec.js
+RUN mocha -t 3000 test/runners/php_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
