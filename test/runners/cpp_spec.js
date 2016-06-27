@@ -56,8 +56,8 @@ describe('cpp runner', function () {
             `;
 
             runner.run({language: 'cpp', code: code}, function (buffer) {
-                expect(buffer.stderr).to.contain("use of undeclared identifier 'fudge'");
-                expect(buffer.stderr).to.contain("use of undeclared identifier 'doubleFudge'");
+                expect(buffer.stderr).to.contain("use of undeclared identifier &#39;fudge&#39;");
+                expect(buffer.stderr).to.contain("use of undeclared identifier &#39;doubleFudge&#39;");
                 expect(buffer.stderr).to.contain("2 errors generated.");
                 done();
             });

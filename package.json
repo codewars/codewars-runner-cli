@@ -19,15 +19,16 @@
     "url": "http://github.com/codewars/runner.git"
   },
   "dependencies": {
+    "bluebird": "*",
     "chai": "1.9.x",
+    "escape-html": "1.0.3",
+    "js-yaml": "*",
     "lodash": "*",
     "mocha": "1.19.x",
+    "mocha-reporter": "git://github.com/codewars/mocha-reporter",
     "nomnom": "1.6.x",
     "temp": "*",
-    "bluebird": "*",
-    "js-yaml": "*",
-    "utf8": "^2.1.1",
-    "mocha-reporter": "git://github.com/codewars/mocha-reporter"
+    "utf8": "^2.1.1"
   },
   "devDependencies": {
     "babel-core": "*",
@@ -60,7 +61,6 @@
     "nlp_compromise": "^4.10.6",
     "quickcheck": "0.0.4",
     "react": "^15.0.2",
-    "react-canvas": "^1.1.0",
     "react-dom": "^15.0.2",
     "redis": "^2.6.0-2",
     "rx": "^4.1.0",
