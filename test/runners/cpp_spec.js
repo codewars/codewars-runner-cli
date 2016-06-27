@@ -3,6 +3,8 @@ var runner = require('../runner');
 
 describe('cpp runner', function () {
     describe('.run', function () {
+        runner.assertCodeExamples('cpp');
+
         it('should handle basic code evaluation', function (done) {
             var code = `
                 #include <iostream>

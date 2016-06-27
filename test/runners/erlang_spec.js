@@ -33,7 +33,7 @@ describe('erlang runner', function () {
                 language: 'erlang',
                 code: 'io:fwrite(erlang:system_info(otp_release)), init:stop().'
             }, function (buffer) {
-                expect(buffer.stdout).to.equal('18');
+                expect(buffer.stdout).to.equal('19');
                 done();
             });
         });
