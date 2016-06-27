@@ -22,6 +22,10 @@ RUN pip3 install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/t
 RUN pip install -U scikit-learn
 RUN pip3 install -U scikit-learn
 
+# Install Tornado
+RUN pip install -U tornado
+RUN pip3 install -U tornado
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
