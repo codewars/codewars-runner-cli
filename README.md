@@ -70,46 +70,46 @@ Many languages are currently supported in various states of completeness. This l
 
 **Legend:** `!!!` = Failing Specs, `???` = Status is unknown, `*` = Any
 
-| Language       | Version       | Basic Run    | Test Integration | Codewars     | Strive         | Docker Image   | Examples     | Notes                                                                   |
-|----------------|---------------|--------------|------------------|--------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
-| Assembly (GAS) |               | !!!          |                  |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
-| Bash           |               | ✓            |                  | Kumite Only  |                | *              |              |                                                                         |
-| C              |               | !!!          | !!!              |              |                | systems-runner |              | Travis is failing, tests pass locally                                   |
-| Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test | clojure.test   | func-runner    | clojure.test |                                                                         |
-| CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2         | cw-2           | node-runner    | cw-2         |                                                                         |
-| C++            | 14            | ✓            | igloo            |              |                | systems-runner |              |                                                                         |
-| CSS            |               | ???          |  ???             |              |                |                |              |                                                                         |
-| C#             | Mono 4.2.3    | ✓            | nunit            | nunit        | nunit          | dotnet-runner  | nunit        |                                                                         |
-| Dart           | 1.16.1        | ✓            | test             |              |                | dart-runner    | test         |                                                                         |
-| Elixir         | 1.2.4         | ✓            | exunit           | exunit       |                | erlang-runner  |              |                                                                         |
-| Erlang         |               | ✓            |                  |              |                | erlang-runner  |              |                                                                         |
-| F#             | 4.0           | ✓            |                  | Kumite Only  |                | dotnet-runner  |              |                                                                         |
-| Go             | 1.3.1         | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
-| Groovy         |               | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
-| Haskell        | 7.6.3         | ✓            | hspec!!!         | hspec        | hspec          | haskell-runner | hspec        | An older version is running on CW & Strive that is fully functional     |
-| Java           | 1.8.0_91      | ✓            | junit            | Yes          | Yes            | jvm-runner     | junit        |                                                                         |
-| JavaScript     | 0.10.33       | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 0.10.33/Babel | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 6.0.0         | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 6.0.0/Babel   | ✓            | cw-2, mocha      | cw-2         | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| Julia          |               | ✓!!!         | !!!              |              |                |                |              |                                                                         |
-| Kotlin         |               | ???          |                  |              |                |                |              |                                                                         |
-| Lisp           |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
-| Lua            |               | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
-| ObjC           |               | ???          | ???              |              |                |                |              |                                                                         |
-| OCAML          |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
-| Perl           |               | ✓            |                  | Kumite Only  |                | *              |              |                                                                         |
-| Php            |               | ✓            |                  | Kumite Only  |                | alt-runner     |              |                                                                         |
-| Python         | 2.7.6         | ✓            | cw-2, unittest   | cw-2         | cw-2, unittest | python-runner  | cw-2         |                                                                         |
-| Python         | 3.4.3         | ✓            | cw-2, unittest   |              | cw-2, unittest | python-runner  | cw-2         |                                                                         |
-| R              |               | ✓            |                  |              |                | alt-runner     |              |                                                                         |
-| Racket         |               | ✓            |                  | Kumite Only  |                | func-runner    |              |                                                                         |
-| Ruby           | 2.3.0         | ✓            | cw-2, rspec      | cw-2         | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
-| Rust           |               | ✓            |                  |              |                |                |              |                                                                         |
-| Scala          | 2.11.2        | ✓            |                  | Kumite Only  |                | jvm-runner     |              |                                                                         |
-| Scss/Sass      |               |  ???         | ???              |              |                |                |              |                                                                         |
-| Swift          |               | ???          | ???              |              |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
-| TypeScript     | 1.8.10        | ✓            | mocha            | mocha        |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
+| Language       | Version       | Basic Run    | Test Integration | Codewars      | Strive         | Docker Image   | Examples     | Notes                                                                   |
+|----------------|---------------|--------------|------------------|---------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
+| Assembly (GAS) |               | !!!          |                  |               |                | systems-runner |              | Travis is failing, tests pass locally                                   |
+| Bash           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
+| C              |               | !!!          | !!!              |               |                | systems-runner |              | Travis is failing, tests pass locally                                   |
+| Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test  | clojure.test   | func-runner    | clojure.test |                                                                         |
+| CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2          | cw-2           | node-runner    | cw-2         |                                                                         |
+| C++            | 14            | ✓            | igloo            |               |                | systems-runner |              |                                                                         |
+| CSS            |               | ???          |  ???             |               |                |                |              |                                                                         |
+| C#             | Mono 4.2.3    | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
+| Dart           | 1.16.1        | ✓            | test             |               |                | dart-runner    | test         |                                                                         |
+| Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
+| Erlang         | 19            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |
+| F#             | 4.0           | ✓            |                  | Kumite Only   |                | dotnet-runner  |              |                                                                         |
+| Go             | 1.3.1         | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
+| Groovy         |               | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
+| Haskell        | 7.6.3         | ✓            | hspec!!!         | hspec         | hspec          | haskell-runner | hspec        | An older version is running on CW & Strive that is fully functional     |
+| Java           | 1.8.0_91      | ✓            | junit            | Yes           | Yes            | jvm-runner     | junit        |                                                                         |
+| JavaScript     | 0.10.33       | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| JavaScript     | 0.10.33/Babel | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| JavaScript     | 6.0.0         | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| JavaScript     | 6.0.0/Babel   | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
+| Julia          |               | ✓!!!         | !!!              |               |                |                |              |                                                                         |
+| Kotlin         |               | ???          |                  |               |                |                |              |                                                                         |
+| Lisp           |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
+| Lua            |               | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
+| ObjC           |               | ???          | ???              |               |                |                |              |                                                                         |
+| OCAML          |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
+| Perl           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
+| Php            | 7.0           | ✓            | cw-2, phpunit    | phpunit       |                | alt-runner     |              |                                                                         |
+| Python         | 2.7.6         | ✓            | cw-2, unittest   | cw-2          | cw-2, unittest | python-runner  | cw-2         |                                                                         |
+| Python         | 3.4.3         | ✓            | cw-2, unittest   |               | cw-2, unittest | python-runner  | cw-2         |                                                                         |
+| R              |               | ✓            |                  |               |                | alt-runner     |              |                                                                         |
+| Racket         |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
+| Ruby           | 2.3.0         | ✓            | cw-2, rspec      | cw-2          | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
+| Rust           |               | ✓            |                  |               |                |                |              |                                                                         |
+| Scala          | 2.11.2        | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
+| Scss/Sass      |               |  ???         | ???              |               |                |                |              |                                                                         |
+| Swift          |               | ???          | ???              |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
+| TypeScript     | 1.8.10        | ✓            | mocha            | mocha         |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
 
 ## Setup
 

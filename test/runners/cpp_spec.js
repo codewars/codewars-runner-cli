@@ -3,6 +3,8 @@ var runner = require('../runner');
 
 describe('cpp runner', function () {
     describe('.run', function () {
+        runner.assertCodeExamples('cpp');
+
         it('should handle basic code evaluation', function (done) {
             var code = `
                 #include <iostream>
@@ -56,8 +58,8 @@ describe('cpp runner', function () {
             `;
 
             runner.run({language: 'cpp', code: code}, function (buffer) {
-                expect(buffer.stderr).to.contain("use of undeclared identifier 'fudge'");
-                expect(buffer.stderr).to.contain("use of undeclared identifier 'doubleFudge'");
+                expect(buffer.stderr).to.contain("use of undeclared identifier &#39;fudge&#39;");
+                expect(buffer.stderr).to.contain("use of undeclared identifier &#39;doubleFudge&#39;");
                 expect(buffer.stderr).to.contain("2 errors generated.");
                 done();
             });
@@ -217,9 +219,40 @@ describe('cpp runner', function () {
                 }, function(buffer) {
                     expect(buffer.stdout).to.contain('<DESCRIBE::>two_oldest_ages_test');
                     expect(buffer.stdout).to.contain('<IT::>should_return_the_oldest');
-                    expect(buffer.stdout).to.contain('<PASSED::>should_return_the_oldest');
+                    expect(buffer.stdout).to.contain('<PASSED::>');
                     expect(buffer.stdout).to.contain('<IT::>thing_inherit_from_base');
-                    expect(buffer.stdout).to.contain('<PASSED::>thing_inherit_from_base');
+                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    done();
+                });
+            })
+
+            it('should only display errors once', function(done) {
+                runner.run({
+                    language: 'cpp',
+                    code: `
+                        //
+                    `,
+                    fixture: `
+                        Describe(tests)
+                        {
+                            It(should_do_something_0)
+                            {
+                                Assert::That(1, Equals(2));
+                            }
+                            It(should_do_something_1)
+                            {
+                                Assert::That(123, Equals(456));
+                            }
+                            It(should_do_something_2)
+                            {
+                                Assert::That('a', Equals('b'));
+                            }
+                        };
+                    `
+                }, function(buffer) {
+                    expect(buffer.stdout.match(/Expected: equal to 2/g).length).to.equal(1);
+                    expect(buffer.stdout.match(/Expected: equal to 456/g).length).to.equal(1);
+                    expect(buffer.stdout.match(/Expected: equal to b/g).length).to.equal(1);
                     done();
                 });
             })
@@ -265,9 +298,9 @@ describe('cpp runner', function () {
                     expect(buffer.stdout).to.contain('<DESCRIBE::>entity');
                     expect(buffer.stdout).to.contain('<DESCRIBE::>player');
                     expect(buffer.stdout).to.contain('<IT::>should_run_at_speed_5');
-                    expect(buffer.stdout).to.contain('<PASSED::>should_run_at_speed_5');
+                    expect(buffer.stdout).to.contain('<PASSED::>');
                     expect(buffer.stdout).to.contain('<IT::>should_run_at_speed_10');
-                    expect(buffer.stdout).to.contain('<PASSED::>should_run_at_speed_10');
+                    expect(buffer.stdout).to.contain('<PASSED::>');
                     done();
                 });
             })
@@ -309,9 +342,9 @@ describe('cpp runner', function () {
                 }, function(buffer) {
                     expect(buffer.stdout).to.contain('<DESCRIBE::>inheritance_tests');
                     expect(buffer.stdout).to.contain('<IT::>should_access_the_base_var');
-                    expect(buffer.stdout).to.contain('<PASSED::>should_access_the_base_var');
+                    expect(buffer.stdout).to.contain('<PASSED::>');
                     expect(buffer.stdout).to.contain('<IT::>thing_inherit_from_base');
-                    expect(buffer.stdout).to.contain('<PASSED::>thing_inherit_from_base');
+                    expect(buffer.stdout).to.contain('<PASSED::>');
                     done();
                 });
             })

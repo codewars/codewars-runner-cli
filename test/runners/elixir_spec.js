@@ -51,7 +51,8 @@ describe('elixir runner', function() {
             describe('compilation errors', function() {
               it('catches compilation error of the code module', function(done) {
                   runner.run({language: 'elixir', code: 'defodule BrokenModule do\n def broken, do: true\nend', fixture: 'defmodule TestBrokenModule do\nend', testFramework: 'ex_unit'}, function(buffer) {
-                      expect(buffer.stdout).to.equal('<ERROR::>solution:1: undefined function defodule/2\n');
+                      console.log(buffer)
+                      expect(buffer.stdout).to.contain('<ERROR::>solution:1: undefined function defodule/2\n');
                       done();
                   });
               });
@@ -79,7 +80,7 @@ describe('elixir runner', function() {
                   });
               });
             });
-
+            
             describe('no fixtures', function() {
               // Due to ExUnit.start, it can add COMPLETEDIN:: at the end.
               // That's why we match with .contain and not .equal
