@@ -1,7 +1,8 @@
 HOSTNAME=codewars
-# NOTE: systems was removed do to failing Travis issues. Must debug those issues before systems can be put back in
-# Haskell was removed until the image is able to be repaired
-CONTAINERS=dotnet jvm node python ruby alt func erlang dart systems
+
+# Building haskell and erlang images have been suspended (frozen) until they are able to be repaired
+# CONTAINERS=dotnet jvm node python ruby alt func dart systems erlang haskell
+CONTAINERS=dotnet jvm node python ruby alt func dart systems
 
 ALL_CONTAINERS=${CONTAINERS} base
 
