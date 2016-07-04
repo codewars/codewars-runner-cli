@@ -82,7 +82,7 @@ Many languages are currently supported in various states of completeness. This l
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
 | Dart           | 1.16.1        | ✓            | test             |               |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
-| Erlang         | 19            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |
+| Erlang         | 18            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |
 | F#             | 4.0           | ✓            |                  | Kumite Only   |                | dotnet-runner  |              |                                                                         |
 | Go             | 1.3.1         | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
 | Groovy         |               | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
