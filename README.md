@@ -80,7 +80,7 @@ Many languages are currently supported in various states of completeness. This l
 | C++            | 14            | ✓            | igloo            |               |                | systems-runner |              |                                                                         |
 | CSS            |               | ???          |  ???             |               |                |                |              |                                                                         |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
-| Dart           | 1.16.1        | ✓            | test             |               |                | dart-runner    | test         |                                                                         |
+| Dart           | 1.16.1        | ✓            | test             | Kumite Only   |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
 | Erlang         | 18            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |
 | F#             | 4.0           | ✓            |                  | Kumite Only   |                | dotnet-runner  |              |                                                                         |
@@ -99,7 +99,7 @@ Many languages are currently supported in various states of completeness. This l
 | ObjC           |               | ???          | ???              |               |                |                |              |                                                                         |
 | OCAML          |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
 | Perl           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
-| Php            | 7.0           | ✓            | cw-2, phpunit    | phpunit       |                | alt-runner     |              |                                                                         |
+| Php            | 7.0           | ✓            | cw-2, phpunit    | Kumite Only   |                | alt-runner     |              |                                                                         |
 | Python         | 2.7.6         | ✓            | cw-2, unittest   | cw-2          | cw-2, unittest | python-runner  | cw-2         |                                                                         |
 | Python         | 3.4.3         | ✓            | cw-2, unittest   |               | cw-2, unittest | python-runner  | cw-2         |                                                                         |
 | R              |               | ✓            |                  |               |                | alt-runner     |              |                                                                         |
