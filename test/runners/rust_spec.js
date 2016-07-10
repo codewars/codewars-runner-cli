@@ -60,7 +60,7 @@ describe('rust runner', function() {
         language: 'rust',
         code: `
           fn test_function() -> i32 {
-            return 69;
+            69
           }
         `,
         fixture: `
@@ -69,7 +69,7 @@ describe('rust runner', function() {
             assert_eq!(test_function(),69);
           }
         `,
-        testFramework: 'cargo'
+        testFramework: 'rust'
       }, function(buffer) {
         expect(buffer.stdout).to.contain(`<DESCRIBE::>returns_number`);
         expect(buffer.stdout).to.contain(`<PASSED::>Test Passed`);
@@ -93,7 +93,48 @@ describe('rust runner', function() {
           }
 
           fn doubler(n: i32) -> i32 {
-            return n * 2;
+            n * 2
+          }
+        `,
+        fixture: `
+          #[test]
+          fn doubler_works() {
+            assert_eq!(doubler(2),4);
+          }
+          `,
+        testFramework: 'rust'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<DESCRIBE::>doubler_works`);
+        expect(buffer.stdout).to.contain(`<PASSED::>Test Passed`);
+        done();
+      });
+    });
+
+    it('should handle broken and unused code', function(done) {
+      runner.run({
+        language: 'rust',
+        setup: `
+          use std::thread;
+          use std::sync::mpsc::channel;
+        `,
+        code: `
+          fn async_thingo() {
+            let (tx, rx) = channel();
+            thread::spawn(move|| {
+                tx.send(10).unwrap();
+            });
+          }
+
+          fn unused_func() {
+            println!("Never called");
+          }
+
+          fn broken_func() {
+            println!("This is broken...";
+          }
+
+          fn doubler(n: i32) -> i32 {
+            n * 2
           }
         `,
         fixture: `
@@ -102,10 +143,124 @@ describe('rust runner', function() {
           assert_eq!(doubler(2),4);
         }
           `,
-        testFramework: 'cargo'
+        testFramework: 'rust'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.contain(`incorrect close delimiter`);
+        done();
+      });
+    });
+
+    it('should ignore unused code warnings', function(done) {
+      runner.run({
+        language: 'rust',
+        setup: `
+          use std::thread;
+          use std::sync::mpsc::channel;
+        `,
+        code: `
+          fn async_thingo() {
+            let (tx, rx) = channel();
+            thread::spawn(move|| {
+                tx.send(10).unwrap();
+            });
+          }
+
+          fn unused_func() {
+            println!("Never called");
+          }
+
+          fn doubler(n: i32) -> i32 {
+            n * 2
+          }
+        `,
+        fixture: `
+        #[test]
+        fn doubler_works() {
+          assert_eq!(doubler(2),4);
+        }
+          `,
+        testFramework: 'rust'
       }, function(buffer) {
         expect(buffer.stdout).to.contain(`<DESCRIBE::>doubler_works`);
         expect(buffer.stdout).to.contain(`<PASSED::>Test Passed`);
+        done();
+      });
+    });
+
+    it('should handle failed tests', function(done) {
+      runner.run({
+        language: 'rust',
+        setup: `
+          use std::thread;
+          use std::sync::mpsc::channel;
+        `,
+        code: `
+          fn doubler(n: i32) -> i32 {
+            n * 2
+          }
+        `,
+        fixture: `
+          #[test]
+          fn doubler_failure() {
+            assert_eq!(doubler(2),3);
+          }
+          `,
+        testFramework: 'rust'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<DESCRIBE::>doubler_failure`);
+        expect(buffer.stdout).to.contain(`<FAILED::>Test Failed`);
+        done();
+      });
+    });
+
+    it('should handle broken test code', function(done) {
+      runner.run({
+        language: 'rust',
+        code: `
+          fn doubler(n: i32) -> i32 {
+            n * 2
+          }
+        `,
+        fixture: `
+          #[test]
+          fn doubler_works( {
+            assert_eq!(doubler(2),4);
+          }
+        `,
+        testFramework: 'rust'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.contain(`un-closed delimiter`);
+        done();
+      });
+    });
+
+    it('should handle success and failed tests', function(done) {
+      runner.run({
+        language: 'rust',
+        code: `
+          fn doubler(n: i32) -> i32 {
+            n * 2
+          }
+        `,
+        fixture: `
+          #[test]
+          fn doubler_success() {
+            assert_eq!(doubler(2),4);
+          }
+
+          #[test]
+          fn doubler_failure() {
+            assert_eq!(doubler(2),3);
+          }
+        `,
+        testFramework: 'rust'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<DESCRIBE::>doubler_success`);
+        expect(buffer.stdout).to.contain(`<PASSED::>Test Passed`);
+        expect(buffer.stdout).to.contain(`<DESCRIBE::>doubler_failure`);
+        expect(buffer.stdout).to.contain(`<FAILED::>Test Failed`);
         done();
       });
     });
