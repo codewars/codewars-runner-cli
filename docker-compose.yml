@@ -111,6 +111,16 @@ services:
     entrypoint: ''
     command: bash
 
+  rust-runner:
+    image: codewars/rust-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript:
     image: codewars/node-runner
