@@ -9,4 +9,5 @@ services:
 
 # testing is built in to the docker images
 script:
+  - make pull # pull the images first to give us something cached to build off of
   - make all
