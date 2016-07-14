@@ -15,7 +15,7 @@ describe( 'php runner', function(){
 
         it( 'should handle bad syntax', function(done){
             runner.run({
-            	language: 'php', 
+            	language: 'php',
             	solution: `
             		fliggaflagam!!!
         		`
@@ -27,7 +27,7 @@ describe( 'php runner', function(){
 
         it( 'should handle thrown exceptions', function(done){
             runner.run({
-            	language: 'php', 
+            	language: 'php',
             	solution: `
         			throw new Exception('Rawr!');
         		`
@@ -39,7 +39,7 @@ describe( 'php runner', function(){
 
         it( 'should handle undefined functions', function(done){
             runner.run({
-            	language: 'php', 
+            	language: 'php',
             	solution: `
             		fliggaflagam();
         		`
@@ -51,7 +51,7 @@ describe( 'php runner', function(){
 
         it( 'should handle the latest and greatest of PHP 7', function(done){
             runner.run({
-            	language: 'php', 
+            	language: 'php',
             	solution: `
             		function sumOfInts(int ...$ints)
 					{
@@ -239,6 +239,7 @@ describe( 'php runner', function(){
 	            },
 	            function(buffer) {
 	                expect(buffer.stdout).to.contain('<FAILED::>');
+		            expect(buffer.stdout).to.not.contain('<PASSED::>');
 	                done();
 	            });
         	});
@@ -261,6 +262,7 @@ describe( 'php runner', function(){
 	            },
 	            function(buffer) {
 	                expect(buffer.stdout).to.contain('<FAILED::>');
+		            expect(buffer.stdout).to.not.contain('<PASSED::>');
 	                done();
 	            });
         	});
