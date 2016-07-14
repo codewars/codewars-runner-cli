@@ -9,7 +9,8 @@
      convertWarningsToExceptions="true"
      forceCoversAnnotation="false"
      mapTestClassNameToCoveredClassName="false"
-     printerClass="PHPUnit_TextUI_ResultPrinter"
+     printerClass="CodewarsListener"
+     printerFile="CodewarsListener.php"
 
      processIsolation="false"
      stopOnError="false"
@@ -22,9 +23,4 @@
      verbose="false"
     >
 
-
-    <listeners>
-        <listener class="CodewarsListener" file="CodewarsListener.php">
-        </listener>
-    </listeners>
 </phpunit>
