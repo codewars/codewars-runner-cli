@@ -70,8 +70,8 @@ describe('ruby runner', function () {
                         expect(buffer.stdout).to.contain('<:LF:>');
                         expect(buffer.stdout).to.contain('NoMethodError:');
                         expect(buffer.stdout).to.not.contain('from /cli-runner/');
-                        expect(buffer.stdout).to.not.contain('-e:');
-                        expect(buffer.stdout).to.not.contain('cw-2.rb');
+                        // expect(buffer.stdout).to.not.contain('-e:');
+                        // expect(buffer.stdout).to.not.contain('cw-2.rb');
                         expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                         done();
                     });

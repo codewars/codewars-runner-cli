@@ -16,7 +16,7 @@ describe( 'c# runner', function() {
                 done();
             });
         });
-
+        
         it('should handle setup', function (done) {
             runner.run({language: 'csharp',
                 setup: 'public class Preloaded { public static string hello = "Hello, World!"; }',
@@ -27,7 +27,7 @@ describe( 'c# runner', function() {
                 done();
             });
         });
-
+        
         it('should handle basic nunit tests', function (done) {
             runner.run({ language: 'csharp',
                 code: 'namespace Bank { using System; public class Account { private decimal balance; public void Deposit(decimal amount) { Console.WriteLine("slorgs"); balance += amount; } public void Withdraw(decimal amount) { balance -= amount; } public void TransferFunds(Account destination, decimal amount) { } public decimal Balance { get { return balance; } } } } ',
@@ -42,7 +42,7 @@ describe( 'c# runner', function() {
                 done();
             });
         });
-
+        
         it('should handle bad code', function (done) {
             runner.run({ language: 'csharp',
                 code: 'namespace Bank { using System; using System.Drawing; public class Account { private decimal balance; public void Deposit(decimal amount) { Console.WriteLine("slorgs"); balance += amount; } public void Withdraw(decimal amount) { balance -= Amount; } public void TransferFunds(Account destination, decimal amount) { } public decimal Balance { get { return balance; } } } } ',
@@ -51,6 +51,22 @@ describe( 'c# runner', function() {
                 console.log(buffer);
                 expect(buffer.stdout).to.not.contain("lib/runners/csharp.js");
                 expect(buffer.stderr).to.contain("does not exist in the current context");
+                done();
+            });
+        });
+
+        it('should handle compilation errors with clean output', function (done) {
+            runner.run({
+                language: 'csharp',
+                format: 'json',
+                code: 'public class CheckChoose{ public static void Main(){} public static long Checkchoose(long m, int n){}}'
+            }, function (buffer)
+            {
+                // console.log(buffer);
+                console.log('');
+                expect(buffer.stdout).to.not.contain('stdout');
+                expect(buffer.stderr).to.not.contain('stdout');
+                expect(buffer.stderr).to.not.equal('');
                 done();
             });
         });

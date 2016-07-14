@@ -117,6 +117,9 @@ RUN gem install stuff-classifier --no-ri --no-rdoc
 RUN gem install symbolic --no-ri --no-rdoc
 RUN gem install unit --no-ri --no-rdoc
 
+# partner packages
+RUN gem install ably --no-ri --no-rdoc
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
