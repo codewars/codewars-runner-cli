@@ -155,7 +155,48 @@ describe('cpp runner', function () {
                     done();
                 });
             });
-            
+
+            it('should run test iterations in the order written (not alphabetical)', function(done) {
+                runner.run({
+                    language: 'cpp',
+                    code: `
+                        char LetterA() {
+                            return 'a';
+                        }
+                        char LetterB() {
+                            return 'b';
+                        }
+                        char LetterC() {
+                            return 'c';
+                        }
+                    `,
+                    fixture: `
+                        Describe(alphabetical_tests)
+                        {
+                          It(b_test)
+                          {
+                            Assert::That(LetterB(), Equals('b'));
+                          }
+                          It(c_test)
+                          {
+                            Assert::That(LetterC(), Equals('c'));
+                          }
+                          It(a_test)
+                          {
+                            Assert::That(LetterA(), Equals('a'));
+                          }
+                        };
+                    `
+                }, function(buffer) {
+                    var aIndex = buffer.stdout.indexOf("a_test");
+                    var bIndex = buffer.stdout.indexOf("b_test");
+                    var cIndex = buffer.stdout.indexOf("c_test");
+                    expect(bIndex).to.be.below(cIndex);
+                    expect(cIndex).to.be.below(aIndex);
+                    done();
+                });
+            })
+
             it( 'should record std output', function(done){
                 runner.run({
                     language: 'cpp',
