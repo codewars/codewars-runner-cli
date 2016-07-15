@@ -160,5 +160,84 @@ describe('dart runner', function() {
       });
     });
 
+    it('should return an error message about missing semicolon', function(done) {
+      runner.run({
+        language: 'dart',
+        setup: `import 'dart:async';`,
+        code: `
+          returnFive() => 5;
+          `,
+        fixture: `
+        test('Should fail', () {
+          expect(returnFive(), equals(4))
+        });
+          `,
+        testFramework: 'test'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.contain('semicolon expected');
+        done();
+      });
+    });
+
+    it('should return an error message because there is some random text', function(done) {
+      runner.run({
+        language: 'dart',
+        setup: `import 'dart:async';`,
+        code: `
+          returnFive() => 5;
+          `,
+        fixture: `
+        random stuffs..
+        test('Should fail', () {
+          expect(returnFive(), equals(4))
+        });
+          `,
+        testFramework: 'test'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.not.contain('undefined');
+        done();
+      });
+    });
+
+    it('should return an error message because there is more random text', function(done) {
+      runner.run({
+        language: 'dart',
+        setup: `import 'dart:async';`,
+        code: `
+          returnFive() => 5;
+          `,
+        fixture: `
+        what is a test...
+          `,
+        testFramework: 'test'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.not.contain('undefined');
+        done();
+      });
+    });
+
+    it('should return an error message because the code is invalid', function(done) {
+      runner.run({
+        language: 'dart',
+        setup: `import 'dart:async';`,
+        code: `
+          what is dart programming??
+          `,
+        fixture: `
+          test('Should fail', () {
+            expect(returnFive(), equals(4));
+          });
+          `,
+        testFramework: 'test'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain(`<ERROR::>`);
+        expect(buffer.stdout).to.not.contain('undefined');
+        done();
+      });
+    });
+
   });
 });
