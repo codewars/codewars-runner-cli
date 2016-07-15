@@ -105,7 +105,7 @@ Many languages are currently supported in various states of completeness. This l
 | R              |               | ✓            |                  |               |                | alt-runner     |              |                                                                         |
 | Racket         |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
 | Ruby           | 2.3.0         | ✓            | cw-2, rspec      | cw-2          | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
-| Rust           |               | ✓            |                  |               |                |                |              |                                                                         |
+| Rust           | 1.10.0        | ✓            | rust             | Kumite Only   |                |                |              |                                                                         |
 | Scala          | 2.11.2        | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
 | Scss/Sass      |               |  ???         | ???              |               |                |                |              |                                                                         |
 | Swift          |               | ???          | ???              |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |

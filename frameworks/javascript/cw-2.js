@@ -6,6 +6,12 @@ try
     {
         global.process.execArgv = null;
         global.process._eval = null;
+
+        Object.defineProperty(global.process, "_eval", {
+            writable: false,
+            configurable: false,
+            value: "Don't cheat :)"
+        });
     }
 
     var util = require('util');
