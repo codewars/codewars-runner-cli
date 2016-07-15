@@ -73,7 +73,12 @@
                 $buffer = $e->toString();
 
                 if ($e instanceof PHPUnit_Framework_ExpectationFailedException && $e->getComparisonFailure()) {
-                    $buffer = $buffer . $e->getComparisonFailure()->getDiff();
+                    $comparisonFailure = $e->getComparisonFailure();
+                    $expectedString = $comparisonFailure->getExpectedAsString();
+                    $actualString = $comparisonFailure->getActualAsString();
+                    if($actualString || $expectedString) {
+                        $buffer = $buffer . sprintf("\nExpected: %s\nActual  : %s", $expectedString, $actualString);
+                    }
                 }
 
                 if (!empty($buffer)) {
