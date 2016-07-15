@@ -16,9 +16,7 @@ describe( 'php runner', function(){
         it( 'should handle bad syntax', function(done){
             runner.run({
             	language: 'php',
-            	solution: `
-            		fliggaflagam!!!
-        		`
+            	solution: `fliggaflagam!!!`
         	}, function(buffer) {
                 expect(buffer.stderr).to.contain('syntax error');
                 done();
@@ -28,9 +26,7 @@ describe( 'php runner', function(){
         it( 'should handle thrown exceptions', function(done){
             runner.run({
             	language: 'php',
-            	solution: `
-        			throw new Exception('Rawr!');
-        		`
+            	solution: `throw new Exception('Rawr!');`
         	}, function(buffer) {
                 expect(buffer.stderr).to.contain('Rawr!');
                 done();
@@ -40,9 +36,7 @@ describe( 'php runner', function(){
         it( 'should handle undefined functions', function(done){
             runner.run({
             	language: 'php',
-            	solution: `
-            		fliggaflagam();
-        		`
+            	solution: `fliggaflagam();`
         	}, function(buffer) {
                 expect(buffer.stderr).to.contain('Uncaught Error');
                 done();
@@ -53,13 +47,11 @@ describe( 'php runner', function(){
             runner.run({
             	language: 'php',
             	solution: `
-            		function sumOfInts(int ...$ints)
-					{
-					    return array_sum($ints);
-					}
-					echo sumOfInts(2, '3', 4.1);
+								function sumOfInts(int ...$ints) { return array_sum($ints); }
+								echo sumOfInts(2, '3', 4.1);
         		`
         	}, function(buffer) {
+								console.log(buffer);
                 expect(buffer.stdout).to.equal('9');
                 done();
             });
