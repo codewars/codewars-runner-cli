@@ -1,0 +1,27 @@
+FROM codewars/base-runner
+
+# Install Rust Compiler
+RUN curl -sSf https://static.rust-lang.org/rustup.sh | sh
+
+# Setup env
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+
+# Copy package json to tmp
+ADD package.json /tmp/package.json
+
+# Do npm install in tmp and setup cargo dir
+RUN \
+  cd /tmp && npm install --production && \
+  mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+# ADD cli-runner
+ADD . /runner
+
+# Working dir is /runner
+WORKDIR /runner
+
+# Codewarrior...
+USER codewarrior
+
+RUN mocha -t 10000 test/runners/rust_spec.js
