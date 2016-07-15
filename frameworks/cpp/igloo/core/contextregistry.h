@@ -37,12 +37,12 @@ namespace igloo {
     struct SpecInfo
     {
       SpecPtr spec_ptr;
+      std::string name;
       bool skip;
       bool only;
     };
 
-    typedef std::pair<std::string, SpecInfo> NamedSpec;
-    typedef std::map<std::string, SpecInfo> Specs;
+    typedef std::list<SpecInfo> Specs;
 
     public:
     //
@@ -55,8 +55,9 @@ namespace igloo {
       SpecInfo spec_info;
       spec_info.spec_ptr = spec;
       spec_info.skip = skip;
+      spec_info.name = name;
       spec_info.only = only;
-      GetSpecs().insert(std::make_pair(name, spec_info));
+      GetSpecs().push_back(spec_info);
     }
 
     static void ClearRegisteredSpecs()
@@ -88,8 +89,8 @@ namespace igloo {
         typename Specs::const_iterator it;
         for (it = specs.begin(); it != specs.end(); it++)
         {
-          const std::string& specName = (*it).first;
-          SpecInfo spec_info = (*it).second;
+          SpecInfo spec_info = *it;
+          const std::string& specName = spec_info.name;
 
           ContextToCreate context;
           context.SetName(contextName);
@@ -168,14 +169,14 @@ namespace igloo {
       return specs;
     }
 
-    static bool is_spec_not_marked_as_only(const NamedSpec& spec)
+    static bool is_spec_not_marked_as_only(const SpecInfo& spec)
     {
       return !is_spec_marked_as_only(spec);
     }
 
-    static bool is_spec_marked_as_only(const NamedSpec& spec)
+    static bool is_spec_marked_as_only(const SpecInfo& spec)
     {
-      return spec.second.only;
+      return spec.only;
     }
 
     static void GetSpecsMarkedAsOnly(Specs& specs)
