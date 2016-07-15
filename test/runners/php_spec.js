@@ -188,6 +188,63 @@ describe( 'php runner', function(){
 	                done();
 	            });
         	});
+	        it('should handle multiple tests', function(done) {
+		        runner.run({
+	                language: 'php',
+	                code: `
+				      function double($a) {
+				        return $a * 2;
+				      }
+	                `,
+	                fixture: `
+			            class DoubleMethod extends TestCase
+			            {
+		                	public function testDouble() {
+		                		$this->assertEquals(double(1), 2);
+		                	}
+		                	public function testDouble2() {
+                                $this->assertEquals(double(2), 4);
+                            }
+                            public function testDouble3() {
+                                $this->assertEquals(double(4), 8);
+                            }
+			            }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('\n<IT::>testDouble\n');
+		            expect(buffer.stdout).to.contain('\n<IT::>testDouble2\n');
+		            expect(buffer.stdout).to.contain('\n<IT::>testDouble3\n');
+	                done();
+	            });
+        	});
+
+	        it( 'should render console output', function(done){
+		        runner.run({
+	                language: 'php',
+	                code: `
+	                  function double($a) {
+	                    print("this was a triumph\n");
+	                    return $a * 2;
+	                  }
+	                `,
+	                fixture: `
+	                    class DoubleMethod extends TestCase
+	                    {
+	                        public function testDouble() {
+	                            $this->assertEquals(double(1), 2);
+	                        }
+	                    }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('<PASSED::>');
+		            expect(buffer.stdout).to.contain('this was a triumph');
+	                done();
+	            });
+	        });
 
         	it('should be able to reference preloaded code', function(done) {
 		        runner.run({
@@ -219,7 +276,7 @@ describe( 'php runner', function(){
 	            });
         	});
 
-        	it('should handle failed tests', function(done) {
+	        it('should handle failed tests', function(done) {
 		        runner.run({
 	                language: 'php',
 	                code: `
@@ -240,6 +297,33 @@ describe( 'php runner', function(){
 	            function(buffer) {
 	                expect(buffer.stdout).to.contain('<FAILED::>');
 		            expect(buffer.stdout).to.not.contain('<PASSED::>');
+	                done();
+	            });
+        	});
+
+
+	        it('should render output on failed tests', function(done) {
+		        runner.run({
+	                language: 'php',
+	                code: `
+				      function greet($s) {
+				        return 'hello, ' . $s;
+				      }
+	                `,
+	                fixture: `
+			            class GreetingTest extends TestCase
+			            {
+		                	public function testGreet() {
+	                			$this->assertEquals(greet('Joe'), 'Hello, Joe');
+		                	}
+			            }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('<FAILED::>');
+		            expect(buffer.stdout).to.contain('hello, Joe');
+		            expect(buffer.stdout).to.contain('Hello, Joe');
 	                done();
 	            });
         	});

@@ -16,14 +16,14 @@
         public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
         {
             $this->writeOutput($test);
-            $message = preg_replace('/\n/', '<:LF:>', $e->getMessage());
+            $message = preg_replace('/\n/', '<:LF:>', self::exceptionToString($e));
             printf("<FAILED::>%s\n", $message);
         }
 
         public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
         {
             $this->writeOutput($test);
-            $message = preg_replace('/\n/', '<:LF:>', $e->getMessage());
+            $message = preg_replace('/\n/', '<:LF:>', self::exceptionToString($e));
             printf("<FAILED::>%s\n", $message);
         }
 
@@ -64,5 +64,34 @@
         public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
         {
             printf("\n<COMPLETEDIN::>\n");
+        }
+
+
+        private static function exceptionToString(Exception $e)
+        {
+            if ($e instanceof PHPUnit_Framework_SelfDescribing) {
+                $buffer = $e->toString();
+
+                if ($e instanceof PHPUnit_Framework_ExpectationFailedException && $e->getComparisonFailure()) {
+                    $comparisonFailure = $e->getComparisonFailure();
+                    $expectedString = $comparisonFailure->getExpectedAsString();
+                    $actualString = $comparisonFailure->getActualAsString();
+                    if($actualString || $expectedString) {
+                        $buffer = $buffer . sprintf("\nExpected: %s\nActual  : %s", $expectedString, $actualString);
+                    }
+                }
+
+                if (!empty($buffer)) {
+                    $buffer = trim($buffer) . "\n";
+                }
+            } elseif ($e instanceof PHPUnit_Framework_Error) {
+                $buffer = $e->getMessage() . "\n";
+            } elseif ($e instanceof PHPUnit_Framework_ExceptionWrapper) {
+                $buffer = $e->getClassname() . ': ' . $e->getMessage() . "\n";
+            } else {
+                $buffer = get_class($e) . ': ' . $e->getMessage() . "\n";
+            }
+
+            return $buffer;
         }
     }
