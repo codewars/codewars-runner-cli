@@ -99,7 +99,7 @@ Many languages are currently supported in various states of completeness. This l
 | ObjC           |               | ???          | ???              |               |                |                |              |                                                                         |
 | OCAML          |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
 | Perl           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
-| Php            | 7.0           | ✓            | cw-2, phpunit    | Kumite Only   |                | alt-runner     |              |                                                                         |
+| Php            | 7.0           | ✓            | cw-2, phpunit    | phpunit        | phpunit, cw-2 | alt-runner     |              |                                                                         |
 | Python         | 2.7.6         | ✓            | cw-2, unittest   | cw-2          | cw-2, unittest | python-runner  | cw-2         |                                                                         |
 | Python         | 3.4.3         | ✓            | cw-2, unittest   |               | cw-2, unittest | python-runner  | cw-2         |                                                                         |
 | R              |               | ✓            |                  |               |                | alt-runner     |              |                                                                         |
