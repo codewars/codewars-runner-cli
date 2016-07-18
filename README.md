@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Codewars/codewars-runner-cli.svg?branch=master)](https://travis-ci.org/Codewars/codewars-runner-cli)
 
-This project is used by [Codewars](http://www.codewars.com) and [Strive](https://www.strive.co) to execute small sets of code within various languages, using various testing frameworks.
+This project is used by [Codewars](http://www.codewars.com) and [Qualified.io](https://www.qualified.io) to execute small sets of code within various languages, using various testing frameworks.
 Each time code is run, it is executed within a Docker container in order to secure unsafe code execution.  
 
 All execution is done within Docker, with a Node CLI app contained within each container
