@@ -10,9 +10,9 @@ that manages the code execution for that specific language environment and retur
 
 ## Contributions
 
-This project has been open-sourced so that the Codewars and Strive communites can contribute support for new languages and
+This project has been open-sourced so that the Codewars and Qualified communites can contribute support for new languages and
 frameworks. See the [Language Support Status section](#user-content-language-support-status) for more information regarding which languages are currently supported
-and where their Codewars/Strive support has been added.
+and where their Codewars/Qualified support has been added.
  
 ## Basic Usage
 
@@ -49,7 +49,7 @@ docker-compose run ruby -c "puts 'I ran inside of Docker using Ruby'"
 
 ### Integrated Test Suites
 The most significant aspect of this project is that integrated test support is built in to many languages. This is how
-Codewars and Strive work, instead of testing STDOUT of a program, the executed code is tested using traditional
+Codewars and Qualified work, instead of testing STDOUT of a program, the executed code is tested using traditional
 code testing methods, with unit-tests and language-specific testing frameworks. 
 
 Here is a very simple example of running tests using the simplified Codewars testing framework. 
@@ -70,7 +70,7 @@ Many languages are currently supported in various states of completeness. This l
 
 **Legend:** `!!!` = Failing Specs, `???` = Status is unknown, `*` = Any
 
-| Language       | Version       | Basic Run    | Test Integration | Codewars      | Strive         | Docker Image   | Examples     | Notes                                                                   |
+| Language       | Version       | Basic Run    | Test Integration | Codewars      | Qualified      | Docker Image   | Examples     | Notes                                                                   |
 |----------------|---------------|--------------|------------------|---------------|----------------|----------------|--------------|-------------------------------------------------------------------------|
 | Assembly (GAS) |               | !!!          |                  |               |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Bash           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
@@ -86,7 +86,7 @@ Many languages are currently supported in various states of completeness. This l
 | F#             | 4.0           | ✓            |                  | Kumite Only   |                | dotnet-runner  |              |                                                                         |
 | Go             | 1.3.1         | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
 | Groovy         |               | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
-| Haskell        | 7.6.3         | ✓            | hspec!!!         | hspec         | hspec          | haskell-runner | hspec        | An older version is running on CW & Strive that is fully functional     |
+| Haskell        | 7.6.3         | ✓            | hspec!!!         | hspec         | hspec          | haskell-runner | hspec        | An older version is running on CW & Qualified that is fully functional     |
 | Java           | 1.8.0_91      | ✓            | junit            | Yes           | Yes            | jvm-runner     | junit        |                                                                         |
 | JavaScript     | 0.10.33       | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
 | JavaScript     | 0.10.33/Babel | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
