@@ -78,7 +78,6 @@ Many languages are currently supported in various states of completeness. This l
 | Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test  | clojure.test   | func-runner    | clojure.test |                                                                         |
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2          | cw-2           | node-runner    | cw-2         |                                                                         |
 | C++            | 14            | ✓            | igloo            |               |                | systems-runner |              |                                                                         |
-| CSS            |               | ???          |  ???             |               |                |                |              |                                                                         |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
 | Dart           | 1.16.1        | ✓            | test             | Kumite Only   |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
@@ -117,9 +116,21 @@ You should have [Docker](https://www.docker.com/) installed, if not do that firs
 environments you will need to build the proper Docker image. To get started lets work with the
 node image.
 
-Run `make node` to build the base and node images. This will take a few minutes.
+Run `make node` to build the base and node images. This will take a few minutes. You can speed up the process by first 
+downloading the existing images that you intend to work on, which will allow you to only need to build when you make a change.
 
-Once you image is built, you can create a container to work within it. Doing this means you do not
+For example, if you intend to work on the jvm image, you would do this:
+
+```bash
+# download existing images first to greatly speed up time
+docker pull codewars/base-runner
+docker pull codewars/jvm-runner
+
+# now build the jvm image, so that any recent changes that have may not have been pushed yet get added into the image 
+make jvm
+```
+
+Once you image is downloaded/built, you can create a container to work within it. Doing this means you do not
 have to worry about having any of the project dependencies loaded directly on your machine.
 
 Run the following command:
