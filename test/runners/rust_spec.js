@@ -3,7 +3,6 @@ const runner = require('../runner');
 
 describe('rust runner', function() {
   describe('.run', function() {
-    // Basic code run
     it('should handle basic code evaluation', function(done) {
       runner.run({
         language: 'rust',
@@ -17,7 +16,7 @@ describe('rust runner', function() {
         done();
       });
     });
-
+    
     it('should handle invalid code', function(done) {
       runner.run({
         language: 'rust',
@@ -31,7 +30,7 @@ describe('rust runner', function() {
         done();
       });
     });
-
+    
     it('should allow mods inside setup', function(done) {
       runner.run({
         language: 'rust',
@@ -45,7 +44,7 @@ describe('rust runner', function() {
             thread::spawn(move|| {
                 tx.send(10).unwrap();
             });
-
+    
             println!("{}", rx.recv().unwrap());
           }
         `
@@ -54,7 +53,7 @@ describe('rust runner', function() {
         done();
       });
     });
-
+    
     it('should handle basic tests', function(done) {
       runner.run({
         language: 'rust',
@@ -76,7 +75,7 @@ describe('rust runner', function() {
         done();
       });
     });
-
+    
     it('should handle tests with setup', function(done) {
       runner.run({
         language: 'rust',
@@ -91,7 +90,7 @@ describe('rust runner', function() {
                 tx.send(10).unwrap();
             });
           }
-
+    
           fn doubler(n: i32) -> i32 {
             n * 2
           }
@@ -109,7 +108,7 @@ describe('rust runner', function() {
         done();
       });
     });
-
+    
     it('should handle broken and unused code', function(done) {
       runner.run({
         language: 'rust',
@@ -124,15 +123,15 @@ describe('rust runner', function() {
                 tx.send(10).unwrap();
             });
           }
-
+    
           fn unused_func() {
             println!("Never called");
           }
-
+    
           fn broken_func() {
             println!("This is broken...";
           }
-
+    
           fn doubler(n: i32) -> i32 {
             n * 2
           }
@@ -145,12 +144,11 @@ describe('rust runner', function() {
           `,
         testFramework: 'rust'
       }, function(buffer) {
-        expect(buffer.stdout).to.contain(`<ERROR::>`);
-        expect(buffer.stdout).to.contain(`incorrect close delimiter`);
+        expect(buffer.stderr).to.contain(`incorrect close delimiter`);
         done();
       });
     });
-
+    
     it('should ignore unused code warnings', function(done) {
       runner.run({
         language: 'rust',
@@ -165,11 +163,11 @@ describe('rust runner', function() {
                 tx.send(10).unwrap();
             });
           }
-
+    
           fn unused_func() {
             println!("Never called");
           }
-
+    
           fn doubler(n: i32) -> i32 {
             n * 2
           }
@@ -187,7 +185,7 @@ describe('rust runner', function() {
         done();
       });
     });
-
+    
     it('should handle failed tests', function(done) {
       runner.run({
         language: 'rust',
@@ -230,8 +228,8 @@ describe('rust runner', function() {
         `,
         testFramework: 'rust'
       }, function(buffer) {
-        expect(buffer.stdout).to.contain(`<ERROR::>`);
-        expect(buffer.stdout).to.contain(`un-closed delimiter`);
+        console.log(buffer);
+        expect(buffer.stderr).to.contain(`un-closed delimiter`);
         done();
       });
     });
@@ -249,7 +247,7 @@ describe('rust runner', function() {
           fn doubler_success() {
             assert_eq!(doubler(2),4);
           }
-
+    
           #[test]
           fn doubler_failure() {
             assert_eq!(doubler(2),3);

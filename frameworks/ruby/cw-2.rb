@@ -73,6 +73,7 @@ class Test
         @@after_blocks.each do |block|
           block.call
         end
+        puts "<COMPLETEDIN::>"
       end
     end
 
@@ -162,7 +163,7 @@ class Test
 
     def handle_error(ex)
       if ex.is_a? Exception
-        puts "<ERROR::>#{format_msg(ex.inspect)}<:LF:>\n#{ex.backtrace.join('<:LF:>')}"
+        puts "<ERROR::>#{format_msg(ex.inspect)}<:LF:>#{ex.backtrace.join('<:LF:>')}"
       else
         puts "<ERROR::>#{format_msg(ex)}"
       end

@@ -43,3 +43,5 @@ pull:
 	docker pull codewars/func-runner
 	docker pull codewars/erlang-runner
 	docker pull codewars/alt-runner
+	docker pull codewars/rust-runner || true
+	docker pull codewars/dart-runner || true

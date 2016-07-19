@@ -19,6 +19,7 @@
     "url": "http://github.com/codewars/runner.git"
   },
   "dependencies": {
+    "ably": "*",
     "bluebird": "*",
     "chai": "1.9.x",
     "escape-html": "1.0.3",

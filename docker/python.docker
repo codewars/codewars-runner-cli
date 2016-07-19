@@ -26,6 +26,10 @@ RUN pip3 install -U scikit-learn
 RUN pip install -U tornado
 RUN pip3 install -U tornado
 
+# Install Ably
+RUN pip install -U ably
+RUN pip3 install -U ably
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
