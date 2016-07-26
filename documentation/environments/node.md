@@ -106,6 +106,7 @@ The following packages have been installed:
 - brain
 - dclassify
 - natural
+- sqlite3
 
 # Installed Services
 
