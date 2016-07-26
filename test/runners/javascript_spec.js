@@ -108,10 +108,36 @@ describe( 'javascript runner', function(){
                 done();
             });
         });
-        
+
         it( 'should load libraries', function(done){
             runner.run({language: 'javascript', code: 'var _ = require("lodash");console.log(_.map([1], n => n * 2));'}, function(buffer) {
                 expect(buffer.stdout).to.contain('[ 2 ]');
+                done();
+            });
+        });
+        it( 'should work with SQLite', function(done){
+            runner.run({
+                language: 'javascript',
+                code: `
+var sqlite3 = require('sqlite3');
+var db = new sqlite3.Database(':memory:');
+db.serialize(function() {
+  db.run("CREATE TABLE lorem (info TEXT)");
+  var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
+  for (var i = 0; i < 10; i++) {
+      stmt.run("Ipsum " + i);
+  }
+  stmt.finalize();
+  db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
+      console.log(row.id + ": " + row.info);
+  });
+});
+ 
+db.close();
+`
+            }, function(buffer) {
+                expect(buffer.stdout).to.contain('Ipsum 0');
+                expect(buffer.stdout).to.contain('Ipsum 9');
                 done();
             });
         });
