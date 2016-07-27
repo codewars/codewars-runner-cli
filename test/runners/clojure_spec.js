@@ -92,7 +92,7 @@ describe('clojure runner', function () {
                 console.log(buffer.stderr);
                 expect(buffer.stdout).to.contain('<DESCRIBE::>printing');
                 expect(buffer.stdout).to.contain('yolo<IT::>foo/bar');
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                expect(buffer.stdout).to.contain('\n<PASSED::>Test Passed');
                 expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
                 done();
             });
