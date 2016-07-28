@@ -19,7 +19,7 @@ export @fact,
        roughly, 
        @runtest
 
-allresults = {}
+allresults = []
 
 # HACK: get the current line number
 #
@@ -74,7 +74,8 @@ LF = "<:LF:>\n"
 
 function format_line(s...)
     context = isempty(contexts) ? () : ("<IT::>$(contexts[end])",LF)
-    apply(string,tuple(context...,s...,LF))
+    #apply(string,tuple(context...,s...,LF))
+    string(tuple(context...,s...,LF))
 end
 
 
@@ -93,7 +94,7 @@ function TestSuite(filename, desc)
     TestSuite(filename, desc, Success[], Failure[], Error[])
 end
 
-pluralize(s::String, n::Number) = n == 1 ? s : string(s, "s")
+pluralize(s::AbstractString , n::Number) = n == 1 ? s : AbstractString(s, "s")
 
 # Implementing Base.show(io::IO, t::SomeType) gives you control over the
 # printed representation of that type. For example:
@@ -143,7 +144,7 @@ const handlers = Function[]
 
 # A list of test contexts. `contexts[end]` should be the inner-most context.
 #
-const contexts = String[]
+const contexts = AbstractString[]
 
 # `do_fact` constructs a Success, Failure, or Error depending on the outcome
 # of a test and passes it off to the active test handler (`FactCheck.handlers[end]`).
@@ -202,9 +203,8 @@ end
 #
 macro fact(factex::Expr)
     if factex.head == :(=>)
-        :(do_fact(() -> $(fact_pred(factex.args...)),
-                  $(Expr(:quote, factex)),
-                  {"line" => getline()}))
+        :(do_fact(() -> $(fact_pred(factex.args...)),$(Expr(:quote, factex)),Dict("line" => getline())))
+
     else
         error("@fact doesn't support expression: $factex")
     end
@@ -213,7 +213,7 @@ end
 macro fact_throws(factex::Expr)
     :(do_fact(() -> $(throws_pred(factex)),
               $(Expr(:quote, factex)),
-              {"line" => getline()}))
+              Dict("line" => getline())))
 end
 
 # Constructs a function that handles Successes, Failures, and Errors,
@@ -283,7 +283,7 @@ function getstats()
         end
     end
     assert(s+f+e == length(allresults) == s+ns)
-    {"nSuccesses" => s, "nFailures" => f, "nErrors" => e, "nNonSuccessful" => ns}
+    Dict("nSuccesses" => s, "nFailures" => f, "nErrors" => e, "nNonSuccessful" => ns)
 end
 
 exitstatus() = exit(getstats()["nNonSuccessful"])

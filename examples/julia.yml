@@ -1,0 +1,52 @@
+Test:
+  algorithms:
+    initial: |-
+      module AgeUtils
+      export two_oldest_ages
+      # return the two oldest/oldest ages within the array of ages passed in.
+      # it should return the two ages as a sorted array, youngest age first
+        function two_oldest_ages(ages)
+
+        end
+      end
+        # TODO: complete
+
+    answer: |-
+      module AgeUtils
+      export two_oldest_ages
+        function two_oldest_ages(ages)
+          oldest = 0
+          next_oldest = 0;
+          for age in ages
+            if age > oldest
+              next_oldest = oldest
+              oldest = age
+            else age > next_oldest
+              next_oldest = age
+            end
+          end
+          return [next_oldest, oldest]
+        end
+      end
+
+        
+
+  fixture: |-
+      # some example data
+      using AgeUtils
+      results1 = two_oldest_ages([1,5,87,45,8,8])
+      results2 = two_oldest_ages([6,5,83,5,3,18])
+
+
+      facts(()->(@fact  results2[1] => 18) ,"Number is not the second oldest")
+
+      facts(()->(@fact results1[2] => 83))
+
+  bug fixes:
+
+    fixture: |-
+      # "facts" will return information about what values were
+      # expect if the assertion fails. This can be very useful to other
+      # users trying to pass the kata.
+      facts(()->(@fact +(1,2) => 3))
+
