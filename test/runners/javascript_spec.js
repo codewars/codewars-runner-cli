@@ -167,6 +167,17 @@ db.close();
                         done();
                     });
             });
+            it( 'should handle no trailing semicolons', function(done){
+                runner.run({
+                    language: 'javascript',
+                    code: 'var a = 2',
+                    fixture: 'var assert = require("chai").assert;describe("test", function(){it("should be 2", function(){assert.equal(2, a);})});',
+                    testFramework: 'mocha_bdd'},
+                    function(buffer) {
+                        expect(buffer.stdout).to.contain('<PASSED::>');
+                        done();
+                    });
+            });
             it( 'should handle failures', function(done){
                 runner.run({
                     language: 'javascript',
