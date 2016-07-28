@@ -392,3 +392,21 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/dart_spec.js'
+
+  kotlin:
+    image: codewars/jvm-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'node run -l kotlin'
+
+  kotlin_test:
+    image: codewars/jvm-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/kotlin_spec.js'
