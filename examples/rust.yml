@@ -1,0 +1,71 @@
+test:
+  algorithms:
+    initial: |-
+      // Return the two oldest/oldest ages within the vector of ages passed in.
+      // it should return the two ages as a sorted vector, youngest age first
+      fn two_oldest_ages(mut ages: Vec<i32>) -> Vec<i32> {
+        // Code logic here
+      }
+
+    answer: |-
+      fn two_oldest_ages(mut ages: Vec<i32>) -> Vec<i32> {
+        ages.sort();
+        let len = ages.len();
+        return ages.split_off(len-2);
+      }
+
+    fixture: |-
+      #[test]
+      fn returns_oldest() {
+        assert_eq!(two_oldest_ages(vec![1, 5, 87, 45, 8, 8]),[45, 87]);
+      }
+
+  bug fixes:
+    initial: |-
+      struct Person<'a> {
+        name: &'a str,
+      }
+
+      impl <'a>Person<'a> {
+        // The greet method is not returning the expected value
+        fn greet(&self) -> String {
+          "Hello my name is name".to_string()
+        }
+      }
+
+    answer: |-
+      struct Person<'a> {
+        name: &'a str,
+      }
+
+      impl <'a>Person<'a> {
+        fn greet(&self) -> String {
+          format!("Hello my name is {}", self.name)
+        }
+      }
+
+    fixture: |-
+      #[test]
+      fn greet_is_correct() {
+        let p = Person { name: "Bill" };
+        assert_eq!(p.greet(),"Hello my name is Bill");
+      }
+
+  refactoring:
+    initial: |-
+      // TODO: This function needs to be called multiple times for the same person (my_name).
+      // It would be nice if we didnt have to always pass in my_name every time we needed to greet someone.
+      fn greet<'a>(my_name: &'a str, your_name: &'a str) -> String {
+        format!("Hello {}, my name is {}", your_name, my_name)
+      }
+
+    answer: |-
+      struct Person<'a> {
+        name: &'a str,
+      }
+
+      impl <'a>Person<'a> {
+        fn greet(&self,your_name: &'a str) -> String {
+          format!("Hello {}, my name is {}", your_name, self.name)
+        }
+      }
