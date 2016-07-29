@@ -59,7 +59,28 @@ describe('java runner', function () {
                     + '        System.out.println("test out");\n'
                     + '}}'
             }, function (buffer) {
-                expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\n<FAILED::>Failed Message expected:<5> but was:<3><:LF:>\n');
+                expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\n<FAILED::>Failed Message expected:&lt;5&gt; but was:&lt;3&gt;<:LF:>\n');
+                done();
+            });
+        });
+        it('should report junit messages', function (done) {
+            runner.run({language: 'java',
+                code: 'public class Solution {\n'
+                    + '    public Solution(){}\n'
+                    + '    public String testthing(){ return null; }\n'
+                    + '}\n',
+                fixture: 'import static org.junit.Assert.assertEquals;\n'
+                    + 'import org.junit.Test;\n'
+                    + 'import org.junit.runners.JUnit4;\n'
+                    + 'public class TestFixture {\n'
+                    + '    @Test\n'
+                    + '    public void myTestFunction(){\n'
+                    + '        Solution s = new Solution();\n'
+                    + '        assertEquals("Failed Message", 1, s.testthing().length());\n'
+                    + '}}'
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('<FAILED::>Runtime Error Occurred');
+                expect(buffer.stdout).to.contain('NullPointerException');
                 done();
             });
         });

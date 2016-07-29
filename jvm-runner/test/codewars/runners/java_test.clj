@@ -92,7 +92,7 @@
       (let [test-out-string (with-java-out-str (-main))]
         (is (.contains test-out-string "<DESCRIBE::>sadPath(TestForFailure)<:LF:>"))
         (is (.contains test-out-string "<FAILED::>Failed Message expected:"))
-        (is (.contains test-out-string "<5> but was:<3>"))
+        (is (.contains test-out-string "&lt;5&gt; but was:&lt;3&gt;"))
         (is (not (.contains test-out-string "Shouldn't get here")))
         (is (not (.contains test-out-string "<PASSED::>Test Passed<:LF:>")))))))
 
