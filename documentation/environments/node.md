@@ -107,6 +107,11 @@ The following packages have been installed:
 - dclassify
 - natural
 - sqlite3
+- karma
+- karma-mocha
+- karma-chai
+- karma-phantomjs-launcher
+- phantomjs
 
 # Installed Services
 
