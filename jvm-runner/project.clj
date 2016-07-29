@@ -1,4 +1,4 @@
-(defproject jvm-runner "0.1.2"
+(defproject jvm-runner "0.1.3"
   :description "JVM Runner for codewars"
   :url "http://www.codewars.com/"
   :javac-target "1.8"
