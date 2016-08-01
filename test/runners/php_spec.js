@@ -238,6 +238,34 @@ describe( 'php runner', function(){
 	            });
 	        });
 
+	        it( 'should handle console output without linewraps', function(done){
+		        runner.run({
+	                language: 'php',
+	                code: `
+	                  function double($a) {
+	                    print("this was a triumph");
+	                    return $a * 2;
+	                  }
+	                `,
+	                fixture: `
+	                    class DoubleMethod extends TestCase
+	                    {
+	                        public function testDouble() {
+	                            print("I'm making a note here, huge success");
+	                            $this->assertEquals(double(1), 2);
+	                        }
+	                    }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('\n<PASSED::>');
+		            expect(buffer.stdout).to.contain('huge success');
+		            expect(buffer.stdout).to.contain('this was a triumph');
+	                done();
+	            });
+	        });
+
         	it('should be able to reference preloaded code', function(done) {
 		        runner.run({
 	                language: 'php',
@@ -364,6 +392,31 @@ describe( 'php runner', function(){
 	                done();
 	            });
 	        });
+
+	        it('should fail on PHP errors', function(done) {
+		        runner.run({
+	                language: 'php',
+	                code: `
+						function double($a) {
+							return $a * 2;
+						}
+	                `,
+	                fixture: `
+			            class Double extends TestCase
+			            {
+		                	public function testBadDouble() {
+	                			$this->assertEquals(double(), 2);
+		                	}
+			            }
+	                `,
+	                testFramework: 'phpunit'
+	            },
+	            function(buffer) {
+	                expect(buffer.stdout).to.contain('<FAILED::>');
+		            expect(buffer.stdout).to.not.contain('<PASSED::>');
+	                done();
+	            });
+        	});
     	});
 
     });

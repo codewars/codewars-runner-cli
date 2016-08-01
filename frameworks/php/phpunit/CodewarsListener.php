@@ -17,14 +17,14 @@
         {
             $this->writeOutput($test);
             $message = preg_replace('/\n/', '<:LF:>', self::exceptionToString($e));
-            printf("<FAILED::>%s\n", $message);
+            printf("\n<FAILED::>%s\n", $message);
         }
 
         public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
         {
             $this->writeOutput($test);
             $message = preg_replace('/\n/', '<:LF:>', self::exceptionToString($e));
-            printf("<FAILED::>%s\n", $message);
+            printf("\n<FAILED::>%s\n", $message);
         }
 
         public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
@@ -44,21 +44,21 @@
 
         public function startTest(PHPUnit_Framework_Test $test)
         {
-            printf("<IT::>%s\n", $test->getName());
+            printf("\n<IT::>%s\n", $test->getName());
         }
 
         public function endTest(PHPUnit_Framework_Test $test, $time)
         {
             if ($test !== null && method_exists($test, 'hasFailed') && !$test->hasFailed()) {
                 $this->writeOutput($test);
-                printf("<PASSED::>%s\n", $test->getName());
+                printf("\n<PASSED::>%s\n", $test->getName());
             }
-            printf("<COMPLETEDIN::>%s\n", number_format($time * 1000, 2, '.', ''));
+            printf("\n<COMPLETEDIN::>%s\n", number_format($time * 1000, 2, '.', ''));
         }
 
         public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
         {
-            printf("<DESCRIBE::>%s\n", $suite->getName());
+            printf("\n<DESCRIBE::>%s\n", $suite->getName());
         }
 
         public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
@@ -88,8 +88,10 @@
                 $buffer = $e->getMessage() . "\n";
             } elseif ($e instanceof PHPUnit_Framework_ExceptionWrapper) {
                 $buffer = $e->getClassname() . ': ' . $e->getMessage() . "\n";
-            } else {
+            } else if(method_exists($e, 'getMessage')) {
                 $buffer = get_class($e) . ': ' . $e->getMessage() . "\n";
+            } else {
+                $buffer = $e . "\n";
             }
 
             return $buffer;

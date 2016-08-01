@@ -19,6 +19,8 @@
      stopOnSkipped="false"
      testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
 
+     beStrictAboutTestsThatDoNotTestAnything="true"
+
      strict="false"
      verbose="false"
     >
