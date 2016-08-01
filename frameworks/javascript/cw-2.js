@@ -16,6 +16,7 @@ try
 
     var util = require('util');
     var deepEquals = require('lodash').isEqual;
+    var Promise = require("bluebird");
 
     var fnToString = Function.toString;
     Function.prototype.toString = function ()
@@ -30,12 +31,15 @@ try
 
             default:
                 return fnToString.call(this);
-
         }
     };
 
     var methodCalls = {},
         describing = false,
+        async = false,
+        describeDone = null,
+        asyncIts = null,
+        asyncDone = null,
         correct = 0,
         incorrect = 0,
         failed = [],
@@ -44,6 +48,22 @@ try
 
     $$_SUCCESS__ = null;
     $STDOUT = [];
+
+    process.on('uncaughtException', function (err) {
+        if (async) {
+            Test.handleError(err);
+            if (asyncDone) asyncDone();
+        }
+    });
+
+    describeNext = function() {
+        if (asyncIts.length > 0) {
+            asyncIts.shift()();
+        }
+        else if(describeDone) {
+            describeDone();
+        }
+    }
 
     var _expect = function (passed, failMsg, options)
     {
@@ -179,64 +199,108 @@ try
                 return obj && obj !== true ? JSON.stringify(obj) : ('' + obj)
             }
         },
-        describe: function (msg, fn)
+        describe: function (msg, asyncTimeout, fn)
         {
-            var start = new Date();
-            try
-            {
-                if (describing) throw "cannot call describe within another describe";
-                describing = true;
-                console.log("<DESCRIBE::>" + Test.format(_message(msg)));
-                fn();
-            }
-            catch (ex)
-            {
-                Test.handleError(ex);
-            }
-            finally
-            {
-                var ms = new Date() - start;
-                console.log("<COMPLETEDIN::>" + ms);
-                describing = false;
-                beforeCallbacks = [];
-                afterCallbacks = [];
-
-                if (failed.length > 0)
-                {
-                    throw failed[0];
+            return new Promise(function(resolve, reject) {
+                if (!fn) {
+                    fn = asyncTimeout;
+                    asyncTimeout = false;
+                } else if (asyncTimeout === true) {
+                    asyncTimeout = 2000; // default timeout to 2 seconds
                 }
-            }
+
+                var start = new Date();
+                try {
+                    if (describing) throw "cannot call describe within another describe";
+                    describing = true;
+                    async = asyncTimeout;
+                    asyncIts = [];
+                    describeDone = function () {
+                        var ms = new Date() - start;
+                        console.log("<COMPLETEDIN::>" + ms);
+                        describing = false;
+                        beforeCallbacks = [];
+                        afterCallbacks = [];
+
+                        if (failed.length > 0) throw failed[0];
+
+                        describeDone = null;
+                        async = false;
+                        resolve();
+                    }
+
+                    console.log("<DESCRIBE::>" + Test.format(_message(msg)));
+                    fn();
+                    if (async) describeNext();
+                }
+                catch (ex)
+                {
+                    Test.handleError(ex);
+                }
+                finally
+                {
+                    if (!async && describeDone) describeDone();
+                }
+            });
+
         },
         it: function (msg, fn)
         {
             if (!describing) throw '"it" calls must be invoked within a parent "describe" context';
+            var asyncIt = (async && fn.length > 0);
 
-            console.log("<IT::>" + Test.format(_message(msg)));
-            beforeCallbacks.forEach(function (cb)
-            {
-                cb();
-            });
-
-            var start = new Date();
-            try
-            {
-                fn();
-            }
-            catch (ex)
-            {
-                Test.handleError(ex);
-            }
-            finally
-            {
-                var ms = new Date() - start;
-                console.log("<COMPLETEDIN::>" + ms);
-
-                afterCallbacks.forEach(function (cb)
-                {
+            var begin = function() {
+                console.log("<IT::>" + Test.format(_message(msg)));
+                beforeCallbacks.forEach(function (cb) {
                     cb();
                 });
+
+                var start = new Date(),
+                    timeout,
+                    done = function () {
+                        if (timeout) clearTimeout(timeout)
+
+                        var ms = new Date() - start;
+                        console.log("<COMPLETEDIN::>" + ms);
+
+                        afterCallbacks.forEach(function (cb) {
+                            cb();
+                        });
+
+                        done = null;
+
+                        if (asyncIt) describeNext();
+                    };
+
+                if (asyncIt) {
+                    timeout = setTimeout(function() {
+                        if (done) {
+                            throw "`it` function timed out. Function ran longer than " + async + "ms";
+                        }
+                    }, async);
+
+                    asyncDone = done;
+                }
+
+                try {
+                    fn(asyncIt ? done : undefined);
+                }
+                catch (ex) {
+                    Test.handleError(ex);
+                }
+                finally {
+                    if (!asyncIt) done();
+                }
             }
 
+            // if async then we queue everything up first
+            if (async) {
+                asyncIts.push(begin);
+            }
+            // otherwise just run it
+            else {
+                begin();
+            }
         },
         before: function (cb)
         {

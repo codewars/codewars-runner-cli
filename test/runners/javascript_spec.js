@@ -19,6 +19,13 @@ describe( 'javascript runner', function(){
             });
         });
 
+        it( 'should handle unicode characters', function(done) {
+            runner.run({language: 'javascript', code: 'console.log("✓")'}, function(buffer) {
+                expect(buffer.stdout).to.include("✓");
+                done();
+            });
+        });
+
         it( 'should be able to access solution.txt', function(done) {
             runner.run({
                 language: 'javascript',
@@ -80,7 +87,7 @@ describe( 'javascript runner', function(){
                 code: `
                     var React = require("react");
                     var ReactDOM = require("react-dom/server");
-                    let render = (el) => ReactDOM.renderToStaticMarkup(el); 
+                    let render = (el) => ReactDOM.renderToStaticMarkup(el);
                     var div = <div><h3>Test</h3></div>;
                     console.log(render(div));
                 `
@@ -98,7 +105,7 @@ describe( 'javascript runner', function(){
                 code: `
                     var React = require("react");
                     var ReactDOM = require("react-dom/server");
-                    let render = (el) => ReactDOM.renderToStaticMarkup(el); 
+                    let render = (el) => ReactDOM.renderToStaticMarkup(el);
                     var div = <div><h3>Test</h3></div>;
                     console.log(render(div));
                 `
@@ -132,7 +139,7 @@ db.serialize(function() {
       console.log(row.id + ": " + row.info);
   });
 });
- 
+
 db.close();
 `
             }, function(buffer) {
@@ -302,6 +309,49 @@ db.close();
                 runner.run({language: 'javascript', code:'console.log({a: 1});', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('{ a: 1 }\n');
                     done();
+                });
+            });
+
+            describe("async handling", function() {
+                it( 'should throw a timeout if code runs too long', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        code: 'function solution() {}',
+                        fixture: `
+                            describe("test", 2, function(){
+                                it("should do something", function(done){
+                                });
+                            });
+                        `,
+                        testFramework: 'cw-2'
+                    },
+                    function(buffer) {
+                        expect(buffer.stdout).to.include("<ERROR::>`it` function timed out. Function ran longer than 2ms\n<COMPLETEDIN::>")
+                        done();
+                    });
+                });
+
+                it( 'should render in proper order', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        code: 'function solution(cb) {setTimeout(() => cb("ok"), 0)}',
+                        fixture: `
+                            describe("test", true, function(){
+                                it("should do something", function(done){
+                                    solution((msg) => {
+                                        Test.assertEquals(msg, "ok");
+                                        done();
+                                    });
+                                    console.log("ran solution");
+                                });
+                            });
+                        `,
+                        testFramework: 'cw-2'
+                    },
+                    function(buffer) {
+                        expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == ok\n<COMPLETEDIN::>")
+                        done();
+                    });
                 });
             });
 
