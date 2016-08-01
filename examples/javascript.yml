@@ -100,3 +100,53 @@ cw-2:
       Test.expect(websites.length > 0, 'The array is still empty')
       Test.expect(websites.length == 1, 'The array contains too many values')
       Test.expect(websites[0] == 'codewars', 'The array does not contain the correct value "codewars"')
+
+  async:
+    initial: |-
+      function solution(client, done){
+      }
+
+    answer: |-
+      const redis = require("redis");
+      require('bluebird').promisifyAll(redis.RedisClient.prototype);
+
+      const spawn = require('child_process').spawn
+
+      function startRedis(ready) {
+        return new Promise(resolve => {
+          let rs = spawn('redis-server');
+          rs.stdout.on('data', (data) => {
+            if (data && data.toString().indexOf("Running")){
+              resolve(() => process.exit());
+            }
+          });
+        });
+      }
+
+      function solution(client, done){
+        client.setAsync("foo", "bar").then(done);
+      }
+
+    fixture: |-
+      startRedis().then(exit => {
+        let client = redis.createClient();
+
+        solution(client, _ => {
+          describe("redis challenge", true, _ => {
+            it ("should have set foo to == bar", done => {
+              client.getAsync('foo').then(actual => {
+                Test.assertEquals(actual, "bar");
+                done();
+              });
+            });
+
+            it ("should have set foo to === bar", done => {
+              client.getAsync('foo').then(actual => {
+                Test.assertEquals(actual, "bar");
+                done();
+              });
+            });
+          }).then(exit);
+        });
+      });
+
