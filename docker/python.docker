@@ -30,6 +30,22 @@ RUN pip3 install -U tornado
 RUN pip install -U ably
 RUN pip3 install -U ably
 
+# Install Django
+ENV DJANGO_VERSION 1.9.8
+RUN pip install -U psycopg2 django=="$DJANGO_VERSION"
+RUN pip3 install -U psycopg2 django=="$DJANGO_VERSION"
+
+# Install PySVG
+RUN pip install -U pysvg
+RUN pip3 install -U pysvg
+
+# Install mpld3 package for rendering images to browser
+RUN pip install mpld3
+RUN pip3 install mpld3
+
+RUN pip install Jinja Jinja2
+RUN pip3 install Jinja2
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production

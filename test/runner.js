@@ -35,6 +35,7 @@ module.exports.assertCodeExamples = function(language, version) {
                 }, function(buffer) {
                     expect(buffer.stdout).to.not.contain('<FAILED::>');
                     expect(buffer.stdout).to.not.contain('<ERROR::>');
+                    if (buffer.stderr) console.log(buffer.stderr);
                     done();
                 });
             });
