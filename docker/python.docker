@@ -46,6 +46,14 @@ RUN pip3 install mpld3
 RUN pip install Jinja Jinja2
 RUN pip3 install Jinja2
 
+# Install gmpy2 for high-precision arithmetic
+RUN pip install -U gmpy2
+RUN pip3 install -U gmpy2
+
+# Install PyCrypto
+RUN pip install -U pycrypto
+RUN pip3 install -U pycrpyto
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
