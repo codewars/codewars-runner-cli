@@ -5,10 +5,10 @@
 FROM codewars/base-runner
 
 # Install Additional Python libraries
-RUN apt-get install -y python-pip python-numpy python-scipy python-pandas
+RUN apt-get install -y python-pip python-numpy python-scipy python-pandas python-gmpy2
 
 # Install Python 3
-RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
+RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas python3-gmpy2
 
 # Install Packages
 RUN pip install pymongo redis
@@ -45,10 +45,6 @@ RUN pip3 install mpld3
 
 RUN pip install Jinja Jinja2
 RUN pip3 install Jinja2
-
-# Install gmpy2 for high-precision arithmetic
-RUN pip install -U gmpy2
-RUN pip3 install -U gmpy2
 
 # Install PyCrypto
 RUN pip install -U pycrypto
