@@ -48,7 +48,7 @@ RUN pip3 install Jinja2
 
 # Install PyCrypto
 RUN pip install -U pycrypto
-RUN pip3 install -U pycrpyto
+RUN pip3 install -U pycrypto
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
