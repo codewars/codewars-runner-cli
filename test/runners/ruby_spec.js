@@ -97,6 +97,28 @@ describe('ruby runner', function () {
                         }
                     );
                 });
+                it('should escape errors with class output', function (done) {
+                    runner.run({language: 'ruby',
+                            code: `
+                                def example
+                                    Thing.new
+                                end
+                                class Thing
+                                end
+                            `,
+                            fixture: `
+                                describe "test" do
+                                    it("test") { Test.assert_equals(example, 2) }
+                                end
+                            `,
+                            testFramework: 'cw-2'
+                        }, function (buffer) {
+                            expect(buffer.stdout).to.contain('<FAILED::>');
+                            expect(buffer.stdout).to.contain('#&lt;Thing');
+                            done();
+                        }
+                    );
+                });
             });
         });
         describe('rspec', function () {
@@ -172,6 +194,29 @@ describe('ruby runner', function () {
                         ].join('\n'),
                         testFramework: 'rspec'}, function (buffer) {
                         expect(buffer.stdout).to.contain('<ERROR::>');
+                        done();
+                    }
+                );
+            });
+            it('should escape errors with class output', function (done) {
+                runner.run({language: 'ruby',
+                        code: `
+                            def example
+                                Thing.new
+                            end
+                            class Thing
+                            end
+                        `,
+                        fixture: `
+                            describe "test" do
+                                it("test") { expect(example).to eq(2) }
+                            end
+                        `,
+                        testFramework: 'rspec'
+                    }, function (buffer) {
+                        expect(buffer.stdout).to.contain('<FAILED::>');
+                        expect(buffer.stdout).to.contain('#&lt;Thing'); // class output should be escaped
+                        expect(buffer.stdout).to.contain('<:LF:>'); // Line Feed tokens should not 
                         done();
                     }
                 );

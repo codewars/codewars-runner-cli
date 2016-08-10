@@ -9,8 +9,12 @@ class CwRSpecFormatter
     s.gsub("\n", LF_TOKEN)
   end
 
+  def escape_html(value)
+    CGI::escapeHTML(value)
+  end
+
   def format_exception(notification)
-    format_message(notification.exception.message.split("\\n/tmp").first)
+    format_message(escape_html(notification.exception.message.split("\\n/tmp").first))
   end
   
   def format_backtrace(notification)
@@ -18,6 +22,7 @@ class CwRSpecFormatter
       when :simple
         trace = notification.formatted_backtrace
             .map {|chunk| chunk.split('`').last.split("'").first }
+            .map {|chunk| escape_html(chunk) }
 
         if trace.any?
           "#{LF_TOKEN}Simplified backtrace: #{trace.join(' -> ')}"
@@ -26,7 +31,7 @@ class CwRSpecFormatter
         end
 
       when :detailed
-        LF_TOKEN + notification.formatted_backtrace.join(LF_TOKEN)
+        LF_TOKEN + notification.formatted_backtrace.map{ | line | escape_html(line) }.join(LF_TOKEN)
       end
   end
   
