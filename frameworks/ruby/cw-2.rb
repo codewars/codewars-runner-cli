@@ -4,6 +4,7 @@ require 'forwardable'
 require 'delegate'
 require 'set'
 require 'uri'
+require 'cgi'
 
 NameError
 class Test
@@ -20,6 +21,14 @@ class Test
 
   class << self
 
+    def escape_html(value)
+      CGI::escapeHTML(value)
+    end 
+
+    def format_exception(msg)
+      escape_html(msg)
+    end
+
     def expect(passed = nil, message = nil, options = {}, &block)
       success = (block_given? ? block.call() : !!passed)
 
@@ -30,7 +39,7 @@ class Test
         puts "<PASSED::>#{success_msg}"
       else
         message ||= 'Value is not what was expected'
-        puts "<FAILED::>#{message}"
+        puts "<FAILED::>#{format_exception(message)}"
         if $describing
           @@failed << Test::Error.new(message)
         else
@@ -163,9 +172,9 @@ class Test
 
     def handle_error(ex)
       if ex.is_a? Exception
-        puts "<ERROR::>#{format_msg(ex.inspect)}<:LF:>#{ex.backtrace.join('<:LF:>')}"
+        puts "<ERROR::>#{format_msg(format_exception(ex.inspect))}<:LF:>#{ex.backtrace.map { | line | format_exception(line) }.join('<:LF:>')}"
       else
-        puts "<ERROR::>#{format_msg(ex)}"
+        puts "<ERROR::>#{format_msg(format_exception(ex))}"
       end
     end
 
