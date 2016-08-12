@@ -50,16 +50,16 @@ pull:
 	docker pull codewars/dart-runner || true
 
 save:
-	docker save codewars/base-runner > ~/docker/image.tar
-	docker save codewars/ruby-runner > ~/docker/image.tar
-	docker save codewars/node-runner > ~/docker/image.tar
-	docker save codewars/python-runner > ~/docker/image.tar
-	docker save codewars/dotnet-runner > ~/docker/image.tar
-	docker save codewars/jvm-runner > ~/docker/image.tar
-	docker save codewars/func-runner > ~/docker/image.tar
-	docker save codewars/erlang-runner > ~/docker/image.tar
-	docker save codewars/alt-runner > ~/docker/image.tar
-	docker save codewars/rust-runner > ~/docker/image.tar
-	docker save codewars/dart-runner > ~/docker/image.tar
-	docker save codewars/crystal-runner > ~/docker/image.tar
-	docker save codewars/julia-runner > ~/docker/image.tar
+	docker save codewars/base-runner > build//image.tar
+	docker save codewars/ruby-runner > build//image.tar
+	docker save codewars/node-runner > build//image.tar
+	docker save codewars/python-runner > build//image.tar
+	docker save codewars/dotnet-runner > build//image.tar
+	docker save codewars/jvm-runner > build//image.tar
+	docker save codewars/func-runner > build//image.tar
+	docker save codewars/erlang-runner > build//image.tar
+	docker save codewars/alt-runner > build//image.tar
+	docker save codewars/rust-runner > build//image.tar
+	docker save codewars/dart-runner > build//image.tar
+	docker save codewars/crystal-runner > build//image.tar
+	docker save codewars/julia-runner > build//image.tar

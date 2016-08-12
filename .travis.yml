@@ -6,18 +6,18 @@ node_js:
 
 cache:
   directories:
-  - ~/docker
+  - build
 
 services:
   - docker
 
 # testing is built in to the docker images
 before_script:
-  - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+  - if [[ -e build/image.tar ]]; then docker load -i build/image.tar; fi
 
 script:
   - make all
 
 after_success:
-  - mkdir -p ~/docker;
+  - mkdir -p build;
   - make save
