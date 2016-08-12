@@ -13,7 +13,6 @@ describe('python runner', function () {
                     languageVersion: lv,
                     code: 'import sys; sys.stdout.write("42")'
                 }, function (buffer) {
-                    console.log(buffer);
                     expect(buffer.stdout).to.equal('42');
                     done();
                 });
@@ -24,7 +23,6 @@ describe('python runner', function () {
                     languageVersion: lv,
                     code: 'import sys; sys.stderr.write("Error!  Codewars cannot and will not accept any more Fibonacci kata.")'
                 }, function (buffer) {
-                    console.log(buffer);
                     expect(buffer.stderr).to.equal("Error!  Codewars cannot and will not accept any more Fibonacci kata.");
                     done();
                 });
@@ -35,7 +33,6 @@ describe('python runner', function () {
                     languageVersion: lv,
                     code: 'import sys; sys.stderr.write("florp"); sys.stdout.write("foop")'
                 }, function (buffer) {
-                    console.log(buffer);
                     expect(buffer.stderr).to.equal("florp");
                     expect(buffer.stdout).to.equal("foop");
                     done();
@@ -52,7 +49,6 @@ describe('python runner', function () {
                         testFramework: 'cw-2'
                     },
                     function (buffer) {
-                        console.log(buffer);
                         expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                         done();
                     });
@@ -66,7 +62,6 @@ describe('python runner', function () {
                         testFramework: 'cw-2'
                     },
                     function (buffer) {
-                        console.log(buffer);
                         expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                         done();
                     });
@@ -81,7 +76,6 @@ describe('python runner', function () {
                         testFramework: 'cw-2'
                     },
                     function (buffer) {
-                        console.log(buffer);
                         expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                         done();
                     });
@@ -95,7 +89,6 @@ describe('python runner', function () {
                         testFramework: 'cw-2'
                     },
                     function (buffer) {
-                        console.log(buffer);
                         expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
                         done();
                     });
@@ -108,7 +101,6 @@ describe('python runner', function () {
                         code: 'a.fail()',
                         testFramework: 'cw-2'},
                     function (buffer) {
-                        console.log(buffer);
                         expect(buffer.stderr).to.not.contain('File ');
                         expect(buffer.stderr).to.not.contain(', line ');
                         expect(buffer.stderr).to.not.contain('most recent call last');
@@ -129,8 +121,23 @@ describe('python runner', function () {
                         ].join('\n'),
                         testFramework: 'unittest'},
                     function (buffer) {
-                        console.log(buffer);
-                        expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+                        expect(buffer.stdout).to.contain('\n<PASSED::>Test Passed\n');
+                        done();
+                    });
+            });
+            it('should include test names', function (done) {
+                runner.run({
+                        language: 'python',
+                        languageVersion: lv,
+                        code: 'a = 1',
+                        fixture: [
+                            'class Test(unittest.TestCase):',
+                            '  def test_assert(self):',
+                            '    self.assertEqual(a, 1)'
+                        ].join('\n'),
+                        testFramework: 'unittest'},
+                    function (buffer) {
+                        expect(buffer.stdout).to.contain('\n<IT::>test_assert');
                         done();
                     });
             });
@@ -146,8 +153,7 @@ describe('python runner', function () {
                         ].join('\n'),
                         testFramework: 'unittest'},
                     function (buffer) {
-                        console.log(buffer);
-                        expect(buffer.stdout).to.contain('<FAILED::>');
+                        expect(buffer.stdout).to.contain('\n<FAILED::>');
                         expect(buffer.stdout).to.contain('test failed');
                         done();
                     });
@@ -164,8 +170,7 @@ describe('python runner', function () {
                         ].join('\n'),
                         testFramework: 'unittest'},
                     function (buffer) {
-                        console.log(buffer);
-                        expect(buffer.stdout).to.equal('<ERROR::>Unhandled Exception: exceptions are my favorite, I always throw them\n');
+                        expect(buffer.stdout).to.contain('\n<ERROR::>Unhandled Exception: exceptions are my favorite, I always throw them\n');
                         done();
                     });
             });
