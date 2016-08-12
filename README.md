@@ -79,6 +79,7 @@ Many languages are currently supported in various states of completeness. This l
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2          | cw-2           | node-runner    | cw-2         |                                                                         |
 | C++            | 14            | ✓            | igloo            |               |                | systems-runner |              |                                                                         |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
+| Crystal        | 0.18.7        | ✓            | spec             | spec          | spec           | crystal-runner | spec         |                                                                         |
 | Dart           | 1.16.1        | ✓            | test             | Kumite Only   |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
 | Erlang         | 18            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |
@@ -91,7 +92,7 @@ Many languages are currently supported in various states of completeness. This l
 | JavaScript     | 0.10.33/Babel | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
 | JavaScript     | 6.0.0         | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
 | JavaScript     | 6.0.0/Babel   | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| Julia          |               | ✓!!!         | !!!              |               |                |                |              |                                                                         |
+| Julia          | 0.4.6         | ✓            | factcheck        | factcheck     |                |                |              |                                                                         |
 | Kotlin         | 1.0.3         | ✓            | ???              |               |                | jvm-runner     |              |                                                                         |
 | Lisp           |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
 | Lua            |               | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
@@ -104,7 +105,7 @@ Many languages are currently supported in various states of completeness. This l
 | R              |               | ✓            |                  |               |                | alt-runner     |              |                                                                         |
 | Racket         |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
 | Ruby           | 2.3.0         | ✓            | cw-2, rspec      | cw-2          | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
-| Rust           | 1.10.0        | ✓            | rust             | Kumite Only   |                |                |              |                                                                         |
+| Rust           | 1.10.0        | ✓            | rust             | rust          |                |                |              |                                                                         |
 | Scala          | 2.11.2        | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
 | Scss/Sass      |               |  ???         | ???              |               |                |                |              |                                                                         |
 | Swift          |               | ???          | ???              |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |

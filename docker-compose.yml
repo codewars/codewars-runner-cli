@@ -131,6 +131,16 @@ services:
     entrypoint: ''
     command: bash
 
+  crystal-runner:
+    image: codewars/crystal-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript:
     image: codewars/node-runner
@@ -420,3 +430,21 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/kotlin_spec.js'
+
+  crystal:
+    image: codewars/crystal-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'node run -l crystal'
+
+  crystal_test:
+    image: codewars/crystal-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/crystal_spec.js'

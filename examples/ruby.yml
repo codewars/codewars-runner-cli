@@ -52,7 +52,7 @@ cw-2:
           end
         end
         [next_oldest, oldest]
-
+      end
 
     fixture: |-
       results1 = two_oldest_ages [1,5,87,45,8,8]

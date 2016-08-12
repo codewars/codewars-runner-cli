@@ -1,0 +1,22 @@
+name: crystal_runner
+version: 0.1.0
+
+license: MIT
+
+dependencies:
+  kemal:
+    github: sdogruyol/kemal
+    branch: master
+
+  crystaledge:
+    github: unn4m3d/crystaledge
+
+  faker:
+    github: askn/faker
+
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+
+  redis:
+    github: stefanwille/crystal-redis
+    version: ~> 1.6.6
