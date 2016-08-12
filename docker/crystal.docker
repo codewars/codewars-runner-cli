@@ -18,7 +18,7 @@ RUN chown -R codewarrior:codewarrior /home/codewarrior/crystal
 # Copy package json to tmp
 ADD package.json /tmp/package.json
 
-# Do npm install in tmp and setup cargo dir
+# Do npm install in tmp for better caching
 RUN \
   cd /tmp && npm install --production && \
   mkdir -p /runner && cp -a /tmp/node_modules /runner

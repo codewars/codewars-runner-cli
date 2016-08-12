@@ -4,9 +4,20 @@ language: node_js
 node_js:
   - "5.8"
 
+cache:
+  directories:
+  - ~/docker
+
 services:
   - docker
 
 # testing is built in to the docker images
+before_script:
+  - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+
 script:
   - make all
+
+after_success:
+  - mkdir -p ~/docker;
+  - make save

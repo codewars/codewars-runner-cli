@@ -44,4 +44,21 @@ pull:
 	docker pull codewars/erlang-runner
 	docker pull codewars/alt-runner
 	docker pull codewars/rust-runner || true
+	docker pull codewars/julia-runner || true
+	docker pull codewars/crystal-runner || true
 	docker pull codewars/dart-runner || true
+
+save:
+	docker save codewars/base-runner > ~/docker/image.tar
+	docker save codewars/ruby-runner > ~/docker/image.tar
+	docker save codewars/node-runner > ~/docker/image.tar
+	docker save codewars/python-runner > ~/docker/image.tar
+	docker save codewars/dotnet-runner > ~/docker/image.tar
+	docker save codewars/jvm-runner > ~/docker/image.tar
+	docker save codewars/func-runner > ~/docker/image.tar
+	docker save codewars/erlang-runner > ~/docker/image.tar
+	docker save codewars/alt-runner > ~/docker/image.tar
+	docker save codewars/rust-runner > ~/docker/image.tar
+	docker save codewars/dart-runner > ~/docker/image.tar
+	docker save codewars/crystal-runner > ~/docker/image.tar
+	docker save codewars/julia-runner > ~/docker/image.tar
