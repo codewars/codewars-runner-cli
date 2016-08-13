@@ -3,7 +3,7 @@ HOSTNAME=codewars
 # Building haskell and erlang images have been suspended (frozen) until they are able to be repaired
 # CONTAINERS=dotnet jvm node python ruby alt func dart systems erlang haskell
 #CONTAINERS=dotnet jvm node python ruby alt func dart systems rust julia crystal
-CONTAINERS=node crystal
+CONTAINERS=node crystal dotnet
 
 ALL_CONTAINERS=${CONTAINERS} base
 
