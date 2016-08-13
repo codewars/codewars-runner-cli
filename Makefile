@@ -3,7 +3,7 @@ HOSTNAME=codewars
 # Building haskell and erlang images have been suspended (frozen) until they are able to be repaired
 # CONTAINERS=dotnet jvm node python ruby alt func dart systems erlang haskell
 #CONTAINERS=dotnet jvm node python ruby alt func dart systems rust julia crystal
-CONTAINERS=node crystal dotnet
+CONTAINERS=node dotnet jvm python ruby alt rust julia crystal
 
 ALL_CONTAINERS=${CONTAINERS} base
 
@@ -50,16 +50,16 @@ pull:
 	docker pull codewars/dart-runner || true
 
 save:
-	docker save codewars/base-runner > build//image.tar
-	docker save codewars/ruby-runner > build//image.tar
-	docker save codewars/node-runner > build//image.tar
-	docker save codewars/python-runner > build//image.tar
-	docker save codewars/dotnet-runner > build//image.tar
-	docker save codewars/jvm-runner > build//image.tar
-	docker save codewars/func-runner > build//image.tar
-	docker save codewars/erlang-runner > build//image.tar
-	docker save codewars/alt-runner > build//image.tar
-	docker save codewars/rust-runner > build//image.tar
-	docker save codewars/dart-runner > build//image.tar
-	docker save codewars/crystal-runner > build//image.tar
-	docker save codewars/julia-runner > build//image.tar
+	docker save codewars/base-runner > build/image.tar
+	docker save codewars/ruby-runner > build/image.tar
+	docker save codewars/node-runner > build/image.tar
+	docker save codewars/python-runner > build/image.tar
+	docker save codewars/dotnet-runner > build/image.tar
+	docker save codewars/jvm-runner > build/image.tar
+	docker save codewars/func-runner > build/image.tar
+	docker save codewars/erlang-runner > build/image.tar
+	docker save codewars/alt-runner > build/image.tar
+	docker save codewars/rust-runner > build/image.tar
+	docker save codewars/dart-runner > build/image.tar
+	docker save codewars/crystal-runner > build/image.tar
+	docker save codewars/julia-runner > build/image.tar
