@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "ably": "*",
+    "ansi-to-html": "^0.4.1",
     "bluebird": "*",
     "chai": "1.9.x",
     "escape-html": "1.0.3",

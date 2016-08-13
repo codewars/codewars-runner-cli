@@ -1,0 +1,75 @@
+spec:
+  bug fixes:
+    initial: |-
+      class Person
+        getter :name
+        def initialize(name)
+          name = name
+        end
+
+        def greet
+          "Hello my name is #{name}"
+        end
+      end
+    answer: |-
+      class Person
+        getter :name
+        def initialize(@name : String)
+        end
+
+        def greet
+          "Hello my name is #{name}"
+        end
+      end
+
+    fixture: |-
+      jack = Person.new("Jack")
+      jill = Person.new("Jill")
+
+      describe "Person" do
+        it "should have a proper name" do
+          jack.name.should eq "Jack"
+        end
+
+        it "should have a proper greeting" do
+          jack.greet.should eq "Hello my name is Jack"
+          jill.greet.should eq "Hello my name is Jill"
+        end
+      end
+
+  algorithms:
+    initial: |-
+      # return the two oldest/oldest ages within the array of ages passed in.
+      # it should return the two ages as a sorted array, youngest age first
+      def two_oldest_ages(ages)
+      end
+
+    answer: |-
+      def two_oldest_ages(ages)
+        oldest = 0
+        next_oldest = 0;
+        ages.each do |age|
+          if age > oldest
+            next_oldest = oldest
+            oldest = age
+          elsif age > next_oldest
+            next_oldest = age
+          end
+        end
+        [next_oldest, oldest]
+      end
+
+
+    fixture: |-
+      results1 = two_oldest_ages [1,5,87,45,8,8]
+      results2 = two_oldest_ages [6,5,83,5,3,18]
+
+      describe "two_oldest_ages" do
+        it "should return the two oldest ages" do
+          results1[0].should eq 45
+          results1[1].should eq 87
+
+          results2[0].should eq 18
+          results2[1].should eq 83
+        end
+      end
