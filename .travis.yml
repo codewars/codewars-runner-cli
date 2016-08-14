@@ -7,6 +7,5 @@ node_js:
 services:
   - docker
 
-# testing is built in to the docker images
 script:
   - make all
