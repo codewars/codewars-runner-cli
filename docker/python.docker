@@ -5,10 +5,10 @@
 FROM codewars/base-runner
 
 # Install Additional Python libraries
-RUN apt-get install -y python-pip python-numpy python-scipy python-pandas python-gmpy2
+RUN apt-get install -y python-pip python-numpy python-scipy python-pandas
 
 # Install Python 3
-RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas python3-gmpy2
+RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
 
 # Install Packages
 RUN pip install pymongo redis
@@ -49,6 +49,9 @@ RUN pip3 install Jinja2
 # Install PyCrypto
 RUN pip install -U pycrypto
 RUN pip3 install -U pycrypto
+
+# Install gmpy2 for Python2/Python3
+RUN apt-get install -y python-gmpy2 python3-gmpy2
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
