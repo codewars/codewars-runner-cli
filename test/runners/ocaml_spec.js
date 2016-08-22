@@ -42,6 +42,10 @@ describe( 'ocaml runner', function(){
                 expect(buffer.stdout).to.contain("<DESCRIBE::>Person\n<IT::>.greet\n<PASSED::>");
                 done();
             })
-        })
+        });
+        it('should execute the included code examples', function(done){
+            runner.assertCodeExamples('ocaml');
+            done();
+        });
     })
 });
