@@ -35,7 +35,8 @@ RUN opam update --use-internal-solver -y
 RUN opam install --use-internal-solver -y ocamlbuild ounit core batteries lwt utop
 
 # Set environment variables
-RUN echo 'eval `opam config env` && $@' > /home/codewarrior/run_ocaml.sh
+RUN echo '#!/bin/bash' > /home/codewarrior/run_ocaml.sh
+RUN echo 'eval `opam config env` && $@' >> /home/codewarrior/run_ocaml.sh
 RUN chmod +x /home/codewarrior/run_ocaml.sh
 
 # Run the test suite to make sure this thing works
