@@ -4,6 +4,8 @@ var runner = require('../runner');
 
 describe( 'ocaml runner', function(){
     describe( '.run', function(){
+        runner.assertCodeExamples('ocaml');
+
         it( 'should handle basic code evaluation', function(done){
             runner.run({language: 'ocaml', code: 'print_string "42\n";;'}, function(buffer) {
                 expect(buffer.stdout).to.equal('42\n');
@@ -42,10 +44,6 @@ describe( 'ocaml runner', function(){
                 expect(buffer.stdout).to.contain("<DESCRIBE::>Person\n<IT::>.greet\n<PASSED::>");
                 done();
             })
-        });
-        it('should execute the included code examples', function(done){
-            runner.assertCodeExamples('ocaml');
-            done();
         });
     })
 });
