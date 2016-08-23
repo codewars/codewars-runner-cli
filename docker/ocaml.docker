@@ -20,7 +20,6 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 ADD . /runner
 WORKDIR /runner
 
-# Run the test suite to make sure this thing works
 
 USER codewarrior
 ENV USER codewarrior
@@ -29,21 +28,19 @@ ENV HOME /home/codewarrior
 # Install opam stuff as the target user (so that they have utop, etc)
 # Note that because aspucd is max of 1.8 (a broken version) on Ubuntu Trusty, we have to use the internal solver
 RUN opam init --use-internal-solver  -y
-RUN opam switch --use-internal-solver 4.02.3
 RUN eval `opam config env`
 RUN echo ". $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true" >> ~/.profile
 RUN echo ". $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true" >> ~/.bashrc
 RUN opam update --use-internal-solver -y
-RUN opam install --use-internal-solver -y ocamlbuild
-RUN opam install --use-internal-solver -y ounit
-RUN opam install --use-internal-solver -y core
-RUN opam install --use-internal-solver -y batteries
-RUN opam install --use-internal-solver -y lwt
-RUN opam install --use-internal-solver -y utop
+RUN opam install --use-internal-solver -y ocamlbuild ounit core batteries lwt utop
 
 # Set environment variables
-RUN eval `opam config env` && mocha -t 5000 test/runners/ocaml_spec.js
+RUN echo 'eval `opam config env` && $@' > /home/codewarrior/run_ocaml.sh
+RUN chmod +x /home/codewarrior/run_ocaml.sh
+
+# Run the test suite to make sure this thing works
+RUN /home/codewarrior/run_ocaml.sh mocha -t 5000 test/runners/ocaml_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
-ENTRYPOINT ["eval", "`opam config env`", "&&" "timeout", "15", "node"]
+ENTRYPOINT ["/home/codewarrior/run_ocaml.sh", "timeout", "15", "node"]
