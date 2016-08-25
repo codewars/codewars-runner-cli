@@ -129,6 +129,28 @@ class Test
       end
     end
 
+    def assert_include(actual, expected, options = {})
+      if actual.include?(expected)
+        options[:success_msg] ||= 'Value included ' + expected.inspect
+        Test.expect(true, nil, options)
+      else
+        msg = msg ? msg + ' -  ' : ''
+        message = "#{msg}Expected: #{actual.inspect} to include #{expected.inspect}"
+        Test.expect(false, message)
+      end
+    end
+
+    def assert_not_include(actual, expected, options = {})
+      if !actual.include?(expected)
+        options[:success_msg] ||= 'Value did not include ' + expected.inspect
+        Test.expect(true, nil, options)
+      else
+        msg = msg ? msg + ' -  ' : ''
+        message = "#{msg}Expected: #{actual.inspect} to not include #{expected.inspect}"
+        Test.expect(false, message)
+      end
+    end
+
     def fail(msg = nil)
       Test.expect(false, msg)
     end
@@ -145,11 +167,20 @@ class Test
       rand(100)
     end
 
-    private
+    def example(msg, mode = "")
+      puts format_msg("<LOG:#{mode.upcase}:Example>#{msg}")
+    end
+
+    def log(msg, mode: "", label: "")
+      puts format_msg("<LOG:#{mode.upcase}:#{label}>#{msg}")
+    end
 
     def format_msg(msg)
       msg.gsub("\n", '<:LF:>')
     end
+
+    private
+
 
     def wrap_error
       begin

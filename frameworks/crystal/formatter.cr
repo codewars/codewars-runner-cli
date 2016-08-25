@@ -6,11 +6,11 @@ module Spec
   end
 
   def self.example(msg, mode = "")
-    puts format_message("<EXAMPLE:#{mode.upcase}:>#{msg}")
+    puts format_message("<LOG:#{mode.upcase}:Example>#{msg}")
   end
 
-  def self.log(msg, mode = "")
-    puts format_message("<LOG:#{mode.upcase}:>#{msg}")
+  def self.log(msg, mode = "", label = "")
+    puts format_message("<LOG:#{mode.upcase}:#{label}>#{msg}")
   end
 
   class RootContext
