@@ -6,6 +6,7 @@ try
     {
         global.process.execArgv = null;
         global.process._eval = null;
+        global.process.exit = function(){};
 
         Object.defineProperty(global.process, "_eval", {
             writable: false,

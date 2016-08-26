@@ -172,7 +172,15 @@ class Test
     end
 
     def log(msg, mode: "", label: "")
-      puts format_msg("<LOG:#{mode.upcase}:#{label}>#{msg}")
+      display('LOG', msg, mode: mode, label: label)
+    end
+
+    def display(type, msg, mode: "", label: "")
+      puts format_msg("<#{type.upcase}:#{mode.upcase}:#{label}>#{msg}")
+    end
+
+    def prop(name, value)
+      puts format_msg("<PROP::#{name}>#{value}")
     end
 
     def format_msg(msg)
