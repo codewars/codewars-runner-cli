@@ -1,0 +1,29 @@
+ounit:
+  reference:
+    initial: |-
+        module Person = struct
+            type t = { name: string }
+            let greet (person: t) = (* TODO: write a greeter *)
+        end
+
+    answer: |-
+        module Person = struct
+            type t = { name: string }
+            let greet (person: t) = "Hello, " ^ person.name ^ "!"
+        end
+
+    fixture: |-
+        module Tests = struct
+            open OUnit
+            let suite = [
+                "Person module" >:::
+                    [
+                        "test_greet" >:: (fun _ -> 
+                            let person : Person.t = { Person.name = "Jack" } in
+                            assert_equal "Hello, Jack!" (Person.greet person) 
+                        )
+                    ]
+                ]
+            ;;
+        end
+

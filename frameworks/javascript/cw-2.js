@@ -6,6 +6,7 @@ try
     {
         global.process.execArgv = null;
         global.process._eval = null;
+        global.process.exit = function(){};
 
         Object.defineProperty(global.process, "_eval", {
             writable: false,
@@ -198,6 +199,14 @@ try
             {
                 return obj && obj !== true ? JSON.stringify(obj) : ('' + obj)
             }
+        },
+        log: function(msg, opts) {
+            mode = (opts.mode || "").toUpperCase();
+            label = (opts.label || "");
+            console.log("<LOG:" + mode + ":" + label + ":>" + Test.format(_message(msg)));
+        },
+        example: function(msg, mode) {
+            Test.log(msg, {mode: mode, label: "Example"});
         },
         describe: function (msg, asyncTimeout, fn)
         {
@@ -415,6 +424,28 @@ try
             }
             else {
                 msg = _message('Value should not deep equal ' + Test.inspect(actual), msg);
+                Test.expect(false, msg, options);
+            }
+        },
+        assertContains: function(actual, expected, msg, options) {
+            if (actual.indexOf(expected) >= 0) {
+                options = options || {};
+                options.successMsg = options.successMsg || 'Value ' + Test.inspect(actual) + ' contains ' + Test.inspect(expected);
+                Test.expect(true, null, options);
+            }
+            else {
+                msg = _message('Value ' + Test.inspect(actual) + ' should contain ' + Test.inspect(expected), msg);
+                Test.expect(false, msg, options);
+            }
+        },
+        assertNotContains: function(actual, expected, msg, options) {
+            if (actual.indexOf(expected) === -1) {
+                options = options || {};
+                options.successMsg = options.successMsg || 'Value ' + Test.inspect(actual) + ' does not contain ' + Test.inspect(expected);
+                Test.expect(true, null, options);
+            }
+            else {
+                msg = _message('Value ' + Test.inspect(actual) + ' should not contain ' + Test.inspect(expected), msg);
                 Test.expect(false, msg, options);
             }
         },
