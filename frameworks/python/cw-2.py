@@ -54,3 +54,8 @@ def describe(message):
 
 def it(message):
     print("<IT::>{0}".format(format_message(message)))
+
+
+def display(type, message, label="", mode=""):
+    print("<{0}:{1}:{2}>{3}".format(type.upper(), mode.upper(), label, format_message(message)))
+

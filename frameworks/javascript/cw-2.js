@@ -201,12 +201,12 @@ try
             }
         },
         log: function(msg, opts) {
+            this.display("LOG", msg, opts);
+        },
+        display: function(type, msg, opts) {
             mode = (opts.mode || "").toUpperCase();
             label = (opts.label || "");
-            console.log("<LOG:" + mode + ":" + label + ":>" + Test.format(_message(msg)));
-        },
-        example: function(msg, mode) {
-            Test.log(msg, {mode: mode, label: "Example"});
+            console.log("<" + type.toUpperCase() + ":" + mode + ":" + label + ":>" + Test.format(_message(msg)));
         },
         describe: function (msg, asyncTimeout, fn)
         {
