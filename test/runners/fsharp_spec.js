@@ -11,4 +11,34 @@ describe( 'fsharp runner', function(){
             });
         });
     });
+
+    describe('using Fuchu for testing', function(){
+        runner.assertCodeExamples('fsharp');
+
+        it('should be able to run a basic test', function(done){
+            runner.run({
+                language: 'fsharp',
+                code: [
+                    'type Person = {name: string};;',
+                    'let greet (person: Person) = "Hello, " + person.name + "!";;',
+                ].join('\n'),
+                fixture: [
+                    'module Tests = begin',
+                    '   open Fuchu',
+                    '   let suite = ',
+                    '       testList "Person" [',
+                    '           testCase ".greet" <| (fun _ -> ',
+                    '               let person: Person = { name = "Jack" } in ',
+                    '               Assert.Equal("Greet", "Hello, Jack!", (greet person))',
+                    '           )',
+                    '       ]',
+                    'end'
+                ].join('\n')
+            }, function(buffer){
+                console.log(buffer);
+                expect(buffer.stdout).to.contain("<IT::>Person/.greet\n<PASSED::>");
+                done();
+            })
+        })
+    });
 });

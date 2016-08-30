@@ -1,0 +1,20 @@
+fuchu:
+  reference:
+    initial: |-
+        type Person = { name: string }
+        let greet (person: Person) = // TODO: write a greeter
+    answer: |-
+        type Person = { name: string }
+        let greet (person: Person) = "Hello, " + person.name + "!"
+    fixture: |-
+        module Tests = begin
+            open Fuchu
+            let suite = 
+                testList "Person" [
+                    testCase ".greet" <| (fun _ -> 
+                        let person : Person = { name = "Jack" } in
+                        Assert.Equal("Greet", "Hello, Jack!", (greet person))
+                    )
+                ]
+        end
+

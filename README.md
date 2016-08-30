@@ -83,7 +83,7 @@ Many languages are currently supported in various states of completeness. This l
 | Dart           | 1.16.1        | ✓            | test             | Kumite Only   |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
 | Erlang         | 18            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |
-| F#             | 4.0           | ✓            |                  | Kumite Only   |                | dotnet-runner  |              |                                                                         |
+| F#             | 4.0           | ✓            | Fuchu            | Yes           |                | dotnet-runner  | Fuchu        | Tests should be placed in a module called "Tests", in a Fuchu testList  |
 | Go             | 1.3.1         | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
 | Groovy         |               | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
 | Haskell        | 7.6.3         | ✓            | hspec!!!         | hspec         | hspec          | haskell-runner | hspec        | An older version is running on CW & Qualified that is fully functional  |
