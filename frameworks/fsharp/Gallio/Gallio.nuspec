@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Gallio</id>
+    <version>3.3.1</version>
+    <authors>Gallio.org</authors>
+    <owners>Amir Barylko</owners>
+    <licenseUrl>http://gallio.org/License.aspx</licenseUrl>
+    <projectUrl>http://gallio.org</projectUrl>
+    <iconUrl>http://gallio.org/images/EchoLink100.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Gallio is a test automation platform.</description>
+  </metadata>
+</package>
