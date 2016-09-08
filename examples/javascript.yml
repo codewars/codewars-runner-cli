@@ -97,9 +97,11 @@ cw-2:
       var websites = ['codewars'];
 
     fixture: |-
-      Test.expect(websites.length > 0, 'The array is still empty')
-      Test.expect(websites.length == 1, 'The array contains too many values')
-      Test.expect(websites[0] == 'codewars', 'The array does not contain the correct value "codewars"')
+      // this example uses chai
+      var expect = require("chai").expect;
+      expect(websites.length, 'The array is still empty').to.not.equal(0);
+      expect(websites.length, 'The array contains too many values').to.equal(1);
+      expect(websites[0]).to.equal('codewars');
 
 #  async:
 #    initial: |-
