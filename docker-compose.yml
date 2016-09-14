@@ -474,7 +474,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: 'bash /home/codewarrior/run_ocaml.sh node run -l ocaml'
+    entrypoint: 'node run -l ocaml'
 
   ocaml_test:
     image: codewars/ocaml-runner
