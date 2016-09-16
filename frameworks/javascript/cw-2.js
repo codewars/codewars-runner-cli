@@ -1,24 +1,12 @@
 
 try
 {
-    // prevent anyone from peeking at the code we passed in
-    if (global.process)
-    {
-        global.process.execArgv = null;
-        global.process._eval = null;
-        global.process.exit = function(){};
-
-        Object.defineProperty(global.process, "_eval", {
-            writable: false,
-            configurable: false,
-            value: "Don't cheat :)"
-        });
-    }
-
-    var util = require('util');
-    var deepEquals = require('lodash').isEqual;
-    var Promise = require("bluebird");
-
+    var util = require('util'),
+        deepEquals = require('lodash').isEqual,
+        Promise = require("bluebird");
+    
+    require('./chai-display');
+    
     var fnToString = Function.toString;
     Function.prototype.toString = function ()
     {
@@ -45,7 +33,8 @@ try
         incorrect = 0,
         failed = [],
         beforeCallbacks = [],
-        afterCallbacks = [];
+        afterCallbacks = [],
+        alwaysExplain = false;
 
     $$_SUCCESS__ = null;
     $STDOUT = [];
@@ -69,7 +58,6 @@ try
     var _expect = function (passed, failMsg, options)
     {
         options = options || {};
-        if (Object.__proto__.extraCredit || Object.prototype.extraCredit) throw 'extraCredit cannot be on the object prototype';
 
         if (passed)
         {
@@ -78,65 +66,51 @@ try
             {
                 successMsg += ": " + options.successMsg;
             }
-            console.log('<PASSED::>' + Test.format(successMsg));
+            Test.display.write("PASSED", successMsg);
+
+            if (options.passed) {
+                options.passed(successMsg, options);
+            }
+
             correct++;
         }
         else
         {
-            failMsg = _message(failMsg) || 'Value is not what was expected';
-            if (options.extraCredit)
+            failMsg = failMsg || 'Value is not what was expected';
+
+            Test.display.write("FAILED", failMsg);
+
+            if (options.failed) {
+                options.failed(failMsg, options);
+            }
+
+            var error = new Test.Error(failMsg);
+            if (describing)
             {
-                failMsg = (options.extraCredit !== true) ? _message(options.extraCredit) : failMsg;
-                failMsg = combineMessages(["Test Missed", failMsg], ": ");
-                console.log("<MISSED::>" + Test.format(failMsg));
-                incorrect++;
+                failed.push(error);
             }
             else
             {
-                console.log("<FAILED::>" + Test.format(failMsg));
-                var error = new Test.Error(failMsg);
-                if (describing)
-                {
-                    failed.push(error);
-                }
-                else
-                {
-                    throw error;
-                }
+                throw error;
             }
         }
     }
 
-//    console._log = console.log;
-//    console.log = function(){
-//        var out = [];
-//        Array.prototype.slice.apply(arguments).forEach(function(arg){
-//            out.push(Test.format(arg));
-//        });
-//
-//        console._log(out.join(' '));
-//    };
-
-    function combineMessages(msgs, separator)
-    {
-        return msgs.filter(function (m){ return m != null;}).join(separator)
-    }
-
-    function _message(msg, prefix)
-    {
-        if (typeof msg == 'function')
-        {
-            msg = msg()
-        }
-        else if (typeof msg == 'array')
-        {
-            msg = combineMessages(msg, ' - ')
-        }
-        msg = prefix ? (prefix + ' - ' + msg) : msg;
-        return msg || '';
+    // convenience method for adding a default failed callback to an options
+    var _failed = function(options, callback) {
+        options = options || {}
+        options.failed = options.failed || callback;
+        return options;
     }
 
     var Test = {
+        // when called, it will set a flag to cause all failed tests to explain the expected/actual results
+        explainAll: function(mode) {
+            alwaysExplain = mode || true;
+        },
+
+        display: require('./display'),
+        
         // we use this instead of util.inspect so that we can support the indent option and json options
         stringify: function(obj, indent)
         {
@@ -151,62 +125,25 @@ try
                 return value;
             }, indent);
         },
-        // formats an value to be outputted. If a function is provided then it will be evaluated,
-        // if an object is provided then it will JSONfied. By default
-        // any line breaks will be replaced with <:BR:> so that the entire message is considered
-        // one group of data.
+
+        // backwards compatibility
         format: function (obj, options)
         {
-            options = options || {};
-            var out = '';
-            if (typeof obj == 'string')
-            {
-                out = obj;
-            }
-            else if (typeof obj == 'function')
-            {
-                out = obj.toString();
-            }
-            else
-            {
-                if (obj && obj !== true){
-
-                    // for backwards compatibility we will support the indent option
-                    if (options.indent || options.json)
-                    {
-                        out = Test.stringify(obj, options.indent ? 4 : 0)
-                    }
-                    else
-                    {
-                        out = util.inspect(obj, options);
-                    }
-                }
-                else{
-                    out = ('' + obj);
-                }
-            }
-            // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
-            // the linebreak will be treated as a new data item.
-            return out.replace(/\n/g, '<:LF:>');
+            Test.display.format(obj, options);
         },
         inspect: function (obj)
         {
-            if (typeof obj == 'string')
-            {
-                return obj;
+            // format arrays ourselves since long arrays end up getting broken out into separate lines, which is often a
+            // bad format for typical use cases.
+            if (Array.isArray(obj)) {
+                return "[" + obj.map(function(v) { return Test.inspect(v) }).join(", ") + "]";
             }
-            else
-            {
-                return obj && obj !== true ? JSON.stringify(obj) : ('' + obj)
+            else {
+                return util.inspect(obj);
             }
         },
         log: function(msg, opts) {
-            this.display("LOG", msg, opts);
-        },
-        display: function(type, msg, opts) {
-            mode = (opts.mode || "").toUpperCase();
-            label = (opts.label || "");
-            console.log("<" + type.toUpperCase() + ":" + mode + ":" + label + ":>" + Test.format(_message(msg)));
+            Test.display.log(msg, opts);
         },
         describe: function (msg, asyncTimeout, fn)
         {
@@ -226,7 +163,7 @@ try
                     asyncIts = [];
                     describeDone = function () {
                         var ms = new Date() - start;
-                        console.log("<COMPLETEDIN::>" + ms);
+                        Test.display.write("COMPLETEDIN", ms);
                         describing = false;
                         beforeCallbacks = [];
                         afterCallbacks = [];
@@ -238,7 +175,7 @@ try
                         resolve();
                     }
 
-                    console.log("<DESCRIBE::>" + Test.format(_message(msg)));
+                    Test.display.write("DESCRIBE", msg);
                     fn();
                     if (async) describeNext();
                 }
@@ -259,7 +196,8 @@ try
             var asyncIt = (async && fn.length > 0);
 
             var begin = function() {
-                console.log("<IT::>" + Test.format(_message(msg)));
+                Test.display.write("IT", msg);
+
                 beforeCallbacks.forEach(function (cb) {
                     cb();
                 });
@@ -270,7 +208,7 @@ try
                         if (timeout) clearTimeout(timeout)
 
                         var ms = new Date() - start;
-                        console.log("<COMPLETEDIN::>" + ms);
+                        Test.display.write("COMPLETEDIN", ms);
 
                         afterCallbacks.forEach(function (cb) {
                             cb();
@@ -341,7 +279,7 @@ try
             }
             else if (ex.name != "TestError")
             {
-                console.log("<ERROR::>" + this.format(_message(Test.trace(ex))));
+                Test.display.write("ERROR", Test.trace(ex));
             }
         },
         // clean up the stack trace of the exception so that it doesn't give confusing results.
@@ -377,16 +315,29 @@ try
         },
         assertSimilar: function (actual, expected, msg, options)
         {
-            this.assertEquals(this.inspect(actual), this.inspect(expected), msg, options)
+            this.assertEquals(Test.inspect(actual), Test.inspect(expected), msg, options)
         },
         assertNotSimilar: function (actual, expected, msg, options)
         {
-            this.assertNotEquals(this.inspect(actual), this.inspect(expected), msg, options)
+            this.assertNotEquals(Test.inspect(actual), Test.inspect(expected), msg, options)
         },
         assertEquals: function (actual, expected, msg, options) {
+            if (typeof(msg) == 'object') {
+                options = msg;
+                msg = null;
+            }
+
             if (actual !== expected) {
-                msg = _message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg);
-                Test.expect(false, msg, options);
+                explain = options && options.explain ? options.explain : alwaysExplain;
+
+                if (explain) {
+                    Test.expect(false, msg || "Values should be equal", _failed(options, function() {
+                        Test.display.explain(actual, expected, { mode: explain, className: 'failed' });
+                    }));
+                }
+                else {
+                    Test.expect(false, Test.display.message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg));
+                }
             }
             else {
                 options = options || {};
@@ -395,9 +346,24 @@ try
             }
         },
         assertNotEquals: function (a, b, msg, options) {
+            if (typeof(msg) == 'object') {
+                options = msg;
+                msg = null;
+            }
+
             if (a === b) {
-                msg = _message('Not Expected: ' + Test.inspect(a), msg);
-                Test.expect(false, msg, options);
+                explain = options && options.explain ? options.explain : alwaysExplain;
+
+                if (explain) {
+                    Test.expect(false, msg || "Values should not equal each other", _failed(options, function() {
+                        Test.display.explain(actual, expected, { mode: explain, className: 'failed' });
+                    }));
+                }
+                else {
+                    msg = Test.display.message('Values should not be equal: ' + Test.inspect(a), msg);
+                    Test.expect(false, msg, options);
+                }
+
             }
             else {
                 options = options || {};
@@ -412,7 +378,7 @@ try
                 Test.expect(true, null, options);
             }
             else {
-                msg = _message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg);
+                msg = Test.display.message('Expected: ' + Test.inspect(expected) + ', instead got: ' + Test.inspect(actual), msg);
                 Test.expect(false, msg, options);
             }
         },
@@ -423,7 +389,7 @@ try
                 Test.expect(true, null, options);
             }
             else {
-                msg = _message('Value should not deep equal ' + Test.inspect(actual), msg);
+                msg = Test.display.message('Value should not deep equal ' + Test.inspect(actual), msg);
                 Test.expect(false, msg, options);
             }
         },
@@ -434,7 +400,7 @@ try
                 Test.expect(true, null, options);
             }
             else {
-                msg = _message('Value ' + Test.inspect(actual) + ' should contain ' + Test.inspect(expected), msg);
+                msg = Test.display.message('Value ' + Test.inspect(actual) + ' should contain ' + Test.inspect(expected), msg);
                 Test.expect(false, msg, options);
             }
         },
@@ -445,7 +411,7 @@ try
                 Test.expect(true, null, options);
             }
             else {
-                msg = _message('Value ' + Test.inspect(actual) + ' should not contain ' + Test.inspect(expected), msg);
+                msg = Test.display.message('Value ' + Test.inspect(actual) + ' should not contain ' + Test.inspect(expected), msg);
                 Test.expect(false, msg, options);
             }
         },
@@ -521,12 +487,7 @@ try
             return array[~~(array.length * Math.random())]
         },
         escapeHtml: function (html) {
-            return String(html)
-                .replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
+            return Test.display.escapeHtml(html);
         },
         Error: function (message)
         {
@@ -538,7 +499,9 @@ try
 //    Test.Error.prototype = require('assert').AssertionError.prototype;
     Test.Error.prototype = Error.prototype;
 
+    Object.freeze(Test.display);
     Object.freeze(Test);
+    
     Object.defineProperty(global, 'Test', {
         writable: false,
         configurable: false,
@@ -564,5 +527,6 @@ try
 
 }catch(ex)
 {
+    console.error(ex);
     throw "Failed to load core API methods";
 }

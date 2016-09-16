@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Fuchu</id>
+    <version>1.0.3.0</version>
+    <title>Fuchu</title>
+    <authors>Mauricio Scheffer</authors>
+    <owners>Mauricio Scheffer</owners>
+    <licenseUrl>https://raw.githubusercontent.com/mausch/Fuchu/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/mausch/Fuchu</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Functional test library</description>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="FSharp.Core" version="3.1.2.1" />
+    </dependencies>
+  </metadata>
+</package>

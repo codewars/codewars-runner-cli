@@ -5,6 +5,11 @@ describe( 'javascript runner', function(){
     describe( '.run', function(){
         runner.assertCodeExamples('javascript');
 
+
+        //----------------------------------------------------------------------------------------
+        // Basics
+        //----------------------------------------------------------------------------------------
+
         it( 'should handle basic code evaluation', function(done){
             runner.run({language: 'javascript', code: 'console.log(42)'}, function(buffer) {
                 expect(buffer.stdout).to.equal('42\n');
@@ -75,7 +80,7 @@ describe( 'javascript runner', function(){
 
         it( 'should handle bad babel syntax', function(done){
             runner.run({language: 'javascript', languageVersion: '6.x/babel', code: 'var a = function(){returns 42;};\na();'}, function(buffer) {
-                expect(buffer.stderr).to.contain('kata: Unexpected token:27');
+                expect(buffer.stderr).to.contain('kata.js: Unexpected token:27');
                 done();
             });
         });
@@ -162,6 +167,11 @@ db.close();
             });
         });
 
+
+        //----------------------------------------------------------------------------------------
+        // Mocha BDD
+        //----------------------------------------------------------------------------------------
+
         describe('mocha bdd', function() {
             it( 'should handle outputting objects', function(done){
                 runner.run({
@@ -209,6 +219,11 @@ db.close();
             });
         });
 
+
+        //----------------------------------------------------------------------------------------
+        // Mocha TDD
+        //----------------------------------------------------------------------------------------
+
         describe('mocha tdd', function() {
             it( 'should handle outputting objects', function(done){
                 runner.run({
@@ -255,6 +270,11 @@ db.close();
                     });
             });
         });
+
+
+        //----------------------------------------------------------------------------------------
+        // CW-2
+        //----------------------------------------------------------------------------------------
 
         describe('cw-2', function() {
             it( 'should handle outputting objects', function(done){
@@ -349,7 +369,7 @@ db.close();
                         testFramework: 'cw-2'
                     },
                     function(buffer) {
-                        expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == ok\n<COMPLETEDIN::>")
+                        expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == \'ok\'\n<COMPLETEDIN::>")
                         done();
                     });
                 });
@@ -409,6 +429,276 @@ db.close();
                                     expect(buffer.stdout).to.not.contain('Object.Test.handleError');
                                     done();
                                 });
+                });
+            });
+        });
+
+
+        //----------------------------------------------------------------------------------------
+        // Karma BDD
+        //----------------------------------------------------------------------------------------
+
+        describe('karma bdd', function() {
+            it( 'should handle basic tests', function(done){
+                runner.run({
+                    language: 'javascript',
+                    code: 'var a = {b: 2};',
+                    fixture: 'describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});',
+                    testFramework: 'karma_bdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    done();
+                });
+            });
+            it( 'should handle loading Angular', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input * 2;
+                }
+        };
+    });`,
+                    fixture: `
+describe("test", function(){
+    beforeEach(module('testModule'));
+    it("should multiply", inject(function(testService) {
+        expect(testService).to.be.ok;
+        expect(testService.double(2)).to.eql(4);
+    }));
+});`,
+                    testFramework: 'karma_bdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+                    expect(buffer.stdout).to.contain('\n<PASSED::>');
+                    done();
+                });
+            });
+
+            it( 'should handle failures', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input * 3;
+                }
+        };
+    });`,
+                    fixture: `
+describe("test", function(){
+    beforeEach(module('testModule'));
+    it("should multiply", inject(function(testService) {
+        expect(testService.double(2)).to.eql(4);
+    }));
+});`,
+                    testFramework: 'karma_bdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+                    expect(buffer.stdout).to.contain('\n<FAILED::>');
+                    done();
+                });
+            });
+
+            it( 'should handle code errors', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input2 * 2;
+                }
+        };
+    });`,
+                    fixture: `
+describe("test", function(){
+    beforeEach(module('testModule'));
+    it("should multiply", inject(function(testService) {
+        expect(testService.double(2)).to.eql(4);
+    }));
+});`,
+                    testFramework: 'karma_bdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<FAILED::>');
+                    done();
+                });
+            });
+
+            it( 'should handle test errors', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input * 2;
+                }
+        };
+    });`,
+                    fixture: `
+describe("test", function(){
+    beforeEach(module('testModule'));
+    it("should multiply", inject(function(testService) {
+        expect(testService.double(2)).to.eql(4);
+        expect(testServie.double(3)).to.eql(6);
+    }));
+});`,
+                    testFramework: 'karma_bdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<FAILED::>');
+                    done();
+                });
+            });
+        });
+
+
+        //----------------------------------------------------------------------------------------
+        // Karma TDD
+        //----------------------------------------------------------------------------------------
+
+        describe('karma tdd', function() {
+            it( 'should handle basic tests', function(done){
+                runner.run({
+                    language: 'javascript',
+                    code: 'var a = {b: 2};',
+                    fixture: 'suite("test", function(){test("should be 2", function(){assert.equal(2, a.b);})});',
+                    testFramework: 'karma_tdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    done();
+                });
+            });
+            it( 'should handle loading Angular', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input * 2;
+                }
+        };
+    });`,
+                    fixture: `
+suite("test", function(){
+    setup(module('testModule'));
+    test("should multiply", inject(function(testService) {
+        expect(testService).to.be.ok;
+        expect(testService.double(2)).to.eql(4);
+    }));
+});`,
+                    testFramework: 'karma_tdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+                    expect(buffer.stdout).to.contain('\n<PASSED::>');
+                    done();
+                });
+            });
+
+            it( 'should handle failures', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input * 3;
+                }
+        };
+    });`,
+                    fixture: `
+suite("test", function(){
+    setup(module('testModule'));
+    test("should multiply", inject(function(testService) {
+        expect(testService.double(2)).to.eql(4);
+    }));
+});`,
+                    testFramework: 'karma_tdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+                    expect(buffer.stdout).to.contain('\n<FAILED::>');
+                    done();
+                });
+            });
+
+            it( 'should handle code errors', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input2 * 2;
+                }
+        };
+    });`,
+                    fixture: `
+suite("test", function(){
+    setup(module('testModule'));
+    test("should multiply", inject(function(testService) {
+        expect(testService.double(2)).to.eql(4);
+    }));
+});`,
+                    testFramework: 'karma_tdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<FAILED::>');
+                    done();
+                });
+            });
+
+            it( 'should handle test errors', function(done){
+                runner.run({
+                    language: 'javascript',
+                    setup: '// @include-external angular@1.5',
+                    code: `
+angular.module('testModule', [])
+    .factory('testService', function() {
+        return {
+                double(input) {
+                    return input * 2;
+                }
+        };
+    });`,
+                    fixture: `
+suite("test", function(){
+    setup(module('testModule'));
+    test("should multiply", inject(function(testService) {
+        expect(testService.double(2)).to.eql(4);
+        expect(testServie.double(3)).to.eql(6);
+    }));
+});`,
+                    testFramework: 'karma_tdd'
+                },
+                function(buffer) {
+                    expect(buffer.stdout).to.contain('\n<FAILED::>');
+                    done();
                 });
             });
         });
