@@ -35,12 +35,16 @@ internal class PrintObserver: XCTestObservation {
       return testCase.name
     }
 
+    func format(_ str: String) -> String {
+        return str.replacingOccurrences(of: "\n", with: "<:LF:>")
+    }
+
     func testCaseWillStart(_ testCase: XCTestCase) {
         printAndFlush("<IT::>\(getMethodName(testCase))")
     }
 
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: UInt) {
-        printAndFlush("<ERROR::>\(getMethodName(testCase)) : \(description)")
+        printAndFlush("<ERROR::>\(getMethodName(testCase)) : \(format(description))")
     }
 
     func testCaseDidFinish(_ testCase: XCTestCase) {
