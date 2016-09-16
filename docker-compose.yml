@@ -142,7 +142,7 @@ services:
     command: bash
 
   swift-runner:
-    image: jasondebolt/swift-runner
+    image: codewars/swift-runner
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -496,7 +496,7 @@ services:
     entrypoint: 'bash /home/codewarrior/run_ocaml.sh mocha -t 5000 test/runners/ocaml_spec.js'
 
   swift:
-    image: jasondebolt/swift-runner
+    image: codewars/swift-runner
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -505,7 +505,7 @@ services:
     entrypoint: 'node run -l swift'
 
   swift_test:
-    image: jasondebolt/swift-runner
+    image: codewars/swift-runner
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
