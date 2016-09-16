@@ -133,7 +133,14 @@ try
         },
         inspect: function (obj)
         {
-            return util.inspect(obj);
+            // format arrays ourselves since long arrays end up getting broken out into separate lines, which is often a
+            // bad format for typical use cases.
+            if (Array.isArray(obj)) {
+                return "[" + obj.map(function(v) { return Test.inspect(v) }).join(", ") + "]";
+            }
+            else {
+                return util.inspect(obj);
+            }
         },
         log: function(msg, opts) {
             Test.display.log(msg, opts);
@@ -308,11 +315,11 @@ try
         },
         assertSimilar: function (actual, expected, msg, options)
         {
-            this.assertEquals(util.inspect(actual), util.inspect(expected), msg, options)
+            this.assertEquals(Test.inspect(actual), Test.inspect(expected), msg, options)
         },
         assertNotSimilar: function (actual, expected, msg, options)
         {
-            this.assertNotEquals(util.inspect(actual), util.inspect(expected), msg, options)
+            this.assertNotEquals(Test.inspect(actual), Test.inspect(expected), msg, options)
         },
         assertEquals: function (actual, expected, msg, options) {
             if (typeof(msg) == 'object') {
