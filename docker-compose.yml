@@ -141,6 +141,16 @@ services:
     entrypoint: ''
     command: bash
 
+  swift-runner:
+    image: codewars/swift-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript:
     image: codewars/node-runner
@@ -484,3 +494,21 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: 'bash /home/codewarrior/run_ocaml.sh mocha -t 5000 test/runners/ocaml_spec.js'
+
+  swift:
+    image: codewars/swift-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'node run -l swift'
+
+  swift_test:
+    image: codewars/swift-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/swift_spec.js'

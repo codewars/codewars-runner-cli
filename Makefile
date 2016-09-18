@@ -3,7 +3,7 @@ HOSTNAME=codewars
 # Building haskell and erlang images have been suspended (frozen) until they are able to be repaired
 # CONTAINERS=dotnet jvm node python ruby alt func dart systems erlang haskell
 #CONTAINERS=dotnet jvm node python ruby alt func dart systems rust julia crystal
-CONTAINERS=node dotnet jvm python ruby alt rust julia crystal ocaml
+CONTAINERS=node dotnet jvm python ruby alt rust julia crystal ocaml swift
 
 ALL_CONTAINERS=${CONTAINERS} base
 
@@ -48,6 +48,7 @@ pull:
 	docker pull codewars/julia-runner || true
 	docker pull codewars/crystal-runner || true
 	docker pull codewars/dart-runner || true
+	docker pull codewars/swift-runner || true
 
 save:
 	docker save codewars/base-runner > build/image.tar
@@ -63,3 +64,4 @@ save:
 	docker save codewars/dart-runner > build/image.tar
 	docker save codewars/crystal-runner > build/image.tar
 	docker save codewars/julia-runner > build/image.tar
+	docker save codewars/swift-runner > build/swift.tar
