@@ -44,6 +44,9 @@ WORKDIR $SWIFT_SOURCE_DIR/swift
 RUN utils/build-script --preset-file=codewars-build-presets.ini --preset=codewars_linux_1404 install_destdir=$SWIFT_GEN_DIR installable_package=$SWIFT_GEN_DIR/swift.tar.gz
 env PATH $SWIFT_GEN_DIR/usr/bin:$PATH
 
+# Remove swift source code to save space on the image.
+RUN rm -rf $SWIFT_SOURCE_DIR/*
+
 # Change permissions so we maybe don't have to use the --privileged docker run flag.
 RUN chmod -R a+rx $SWIFT_VOL/*
 
