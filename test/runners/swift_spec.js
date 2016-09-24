@@ -18,7 +18,6 @@ describe( 'swift runner', function(){
                 setup: "func foo() -> Int { return 999; }",
                 code: "print(foo())"
             }, function (buffer) {
-                console.log(buffer);
                 expect(buffer.stdout).to.equal("999\n");
                 done();
             });
@@ -230,6 +229,43 @@ describe( 'swift runner', function(){
                         done();
                     });
             });
+            it('should replace newlines in error messages with <:LF:>', function (done) {
+                var code = `
+                    class Calculator {
+                        func add(a:Int, b:Int) -> Int {
+                            // Force an error
+                            return -1
+                        }
+                    }
+                `
+                runner.run({
+                        language: 'swift',
+                        languageVersion: '3',
+                        code: code,
+                        fixture: `
+                            class CalculatorTest: XCTestCase {
+                              static var allTests = [
+                                    ("testAddCheck", testAddCheck),
+                              ]
+
+                              func testAddCheck() {
+                                let calc = Calculator()
+                                XCTAssertEqual(calc.add(a:1, b:2), 3, "calc.add(1, 2) \\n should be 3")
+                              }
+                            }
+
+                            XCTMain([
+                                testCase(CalculatorTest.allTests)
+                            ])
+                        `,
+                        testFramework: 'xctest'
+                    },
+                    function (buffer) {
+                        expect(buffer.stdout).to.contain('<FAILED::>testAddCheck')
+                        expect(buffer.stdout).to.contain('<ERROR::>testAddCheck : XCTAssertEqual failed: ("-1") is not equal to ("3") - calc.add(1, 2) <:LF:> should be 3\n')             
+                        done();
+                    });
+            });
             it('should handle multiple assertions', function (done) {
                 var code = `
                     class Calculator {
@@ -294,6 +330,56 @@ describe( 'swift runner', function(){
                         expect(buffer.stdout).to.contain('<ERROR::>testSubCheck')
                         expect(buffer.stdout).to.contain('<FAILED::>testSubCheck')
                         expect(buffer.stdout).to.contain('<IT::>testMulCheck')                   
+                        done();
+                    });
+            });
+            it('should display test results for multiple assertions in the same test method', function (done) {
+                var code = `
+                    class Calculator {
+                        func add(a:Int, b:Int) -> Int {
+                            return a + b
+                        }
+
+                        func sub(a:Int, b:Int) -> Int {
+                            // Let's force a test failure
+                            return 12345
+                        }
+
+                        func mul(a:Int, b:Int) -> Int {
+                            return a * b
+                        }
+                    }
+                `
+                runner.run({
+                        language: 'swift',
+                        languageVersion: '3',
+                        code: code,
+                        fixture: `
+                            class CalculatorTest: XCTestCase {
+
+                              static var allTests = [
+                                    ("testCalculator", testCalculator),
+                              ]
+
+                              func testCalculator() {
+                                let calc = Calculator()
+                                XCTAssertEqual(calc.add(a:1, b:2), 3, "calc.add(1, 2) should be 3")
+                                XCTAssertEqual(calc.sub(a:3, b:4), -1, "calc.sub(3, 4) should be -1")
+                              }
+                            }
+
+                            XCTMain([
+                                testCase(CalculatorTest.allTests)
+                            ])
+                        `,
+                        testFramework: 'xctest'
+                    },
+                    function (buffer) {
+                        expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest')
+                        expect(buffer.stdout).to.contain('<IT::>testCalculator')
+                        expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
+                        expect(buffer.stdout).to.contain('<FAILED::>XCTAssertEqual failed:')
+                        expect(buffer.stdout).to.contain('<COMPLETEDIN::>')                 
                         done();
                     });
             });

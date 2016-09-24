@@ -49,8 +49,9 @@ internal class PrintObserver: XCTestObservation {
 
     func testCaseDidFinish(_ testCase: XCTestCase) {
         let testRun = testCase.testRun!
-        let verb = testRun.hasSucceeded ? "<PASSED::>Test Passed" : "<FAILED::>\(getMethodName(testCase))"
-        printAndFlush("\(verb)")
+        if !testRun.hasSucceeded {
+            printAndFlush("<FAILED::>\(getMethodName(testCase))")
+        }
         printAndFlush("<COMPLETEDIN::>\(formatTimeInterval(testRun.totalDuration))")
     }
 
