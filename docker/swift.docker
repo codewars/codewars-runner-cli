@@ -33,8 +33,9 @@ WORKDIR $SWIFT_SOURCE_DIR
 RUN git clone https://github.com/apple/swift.git && ./swift/utils/update-checkout --clone
 RUN git clone https://github.com/ninja-build/ninja.git && cd ninja && git checkout release
 
-# Copy our custom codewars standard output file to the swift-corelibs-xctest directory.
+# Copy our custom codewars standard output files to the swift-corelibs-xctest directory.
 COPY frameworks/swift/xctest/PrintObserver.swift $SWIFT_SOURCE_DIR/swift-corelibs-xctest/Sources/XCTest/Private/PrintObserver.swift
+COPY frameworks/swift/xctest/XCTAssert.swift $SWIFT_SOURCE_DIR/swift-corelibs-xctest/Sources/XCTest/Public/XCTAssert.swift
 
 # Copy our custom build-presets file to the swift directory.
 COPY frameworks/swift/xctest/codewars-build-presets.ini $SWIFT_SOURCE_DIR/swift/codewars-build-presets.ini
@@ -43,6 +44,9 @@ COPY frameworks/swift/xctest/codewars-build-presets.ini $SWIFT_SOURCE_DIR/swift/
 WORKDIR $SWIFT_SOURCE_DIR/swift
 RUN utils/build-script --preset-file=codewars-build-presets.ini --preset=codewars_linux_1404 install_destdir=$SWIFT_GEN_DIR installable_package=$SWIFT_GEN_DIR/swift.tar.gz
 env PATH $SWIFT_GEN_DIR/usr/bin:$PATH
+
+# Remove swift source code to save space on the image.
+RUN rm -rf $SWIFT_SOURCE_DIR/*
 
 # Change permissions so we maybe don't have to use the --privileged docker run flag.
 RUN chmod -R a+rx $SWIFT_VOL/*
