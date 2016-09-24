@@ -58,6 +58,8 @@ ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
 RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
+RUN ln -s /home/codewarrior /workspace
+
 # ADD cli-runner and install node deps
 ADD . /runner
 

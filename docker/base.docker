@@ -23,7 +23,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 5.8.0
+ENV NODE_VERSION 6.6.0
 
 # Install NodeJS
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
@@ -52,6 +52,9 @@ CMD ["bash"]
 ENV NODE_ENV production
 ENTRYPOINT ["timeout", "15", "node"]
 
+# Install Prereqs
+RUN apt-get install -y python-minimal git software-properties-common
+
 # Install Redis
 RUN apt-get install -y redis-server
 
@@ -59,7 +62,19 @@ RUN apt-get install -y redis-server
 RUN apt-get install -y sqlite libsqlite3-dev
 
 # Install MongoDB
-RUN apt-get install -y mongodb
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+RUN echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+RUN apt-get update && apt-get install -y mongodb-org
+
+# Install MariaDB
+RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+RUN add-apt-repository 'deb http://mirror.jmu.edu/pub/mariadb/repo/5.5/ubuntu trusty main'
+RUN apt-get update && apt-get install -y mariadb-server
+RUN service mysql stop
+RUN mysql_install_db
+
+# Install Cairo graphics
+RUN apt-get install -y libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 
 RUN mkdir /.npm-global
 RUN npm config set prefix '/.npm-global'
@@ -69,8 +84,3 @@ ENV PATH /.npm-global/bin:$PATH
 # Install Node testing frameworks & additional frameworks
 RUN npm install -g chai mocha
 
-# Install Python Basics
-RUN apt-get install -y python-minimal
-
-# Install Git
-RUN apt-get -y install git

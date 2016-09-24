@@ -83,7 +83,7 @@ Many languages are currently supported in various states of completeness. This l
 | Dart           | 1.16.1        | ✓            | test             | Kumite Only   |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
 | Erlang         | 18            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |
-| F#             | 4.0           | ✓            | Fuchu            | Yes           |                | dotnet-runner  | Fuchu        | Tests should be placed in a module called "Tests", in a Fuchu testList  |
+| F#             | 4.0           | ✓            | fuchu            | fuchu         |                | dotnet-runner  | Fuchu        | Tests should be placed in a module called "Tests", in a Fuchu testList  |
 | Go             | 1.3.1         | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
 | Groovy         |               | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
 | Haskell        | 7.6.3         | ✓            | hspec!!!         | hspec         | hspec          | haskell-runner | hspec        | An older version is running on CW & Qualified that is fully functional  |
@@ -97,7 +97,7 @@ Many languages are currently supported in various states of completeness. This l
 | Lisp           |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
 | Lua            |               | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
 | ObjC           |               | ???          | ???              |               |                |                |              |                                                                         |
-| OCAML          | 4.02.3        | ✓            | oUnit            |               |                | ocaml-runner    |             | Tests should be placed in a module called "Tests", in an array of OUnit labels named "suite" |
+| OCAML          | 4.02.3        | ✓            | ounit            | ounit         |                | ocaml-runner    |             | Tests should be placed in a module called "Tests", in an array of OUnit labels named "suite" |
 | Perl           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
 | Php            | 7.0           | ✓            | cw-2, phpunit    | phpunit        | phpunit, cw-2 | alt-runner     |              |                                                                         |
 | Python         | 2.7.6         | ✓            | cw-2, unittest   | cw-2          | cw-2, unittest | python-runner  | cw-2         |                                                                         |
@@ -108,7 +108,7 @@ Many languages are currently supported in various states of completeness. This l
 | Rust           | 1.10.0        | ✓            | rust             | rust          |                |                |              |                                                                         |
 | Scala          | 2.11.2        | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
 | Scss/Sass      |               |  ???         | ???              |               |                |                |              |                                                                         |
-| Swift          |               | ???          | ???              |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
+| Swift          | 3.0-dev       | ✓            | cw-2, xctest     | xctest        |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
 | TypeScript     | 1.8.10        | ✓            | mocha            | mocha         |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
 
 ## Setup
