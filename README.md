@@ -79,7 +79,7 @@ Many languages are currently supported in various states of completeness. This l
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2          | cw-2           | node-runner    | cw-2         |                                                                         |
 | C++            | 14            | ✓            | igloo            |               |                | systems-runner |              |                                                                         |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
-| Crystal        | 0.18.7        | ✓            | spec             | spec          | spec           | crystal-runner | spec         |                                                                         |
+| Crystal        | 0.19.2        | ✓            | spec             | spec          | spec           | crystal-runner | spec         |                                                                         |
 | Dart           | 1.16.1        | ✓            | test             | Kumite Only   |                | dart-runner    | test         |                                                                         |
 | Elixir         | 1.2.4         | ✓            | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
 | Erlang         | 18            | ✓            |                  |               |                | erlang-runner  |              |                                                                         |

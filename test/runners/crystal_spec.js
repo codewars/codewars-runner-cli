@@ -43,13 +43,12 @@ describe('crystal runner', function () {
             });
             it('should handle errored code', function (done) {
                 runner.run({language: 'crystal',
-                        code: '$a = 1',
+                        code: 'A = 1',
                         fixture: 'describe "test" do\n' +
-                        'it("test2") { $a.should eq 1 }\n' +
-                        'it("test2") { $a.idontexist()}\n' +
+                        'it("test2") { A.should eq 1 }\n' +
+                        'it("test2") { A.idontexist()}\n' +
                         'end',
                         testFramework: 'spec'}, function (buffer) {
-                    console.log(buffer);
                         expect(buffer.stdout).to.eq('');
                         expect(buffer.stderr).to.contain('undefined method');
                         done();

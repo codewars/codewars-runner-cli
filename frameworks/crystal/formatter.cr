@@ -37,8 +37,12 @@ module Spec
     end
 
     def report(result)
-      opts = result.exception
-      ex = result.exception.is_a?(AssertionFailed) ? result.exception as AssertionFailed : result
+      ex = if result.exception.is_a?(AssertionFailed)
+        result.exception.as(AssertionFailed)
+      else
+        result
+      end
+
       source_line = Spec.read_line(ex.file, ex.line) rescue nil
 
       msg = Spec.format_message(source_line ? source_line.strip : result.description)
