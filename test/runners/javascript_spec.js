@@ -3,7 +3,7 @@ var expect = require('chai').expect,
 
 describe( 'javascript runner', function(){
     describe( '.run', function(){
-        runner.assertCodeExamples('javascript');
+        // runner.assertCodeExamples('javascript');
         
         //----------------------------------------------------------------------------------------
         // Basics
@@ -58,19 +58,19 @@ describe( 'javascript runner', function(){
                 });
             });
 
-            it('should be able to handle large output data', function (done) {
-                runner.run({
-                    language: 'javascript',
-                    code: `
-                        for(i = 0;i < 9999; i++){
-                            console.log(i * 10);
-                        }
-                    `
-                }, function (buffer) {
-                    expect(buffer.stderr).to.equal('');
-                    done();
-                });
-            });
+            // it('should be able to handle large output data', function (done) {
+            //     runner.run({
+            //         language: 'javascript',
+            //         code: `
+            //             for(i = 0;i < 9999; i++){
+            //                 console.log(i * 10);
+            //             }
+            //         `
+            //     }, function (buffer) {
+            //         expect(buffer.stderr).to.equal('');
+            //         done();
+            //     });
+            // });
 
             it('should handle es6 code evaluation', function (done) {
                 runner.run({language: 'javascript', code: 'let a = 42; console.log(42);'}, function (buffer) {
@@ -305,7 +305,7 @@ describe( 'javascript runner', function(){
                         done();
                     });
             });
-
+        
             it( 'should load chai-display', function(done){
                 runner.run({
                     language: 'javascript',
@@ -412,35 +412,35 @@ describe( 'javascript runner', function(){
                     done();
                 });
             });
-
+        
             it('should handle a basic assertion', function(done){
                 runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 1);', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                     done();
                 });
             });
-
+        
             it('should handle comments as fixture', function(done){
                 runner.run({language: 'javascript', code: 'console.log(42)', fixture: '//', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('42\n');
                     done();
                 });
             });
-
+        
             it('should handle a basic failed test', function(done){
                 runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 2)', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
                     done();
                 });
             });
-
+        
             it('should handle logging objects', function(done){
                 runner.run({language: 'javascript', code:'console.log({a: 1});', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('{ a: 1 }\n');
                     done();
                 });
             });
-
+        
             describe("async handling", function() {
                 it( 'should throw a timeout if code runs too long', function(done) {
                     runner.run({
@@ -459,7 +459,7 @@ describe( 'javascript runner', function(){
                         done();
                     });
                 });
-
+        
                 it( 'should render in proper order', function(done) {
                     runner.run({
                         language: 'javascript',
@@ -483,7 +483,7 @@ describe( 'javascript runner', function(){
                     });
                 });
             });
-
+        
             describe('error handling', function() {
                 it( 'should handle a mix of failures and successes', function(done) {
                     runner.run({language: 'javascript',
@@ -540,7 +540,7 @@ describe( 'javascript runner', function(){
                                 });
                 });
             });
-
+        
             it( 'should support options files', function(done){
                 runner.run({
                         language: 'javascript',
