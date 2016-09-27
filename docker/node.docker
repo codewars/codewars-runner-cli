@@ -35,7 +35,7 @@ ADD . /runner
 ADD ./frameworks/javascript/display.js /runner/node_modules/display/index.js
 ADD ./frameworks/javascript/chai-display.js /runner/node_modules/chai-display/index.js
 ADD ./frameworks/javascript/display.js /runner/node_modules/chai-display/display.js
-ADD ./frameworks/javascript/require-url.js /runner/node_modules/require-url/index.js
+#ADD ./frameworks/javascript/require-url.js /runner/node_modules/require-url/index.js
 
 # add typings into a cleaner path for inclusion
 ADD typings/main/ambient /runner/typings

@@ -1,3 +1,6 @@
+# flush output when using rspec to support realtime stdout.
+$stdout.sync = true
+
 class CwRSpecFormatter
   LF_TOKEN = "<:LF:>"
 
