@@ -3,7 +3,7 @@ HOSTNAME=codewars
 # Building haskell and erlang images have been suspended (frozen) until they are able to be repaired
 # CONTAINERS=dotnet jvm node python ruby alt func dart systems erlang haskell
 #CONTAINERS=dotnet jvm node python ruby alt func dart systems rust julia crystal
-CONTAINERS=node dotnet jvm python ruby alt rust julia crystal ocaml swift
+CONTAINERS=node dotnet jvm python ruby alt rust julia crystal ocaml erlang swift
 
 # recent containers should be updated when adding or modifying a language, so that
 # the travis build process will test it. The process cant test all languages
