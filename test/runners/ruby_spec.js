@@ -102,9 +102,9 @@ describe('ruby runner', function () {
         describe('rspec', function () {
             it('should handle a basic assertion', function (done) {
                 runner.run({language: 'ruby',
-                        code: 'a = 1',
+                        code: '$a = 1',
                         fixture: 'describe "test" do\n' +
-                            'it("test2") { expect(1).to eq(1)}\n' +
+                            'it("test2") { expect($a).to eq(1)}\n' +
                             'end',
                         testFramework: 'rspec'}, function (buffer) {
                         expect(buffer.stdout).to.equal('<DESCRIBE::>test\n<IT::>test2\n<PASSED::>Test Passed\n<COMPLETEDIN::>\n');
@@ -114,9 +114,9 @@ describe('ruby runner', function () {
             });
             it('should support let', function (done) {
                 runner.run({language: 'ruby',
-                        code: 'a = 1',
+                        code: '$a = 1',
                         fixture: ['describe "test" do',
-                            'let(:b) { a }',
+                            'let(:b) { $a }',
                             'it("test2") { expect(b).to eq(1)}',
                             'end'].join('\n'),
                         testFramework: 'rspec'}, function (buffer) {
@@ -127,9 +127,9 @@ describe('ruby runner', function () {
             });
             it('should handle a basic failed assertion', function (done) {
                 runner.run({language: 'ruby',
-                        code: 'a = 1',
+                        code: '$a = 1',
                         fixture: 'describe "test" do\n' +
-                            'it("test2") { expect(1).to eq(2)}\n' +
+                            'it("test2") { expect($a).to eq(2)}\n' +
                             'end',
                         testFramework: 'rspec'}, function (buffer) {
                         expect(buffer.stdout).to.contain('<DESCRIBE::>test\n<IT::>test2');

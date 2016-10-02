@@ -6,30 +6,32 @@ Ruby MRI 2.3 running within a Dockerized Ubuntu 14.04 container.
 
 The following gems are already installed and available for use. 
 
-- pry
+- ably
+- amqp
 - capybara
-- rails
-- concerning
 - celluloid
-- sinatra
+- concerning
+- concurrent-ruby
+- elasticsearch
 - eventmachine
-- timers
 - factory_girl
+- functional-ruby
+- googlecharts
 - mongo
 - mongoid
-- redis
-- elasticsearch
 - nokogiri
-- sequel
-- webmock
-- timecop
+- pry
+- rails
+- redis
+- rspec
+- rspec-its
+- rspec-rails
 - ruby-graphviz
-- googlecharts
-- ffi-rzmq
-- bunny
-- amqp
-- functional-ruby
-- concurrent-ruby
+- sequel
+- sinatra
+- timecop
+- timers
+- webmock
 
 #### Sciruby Based Gems:
 
@@ -61,6 +63,6 @@ The following gems are already installed and available for use.
 
 # Timeout
 
-The sandbox environment will timeout the code within 7 seconds. In the future, as Codewars expands its abilities, this limitation may be increased in order to handle more complex kata/code challenges.
+The sandbox environment will timeout the code within 8 seconds.
  
 > For more information, view the [docker file](https://github.com/Codewars/codewars-runner-cli/blob/master/docker/ruby.docker)

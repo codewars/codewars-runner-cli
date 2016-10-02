@@ -12,7 +12,7 @@ FROM codewars/base-runner
 # Install Node manager so that we can have multiple versions of node
 RUN npm -g install n
 RUN n 0.10.33
-RUN n 6.0.0
+RUN n 6.6.0
 
 # install TypeScript type definitions
 RUN npm install -gq typings
@@ -33,17 +33,22 @@ ADD . /runner
 
 # add display as if it is a node module, so that it can easily be included via require("display")
 ADD ./frameworks/javascript/display.js /runner/node_modules/display/index.js
+ADD ./frameworks/javascript/chai-display.js /runner/node_modules/chai-display/index.js
+ADD ./frameworks/javascript/display.js /runner/node_modules/chai-display/display.js
+#ADD ./frameworks/javascript/require-url.js /runner/node_modules/require-url/index.js
 
 # add typings into a cleaner path for inclusion
 ADD typings/main/ambient /runner/typings
+
+RUN ln -s /home/codewarrior /workspace
 
 WORKDIR /runner
 ENV NODE_PATH /usr/lib/node_modules:/runner/node_modules
 
 # Set environment variables
+ENV HOME /home/codewarrior
 USER codewarrior
 ENV USER codewarrior
-ENV HOME /home/codewarrior
 
 # Run the test suite to make sure this thing works
 RUN mocha -t 5000 test/runners/javascript_spec.js

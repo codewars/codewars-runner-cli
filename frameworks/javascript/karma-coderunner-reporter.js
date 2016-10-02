@@ -24,7 +24,7 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
 	};
 
 	this.onBrowserError = function(browser, error) {
-		print('FAILED', 'Error:\n' + formatError(error));
+		print('ERROR', 'Error:\n' + formatError(error));
 	};
 
 	this.onBrowserLog = function(browser, log, type) {

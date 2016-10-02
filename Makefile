@@ -1,9 +1,12 @@
 HOSTNAME=codewars
 
 # Building haskell and erlang images have been suspended (frozen) until they are able to be repaired
-# CONTAINERS=dotnet jvm node python ruby alt func dart systems erlang haskell
-#CONTAINERS=dotnet jvm node python ruby alt func dart systems rust julia crystal
-CONTAINERS=node dotnet jvm python ruby alt rust julia crystal ocaml
+CONTAINERS=node dotnet jvm python ruby alt rust julia systems dart crystal ocaml swift
+
+# recent containers should be updated when adding or modifying a language, so that
+# the travis build process will test it. The process cant test all languages
+# without timing out so this is required to get passed that issue.
+RECENT_CONTAINERS=ocaml node julia dotnet
 
 ALL_CONTAINERS=${CONTAINERS} base
 
@@ -11,14 +14,15 @@ ALL_CONTAINERS=${CONTAINERS} base
 
 all: ${CONTAINERS}
 
+recent: ${RECENT_CONTAINERS}
+
 base:
 	cp docker/$@.docker ./Dockerfile
 	docker build -t $(HOSTNAME)/$@-runner .
 
-${CONTAINERS}: base
+${CONTAINERS}:
 	cp docker/$@.docker ./Dockerfile
 	docker build -t $(HOSTNAME)/$@-runner .
-
 
 # Kill all of the in-flight and exited docker containers
 docker_rm:
@@ -35,19 +39,21 @@ deep-clean: docker_rmi
 
 pull:
 	docker pull codewars/base-runner
-	docker pull codewars/ruby-runner
 	docker pull codewars/node-runner
+	docker pull codewars/ruby-runner
 	docker pull codewars/python-runner
 	docker pull codewars/dotnet-runner
 	docker pull codewars/jvm-runner
+	docker pull codewars/haskell-runner
 	docker pull codewars/systems-runner
-	docker pull codewars/func-runner
 	docker pull codewars/erlang-runner
 	docker pull codewars/alt-runner
 	docker pull codewars/rust-runner || true
 	docker pull codewars/julia-runner || true
 	docker pull codewars/crystal-runner || true
 	docker pull codewars/dart-runner || true
+	docker pull codewars/ocaml-runner || true
+	docker pull codewars/swift-runner || true
 
 save:
 	docker save codewars/base-runner > build/image.tar
@@ -63,3 +69,4 @@ save:
 	docker save codewars/dart-runner > build/image.tar
 	docker save codewars/crystal-runner > build/image.tar
 	docker save codewars/julia-runner > build/image.tar
+	docker save codewars/swift-runner > build/swift.tar

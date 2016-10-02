@@ -5,6 +5,8 @@ require 'delegate'
 require 'set'
 require 'uri'
 
+$stdout.sync = true
+
 NameError
 class Test
 

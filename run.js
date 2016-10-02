@@ -39,6 +39,12 @@ var run = require('./lib/runner').run,
                 choices: ['default', 'json'],
                 abbr: 'fmt'
             },
+            services: {
+                abbr: 'srv',
+                help: 'Enable a set of services, such as redis or mongodb. Multiple options can be specified',
+                list: true,
+                choices: ['mongodb', 'redis']
+            },
             debug: {
                 abbr: 'd',
                 help: 'Print debugging info',
