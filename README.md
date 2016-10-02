@@ -108,6 +108,8 @@ Many languages are currently supported in various states of completeness. This l
 | Rust           | 1.10.0        | ✓            | rust             | rust          |                |                |              |                                                                         |
 | Scala          | 2.11.2        | ✓            |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
 | Scss/Sass      |               |  ???         | ???              |               |                |                |              |                                                                         |
+| SQL            | SQLite3       | ✓            | rspec            |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
+| SQL            | Postgres 9.6  | ✓            | rspec            |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
 | Swift          | 3.0-dev       | ✓            | cw-2, xctest     | xctest        |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
 | TypeScript     | 1.8.10        | ✓            | mocha            | mocha         |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
 
