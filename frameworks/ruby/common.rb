@@ -13,15 +13,15 @@ end
 
 class Display
   class << self
-    def table(data, label: "Data")
-      log(data.to_json, label: label)
+    def table(data, label: "Data", tab: false)
+      print(tab ? "TAB" : "LOG", data.to_json, mode: "TABLE", label: label)
     end
 
-    def log(msg, mode: "", label: "")
-      write('LOG', msg, mode: mode, label: label)
+    def log(msg, label = "", mode = "")
+      print('LOG', msg, mode: mode, label: label)
     end
 
-    def write(type, msg, mode: "", label: "")
+    def print(type, msg, mode: "", label: "")
       puts format_msg("<#{type.upcase}:#{mode.upcase}:#{label}>#{msg}")
     end
 
