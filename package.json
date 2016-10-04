@@ -128,6 +128,7 @@
     "should": "^8.3.1",
     "sinon": "^1.17.5",
     "socketio": "^1.0.0",
+    "sql": "^0.71.0",
     "sqlite3": "^3.1.4",
     "superagent": "^2.2.0",
     "supertest": "^2.0.0",
