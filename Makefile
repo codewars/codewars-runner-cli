@@ -31,7 +31,7 @@ docker_rm:
 
 # Kill all docker images
 docker_rmi: docker_rm
-	[ ! -n "$(shell docker images -q)" ] || docker images -q | xargs -n 1 docker rmi -f
+	docker rmi $(docker images -q -f dangling=true)
 
 clean: docker_rm_exited docker_rmi_temporary
 
