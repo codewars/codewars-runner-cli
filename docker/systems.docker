@@ -7,7 +7,7 @@
 FROM codewars/base-runner
 
 # Install Tiny C Compiler
-# RUN apt-get -y install tcc
+RUN apt-get -y install tcc
 
 # Needed to run add-apt-repository
 RUN apt-get -y install software-properties-common
