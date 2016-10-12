@@ -28,4 +28,4 @@ char * format(const char * format_string, ...);
   if((value1) == (value2)) __CODEWARS__stdout__("<PASSED::>Test Passed\n",0); \
   else __CODEWARS__fail__(__CODEWARS__default_string__("Values should not equal", ##message, 0));
 
-#endif _CODEWARS_TEST_H_
+#endif // _CODEWARS_TEST_H_
