@@ -365,6 +365,15 @@ services:
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/cpp_spec.js'
 
+  c_test:
+    image: codewars/systems-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/c_spec.js'
+
   csharp:
     image: codewars/dotnet-runner
     volumes:

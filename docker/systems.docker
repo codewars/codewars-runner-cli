@@ -42,9 +42,10 @@ ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
 RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
+RUN ln -s /home/codewarrior /workspace
+
 # ADD cli-runner and install node deps
 ADD . /runner
-
 WORKDIR /runner
 
 # Run the test suite to make sure this thing works
@@ -53,8 +54,8 @@ USER codewarrior
 # Set environment variables
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-#RUN mocha -t 5000 test/runners/{gas,arm,nasm,cpp,c}_spec.js
-RUN mocha -t 5000 test/runners/cpp_spec.js
+
+RUN mocha -t 5000 test/runners/{c,cpp}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
