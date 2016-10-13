@@ -8,4 +8,4 @@ services:
   - docker
 
 script:
-  - make all
+  - make recent
