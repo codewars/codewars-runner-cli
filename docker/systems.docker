@@ -6,9 +6,6 @@
 # Pull base image.
 FROM codewars/base-runner
 
-# Install Tiny C Compiler
-# RUN apt-get -y install tcc
-
 # Needed to run add-apt-repository
 RUN apt-get -y install software-properties-common
 
@@ -19,6 +16,20 @@ RUN apt-get -y install clang-3.6 lldb-3.6
 
 # Install libc++
 RUN apt-get -y install libc++-dev
+
+# Install Criterion Framework
+RUN apt-get -y install cmake git
+RUN git clone --branch=master https://github.com/Snaipe/Criterion && \
+    cd Criterion && \
+    git checkout v2.2.2 && \
+    mkdir build && cd build && \
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_INSTALL_LIBDIR=lib \
+          .. && \
+    make && \
+    make install && \
+    cd ../../ && rm -Rf Criterion
 
 # NASM
 # RUN apt-get -y install nasm
