@@ -54,7 +54,7 @@ USER codewarrior
 ENV USER codewarrior
 ENV HOME /home/codewarrior
 #RUN mocha -t 5000 test/runners/{gas,arm,nasm,cpp,c}_spec.js
-RUN mocha -t 5000 test/runners/cpp_spec.js
+RUN mocha -t 5000 test/runners/{cpp,c}_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
