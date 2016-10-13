@@ -29,6 +29,8 @@ end
 `
 
 describe('sql runner', function () {
+    runner.assertCodeExamples('sql');
+
     describe('.run', function () {
         
         describe('solution only', function() {
@@ -43,7 +45,7 @@ describe('sql runner', function () {
                     done();
                 });
             });
-    
+
             it("should support postgres", function(done) {
                 runner.run({
                     language: 'sql',
@@ -71,7 +73,7 @@ describe('sql runner', function () {
                 });
             });
 
-            it("should support sqlite", function(done) {
+            it("should support postgres", function(done) {
                 runner.run({
                     language: 'sql',
                     languageVersion: 'postgres',
