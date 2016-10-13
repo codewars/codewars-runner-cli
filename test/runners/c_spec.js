@@ -59,7 +59,7 @@ describe('.run', function() {
                 fixture: `#include <criterion/criterion.h>
                         int square(int);
 
-                        Test(test, square) {
+                        Test(basic_test, should_square_a_number) {
                             cr_assert_eq(25,square(5));
                         }`
             }, function(buffer) {
@@ -86,12 +86,11 @@ describe('.run', function() {
         it('should handle basic failures', function(done) {
             runner.run({
                 language: 'c',
-                setup: `int square(int a) { return a * a ; }`,
-                code: ' ',
+                code: `int square(int a) { return a * a ; }`,
                 fixture: `#include <criterion/criterion.h>
                         int square(int);
 
-                        Test(test, basic_failure) {
+                        Test(basic_failure, should_raise_a_failure) {
                             cr_assert_eq(25,square(6));
                         }`
             }, function(buffer) {
@@ -103,17 +102,65 @@ describe('.run', function() {
         it('should support multiple asserts', function(done) {
             runner.run({
                 language: 'c',
-                setup: `int square(int a) { return a * a ; }`,
-                code: ' ',
+                code: `int square(int a) { return a * a ; }`,
                 fixture: `#include <criterion/criterion.h>
                         int square(int);
 
-                        Test(test, support_multiple_assert) {
+                        Test(multiple_assert_test, should_support_multiple_asserts) {
                             cr_assert_eq(36,square(6));
                             cr_assert_neq(36,square(5));
+                            cr_assert_eq(36,square(5));
                         }`
             }, function(buffer) {
                 expect(buffer.stdout.match(/<PASSED::>/g).length).to.equal(2);
+                expect(buffer.stdout.match(/<FAILED::>/g).length).to.equal(1);
+                done();
+            });
+        });
+        it('should support multiple tests on one suite', function(done) {
+            runner.run({
+                language: 'c',
+                code: `int square(int a) { return a * a ; }`,
+                fixture: `#include <criterion/criterion.h>
+                        int square(int);
+
+                        Test(square_test, should_square_a_number) {
+                            cr_assert_eq(36,square(6));
+                            cr_assert_neq(36,square(5));
+                        }
+
+                        Test(square_test, should_square_number_5) {
+                            cr_assert_eq(25,square(5));
+                        }
+                        `
+            }, function(buffer) {
+                expect(buffer.stdout.match(/<DESCRIBE::>/g).length).to.equal(1);
+                expect(buffer.stdout.match(/<IT::>/g).length).to.equal(2);
+                expect(buffer.stdout.match(/<PASSED::>/g).length).to.equal(3);
+                done();
+            });
+        });
+        it('should support multiple test suites', function(done) {
+            runner.run({
+                language: 'c',
+                code: `int square(int a) { return a * a ; }`,
+                fixture: `#include <criterion/criterion.h>
+                        int square(int);
+
+                        Test(basic_test, should_multiply) {
+                            cr_assert_eq(36,6*6);
+                            cr_assert_neq(36,5*5);
+                        }
+
+                        Test(square_test, should_square_a_number) {
+                            cr_assert_eq(36,square(6));
+                            cr_assert_eq(36,square(5));
+                        }
+                        `
+            }, function(buffer) {
+                expect(buffer.stdout.match(/<DESCRIBE::>/g).length).to.equal(2);
+                expect(buffer.stdout.match(/<PASSED::>/g).length).to.equal(3);
+                expect(buffer.stdout.match(/<FAILED::>/g).length).to.equal(1);
                 done();
             });
         });
