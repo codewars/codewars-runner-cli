@@ -1,0 +1,62 @@
+criterion:
+  bug fixes:
+    initial: |-
+      int multiply(int a, int b ) {
+        int m = a * b;
+      }
+    answer: |-
+      int multiply(int a, int b ) {
+        int m = a * b;
+        return m;
+      }
+    fixture: |-
+      #include <criterion/criterion.h>
+      int multiply(int,int);
+
+      Test(the_multiply_function, should_pass_all_the_tests_provided) {
+          cr_assert_eq(multiply(1, 1), 1);
+          cr_assert_eq(multiply(2, 3), 6);
+          cr_assert_eq(multiply(3, 2), 6);
+          cr_assert_eq(multiply(3, 5), 15);
+          cr_assert_eq(multiply(3, 5), 15);
+          cr_assert_eq(multiply(4, 7), 28);
+          cr_assert_eq(multiply(7, 4), 28);
+          cr_assert_eq(multiply(7, 0), 0);
+      }
+  algorithms:
+    initial: |-
+      // check whether an input alphabet is a vowel or not.
+      // it should return 1 if it is a vovel, 0 if not.
+      int is_vowel(char a)
+      {
+      }
+    answer: |-
+      int is_vowel(char a)
+      {
+          if (a >= 'A' && a <= 'Z')
+             a = a + 'a' - 'A';
+
+          if (a == 'a' || a == 'e' || a == 'i' || a == 'o' || a == 'u')
+             return 1;
+
+          return 0;
+      }
+    fixture: |-
+      #include <criterion/criterion.h>
+      int is_vowel(char a);
+
+      Test(is_vowel, should_pass_all_the_tests_provided) {
+          cr_assert(is_vowel('a'));
+          cr_assert(is_vowel('A'));
+          cr_assert(is_vowel('i'));
+          cr_assert(is_vowel('O'));
+          cr_assert_not(is_vowel('Z'));
+          cr_assert_not(is_vowel('s'));
+          cr_assert_not(is_vowel('d'));
+          cr_assert_not(is_vowel('0'));
+          cr_assert_not(is_vowel('?'));
+          cr_assert_not(is_vowel('='));
+          cr_assert_not(is_vowel('\n'));
+          cr_assert_not(is_vowel('_'));
+          cr_assert_not(is_vowel('>'));
+      }

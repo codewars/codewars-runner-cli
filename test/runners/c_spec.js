@@ -3,6 +3,8 @@ var runner = require('../runner');
 
 describe('c runner', function() {
 describe('.run', function() {
+    runner.assertCodeExamples('c');
+
     it('should handle basic code evaluation', function(done) {
         var solution = `
                 #include <stdio.h>
