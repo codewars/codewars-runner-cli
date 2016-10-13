@@ -164,6 +164,56 @@ describe('.run', function() {
                 done();
             });
         });
+        it('should handle a crash', function(done) {
+            runner.run({
+                language: 'c',
+                code: ' ',
+                fixture: `
+                    #include <criterion/criterion.h>
+
+                    Test(misc, crash_dereference) {
+                        int *i = NULL;
+                        *i = 42; // CRASH: dereference i on writing
+                    }
+                    `
+            }, function(buffer) {
+                expect(buffer.stdout).to.contain('<FAILED::>Test Crashed');
+                done();
+            });
+        });
+        it('should handle a timeout', function(done) {
+            runner.run({
+                language: 'c',
+                code: ' ',
+                fixture: `
+                    # include <unistd.h>
+                    #include <criterion/criterion.h>
+
+                    Test(timeout, should_fail_with_a_timeout, .timeout = 1.) {
+                        sleep(10);
+                    }
+                    `
+            }, function(buffer) {
+                expect(buffer.stdout).to.contain('<FAILED::>Test Timedout');
+                done();
+            });
+        });
+        it('should replace message line feeds', function(done) {
+            runner.run({
+                language: 'c',
+                code: ' ',
+                fixture: `
+                    #include <criterion/criterion.h>
+
+                    Test(timeout, simple) {
+                        cr_assert(0, "This message contains \\n 2 \\n line feeds");
+                    }
+                    `
+            }, function(buffer) {
+                expect(buffer.stdout.match(/<:LF:>/g).length).to.equal(2);
+                done();
+            });
+        });
     });
 });
 });
