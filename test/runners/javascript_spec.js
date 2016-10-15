@@ -85,7 +85,7 @@ describe( 'javascript runner', function(){
                     languageVersion: '6.x/babel',
                     code: 'var a = function(){returns 42;};\na();'
                 }, function (buffer) {
-                    expect(buffer.stderr).to.contain('kata.js: Unexpected token:27');
+                    expect(buffer.stderr).to.contain('Unexpected token');
                     done();
                 });
             });
@@ -97,9 +97,9 @@ describe( 'javascript runner', function(){
                     code: `
                         var mongoose = require('mongoose');
                         mongoose.Promise = global.Promise;
-                        mongoose.connect('mongodb://localhost/test');
+                        mongoose.connect('mongodb://localhost/spec');
                         var Cat = mongoose.model('Cat', { name: String });
-        
+            
                         var kitty = new Cat({ name: 'Zildjian' });
                         kitty.save(function (err) {
                           if (err) {
@@ -123,10 +123,10 @@ describe( 'javascript runner', function(){
                     code: `
                         var redis = require('redis'),
                             Promise = require('bluebird');
-        
+            
                         Promise.promisifyAll(redis.RedisClient.prototype);
                         var client = redis.createClient();
-        
+            
                         client.setAsync("foo", "bar").then(_ => {
                             client.getAsync("foo").then( v => {
                                 console.log(v);
@@ -203,7 +203,7 @@ describe( 'javascript runner', function(){
                               console.log(row.id + ": " + row.info);
                           });
                         });
-        
+            
                         db.close();
                     `
                 }, function (buffer) {
