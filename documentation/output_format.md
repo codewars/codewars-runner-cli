@@ -53,7 +53,61 @@ statement, the 2nd completes the nested DESCRIBE and the 3rd completes the top l
 #### <COMPLETEDIN::> Details
 
 The value of COMPLETEDIN should be time spent executing the related statement, in milliseconds. It is not required
-to support time. `<COMPLETEDIN::>` is valid on its own, and in that case it is only used to terminate the current statement. 
+to support time. `<COMPLETEDIN::>` is valid on its own, and in that case it is only used to terminate the current statement.
+ 
+### Advanced Formatting
+
+So far the basic formatting needed to be supported by a language has been discussed. The following
+details more advanced features.
+
+#### Advanced Format Schema
+The basic `<[TAG]::>[VALUE]` tag format described previously can be expanded to support modes and labels. 
+This is done using the following convention: `<[TAG]:[MODE]:[LABEL]>[VALUE]`. Modes and labels are optional.
+
+For example. To write a log message with a custom container label. You can do this: `<LOG::My Label>My log message`.
+In this example, we provided a tag (required) and a label, and skipped using a mode. 
+ 
+#### What are modes?
+A mode is used to output richer content. For example there is a TABLE mode which parses the value as JSON and renders a 
+table out of it.
+
+#### Advanced Tags
+
+##### LOG
+Normally each unformatted line is considered a "LOG" message and is written to STDOUT. Visually this
+output will be presented withint a Log container. Multiple log lines are grouped together automatically.
+
+In order to access richer log output content (via modes), you will need to explicitely use a LOG tag. 
+
+##### OUT
+Same as LOG, however it does not wrap the output within a container UI.
+
+##### TAB
+Should be used directly after a LOG tag. Will add a 2nd tab to the log container. Otherwise treated the
+same as a LOG tag. You can add multiple tabs to a LOG container.
+
+```
+<LOG::Tab 1>This is content displayed within the first tab.<:LF:>This is a 2nd line
+<TAB::Tab 2>This is content displayed within the 2nd tab.
+```
+
+#### Advanced Modes
+
+##### TABLE
+##### CHART
+##### DIFF
+##### MARKDOWN
+##### JSON
+##### HIGHLIGHT
+##### SCRIPT
+
+In this mode, the tag VALUE will be considered a URL and a script will automatically be
+loaded on the page. A specific file will only be loaded once.
+
+```
+<LOG:SCRIPT:>https://raw.githubusercontent.com/name/repo/file.js
+```
+
 
 ### Why the custom format?
 

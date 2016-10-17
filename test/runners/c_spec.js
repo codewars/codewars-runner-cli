@@ -101,6 +101,7 @@ describe('.run', function() {
                 done();
             });
         });
+
         it('should support multiple asserts', function(done) {
             runner.run({
                 language: 'c',
@@ -196,7 +197,7 @@ describe('.run', function() {
                     }
                     `
             }, function(buffer) {
-                expect(buffer.stdout).to.contain('<FAILED::>Test Timedout');
+                expect(buffer.stdout).to.contain('<FAILED::>Test Timed Out');
                 done();
             });
         });

@@ -130,6 +130,7 @@ RUN gem install stuff-classifier --no-ri --no-rdoc
 RUN gem install symbolic --no-ri --no-rdoc
 RUN gem install unit --no-ri --no-rdoc
 
+RUN gem install chronic --no-ri --no-rdoc
 
 # partner packages
 RUN gem install ably --no-ri --no-rdoc
