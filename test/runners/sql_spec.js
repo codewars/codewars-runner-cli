@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 var itemsData = `
-# database: spec
+# @use-database spec
 DB.drop_table :items rescue nil
 DB.create_table :items do
   primary_key :id
