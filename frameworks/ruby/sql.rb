@@ -5,20 +5,39 @@ require 'active_support/core_ext/object/blank'
 require 'hashie'
 require_relative 'sql/csv_importer'
 
-$sql = File.read('/home/codewarrior/solution.txt')
-$sql_cleaned = $sql.gsub(/(\/\*([\s\S]*?)\*\/|--.*)/, "")
-$sql_commands = $sql_cleaned.split(/; *$/).select(&:present?)
+def clean_sql(sql)
+  sql.gsub(/(\/\*([\s\S]*?)\*\/|--.*)/, "")
+end
 
+def split_sql_commands(sql)
+  sql.split(/;[ \n\r]*$/).select(&:present?)
+end
+
+$sql = File.read('/home/codewarrior/solution.txt')
+$sql_cleaned = clean_sql($sql)
+$sql_commands = split_sql_commands($sql_cleaned)
+
+# runs sql commands within a file. Useful for running external scripts such as importing data
+def run_sql_file(file, &block)
+  sql = clean_sql(File.read(file))
+
+  split_sql_commands(sql).each do |cmd|
+    result = cmd.downcase =~ /^(insert|create)/ ? DB.run(cmd) : DB[cmd]
+    block.call(cmd, result) if block
+  end
+end
+
+# the main method used when running user's code
 def run_sql(limit: 100, cmds: $sql_commands, print: true)
   results = cmds.map do |cmd|
-    (cmd.downcase.start_with?("insert") ? DB.prepare(cmd) : DB[cmd]).tap do |dataset|
-      if dataset.count > 0 or $sql_commands.length == 1
-        label = "SQL Results"
-        label += " (Top #{limit} of #{dataset.count})" if dataset.count > limit
+    dataset = (cmd.downcase =~ /^(insert|create)/ ? DB.run(cmd) : DB[cmd]) || []
+    if dataset.count > 0
+      label = "SQL Results"
+      label += " (Top #{limit} of #{dataset.count})" if dataset.count > limit
 
-        Display.table(dataset.limit(limit).to_a, label: label) if print
-      end
+      Display.table(dataset.to_a.take(limit), label: label) if print
     end
+    dataset
   end
 
   results.select! {|r| r.count > 0 }
@@ -28,7 +47,7 @@ def run_sql(limit: 100, cmds: $sql_commands, print: true)
     $sql_results = results
   else
     $sql_multi = false
-    $sql_results = results.first
+    $sql_results = results.first || []
   end
 
 rescue Sequel::DatabaseError => ex

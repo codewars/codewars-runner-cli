@@ -33,6 +33,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
+      - ./sample_data:/runner/sample_data
     entrypoint: ''
     command: bash
 

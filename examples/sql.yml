@@ -2,16 +2,10 @@ rspec:
   fundamentals:
     initial: |-
     answer: |-
-      CREATE TABLE Persons
-      (
-      PersonID int,
-      LastName varchar(255),
-      FirstName varchar(255)
-      );
-
+      -- SQLite
+      CREATE TABLE Persons(PersonID int, LastName varchar(255), FirstName varchar(255));
       INSERT INTO Persons (PersonID, LastName, FirstName) VALUES (1, "Doe", "Jane");
-
-      SELECT * FROM Persons
+      SELECT * FROM Persons;
 
     fixture: |-
       describe :Persons do

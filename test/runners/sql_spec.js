@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 var itemsData = `
-
+# database: spec
 DB.drop_table :items rescue nil
 DB.create_table :items do
   primary_key :id
@@ -73,18 +73,18 @@ describe('sql runner', function () {
                 });
             });
 
-            it("should support postgres", function(done) {
-                runner.run({
-                    language: 'sql',
-                    languageVersion: 'postgres',
-                    setup: itemsData,
-                    code: query,
-                    fixture: itemsFixture
-                }, function(buffer) {
-                    expect(buffer.stdout).to.contain('PASSED');
-                    done();
-                });
-            });    
+            // it("should support postgres", function(done) {
+            //     runner.run({
+            //         language: 'sql',
+            //         languageVersion: 'postgres',
+            //         setup: itemsData,
+            //         code: query,
+            //         fixture: itemsFixture
+            //     }, function(buffer) {
+            //         expect(buffer.stdout).to.contain('PASSED');
+            //         done();
+            //     });
+            // });
         });
     });
 });

@@ -32,5 +32,17 @@ class Display
     def format_msg(msg)
       msg.gsub("\n", '<:LF:>')
     end
+
+    def status(msg)
+      print("STATUS", msg)
+    end
+
+    def raw(content)
+      puts html_tag("pre", content)
+    end
+
+    def html_tag(tag, content)
+      puts "<#{tag}>#{content}</#{tag}>"
+    end
   end
 end

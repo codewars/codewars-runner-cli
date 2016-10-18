@@ -30,6 +30,8 @@ class CsvImporter
     case @fields[field]
       when DateTime
         Chronic.parse(value)
+      when Integer
+        value.gsub(',', '').to_i
       else
         value
     end
@@ -38,7 +40,7 @@ class CsvImporter
   def import(skip_schema: false)
     create_schema unless skip_schema
 
-    puts "<STATUS::>Importing #{[limit, @csv.count].min} records..."
+    Display.status("Importing #{[limit, @csv.count].min} records...")
 
     fields = @csv.first
     dataset = DB[@table]
@@ -64,7 +66,8 @@ class CsvImporter
   def self.import_sales_data(random: false, limit: 300)
     importer = CsvImporter.new("/runner/sample_data/sales.csv", :sales, random: random, limit: limit, fields: {
       'latitude' => Float,
-      'longitude' => Float
+      'longitude' => Float,
+      'price' => Integer
     })
 
     # TODO: figure out how to fix datetime fields for SQLite
