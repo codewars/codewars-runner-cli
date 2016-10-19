@@ -73,3 +73,17 @@ def each_result(&block)
   end
 end
 
+# connect the database
+
+begin
+  Display.status "Connecting to database..."
+  eval(CONNECT_SQL)
+rescue => ex
+  if defined?(PG::ConnectionBad)
+    if ex.is_a?(PG::ConnectionBad)
+      sleep 1
+      Display.status "Connection not ready, retrying in 1 second..."
+      retry
+    end
+  end
+end
