@@ -107,7 +107,7 @@ describe('ruby runner', function () {
                             'it("test2") { expect($a).to eq(1)}\n' +
                             'end',
                         testFramework: 'rspec'}, function (buffer) {
-                        expect(buffer.stdout).to.equal('<DESCRIBE::>test\n<IT::>test2\n<PASSED::>Test Passed\n<COMPLETEDIN::>\n');
+                        expect(buffer.stdout).to.equal('<DESCRIBE::>test\n<IT::>test2\n<PASSED::>Test Passed\n<COMPLETEDIN::>\n<COMPLETEDIN::>\n');
                         done();
                     }
                 );
@@ -120,7 +120,7 @@ describe('ruby runner', function () {
                             'it("test2") { expect(b).to eq(1)}',
                             'end'].join('\n'),
                         testFramework: 'rspec'}, function (buffer) {
-                        expect(buffer.stdout).to.equal('<DESCRIBE::>test\n<IT::>test2\n<PASSED::>Test Passed\n<COMPLETEDIN::>\n');
+                        expect(buffer.stdout).to.equal('<DESCRIBE::>test\n<IT::>test2\n<PASSED::>Test Passed\n<COMPLETEDIN::>\n<COMPLETEDIN::>\n');
                         done();
                     }
                 );

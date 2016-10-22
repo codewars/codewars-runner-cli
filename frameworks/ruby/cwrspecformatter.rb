@@ -46,6 +46,7 @@ class CwRSpecFormatter
   end
   def example_passed(notification)
     @output.puts "<PASSED::>Test Passed"# + format_message(notification.example.description)
+    @output.puts "<COMPLETEDIN::>"
   end
   def example_failed(notification)
     if notification.exception.is_a? RSpec::Expectations::ExpectationNotMetError
@@ -53,6 +54,7 @@ class CwRSpecFormatter
     else
       @output.puts "<ERROR::>#{format_exception(notification)}#{format_backtrace(notification)}"
     end
+    @output.puts "<COMPLETEDIN::>"
   end
   def message(notification)
     @output.puts format_message(notification.message)

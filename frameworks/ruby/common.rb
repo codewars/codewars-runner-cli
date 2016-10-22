@@ -37,8 +37,8 @@ class Display
       print("STATUS", msg)
     end
 
-    def raw(content)
-      puts html_tag("pre", content)
+    def raw(content, label = nil)
+      log("<pre>#{content}</pre>", label)
     end
 
     def html_tag(tag, content)
