@@ -2,8 +2,12 @@ require_relative 'common'
 require 'sequel'
 require "faker"
 require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/date/calculations'
+require 'active_support/core_ext/time/calculations'
 require 'hashie'
 require_relative 'sql/csv_importer'
+require_relative 'sql/charts'
+require_relative 'sql/compare'
 
 def clean_sql(sql)
   sql.gsub(/(\/\*([\s\S]*?)\*\/|--.*)/, "")
@@ -28,14 +32,15 @@ def run_sql_file(file, &block)
 end
 
 # the main method used when running user's code
-def run_sql(limit: 100, cmds: $sql_commands, print: true)
+def run_sql(limit: 100, cmds: $sql_commands, print: true, label: 'SQL Results', collapsed: false, &block)
   results = cmds.map do |cmd|
     dataset = (cmd.downcase =~ /^(insert|create)/ ? DB.run(cmd) : DB[cmd]) || []
     if dataset.count > 0
-      label = "SQL Results"
-      label += " (Top #{limit} of #{dataset.count})" if dataset.count > limit
-
-      Display.table(dataset.to_a.take(limit), label: label) if print
+      lbl = label
+      lbl += " (Top #{limit} of #{dataset.count})" if dataset.count > limit
+      lbl = "-" + lbl if collapsed
+      block.call(dataset, lbl) if block
+      Display.table(dataset.to_a.take(limit), label: lbl) if print
     end
     dataset
   end
@@ -64,13 +69,22 @@ def find_record(table, id)
   result ? Hashie::Mash.new(result) : nil
 end
 
+# helper method for returning the last queried dataset
+def last_results
+  $sql_multi ? $sql_results.last : $sql_results
+end
+
 # loops through each sql result and returns the row as a Hashie::Mash. If multiple results were returned,
 # the last result set will be used
-def each_result(&block)
-  results = $sql_multi ? $sql_results.last : $sql_results
+def each_result(results = last_results, &block)
   results.each do |result|
     block.call(Hashie::Mash.new(result))
   end
+end
+
+# returns the unique column values contained within the result set
+def pluck_unique(column_name, results = last_results)
+  results.map {|r| r[column_name]}.uniq
 end
 
 # connect the database
