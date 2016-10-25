@@ -8,7 +8,7 @@ end
 class SqlCompare
   attr_reader :actual, :expected, :chart
 
-  def initialize(expected, chart: nil, limit: 100, collapsed: true)
+  def initialize(expected, chart: nil, limit: 100, collapsed: false)
     @results = run_sql(label: 'Results: Actual', limit: limit, collapsed: collapsed)
     @actual = @results.to_a
     @expected = expected.to_a
@@ -46,8 +46,6 @@ class SqlCompare
     RSpec.describe "Query Tests" do
       let(:actual) { _self.actual }
       let(:expected) { _self.expected }
-
-
 
       expected.first.each do |key, value|
         describe "\"#{key}\" column" do
@@ -92,16 +90,18 @@ class SqlCompare
   end
 
   def time_series_chart(results)
+    label = results == actual ? 'Chart: Actual' : 'Chart: Expected'
     TimeSeriesChart.new(
-    results,
-    chart[:group_by],
-    chart[:x],
-    chart[:y],
-    unit: chart.unit || 'day',
-    sort: chart.sort != false
+      results,
+      chart[:group_by],
+      chart[:x],
+      chart[:y],
+      unit: chart.unit || 'day',
+      sort: chart.sort != false
     ).tap do |chart|
-      label = results == actual ? 'Chart: Actual' : 'Chart: Expected'
       chart.draw(label: label, type: 'TAB')
     end
+  rescue => ex
+    Display.print('TAB', "Failed to render chart: #{ex.message}", label: label)
   end
 end

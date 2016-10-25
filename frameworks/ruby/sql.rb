@@ -36,11 +36,16 @@ def run_sql(limit: 100, cmds: $sql_commands, print: true, label: 'SQL Results', 
   results = cmds.map do |cmd|
     dataset = (cmd.downcase =~ /^(insert|create)/ ? DB.run(cmd) : DB[cmd]) || []
     if dataset.count > 0
+
       lbl = label
       lbl += " (Top #{limit} of #{dataset.count})" if dataset.count > limit
       lbl = "-" + lbl if collapsed
+
       block.call(dataset, lbl) if block
-      Display.table(dataset.to_a.take(limit), label: lbl) if print
+
+      data = dataset.to_a.take(limit)
+      Display.table(data, label: lbl) if print
+      Display.prop("preview", true) if data.count > 10
     end
     dataset
   end
