@@ -1,4 +1,4 @@
-def compare_with(expected, limit: 100, collapsed: true, &block)
+def compare_with(expected, limit: 100, collapsed: false, &block)
   sql_compare = SqlCompare.new(expected, limit: limit, collapsed: collapsed)
   sql_compare.instance_eval(&block) if block
 
@@ -12,7 +12,8 @@ class SqlCompare
     @results = run_sql(label: 'Results: Actual', limit: limit, collapsed: collapsed)
     @actual = @results.to_a
     @expected = expected.to_a
-    Display.table(expected.to_a.take(limit), label: 'Results: Expected', tab: true)
+
+    Display.table(expected.to_a.take(limit), label: 'Results: Expected', tab: true, allow_preview: true)
 
     draw_chart(chart) if chart
 

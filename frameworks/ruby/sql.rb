@@ -43,9 +43,7 @@ def run_sql(limit: 100, cmds: $sql_commands, print: true, label: 'SQL Results', 
 
       block.call(dataset, lbl) if block
 
-      data = dataset.to_a.take(limit)
-      Display.table(data, label: lbl) if print
-      Display.prop("preview", true) if data.count > 10
+      Display.table(dataset.to_a.take(limit), label: lbl, allow_preview: true) if print
     end
     dataset
   end

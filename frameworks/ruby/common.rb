@@ -5,7 +5,7 @@ require 'json'
 alias :_puts :puts
 def puts(*args)
   if (defined?(Sequel) and args[0].is_a?(Sequel::Dataset))
-    _puts Display.table(args[0].to_a)
+    _puts Display.table(args[0].to_a.take(100))
   else
     _puts *args
   end
@@ -13,8 +13,9 @@ end
 
 class Display
   class << self
-    def table(data, label: "Data", tab: false)
+    def table(data, label: "Table", tab: false, allow_preview: false)
       print(tab ? "TAB" : "LOG", data.to_json, mode: "TABLE", label: label)
+      prop("preview", true) if allow_preview and data.count > 10
     end
 
     def log(msg, label = "", mode = "")
