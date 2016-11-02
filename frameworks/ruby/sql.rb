@@ -13,8 +13,27 @@ def clean_sql(sql)
   sql.gsub(/(\/\*([\s\S]*?)\*\/|--.*)/, "")
 end
 
+def select_cmd?(cmd)
+  (cmd.strip =~ /^SELECT/i) == 0
+end
+
+def run_cmd(cmd)
+  select_cmd?(cmd) ? DB[cmd] : DB.run(cmd)
+end
+
 def split_sql_commands(sql)
-  sql.split(/;[ \n\r]*$/).select(&:present?)
+  # first we want to seperate select statements into chunks
+  chunks = sql.split(/;[ \n\r]*$/i).select(&:present?).chunk { |l| select_cmd?(l) }
+  # select statements need to stay individual so that we can return individual datasets, but we can group other statements together
+  [].tap do |final|
+    chunks.each do |select, cmds|
+      if select
+        final.concat(cmds)
+      else
+        final << cmds.join(";\n")
+      end
+    end
+  end
 end
 
 $sql = File.read('/home/codewarrior/solution.txt')
@@ -26,15 +45,17 @@ def run_sql_file(file, &block)
   sql = clean_sql(File.read(file))
 
   split_sql_commands(sql).each do |cmd|
-    result = cmd.downcase =~ /^(insert|create)/ ? DB.run(cmd) : DB[cmd]
+    result = run_cmd(cmd)
     block.call(cmd, result) if block
   end
 end
 
 # the main method used when running user's code
-def run_sql(limit: 100, cmds: $sql_commands, print: true, label: 'SQL Results', collapsed: false, &block)
+def run_sql(limit: 100, cmds: $sql_commands, print: true, label: 'SELECT Results', collapsed: false, &block)
+  Display.status("Running sql commands...")
+  cmds = [cmds] if cmds.is_a? String
   results = cmds.map do |cmd|
-    dataset = (cmd.downcase =~ /^(insert|create)/ ? DB.run(cmd) : DB[cmd]) || []
+    dataset = run_cmd(cmd) || []
     if dataset.count > 0
 
       lbl = label

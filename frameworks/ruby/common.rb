@@ -38,9 +38,11 @@ class Display
       print("STATUS", msg)
     end
 
-    def raw(content, label = nil)
+    def pre(content, label = nil)
       log("<pre>#{content}</pre>", label)
     end
+
+    alias :raw :pre
 
     def html_tag(tag, content)
       puts "<#{tag}>#{content}</#{tag}>"

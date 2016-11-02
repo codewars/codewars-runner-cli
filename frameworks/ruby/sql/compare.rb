@@ -10,7 +10,8 @@ class SqlCompare
 
   def initialize(expected, chart: nil, limit: 100, collapsed: false)
     @results = run_sql(label: 'Results: Actual', limit: limit, collapsed: collapsed)
-    @actual = @results.to_a
+    @actual = $sql_multi ? @results.last.to_a : @results.to_a
+    Display.status("Running expected query...")
     @expected = expected.to_a
 
     Display.table(expected.to_a.take(limit), label: 'Results: Expected', tab: true, allow_preview: true)
