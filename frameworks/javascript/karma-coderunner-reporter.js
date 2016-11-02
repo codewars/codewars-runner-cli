@@ -47,6 +47,7 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
 			} else {
 				print('FAILED', result.log);
 			}
+			print('COMPLETEDIN');
 		}
 	};
 
