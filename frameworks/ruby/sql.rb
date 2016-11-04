@@ -14,7 +14,7 @@ def clean_sql(sql)
 end
 
 def select_cmd?(cmd)
-  (cmd.strip =~ /^SELECT/i) == 0
+  (cmd.strip =~ /^(SELECT|WITH)/i) == 0
 end
 
 def run_cmd(cmd)

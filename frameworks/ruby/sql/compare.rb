@@ -14,6 +14,7 @@ class SqlCompare
     Display.status("Running expected query...")
     @expected = expected.to_a
 
+    Display.log('No rows returned', 'Results: Actual') if @actual.size == 0
     Display.table(expected.to_a.take(limit), label: 'Results: Expected', tab: true, allow_preview: true)
 
     draw_chart(chart) if chart
