@@ -29,7 +29,7 @@ To do this, you would either bash into the correct Docker image like so:
 
 ```
 # direct Docker call:
-docker run --rm -it codewars/node-runner bash
+docker run --rm -it --entrypoint bash codewars/node-runner
 
 # alternatively you can use the provided Docker Compose configuration:
 docker-compose run node-runner
