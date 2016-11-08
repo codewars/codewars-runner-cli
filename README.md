@@ -75,7 +75,7 @@ Many languages are currently supported in various states of completeness. This l
 | Assembly (GAS) |               | !!!          |                  |               |                | systems-runner |              | Travis is failing, tests pass locally                                   |
 | Bash           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
 | C              | Clang 3.6/C11 | ✓            | criterion        | criterion     |                | systems-runner |              |                                                                         |
-| Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test  | clojure.test   | func-runner    | clojure.test |                                                                         |
+| Clojure        | 1.6.0         | ✓            | clojure.test     | clojure.test  | clojure.test   | jvm-runner    | clojure.test |                                                                         |
 | CoffeeScript   | 1.10.0        | ✓            | cw-2             | cw-2          | cw-2           | node-runner    | cw-2         |                                                                         |
 | C++            | 14            | ✓            | igloo            | igloo         |                | systems-runner |              |                                                                         |
 | C#             | Mono 4.2.3    | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
