@@ -15,6 +15,7 @@ module Test.Hspec (
   , pendingWith
   , before
   , after
+  , after_
   , around
   , parallel
 
