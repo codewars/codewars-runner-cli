@@ -29,8 +29,8 @@ RUN mkdir /home/codewarrior/tmp
 #RUN echo 'remote-repo: stackage:http://www.stackage.org/lts-7.8' >> /home/codewarrior/.cabal/config
 RUN echo 'remote-repo: hackage.haskell.org:http://hackage.haskell.org/packages/archive' >> /home/codewarrior/.cabal/config
 RUN echo 'remote-repo-cache: /home/codewarrior/.cabal/packages' >> /home/codewarrior/.cabal/config
-RUN cd /home/codewarrior && mkdir .cabal-sandbox
-RUN cd /home/codewarrior && /opt/ghc/bin/cabal sandbox init
+#RUN cd /home/codewarrior && mkdir .cabal-sandbox
+#RUN cd /home/codewarrior && /opt/ghc/bin/cabal sandbox init
 RUN cd /home/codewarrior && /opt/ghc/bin/cabal update
 RUN cd /home/codewarrior && /opt/ghc/bin/cabal install cabal-install
 
