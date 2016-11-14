@@ -3,6 +3,7 @@ def compare_with(expected, limit: 100, collapsed: false, &block)
   sql_compare.instance_eval(&block) if block
 
   sql_compare.spec
+  sql_compare.actual
 end
 
 class SqlCompare
@@ -20,6 +21,7 @@ class SqlCompare
     draw_chart(chart) if chart
 
     @column_blocks ||= {}
+    @rows_blocks = []
   end
 
   def draw_chart(config)
@@ -33,9 +35,10 @@ class SqlCompare
   end
 
   def rows(&block)
-    @rows_block = block.to_proc
+    @rows_blocks << block.to_proc
     self
   end
+
 
   def spec(&block)
     return if @spec_called
@@ -43,7 +46,7 @@ class SqlCompare
 
     _self = self
     column_blocks = @column_blocks
-    rows_block = @rows_block
+    rows_blocks = @rows_blocks
     it_blocks = @it_blocks
 
     RSpec.describe "Query Tests" do
@@ -71,7 +74,9 @@ class SqlCompare
           expect(actual.count).to eq expected.count
         end
 
-        self.instance_eval(&rows_block) if rows_block
+        rows_blocks.each do |block|
+          self.instance_eval(&block)
+        end
 
         it "should should return the expected results" do
           expect(actual).to eq expected

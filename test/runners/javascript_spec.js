@@ -99,7 +99,7 @@ describe( 'javascript runner', function(){
                         mongoose.Promise = global.Promise;
                         mongoose.connect('mongodb://localhost/spec');
                         var Cat = mongoose.model('Cat', { name: String });
-            
+        
                         var kitty = new Cat({ name: 'Zildjian' });
                         kitty.save(function (err) {
                           if (err) {
@@ -123,10 +123,10 @@ describe( 'javascript runner', function(){
                     code: `
                         var redis = require('redis'),
                             Promise = require('bluebird');
-            
+        
                         Promise.promisifyAll(redis.RedisClient.prototype);
                         var client = redis.createClient();
-            
+        
                         client.setAsync("foo", "bar").then(_ => {
                             client.getAsync("foo").then( v => {
                                 console.log(v);
@@ -203,7 +203,7 @@ describe( 'javascript runner', function(){
                               console.log(row.id + ": " + row.info);
                           });
                         });
-            
+        
                         db.close();
                     `
                 }, function (buffer) {
@@ -437,6 +437,29 @@ describe( 'javascript runner', function(){
             it('should handle logging objects', function(done){
                 runner.run({language: 'javascript', code:'console.log({a: 1});', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('{ a: 1 }\n');
+                    done();
+                });
+            });
+
+            it('should handled nested describes', function(done) {
+                runner.run({
+                    language: 'javascript',
+                    code: `var a = 1`,
+                    fixture: `
+                        describe("top", function(){
+                            describe("2nd", function(){
+                                it("should a", function(){
+                                    Test.expect(true);
+                                });
+                            });
+                            it("should b", function(){
+                                Test.expect(true);
+                            });
+                        });
+                    `,
+                    testFramework: 'cw-2'
+                }, function(buffer) {
+                    expect(buffer.stdout).to.include(`<DESCRIBE::>top\n<DESCRIBE::>2nd\n<IT::>should a\n`);
                     done();
                 });
             });

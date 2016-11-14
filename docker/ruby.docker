@@ -153,6 +153,9 @@ RUN /usr/lib/postgresql/9.6/bin/pg_ctl -w start \
 
 USER root
 
+# install the tcsh shell
+RUN apt-get update && apt-get -y install csh tcsh
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
@@ -173,6 +176,7 @@ ENV HOME /home/codewarrior
 
 RUN mocha -t 5000 test/runners/ruby_spec.js
 #RUN mocha -t 5000 test/runners/sql_spec.js
+RUN mocha -t 5000 test/runners/shell_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

@@ -24,9 +24,8 @@ try
     };
 
     var methodCalls = {},
-        describing = false,
+        describing = [],
         async = false,
-        describeDone = null,
         asyncIts = null,
         asyncDone = null,
         correct = 0,
@@ -50,8 +49,8 @@ try
         if (asyncIts.length > 0) {
             asyncIts.shift()();
         }
-        else if(describeDone) {
-            describeDone();
+        else if(describing.length) {
+            describing.pop()();
         }
     }
 
@@ -157,23 +156,24 @@ try
 
                 var start = new Date();
                 try {
-                    if (describing) throw "cannot call describe within another describe";
-                    describing = true;
                     async = asyncTimeout;
                     asyncIts = [];
-                    describeDone = function () {
+                    describing.push(function () {
                         var ms = new Date() - start;
                         Test.display.write("COMPLETEDIN", ms);
-                        describing = false;
-                        beforeCallbacks = [];
-                        afterCallbacks = [];
+
+                        // TODO: right now before/after blocks don't work very well with multi level describes so they
+                        // should only be used at the top level
+                        if (!describing.length) {
+                            beforeCallbacks = [];
+                            afterCallbacks = [];
+                        }
 
                         if (failed.length > 0) throw failed[0];
 
-                        describeDone = null;
                         async = false;
                         resolve();
-                    }
+                    });
 
                     Test.display.write("DESCRIBE", msg);
                     fn();
@@ -185,14 +185,14 @@ try
                 }
                 finally
                 {
-                    if (!async && describeDone) describeDone();
+                    if (!async && describing.length) describing.pop()();
                 }
             });
 
         },
         it: function (msg, fn)
         {
-            if (!describing) throw '"it" calls must be invoked within a parent "describe" context';
+            if (!describing.length) throw '"it" calls must be invoked within a parent "describe" context';
             var asyncIt = (async && fn.length > 0);
 
             var begin = function() {

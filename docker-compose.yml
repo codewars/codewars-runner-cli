@@ -13,7 +13,9 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
       - ./tsconfig.json:/runner/tsconfig.json
+
     entrypoint: ''
+    user: root
     command: bash
 
   jvm-runner:
@@ -35,6 +37,7 @@ services:
       - ./test:/runner/test
       - ./sample_data:/runner/sample_data
     entrypoint: ''
+    user: root
     command: bash
 
   python-runner:
@@ -275,6 +278,15 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/sql_spec.js'
+
+  shell_test:
+    image: codewars/ruby-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/shell_spec.js'
 
   haskell:
     image: codewars/haskell-runner
