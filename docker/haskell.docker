@@ -9,27 +9,17 @@ FROM codewars/base-runner
 ## ensure locale is set during build
 ENV LANG C.UTF-8
 
-RUN apt-get -y install libghc-zlib-dev happy
-
 # Needed to run add-apt-repository
-RUN apt-get -y install software-properties-common
 
 # Install Haskell
-RUN add-apt-repository ppa:hvr/ghc
+RUN add-apt-repository ppa:jtgeibel/haskell-backports-from-wily
 RUN apt-get update
-RUN apt-get install -y ghc-7.6.3 cabal-install
-RUN su codewarrior -c "cd ; cabal update"
-RUN su codewarrior -c "cd ; cabal install cabal"
-RUN echo 'remote-repo: stackage:http://www.stackage.org/lts-1.15' >> /home/codewarrior/.cabal/config
-RUN su codewarrior -c "cd ; cabal update"
-RUN su codewarrior -c "cd ; cabal install cabal"
-
-# Install Haskell Packages
 RUN apt-get -y install libghc-zlib-dev pkg-config happy
-RUN su codewarrior -c "cd ; cabal install split ifelse"
-RUN su codewarrior -c "cd ; cabal install esqueleto persistent-sqlite persistent-template"
-RUN su codewarrior -c "cd ; cabal install haskell-src-exts lens"
-RUN su codewarrior -c "cd ; cabal install hspec-2.1.0 hspec-core-2.1.0 hspec-discover-2.1.0"
+RUN apt-get -y install libghc-split-dev libghc-ifelse-dev
+RUN apt-get -y install libghc-esqueleto-dev libghc-persistent-sqlite-dev libghc-persistent-template-dev
+RUN apt-get -y install libghc-src-exts-dev libghc-lens-dev
+RUN apt-get -y install libghc-hspec-dev libghc-hspec-core-dev hspec-discover
+
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
@@ -39,12 +29,12 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 ADD . /runner
 WORKDIR /runner
 
-# Run the test suite to make sure this thing works
-
 USER codewarrior
 # Set environment variables
 ENV USER codewarrior
 ENV HOME /home/codewarrior
+
+# Run the test suite to make sure this thing works
 RUN mocha -t 5000 test/runners/haskell_spec.js
 
 #timeout is a fallback in case an error with node
