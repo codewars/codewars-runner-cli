@@ -605,7 +605,7 @@ describe('haskell runner', function () {
                     'main = hspec $ do',
                     '  describe "/tmp/movies.db" ',
                     '  $ before (deleteIfExists moviesDBFileName)',
-                    '  $ after (deleteIfExists moviesDBFileName)',
+                    '  $ after_ (deleteIfExists moviesDBFileName)',
                     '  $ do',
                     '    it "contains the movies we expect" $ do',
                     '      mkMoviesDB',

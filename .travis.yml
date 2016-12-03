@@ -1,11 +1,13 @@
 sudo: required
 
-language: node_js
-node_js:
-  - "5.8"
+language: javascript
 
 services:
   - docker
+
+after_success:
+  - docker ps -a
+  - docker images -a
 
 script:
   - make recent

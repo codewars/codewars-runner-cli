@@ -5,33 +5,41 @@
 # Pull base image.
 FROM codewars/base-runner
 
-# Install Haskell
-## ensure locale is set during build
-ENV LANG C.UTF-8
+# =========================================================================
+# Haskell stuff begin
+# -------------------------------------------------------------------------
 
-RUN apt-get -y install libghc-zlib-dev happy
-
-# Needed to run add-apt-repository
-RUN apt-get -y install software-properties-common
-
-# Install Haskell
 RUN add-apt-repository ppa:hvr/ghc
 RUN apt-get update
-RUN apt-get install -y ghc-7.6.3 cabal-install
-RUN su codewarrior -c "cd ; cabal update"
-RUN su codewarrior -c "cd ; cabal install cabal"
-RUN echo 'remote-repo: stackage:http://www.stackage.org/lts-1.15' >> /home/codewarrior/.cabal/config
-RUN su codewarrior -c "cd ; cabal update"
-RUN su codewarrior -c "cd ; cabal install cabal"
+
+# Install Haskell System
+# lts-1.0 is minimum version that contain ifelse
+ENV LTS_VER=1.0 GHC_VER=7.8.4 CABAL_VER=1.18 HAPPY_VER=1.19.4
+
+RUN apt-get install -y ghc-${GHC_VER} cabal-install-${CABAL_VER} happy-${HAPPY_VER}
+
+USER codewarrior
+ENV HOME /home/codewarrior
+ENV PATH=${HOME}/.cabal/bin:/opt/ghc/${GHC_VER}/bin:/opt/cabal/${CABAL_VER}/bin:/opt/happy/${HAPPY_VER}/bin:${PATH}
+RUN mkdir ${HOME}/.cabal ${HOME}/.cabal/bin
+RUN echo "remote-repo: stackage_lts-${LTS_VER}:http://www.stackage.org/lts-${LTS_VER}" >> ${HOME}/.cabal/config
+RUN echo "remote-repo-cache: /home/codewarrior/.cabal/packages" >> ${HOME}/.cabal/config
+RUN cabal update
+RUN cabal install cabal-install
 
 # Install Haskell Packages
-RUN apt-get -y install libghc-zlib-dev pkg-config happy
-RUN su codewarrior -c "cd ; cabal install split ifelse"
-RUN su codewarrior -c "cd ; cabal install esqueleto persistent-sqlite persistent-template"
-RUN su codewarrior -c "cd ; cabal install haskell-src-exts lens"
-RUN su codewarrior -c "cd ; cabal install hspec-2.1.0 hspec-core-2.1.0 hspec-discover-2.1.0"
+# To install additional packages use "RUN cabal install <pkg-name>" 
+RUN cabal install split ifelse
+RUN cabal install esqueleto persistent-sqlite persistent-template
+RUN cabal install haskell-src-exts lens
+RUN cabal install hspec hspec-core hspec-discover
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+# -------------------------------------------------------------------------
+# Haskell stuff end.
+# =========================================================================
+
+# # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+USER root
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
 RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
@@ -40,13 +48,9 @@ ADD . /runner
 WORKDIR /runner
 
 # Run the test suite to make sure this thing works
-
 USER codewarrior
-# Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
-RUN mocha -t 5000 test/runners/haskell_spec.js
+RUN mocha -t 10000 test/runners/haskell_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
+# #timeout is a fallback in case an error with node
+# #prevents it from exiting properly
 ENTRYPOINT ["timeout", "15", "node"]
