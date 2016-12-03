@@ -1,6 +1,6 @@
-# BUILD-USING:    docker build -t codewars/runner-func .
-# TEST-USING:     docker run --rm -i -t --name=test-runner-func --entrypoint=/bin/bash codewars/runner-haskell -s
-# RUN-USING:      docker run --rm --name=runner-func codewars/runner-func --help
+# BUILD-USING:    docker build -t codewars/runner-haskell .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-haskell --entrypoint=/bin/bash codewars/runner-haskell -s
+# RUN-USING:      docker run --rm --name=runner-haskell codewars/runner-haskell --help
 
 # Pull base image.
 FROM codewars/base-runner
@@ -13,8 +13,7 @@ RUN add-apt-repository ppa:hvr/ghc
 RUN apt-get update
 
 # Install Haskell System
-# lts-1.0 is minimum version that contain ifelse
-ENV LTS_VER=1.0 GHC_VER=7.8.4 CABAL_VER=1.18 HAPPY_VER=1.19.4
+ENV RESOLVER=lts-6.24 GHC_VER=7.10.3 CABAL_VER=1.22 HAPPY_VER=1.19.5
 
 RUN apt-get install -y ghc-${GHC_VER} cabal-install-${CABAL_VER} happy-${HAPPY_VER}
 
@@ -22,7 +21,7 @@ USER codewarrior
 ENV HOME /home/codewarrior
 ENV PATH=${HOME}/.cabal/bin:/opt/ghc/${GHC_VER}/bin:/opt/cabal/${CABAL_VER}/bin:/opt/happy/${HAPPY_VER}/bin:${PATH}
 RUN mkdir ${HOME}/.cabal ${HOME}/.cabal/bin
-RUN echo "remote-repo: stackage_lts-${LTS_VER}:http://www.stackage.org/lts-${LTS_VER}" >> ${HOME}/.cabal/config
+RUN echo "remote-repo: stackage_${RESOLVER}:http://www.stackage.org/${RESOLVER}" >> ${HOME}/.cabal/config
 RUN echo "remote-repo-cache: /home/codewarrior/.cabal/packages" >> ${HOME}/.cabal/config
 RUN cabal update
 RUN cabal install cabal-install
@@ -30,7 +29,7 @@ RUN cabal install cabal-install
 # Install Haskell Packages
 # To install additional packages use "RUN cabal install <pkg-name>" 
 RUN cabal install split ifelse
-RUN cabal install esqueleto persistent-sqlite persistent-template
+RUN cabal install persistent-sqlite persistent-template
 RUN cabal install haskell-src-exts lens
 RUN cabal install hspec hspec-core hspec-discover
 
@@ -38,7 +37,8 @@ RUN cabal install hspec hspec-core hspec-discover
 # Haskell stuff end.
 # =========================================================================
 
-# # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+# Add the package json first to a tmp directory and build, 
+# copy over so that we dont rebuild every time
 USER root
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
@@ -51,6 +51,6 @@ WORKDIR /runner
 USER codewarrior
 RUN mocha -t 10000 test/runners/haskell_spec.js
 
-# #timeout is a fallback in case an error with node
-# #prevents it from exiting properly
+# timeout is a fallback in case an error with node
+# prevents it from exiting properly
 ENTRYPOINT ["timeout", "15", "node"]
