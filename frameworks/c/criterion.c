@@ -40,7 +40,7 @@ ReportHook(ASSERT)(struct criterion_assert_stats *stats) {
 
 // when a test crashes unexpectedly
 ReportHook(TEST_CRASH)(struct criterion_test_stats *stats) {
-  puts("\n<FAILED::>Test Crashed");
+  printf("\n<FAILED::>Test Crashed<:LF:>Exit code: %d<:LF:>Signal code: %d",stats->exit_code, stats->signal);
 }
 
 //  after a test ends
