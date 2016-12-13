@@ -18,6 +18,43 @@ describe('.run', function() {
             code: solution
         }, function(buffer) {
             expect(buffer.stdout).to.equal("Hello world");
+            expect(buffer.exitCode).to.equal(0);
+            done();
+        });
+    });
+    it('should get the return code', function(done) {
+        var solution = `
+                #include <stdlib.h>
+
+                int main() {
+                  return 10;
+                }
+                `;
+        runner.run({
+            language: 'c',
+            code: solution
+        }, function(buffer) {
+            expect(buffer.exitCode).to.equal(10);
+            expect(buffer.signalCode).to.equal(null);
+            done();
+        });
+    });
+    it('should catch return codes', function(done) {
+        var solution = `
+                #include <stdlib.h>
+
+                int main() {
+                  int *nullPointer = NULL;
+                  *nullPointer = 0;
+                  return 0;
+                }
+                `;
+        runner.run({
+            language: 'c',
+            code: solution
+        }, function(buffer) {
+            expect(buffer.exitCode).to.equal(null);
+            expect(buffer.signalCode).to.equal('SIGSEGV');
             done();
         });
     });
