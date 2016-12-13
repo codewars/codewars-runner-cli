@@ -181,6 +181,7 @@ describe('.run', function() {
                     `
             }, function(buffer) {
                 expect(buffer.stdout).to.contain('<FAILED::>Test Crashed');
+                expect(buffer.stdout).to.contain('<:LF:>Signal code: 11');
                 done();
             });
         });
