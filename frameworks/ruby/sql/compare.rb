@@ -11,12 +11,13 @@ class SqlCompare
 
   def initialize(expected, chart: nil, limit: 100, collapsed: false)
     @results = run_sql(label: 'Results: Actual', limit: limit, collapsed: collapsed)
-    @actual = $sql_multi ? @results.last.to_a : @results.to_a
+    @actual = ($sql_multi ? @results.last.to_a : @results.to_a)
+    @limit = limit
     Display.status("Running expected query...")
     @expected = expected.to_a
 
     Display.log('No rows returned', 'Results: Actual') if @actual.size == 0
-    Display.table(expected.to_a.take(limit), label: 'Results: Expected', tab: true, allow_preview: true)
+    Display.table(expected.to_a, label: 'Results: Expected', tab: true, allow_preview: true)
 
     draw_chart(chart) if chart
 
@@ -79,7 +80,9 @@ class SqlCompare
         end
 
         it "should should return the expected results" do
-          expect(actual).to eq expected
+          limit = 10
+          expect(actual.take(limit)).to eq expected.take(limit)
+          expect(actual == expected).to be_true
         end
       end
 

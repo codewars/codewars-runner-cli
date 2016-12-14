@@ -21,6 +21,7 @@ USER codewarrior
 ENV HOME /home/codewarrior
 ENV PATH=${HOME}/.cabal/bin:/opt/ghc/${GHC_VER}/bin:/opt/cabal/${CABAL_VER}/bin:/opt/happy/${HAPPY_VER}/bin:${PATH}
 RUN mkdir ${HOME}/.cabal ${HOME}/.cabal/bin
+RUN echo "ghc-options: -fno-warn-tabs" >> ${HOME}/.cabal/config
 RUN echo "remote-repo: stackage_${RESOLVER}:http://www.stackage.org/${RESOLVER}" >> ${HOME}/.cabal/config
 RUN echo "remote-repo-cache: /home/codewarrior/.cabal/packages" >> ${HOME}/.cabal/config
 RUN cabal update

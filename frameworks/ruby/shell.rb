@@ -24,7 +24,7 @@ def run_shell(script: $solution, cwd: $cwd, output: true, args: [])
     end
   end
 
-  out = out.join
+  out = out.join.strip
   if output
     Display.print('LOG', out, mode: 'SHELL', label: "Shell Output")
   end
@@ -33,8 +33,8 @@ def run_shell(script: $solution, cwd: $cwd, output: true, args: [])
   out.gsub(/<span class='stderr'>([\s\S]*)<\/span>/, '\1')
 end
 
-def compare_with(expected, actual = run_shell, &block)
-  describe "Solution" do
+def compare_with(expected, actual: run_shell, label: 'Solution', &block)
+  describe label do
     let(:actual) { actual }
     let(:expected) { expected }
 
