@@ -35,7 +35,7 @@ describe('.run', function() {
             code: solution
         }, function(buffer) {
             expect(buffer.exitCode).to.equal(10);
-            expect(buffer.signalCode).to.equal(null);
+            expect(buffer.exitSignal).to.equal(null);
             done();
         });
     });
@@ -54,7 +54,7 @@ describe('.run', function() {
             code: solution
         }, function(buffer) {
             expect(buffer.exitCode).to.equal(null);
-            expect(buffer.signalCode).to.equal('SIGSEGV');
+            expect(buffer.exitSignal).to.equal('SIGSEGV');
             done();
         });
     });
