@@ -52,6 +52,7 @@ push:
 	docker push codewars/crystal-runner
 	docker push codewars/dart-runner
 	docker push codewars/ocaml-runner
+	docker push codewars/objc-runner
 	docker push codewars/swift-runner || true
 
 pull:
@@ -69,4 +70,5 @@ pull:
 	docker pull codewars/crystal-runner
 	docker pull codewars/dart-runner
 	docker pull codewars/ocaml-runner
+	docker pull codewars/objc-runner
 	docker pull codewars/swift-runner || true

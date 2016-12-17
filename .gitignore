@@ -17,6 +17,7 @@ target/*
 .idea/
 .lein-repl-history
 example.rb
+Dockerfile
 *.o
 *.hi
 \#*
