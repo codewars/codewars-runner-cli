@@ -1,12 +1,12 @@
 HOSTNAME=codewars
 
 # Building erlang images have been suspended (frozen) until they are able to be repaired
-CONTAINERS=node dotnet jvm python ruby alt rust julia systems dart crystal ocaml swift haskell
+CONTAINERS=node dotnet jvm python ruby alt rust julia systems dart crystal ocaml swift haskell objc
 
 # recent containers should be updated when adding or modifying a language, so that
 # the travis build process will test it. The process cant test all languages
 # without timing out so this is required to get passed that issue.
-RECENT_CONTAINERS=haskell
+RECENT_CONTAINERS=objc
 
 ALL_CONTAINERS=${CONTAINERS} base
 
