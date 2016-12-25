@@ -1,5 +1,10 @@
 version: '2'
 services:
+  base-runner:
+    image: codewars/base-runner
+    entrypoint: ''
+    command: bash
+
   node-runner:
     image: codewars/node-runner
     volumes:
@@ -8,7 +13,9 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
       - ./tsconfig.json:/runner/tsconfig.json
+
     entrypoint: ''
+    user: root
     command: bash
 
   jvm-runner:
@@ -28,7 +35,9 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
+      - ./sample_data:/runner/sample_data
     entrypoint: ''
+    user: root
     command: bash
 
   python-runner:
@@ -261,6 +270,24 @@ services:
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/ruby_spec.js'
 
+  sql_test:
+    image: codewars/ruby-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/sql_spec.js'
+
+  shell_test:
+    image: codewars/ruby-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/shell_spec.js'
+
   haskell:
     image: codewars/haskell-runner
     volumes:
@@ -350,6 +377,24 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/cpp_spec.js'
+
+  c:
+    image: codewars/systems-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'node run -l c'
+
+  c_test:
+    image: codewars/systems-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/c_spec.js'
 
   csharp:
     image: codewars/dotnet-runner

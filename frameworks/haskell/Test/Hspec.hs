@@ -15,6 +15,7 @@ module Test.Hspec (
   , pendingWith
   , before
   , after
+  , after_
   , around
   , parallel
 
@@ -47,7 +48,7 @@ module Test.Hspec (
   , hidden
                      ) where
 
-import "hspec" Test.Hspec hiding (hspec)
+import "hspec" Test.Hspec hiding (hspec, shouldNotBe)
 import Test.CodeWars.Runner (hspec)
 import Test.CodeWars.BlackList (Hidden (..), BlackList, hidden)
 import Test.QuickCheck hiding (reason)

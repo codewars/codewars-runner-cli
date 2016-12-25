@@ -51,9 +51,8 @@ USER codewarrior
 ENV USER codewarrior
 
 # Run the test suite to make sure this thing works
-RUN mocha -t 5000 test/runners/javascript_spec.js
-RUN mocha -t 5000 test/runners/coffeescript_spec.js
-RUN mocha -t 7000 test/runners/typescript_spec.js
+RUN mocha -t 10000 test/runners/{javascript,coffeescript}_spec.js
+#RUN mocha -t 10000 test/runners/typescript_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

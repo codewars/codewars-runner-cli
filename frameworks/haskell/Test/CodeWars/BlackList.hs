@@ -95,8 +95,8 @@ unName (Symbol name) = name
 
 -- | Check that an ImportSpec matches a symbol
 importSpecMatchesSymbol :: ImportSpec -> String -> Bool
-(IVar _ x) `importSpecMatchesSymbol` y = (unName x) == y
-(IAbs x) `importSpecMatchesSymbol` y = (unName x) == y
+(IVar x) `importSpecMatchesSymbol` y = (unName x) == y
+(IAbs _ x) `importSpecMatchesSymbol` y = (unName x) == y
 (IThingAll x) `importSpecMatchesSymbol` y = (unName x) == y
 (IThingWith x cnames) `importSpecMatchesSymbol` y =
   (unName x) == y || cnames `anyConstructorMatchesSymbol` y

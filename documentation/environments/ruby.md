@@ -63,6 +63,6 @@ The following gems are already installed and available for use.
 
 # Timeout
 
-The sandbox environment will timeout the code within 8 seconds.
+The sandbox environment will timeout the code within 12 seconds.
  
 > For more information, view the [docker file](https://github.com/Codewars/codewars-runner-cli/blob/master/docker/ruby.docker)

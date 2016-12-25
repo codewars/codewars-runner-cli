@@ -3,7 +3,7 @@ var expect = require('chai').expect,
 
 describe( 'javascript runner', function(){
     describe( '.run', function(){
-        // runner.assertCodeExamples('javascript');
+        runner.assertCodeExamples('javascript');
         
         //----------------------------------------------------------------------------------------
         // Basics
@@ -85,7 +85,7 @@ describe( 'javascript runner', function(){
                     languageVersion: '6.x/babel',
                     code: 'var a = function(){returns 42;};\na();'
                 }, function (buffer) {
-                    expect(buffer.stderr).to.contain('kata.js: Unexpected token:27');
+                    expect(buffer.stderr).to.contain('Unexpected token');
                     done();
                 });
             });
@@ -97,7 +97,7 @@ describe( 'javascript runner', function(){
                     code: `
                         var mongoose = require('mongoose');
                         mongoose.Promise = global.Promise;
-                        mongoose.connect('mongodb://localhost/test');
+                        mongoose.connect('mongodb://localhost/spec');
                         var Cat = mongoose.model('Cat', { name: String });
         
                         var kitty = new Cat({ name: 'Zildjian' });
@@ -271,7 +271,7 @@ describe( 'javascript runner', function(){
                         done();
                     });
             });
-        
+
             it( 'should handle errors', function(done){
                 runner.run({
                     language: 'javascript',
@@ -283,7 +283,7 @@ describe( 'javascript runner', function(){
                         done();
                     });
             });
-        
+
             it( 'should support options files', function(done){
                 runner.run({
                     language: 'javascript',
@@ -305,7 +305,7 @@ describe( 'javascript runner', function(){
                         done();
                     });
             });
-        
+
             it( 'should load chai-display', function(done){
                 runner.run({
                     language: 'javascript',
@@ -412,35 +412,58 @@ describe( 'javascript runner', function(){
                     done();
                 });
             });
-        
+
             it('should handle a basic assertion', function(done){
                 runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 1);', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
                     done();
                 });
             });
-        
+
             it('should handle comments as fixture', function(done){
                 runner.run({language: 'javascript', code: 'console.log(42)', fixture: '//', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('42\n');
                     done();
                 });
             });
-        
+
             it('should handle a basic failed test', function(done){
                 runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 2)', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
                     done();
                 });
             });
-        
+
             it('should handle logging objects', function(done){
                 runner.run({language: 'javascript', code:'console.log({a: 1});', testFramework: 'cw-2'}, function(buffer) {
                     expect(buffer.stdout).to.equal('{ a: 1 }\n');
                     done();
                 });
             });
-        
+
+            it('should handled nested describes', function(done) {
+                runner.run({
+                    language: 'javascript',
+                    code: `var a = 1`,
+                    fixture: `
+                        describe("top", function(){
+                            describe("2nd", function(){
+                                it("should a", function(){
+                                    Test.expect(true);
+                                });
+                            });
+                            it("should b", function(){
+                                Test.expect(true);
+                            });
+                        });
+                    `,
+                    testFramework: 'cw-2'
+                }, function(buffer) {
+                    expect(buffer.stdout).to.include(`<DESCRIBE::>top\n<DESCRIBE::>2nd\n<IT::>should a\n`);
+                    done();
+                });
+            });
+
             describe("async handling", function() {
                 it( 'should throw a timeout if code runs too long', function(done) {
                     runner.run({
@@ -459,7 +482,7 @@ describe( 'javascript runner', function(){
                         done();
                     });
                 });
-        
+
                 it( 'should render in proper order', function(done) {
                     runner.run({
                         language: 'javascript',
@@ -483,7 +506,7 @@ describe( 'javascript runner', function(){
                     });
                 });
             });
-        
+
             describe('error handling', function() {
                 it( 'should handle a mix of failures and successes', function(done) {
                     runner.run({language: 'javascript',
@@ -540,7 +563,7 @@ describe( 'javascript runner', function(){
                                 });
                 });
             });
-        
+
             it( 'should support options files', function(done){
                 runner.run({
                         language: 'javascript',
@@ -570,6 +593,16 @@ describe( 'javascript runner', function(){
         //----------------------------------------------------------------------------------------
 
         describe('karma bdd', function() {
+            it( 'warmup test', function(done){
+                runner.run({
+                        language: 'javascript',
+                        code: 'var a = {b: 2};',
+                        fixture: 'describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});',
+                        testFramework: 'karma_bdd'
+                    },
+                    function(){ done(); }
+                );
+            });
             it( 'should handle basic tests', function(done){
                 runner.run({
                     language: 'javascript',

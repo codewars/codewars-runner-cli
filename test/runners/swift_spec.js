@@ -22,6 +22,18 @@ describe( 'swift runner', function(){
                 done();
             });
         });
+        it('should handle line output when there is setup code', function (done) {
+            runner.run({
+                language: 'swift',
+                languageVersion: '3',
+                setup: "func foo() -> Int { \nreturn 999; \n}",
+                code: "print(foo(1))"
+            }, function (buffer) {
+                console.log(buffer.stderr);
+                expect(buffer.stderr).to.contain("(solution:1:11)");
+                done();
+            });
+        });
     });
     describe('cw-2', function () {
             it('should handle a basic assertion', function (done) {
@@ -128,7 +140,7 @@ describe( 'swift runner', function(){
                             enum MyError : Error {
                                 case RuntimeError(String)
                             }
-
+    
                             func errorThrower(_ a: Int? = nil) throws -> Int {
                                 if (a == 0) {
                                     throw MyError.RuntimeError("An error!")
@@ -200,21 +212,21 @@ describe( 'swift runner', function(){
                         fixture: `
                             class CalculatorTest: XCTestCase {
                               var calc : Calculator!
-
+    
                               static var allTests = [
                                     ("testAddCheck", testAddCheck),
                               ]
-
+    
                               override func setUp() {
                                 super.setUp()
                                 calc = Calculator()
                               }
-
+    
                               func testAddCheck() {
                                 XCTAssertEqual(calc.add(a:1, b:2), 3, "calc.add(1, 2) should be 3")
                               }
                             }
-
+    
                             XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
@@ -225,7 +237,7 @@ describe( 'swift runner', function(){
                         expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest')
                         expect(buffer.stdout).to.contain('<IT::>testAddCheck')
                         expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
-                        expect(buffer.stdout).to.contain('<COMPLETEDIN::>')                 
+                        expect(buffer.stdout).to.contain('<COMPLETEDIN::>')
                         done();
                     });
             });
@@ -247,13 +259,13 @@ describe( 'swift runner', function(){
                               static var allTests = [
                                     ("testAddCheck", testAddCheck),
                               ]
-
+    
                               func testAddCheck() {
                                 let calc = Calculator()
                                 XCTAssertEqual(calc.add(a:1, b:2), 3, "calc.add(1, 2) \\n should be 3")
                               }
                             }
-
+    
                             XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
@@ -262,7 +274,7 @@ describe( 'swift runner', function(){
                     },
                     function (buffer) {
                         expect(buffer.stdout).to.contain('<FAILED::>testAddCheck')
-                        expect(buffer.stdout).to.contain('<ERROR::>testAddCheck : XCTAssertEqual failed: ("-1") is not equal to ("3") - calc.add(1, 2) <:LF:> should be 3\n')             
+                        expect(buffer.stdout).to.contain('<ERROR::>testAddCheck : XCTAssertEqual failed: ("-1") is not equal to ("3") - calc.add(1, 2) <:LF:> should be 3\n')
                         done();
                     });
             });
@@ -272,12 +284,12 @@ describe( 'swift runner', function(){
                         func add(a:Int, b:Int) -> Int {
                             return a + b
                         }
-
+    
                         func sub(a:Int, b:Int) -> Int {
                             // Let's force a test failure
                             return 12345
                         }
-
+    
                         func mul(a:Int, b:Int) -> Int {
                             return a * b
                         }
@@ -290,31 +302,31 @@ describe( 'swift runner', function(){
                         fixture: `
                             class CalculatorTest: XCTestCase {
                               var calc : Calculator!
-
+    
                               static var allTests = [
                                     ("testAddCheck", testAddCheck),
                                     ("testSubCheck", testSubCheck),
                                     ("testMulCheck", testMulCheck)
                               ]
-
+    
                               override func setUp() {
                                 super.setUp()
                                 calc = Calculator()
                               }
-
+    
                               func testAddCheck() {
                                 XCTAssertEqual(calc.add(a:1, b:2), 3, "calc.add(1, 2) should be 3")
                               }
-
+    
                               func testSubCheck() {
                                 XCTAssertEqual(calc.sub(a:3, b:4), -1, "calc.sub(3, 4) should be -1")
                               }
-
+    
                               func testMulCheck() {
                                 XCTAssertEqual(calc.mul(a:4, b:5), 20, "calc.mul(4, 5) should be 20")
                               }
                             }
-
+    
                             XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
@@ -329,7 +341,7 @@ describe( 'swift runner', function(){
                         expect(buffer.stdout).to.contain('<IT::>testSubCheck')
                         expect(buffer.stdout).to.contain('<ERROR::>testSubCheck')
                         expect(buffer.stdout).to.contain('<FAILED::>testSubCheck')
-                        expect(buffer.stdout).to.contain('<IT::>testMulCheck')                   
+                        expect(buffer.stdout).to.contain('<IT::>testMulCheck')
                         done();
                     });
             });
@@ -339,12 +351,12 @@ describe( 'swift runner', function(){
                         func add(a:Int, b:Int) -> Int {
                             return a + b
                         }
-
+    
                         func sub(a:Int, b:Int) -> Int {
                             // Let's force a test failure
                             return 12345
                         }
-
+    
                         func mul(a:Int, b:Int) -> Int {
                             return a * b
                         }
@@ -356,18 +368,18 @@ describe( 'swift runner', function(){
                         code: code,
                         fixture: `
                             class CalculatorTest: XCTestCase {
-
+    
                               static var allTests = [
                                     ("testCalculator", testCalculator),
                               ]
-
+    
                               func testCalculator() {
                                 let calc = Calculator()
                                 XCTAssertEqual(calc.add(a:1, b:2), 3, "calc.add(1, 2) should be 3")
                                 XCTAssertEqual(calc.sub(a:3, b:4), -1, "calc.sub(3, 4) should be -1")
                               }
                             }
-
+    
                             XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
@@ -379,7 +391,7 @@ describe( 'swift runner', function(){
                         expect(buffer.stdout).to.contain('<IT::>testCalculator')
                         expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
                         expect(buffer.stdout).to.contain('<FAILED::>XCTAssertEqual failed:')
-                        expect(buffer.stdout).to.contain('<COMPLETEDIN::>')                 
+                        expect(buffer.stdout).to.contain('<COMPLETEDIN::>')
                         done();
                     });
             });
@@ -398,22 +410,22 @@ describe( 'swift runner', function(){
                         fixture: `
                             class GreetingsTest: XCTestCase {
                               var greetings : Greetings!
-
-                          
+    
+    
                               static var allTests = [
                                     ("testSayHello", testSayHello),
                               ]
-
+    
                               override func setUp() {
                                 super.setUp()
                                 greetings = Greetings()
                               }
-
+    
                               func testSayHello() {
                                 XCTAssertEqual(greetings.sayHello(), "hello, codewars!", "greetings.sayHello() should return \\"hello, codewars!\\"")
                               }
                             }
-
+    
                             XCTMain([
                                 testCase(GreetingsTest.allTests)
                             ])
@@ -424,7 +436,7 @@ describe( 'swift runner', function(){
                         expect(buffer.stdout).to.contain('<DESCRIBE::>GreetingsTest')
                         expect(buffer.stdout).to.contain('<IT::>testSayHello')
                         expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
-                        expect(buffer.stdout).to.contain('<COMPLETEDIN::>')                 
+                        expect(buffer.stdout).to.contain('<COMPLETEDIN::>')
                         done();
                     });
             });
@@ -435,14 +447,14 @@ describe( 'swift runner', function(){
                             return a + b
                         }
                     }
-
+    
                     class Person {
                         let name: String
-
+    
                         init(_ name: String) {
                             self.name = name
                         }
-
+    
                         func greet(_ other: String) -> String {
                             return "Hello, \(other), I am \(name), it's nice to meet you!"
                         }
@@ -455,22 +467,22 @@ describe( 'swift runner', function(){
                         fixture: `
                             class CalculatorTest: XCTestCase {
                               static var allTests = [("testAddCheck", testAddCheck)]
-
+    
                               func testAddCheck() {
                                 let calc = Calculator()
                                 XCTAssertEqual(calc.add(a:1, b:2), 3, "calc.add(1, 2) should be 3")
                               }
                             }
-
+    
                             class PersonTest: XCTestCase {
                                 static var allTests = [("testGreet", testGreet)]
-
+    
                                 func testGreet() {
                                     let person = Person("jorge")
                                     XCTAssertEqual(person.greet("Aditya"), "Hello, Aditya, I am Jorge, it's nice to meet you!")
                                 }
                             }
-
+    
                             XCTMain([
                                 testCase(CalculatorTest.allTests),
                                 testCase(PersonTest.allTests),
@@ -484,10 +496,9 @@ describe( 'swift runner', function(){
                         expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
                         expect(buffer.stdout).to.contain('<DESCRIBE::>PersonTest')
                         expect(buffer.stdout).to.contain('<IT::>testGreet')
-                        expect(buffer.stdout).to.contain('<PASSED::>Test Passed')            
+                        expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
                         done();
                     });
             });
     });
-
 });

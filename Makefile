@@ -1,12 +1,12 @@
 HOSTNAME=codewars
 
-# Building haskell and erlang images have been suspended (frozen) until they are able to be repaired
-CONTAINERS=node dotnet jvm python ruby alt rust julia systems dart crystal ocaml swift
+# Building erlang images have been suspended (frozen) until they are able to be repaired
+CONTAINERS=node dotnet jvm python ruby alt rust julia systems dart crystal ocaml swift haskell
 
 # recent containers should be updated when adding or modifying a language, so that
 # the travis build process will test it. The process cant test all languages
 # without timing out so this is required to get passed that issue.
-RECENT_CONTAINERS=ocaml node julia dotnet
+RECENT_CONTAINERS=haskell
 
 ALL_CONTAINERS=${CONTAINERS} base
 
@@ -31,11 +31,28 @@ docker_rm:
 
 # Kill all docker images
 docker_rmi: docker_rm
-	[ ! -n "$(shell docker images -q)" ] || docker images -q | xargs -n 1 docker rmi -f
+	docker rmi $(docker images -q -f dangling=true)
 
 clean: docker_rm_exited docker_rmi_temporary
 
 deep-clean: docker_rmi
+
+push:
+	docker push codewars/base-runner
+	docker push codewars/node-runner
+	docker push codewars/ruby-runner
+	docker push codewars/python-runner
+	docker push codewars/dotnet-runner
+	docker push codewars/jvm-runner
+	docker push codewars/haskell-runner
+	docker push codewars/systems-runner
+	docker push codewars/erlang-runner
+	docker push codewars/alt-runner
+	docker push codewars/rust-runner
+	docker push codewars/crystal-runner
+	docker push codewars/dart-runner
+	docker push codewars/ocaml-runner
+	docker push codewars/swift-runner || true
 
 pull:
 	docker pull codewars/base-runner
@@ -48,25 +65,8 @@ pull:
 	docker pull codewars/systems-runner
 	docker pull codewars/erlang-runner
 	docker pull codewars/alt-runner
-	docker pull codewars/rust-runner || true
-	docker pull codewars/julia-runner || true
-	docker pull codewars/crystal-runner || true
-	docker pull codewars/dart-runner || true
-	docker pull codewars/ocaml-runner || true
+	docker pull codewars/rust-runner
+	docker pull codewars/crystal-runner
+	docker pull codewars/dart-runner
+	docker pull codewars/ocaml-runner
 	docker pull codewars/swift-runner || true
-
-save:
-	docker save codewars/base-runner > build/image.tar
-	docker save codewars/ruby-runner > build/image.tar
-	docker save codewars/node-runner > build/image.tar
-	docker save codewars/python-runner > build/image.tar
-	docker save codewars/dotnet-runner > build/image.tar
-	docker save codewars/jvm-runner > build/image.tar
-	docker save codewars/func-runner > build/image.tar
-	docker save codewars/erlang-runner > build/image.tar
-	docker save codewars/alt-runner > build/image.tar
-	docker save codewars/rust-runner > build/image.tar
-	docker save codewars/dart-runner > build/image.tar
-	docker save codewars/crystal-runner > build/image.tar
-	docker save codewars/julia-runner > build/image.tar
-	docker save codewars/swift-runner > build/swift.tar

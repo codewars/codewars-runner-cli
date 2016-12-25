@@ -1,0 +1,16 @@
+rspec:
+  fundamentals:
+    initial: |-
+    answer: |-
+      -- SQLite
+      CREATE TABLE Persons(PersonID int, LastName varchar(255), FirstName varchar(255));
+      INSERT INTO Persons (PersonID, LastName, FirstName) VALUES (1, "Doe", "Jane");
+      SELECT * FROM Persons;
+
+    fixture: |-
+      describe :Persons do
+         it "should return 1 item" do
+          expect(run_sql.to_a.count).to eq 1
+         end
+      end
+

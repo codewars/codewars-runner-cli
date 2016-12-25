@@ -60,37 +60,50 @@ ENV PATH $BUNDLE_BIN:$PATH
 RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
 	&& chmod 777 "$GEM_HOME" "$BUNDLE_BIN"
 
-# Ruby Gems
+# RSpec Gems for Testing
 RUN gem install rspec --no-ri --no-rdoc
 RUN gem install rspec-its --no-ri --no-rdoc
+RUN gem install rspec-rails --no-ri --no-rdoc
 
 # needed for nokogiri
 RUN apt-get -y install zlib1g-dev
 
 # Install additional gems
-RUN gem install pry --no-ri --no-rdoc
+RUN gem install amqp --no-ri --no-rdoc
+RUN gem install bunny --no-ri --no-rdoc
 RUN gem install capybara --no-ri --no-rdoc
-RUN gem install rails --no-ri --no-rdoc
-RUN gem install concerning --no-ri --no-rdoc
 RUN gem install celluloid --no-ri --no-rdoc
-RUN gem install sinatra --no-ri --no-rdoc
+RUN gem install concerning --no-ri --no-rdoc
+RUN gem install concurrent-ruby --no-ri --no-rdoc
+RUN gem install connection_pool --no-ri --no-rdoc
+RUN gem install couchrest --no-ri --no-rdoc
+RUN gem install couch_potato --no-ri --no-rdoc
+RUN gem install elasticsearch --no-ri --no-rdoc
 RUN gem install eventmachine --no-ri --no-rdoc
-RUN gem install timers --no-ri --no-rdoc
+RUN gem install faraday --no-ri --no-rdoc
+RUN gem install jbuilder --no-ri --no-rdoc
+RUN gem install jwt --no-ri --no-rdoc
+RUN gem install hashie --no-ri --no-rdoc
+RUN gem install httparty --no-ri --no-rdoc
 RUN gem install factory_girl --no-ri --no-rdoc
+RUN gem install faker --no-ri --no-rdoc
+RUN gem install ffi-rzmq --no-ri --no-rdoc
+RUN gem install googlecharts --no-ri --no-rdoc
+RUN gem install pg --no-ri --no-rdoc
+RUN gem install pry --no-ri --no-rdoc
+RUN gem install mock_redis --no-ri --no-rdoc
 RUN gem install mongo --no-ri --no-rdoc
 RUN gem install mongoid --no-ri --no-rdoc
-RUN gem install redis --no-ri --no-rdoc
-RUN gem install elasticsearch --no-ri --no-rdoc
+RUN gem install net-ssh --no-ri --no-rdoc
 RUN gem install nokogiri --no-ri --no-rdoc
-RUN gem install sequel --no-ri --no-rdoc
-RUN gem install webmock --no-ri --no-rdoc
-RUN gem install timecop --no-ri --no-rdoc
+RUN gem install rails --no-ri --no-rdoc
+RUN gem install redis --no-ri --no-rdoc
 RUN gem install ruby-graphviz --no-ri --no-rdoc
-RUN gem install googlecharts --no-ri --no-rdoc
-RUN gem install ffi-rzmq --no-ri --no-rdoc
-RUN gem install bunny --no-ri --no-rdoc
-RUN gem install amqp --no-ri --no-rdoc
-RUN gem install concurrent-ruby --no-ri --no-rdoc
+RUN gem install sequel --no-ri --no-rdoc
+RUN gem install sinatra --no-ri --no-rdoc
+RUN gem install timecop --no-ri --no-rdoc
+RUN gem install timers --no-ri --no-rdoc
+RUN gem install webmock --no-ri --no-rdoc
 RUN gem install sciruby --no-ri --no-rdoc
 # reduced selection of sciruby-full gems since all needed build dependencies are not installed
 RUN gem install ai4r --no-ri --no-rdoc
@@ -116,10 +129,32 @@ RUN gem install statsample-timeseries --no-ri --no-rdoc
 RUN gem install stuff-classifier --no-ri --no-rdoc
 RUN gem install symbolic --no-ri --no-rdoc
 RUN gem install unit --no-ri --no-rdoc
-RUN gem install rspec-rails --no-ri --no-rdoc
+
+RUN gem install chronic --no-ri --no-rdoc
 
 # partner packages
 RUN gem install ably --no-ri --no-rdoc
+
+USER codewarrior
+
+
+# Sample Database
+# http://www.postgresqltutorial.com/postgresql-sample-database/#
+
+ENV PGDATA /home/codewarrior/pg
+ADD sample_data /runner/sample_data
+RUN /usr/lib/postgresql/9.6/bin/pg_ctl -w start \
+    && createdb -U codewarrior spec \
+    && createdb -U codewarrior dvdrental \
+    && pg_restore -U codewarrior -d dvdrental -v /runner/sample_data/dvdrental.tar || true \
+#    && psql -f /runner/sample_data/mlb-samples.sql sports codewarrior \
+    && psql -l \
+    && /usr/lib/postgresql/9.6/bin/pg_ctl -w stop
+
+USER root
+
+# install the tcsh shell
+RUN apt-get update && apt-get -y install csh tcsh
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
@@ -140,6 +175,8 @@ ENV USER codewarrior
 ENV HOME /home/codewarrior
 
 RUN mocha -t 5000 test/runners/ruby_spec.js
+#RUN mocha -t 5000 test/runners/sql_spec.js
+RUN mocha -t 5000 test/runners/shell_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

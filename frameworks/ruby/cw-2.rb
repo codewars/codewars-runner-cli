@@ -4,8 +4,7 @@ require 'forwardable'
 require 'delegate'
 require 'set'
 require 'uri'
-
-$stdout.sync = true
+require_relative 'common'
 
 NameError
 class Test
@@ -169,24 +168,8 @@ class Test
       rand(100)
     end
 
-    def example(msg, mode = "")
-      puts format_msg("<LOG:#{mode.upcase}:Example>#{msg}")
-    end
-
-    def log(msg, mode: "", label: "")
-      display('LOG', msg, mode: mode, label: label)
-    end
-
-    def display(type, msg, mode: "", label: "")
-      puts format_msg("<#{type.upcase}:#{mode.upcase}:#{label}>#{msg}")
-    end
-
-    def prop(name, value)
-      puts format_msg("<PROP::#{name}>#{value}")
-    end
-
-    def format_msg(msg)
-      msg.gsub("\n", '<:LF:>')
+    def format_msg(*args)
+      Display.format_msg(*args)
     end
 
     private
@@ -204,9 +187,9 @@ class Test
 
     def handle_error(ex)
       if ex.is_a? Exception
-        puts "<ERROR::>#{format_msg(ex.inspect)}<:LF:>#{ex.backtrace.join('<:LF:>')}"
+        puts "<ERROR::>#{Display.format_msg(ex.inspect)}<:LF:>#{ex.backtrace.join('<:LF:>')}"
       else
-        puts "<ERROR::>#{format_msg(ex)}"
+        puts "<ERROR::>#{Display.format_msg(ex)}"
       end
     end
 
