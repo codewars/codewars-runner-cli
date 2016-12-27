@@ -82,7 +82,7 @@ class SqlCompare
         it "should should return the expected results" do
           limit = 10
           expect(actual.take(limit)).to eq expected.take(limit)
-          expect(actual == expected).to be_true
+          expect(actual == expected).to be true
         end
       end
 
