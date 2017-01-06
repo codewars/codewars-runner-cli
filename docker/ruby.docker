@@ -156,6 +156,9 @@ USER root
 # install the tcsh shell
 RUN apt-get update && apt-get -y install csh tcsh
 
+# Install extra shell packages
+RUN apt-get update && apt-get -y install mlocate bc
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
