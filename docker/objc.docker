@@ -13,10 +13,11 @@ env OBJC_SOURCE_DIR $OBJC_VOL/objc-source
 RUN apt-get update
 RUN apt-get upgrade -y
 
-RUN apt-get install -y build-essential gobjc gobjc++ gnustep gnustep-devel libgnustep-base-dev clang gnustep-make llvm libblocksruntime-dev
+RUN apt-get install -y build-essential gobjc gobjc++ gnustep gnustep-devel libgnustep-base-dev clang gnustep-make llvm libblocksruntime-dev libdispatch-dev
 
-# Install libobjc
+# Install libobjc and headers
 ADD headers/objc/objc /usr/include/GNUstep/objc
+ADD headers/objc/CW /usr/include/GNUstep/CW
 
 # Add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json

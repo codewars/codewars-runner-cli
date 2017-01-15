@@ -165,5 +165,98 @@ describe( 'objc runner', function(){
 				done();
 			});
 		});
+		it('should perform unit testing and test for failure (test equal())', function(done) {
+			runner.run({
+				language: 'objc',
+				code: ' ',
+				fixture: [
+					'describe(@"String not match", ^() {',
+						'it(@"should not match", ^() {',
+							'equal(@"Blah", @"Blah1");',
+						'});',
+					'});'
+				].join('\n')
+			}, function(buffer) {
+				console.log(buffer);
+                console.log("buffer.stderr", buffer.stderr.split("\n"));
+                expect(buffer.stderr).to.contain('<FAILED::>Expected "Blah" but instead got "Blah1"');
+                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
+                expect(buffer.stderr).to.contain('<IT::> It should not match');
+                expect(buffer.stderr).to.contain('<DESCRIBE::> String not match');
+				done();
+			});
+		});
+		it('should perform unit testing and pass the test (test notEqual())', function(done) {
+			runner.run({
+				language: 'objc',
+				code: ' ',
+				fixture: [
+					'describe(@"String not match", ^() {',
+						'it(@"should pass", ^() {',
+							'notEqual(@"Blah", @"Blah1");',
+						'});',
+					'});'
+				].join('\n')
+			}, function(buffer) {
+				console.log(buffer);
+                console.log("buffer.stderr", buffer.stderr.split("\n"));
+                expect(buffer.stderr).to.contain('<PASSED::>Test Passed');
+                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
+				expect(buffer.stderr).to.contain('<IT::> It should pass');
+				expect(buffer.stderr).to.contain('<DESCRIBE::> String not match');
+				done();
+			});
+		});
+		it('should perform unit testing and pass the test (test equal())', function(done) {
+			runner.run({
+				language: 'objc',
+				code: ' ',
+				fixture: [
+					'describe(@"Compare types of numbers", ^() {',
+						'it(@"should match int", ^() {',
+							'equal(@1, @1);',
+						'});',
+						'it(@"should not match int", ^() {',
+							'equal(@1, @2);',
+						'});',
+						'it(@"should match float", ^() {',
+							'equal(@2.20, @2.2);',
+						'});',
+					'});'
+				].join('\n')
+			}, function(buffer) {
+				console.log(buffer);
+                console.log("buffer.stderr", buffer.stderr.split("\n"));
+                expect(buffer.stderr).to.contain('<PASSED::>Test Passed');
+                expect(buffer.stderr).to.contain('<FAILED::>Expected "1" but instead got "2"');
+                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
+				expect(buffer.stderr).to.contain('<IT::> It should match int');
+				expect(buffer.stderr).to.contain('<IT::> It should not match int');
+				expect(buffer.stderr).to.contain('<IT::> It should match float');
+				expect(buffer.stderr).to.contain('<DESCRIBE::> Compare types of numbers');
+				done();
+			});
+		});
+		it('should perform unit testing and pass the test (test pass())', function(done) {
+			runner.run({
+				language: 'objc',
+				code: ' ',
+				fixture: [
+					'describe(@"True always equal true", ^() {',
+						'it(@"should pass", ^() {',
+							'pass(true == true);',
+						'});',
+					'});'
+				].join('\n')
+			}, function(buffer) {
+				console.log(buffer);
+                console.log("buffer.stderr", buffer.stderr.split("\n"));
+                expect(buffer.stderr).to.contain('<PASSED::>Test Passed');
+                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
+				expect(buffer.stderr).to.contain('<IT::> It should pass');
+				expect(buffer.stderr).to.contain('<DESCRIBE::> True always equal true');
+				done();
+			});
+		});
 	});
 });

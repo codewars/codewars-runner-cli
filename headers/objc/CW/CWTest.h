@@ -11,48 +11,16 @@
 
 #import <Foundation/Foundation.h>
 
-static NSDate *CWTest_date = nil;
-
-
-void CWTest_format(NSString* text, NSString* tag, void (* handler)(void))
-{
-    // Replace all the new line (\n) with <:LF:>
-    text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@"<:LF:>"];
-
-    NSLog(@"%@", [NSString stringWithFormat:@"%@ %@", tag, text]);
-    handler();
-}
-
-void CWTest_describe(NSString* text, void (* handler)(void))
-{
-    CWTest_format(text, @"<DESCRIBE::>", handler);
-}
-
-void CWTest_it(NSString* text, void (* handler)(void))
-{
-    CWTest_format(text, @"<IT::> It", handler);
-}
-
-void CWTest_start()
-{
-    CWTest_date = [NSDate date];
-}
-
-void CWTest_end()
-{
-    int timePassed_ms = [CWTest_date timeIntervalSinceNow] * -1000.0;
-    NSLog(@"%@", [NSString stringWithFormat:@"<COMPLETEDIN::>%d", timePassed_ms]);
-}
-
 @interface CWTest: NSObject
 
 + (void) format:(NSString*)text withTag:(NSString*)tag withHandler:(void(^)(void))handler;
 + (void) describe:(NSString*)text withHandler:(void(^)(void))handler;
 + (void) it:(NSString*)text withHandler:(void(^)(void))handler;
-+ (void) start;
-+ (void) end;
++ (NSDate*) start;
++ (void) end:(NSDate*)date;
 + (void) pass:(int)expression;
 + (void) equal:(id)a withB:(id)b;
++ (void) notEqual:(id)a withB:(id)b;
 
 @end
 
@@ -77,14 +45,14 @@ void CWTest_end()
     [CWTest format:text withTag:@"<IT::> It" withHandler:handler];
 }
 
-+ (void) start
++ (NSDate*) start
 {
-    CWTest_date = [NSDate date];
+    return [NSDate date];
 }
 
-+ (void) end
++ (void) end:(NSDate*)date
 {
-    int timePassed_ms = [CWTest_date timeIntervalSinceNow] * -1000.0;
+    int timePassed_ms = [date timeIntervalSinceNow] * -1000.0;
     NSLog(@"%@", [NSString stringWithFormat:@"<COMPLETEDIN::>%d", timePassed_ms]);
 }
 
@@ -112,18 +80,32 @@ void CWTest_end()
     }
 }
 
++ (void) notEqual:(id)a withB:(id)b
+{
+    if ([a isEqual: b])
+    {
+        NSLog(@"%@", [NSString stringWithFormat:@"<FAILED::>Expected \"%@\" to not be equal \"%@\"\n", a, b]);
+    }
+    else
+    {
+        NSLog(@"<PASSED::>Test Passed\n");
+    }
+}
+
 @end
 
 #define describe(text, handler) \
 { \
+    NSDate* date = [CWTest start]; \
     [CWTest describe:text withHandler:handler]; \
+    [CWTest end:date]; \
 }
 
 #define it(text, handler) \
 { \
-    [CWTest start]; \
+    NSDate* date = [CWTest start]; \
     [CWTest it:text withHandler:handler]; \
-    [CWTest end]; \
+    [CWTest end:date]; \
 }
 
 #define pass(expression) \
@@ -134,6 +116,11 @@ void CWTest_end()
 #define equal(a, b) \
 { \
     [CWTest equal:a withB:b]; \
+}
+
+#define notEqual(a, b) \
+{ \
+    [CWTest notEqual:a withB:b]; \
 }
 
 #endif /* CWTest_h */
