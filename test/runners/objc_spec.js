@@ -3,6 +3,8 @@ var runner = require('../runner');
 
 describe( 'objc runner', function(){
 	describe( '.run', function(){
+		runner.assertCodeExamples('objc');
+
 		it( 'should handle basic code evaluation', function(done){
 			runner.run({
 				language: 'objc',
@@ -16,7 +18,7 @@ describe( 'objc runner', function(){
 				].join('\n')
 			}, function(buffer) {
 				console.log("buffer", buffer);
-				expect(buffer.stderr).to.contain('Hello World\n');
+				expect(buffer.stdout).to.contain('Hello World\n');
 				done();
 			});
 		});
@@ -36,7 +38,7 @@ describe( 'objc runner', function(){
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-				expect(buffer.stderr).to.contain('999');
+				expect(buffer.stdout).to.contain('999');
 				done();
 			});
 		});
@@ -76,7 +78,7 @@ describe( 'objc runner', function(){
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-				expect(buffer.stderr).to.contain('Square: 36');
+				expect(buffer.stdout).to.contain('Square: 36');
 				done();
 			});
 		});
@@ -119,7 +121,7 @@ describe( 'objc runner', function(){
 			}, function(buffer) {
 				console.log(buffer);
                 console.log("buffer.stderr", buffer.stderr.split("\n"));
-                expect(buffer.stderr).to.contain('Number of BankAccount instances = 2');
+                expect(buffer.stdout).to.contain('Number of BankAccount instances = 2');
 				done();
 			});
 		});
@@ -160,57 +162,54 @@ describe( 'objc runner', function(){
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-                console.log("buffer.stderr", buffer.stderr.split("\n"));
-                expect(buffer.stderr).to.contain('Name: Codewars and the age is 108');
+				expect(buffer.stdout).to.contain('Name: Codewars and the age is 108');
 				done();
 			});
 		});
 		it('should perform unit testing and test for failure (test equal())', function(done) {
 			runner.run({
 				language: 'objc',
-				code: ' ',
+				code: 'NSString* Foo (NSString *str){return str;}',
 				fixture: [
-					'describe(@"String not match", ^() {',
+					'describe(@"String match", ^() {',
 						'it(@"should not match", ^() {',
-							'equal(@"Blah", @"Blah1");',
+							'equal(@"Blah", Foo(@"Blah1"));',
 						'});',
 					'});'
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-                console.log("buffer.stderr", buffer.stderr.split("\n"));
-                expect(buffer.stderr).to.contain('<FAILED::>Expected "Blah" but instead got "Blah1"');
-                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
-                expect(buffer.stderr).to.contain('<IT::> It should not match');
-                expect(buffer.stderr).to.contain('<DESCRIBE::> String not match');
+				expect(buffer.stdout).to.contain('<DESCRIBE::>String match');
+				expect(buffer.stdout).to.contain('<IT::>should not match');
+				expect(buffer.stdout).to.contain('<FAILED::>Expected "Blah" but instead got "Blah1"');
+				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				done();
 			});
 		});
 		it('should perform unit testing and pass the test (test notEqual())', function(done) {
 			runner.run({
 				language: 'objc',
-				code: ' ',
+				code: 'NSString* Foo (NSString *str){return str;}',
 				fixture: [
 					'describe(@"String not match", ^() {',
 						'it(@"should pass", ^() {',
-							'notEqual(@"Blah", @"Blah1");',
+							'notEqual(@"Blah", Foo(@"Blah1"));',
 						'});',
 					'});'
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-                console.log("buffer.stderr", buffer.stderr.split("\n"));
-                expect(buffer.stderr).to.contain('<PASSED::>Test Passed');
-                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
-				expect(buffer.stderr).to.contain('<IT::> It should pass');
-				expect(buffer.stderr).to.contain('<DESCRIBE::> String not match');
+				expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+				expect(buffer.stdout).to.contain('<IT::>should pass');
+				expect(buffer.stdout).to.contain('<DESCRIBE::>String not match');
 				done();
 			});
 		});
 		it('should perform unit testing and pass the test (test equal())', function(done) {
 			runner.run({
 				language: 'objc',
-				code: ' ',
+				code: 'NSString* Foo (NSString *str){return str;}',
 				fixture: [
 					'describe(@"Compare types of numbers", ^() {',
 						'it(@"should match int", ^() {',
@@ -226,21 +225,21 @@ describe( 'objc runner', function(){
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-                console.log("buffer.stderr", buffer.stderr.split("\n"));
-                expect(buffer.stderr).to.contain('<PASSED::>Test Passed');
-                expect(buffer.stderr).to.contain('<FAILED::>Expected "1" but instead got "2"');
-                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
-				expect(buffer.stderr).to.contain('<IT::> It should match int');
-				expect(buffer.stderr).to.contain('<IT::> It should not match int');
-				expect(buffer.stderr).to.contain('<IT::> It should match float');
-				expect(buffer.stderr).to.contain('<DESCRIBE::> Compare types of numbers');
+                console.log("buffer.stdout", buffer.stdout);
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                expect(buffer.stdout).to.contain('<FAILED::>Expected "1" but instead got "2"');
+                expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+				expect(buffer.stdout).to.contain('<IT::>should match int');
+				expect(buffer.stdout).to.contain('<IT::>should not match int');
+				expect(buffer.stdout).to.contain('<IT::>should match float');
+				expect(buffer.stdout).to.contain('<DESCRIBE::>Compare types of numbers');
 				done();
 			});
 		});
 		it('should perform unit testing and pass the test (test pass())', function(done) {
 			runner.run({
 				language: 'objc',
-				code: ' ',
+				code: 'NSString* Foo (NSString *str){return str;}',
 				fixture: [
 					'describe(@"True always equal true", ^() {',
 						'it(@"should pass", ^() {',
@@ -250,11 +249,12 @@ describe( 'objc runner', function(){
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-                console.log("buffer.stderr", buffer.stderr.split("\n"));
-                expect(buffer.stderr).to.contain('<PASSED::>Test Passed');
-                expect(buffer.stderr).to.contain('<COMPLETEDIN::>');
-				expect(buffer.stderr).to.contain('<IT::> It should pass');
-				expect(buffer.stderr).to.contain('<DESCRIBE::> True always equal true');
+                console.log("buffer.stdout", buffer.stdout);
+                console.log("buffer.stderr", buffer.stderr);
+                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+				expect(buffer.stdout).to.contain('<IT::>should pass');
+				expect(buffer.stdout).to.contain('<DESCRIBE::>True always equal true');
 				done();
 			});
 		});

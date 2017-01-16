@@ -31,7 +31,7 @@
     // Replace all the new line (\n) with <:LF:>
     text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@"<:LF:>"];
 
-    NSLog(@"%@", [NSString stringWithFormat:@"%@ %@", tag, text]);
+    NSLog(@"%@", [NSString stringWithFormat:@"%@%@", tag, text]);
     handler();
 }
 
@@ -42,7 +42,7 @@
 
 + (void) it:(NSString*)text withHandler:(void(^)(void))handler
 {
-    [CWTest format:text withTag:@"<IT::> It" withHandler:handler];
+    [CWTest format:text withTag:@"<IT::>" withHandler:handler];
 }
 
 + (NSDate*) start
