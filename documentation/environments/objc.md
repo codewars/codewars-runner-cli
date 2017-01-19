@@ -1,4 +1,9 @@
-#### Objective C - Unit Testing API
+# Environment
+
+Code is executed using GNUstep compiled with Clang within a Dockerized Ubuntu 14.04 container.
+
+
+# Unit Testing API
 
 Running simply equal test:
 

@@ -96,7 +96,7 @@ Many languages are currently supported in various states of completeness. This l
 | Kotlin         | 1.0.3         | ✓            | ???              |               |                | jvm-runner     |              |                                                                         |
 | Lisp           |               | ✓            |                  | Kumite Only   |                | func-runner    |              |                                                                         |
 | Lua            |               | ✓            |                  | Kumite Only   |                | alt-runner     |              |                                                                         |
-| ObjC           |               | ???          | ???              |               |                |                |              |                                                                         |
+| Objective-C    | 2.0           | ✓            | cw               | cw            |                | objc-runner    |              |                                                                         |
 | OCAML          | 4.02.3        | ✓            | ounit            | ounit         |                | ocaml-runner    |             | Tests should be placed in a module called "Tests", in an array of OUnit labels named "suite" |
 | Perl           |               | ✓            |                  | Kumite Only   |                | *              |              |                                                                         |
 | Php            | 7.0           | ✓            | cw-2, phpunit    | phpunit        | phpunit, cw-2 | alt-runner     |              |                                                                         |

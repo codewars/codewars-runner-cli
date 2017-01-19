@@ -84,7 +84,7 @@
 {
     if ([a isEqual: b])
     {
-        NSLog(@"%@", [NSString stringWithFormat:@"<FAILED::>Expected \"%@\" to not be equal \"%@\"\n", a, b]);
+        NSLog(@"%@", [NSString stringWithFormat:@"<FAILED::>Expected \"%@\" to not equal \"%@\"\n", a, b]);
     }
     else
     {
