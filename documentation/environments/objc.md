@@ -2,6 +2,8 @@
 
 Code is executed using GNUstep compiled with Clang within a Dockerized Ubuntu 14.04 container.
 
+See [here](http://wiki.gnustep.org/index.php/ObjC2_FAQ) for more information about GNUstep.
+
 
 # Unit Testing API
 
