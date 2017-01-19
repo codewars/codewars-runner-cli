@@ -160,6 +160,16 @@ services:
     entrypoint: ''
     command: bash
 
+  objc-runner:
+    image: codewars/objc-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript:
     image: codewars/node-runner
@@ -557,3 +567,22 @@ services:
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/swift_spec.js'
+
+  objc:
+    image: codewars/objc-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks/objc/objc:/usr/include/GNUstep/objc
+      - ./frameworks/objc/CW:/usr/include/GNUstep/CW
+    entrypoint: 'node run -l obcj'
+
+  objc_test:
+    image: codewars/objc-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks/objc/objc:/usr/include/GNUstep/objc
+      - ./frameworks/objc/CW:/usr/include/GNUstep/CW
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/objc_spec.js'

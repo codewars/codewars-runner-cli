@@ -40,13 +40,13 @@ public class CwRunListener extends RunListener
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         ex.printStackTrace(pw);
-        return sw.toString().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        return sw.toString();
     }
     private static String formatMessage(final String s)
     {
         if(s == null){
             return "";
         }
-        return s.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<:LF:>");
+        return s.replaceAll("\n", "<:LF:>");
     }
 }

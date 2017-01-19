@@ -13,7 +13,7 @@ env OBJC_SOURCE_DIR $OBJC_VOL/objc-source
 RUN apt-get update
 RUN apt-get upgrade -y
 
-RUN apt-get install -y build-essential gobjc gobjc++ gnustep gnustep-devel libgnustep-base-dev
+RUN apt-get install -y build-essential gobjc gobjc++ gnustep gnustep-devel libgnustep-base-dev clang gnustep-make llvm libblocksruntime-dev libdispatch-dev
 
 # Add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
@@ -22,6 +22,10 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
 # ADD cli-runner and install node deps
 ADD . /runner
+
+# Install libobjc and headers
+ADD frameworks/objc/objc /usr/include/GNUstep/objc
+ADD frameworks/objc/CW /usr/include/GNUstep/CW
 
 WORKDIR /runner
 
