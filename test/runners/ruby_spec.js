@@ -27,6 +27,20 @@ describe('ruby runner', function () {
             });
         });
 
+        it('should support run-shell-script', function (done) {
+            runner.run({
+                language: 'ruby',
+                code: 'puts `ls`',
+                setup: `
+                    # @download-github-repo jhoffner/test
+                    # @run-shell-script start.sh
+                `,
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('test.txt\n');
+                done();
+            });
+        });
+
         describe('cw-2', function () {
             it('should handle a basic assertion', function (done) {
                 runner.run({language: 'ruby', code: 'a = 1', fixture: 'Test.expect a == 1', testFramework: 'cw-2'}, function (buffer) {
