@@ -9,8 +9,6 @@
 #ifndef CWTest_h
 #define CWTest_h
 
-#import <Foundation/Foundation.h>
-
 @interface CWTest: NSObject
 
 + (void) format:(NSString*)text withTag:(NSString*)tag withHandler:(void(^)(void))handler;
