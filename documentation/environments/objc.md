@@ -4,11 +4,26 @@ Code is executed using GNUstep compiled with Clang within a Dockerized Ubuntu 14
 
 See [here](http://wiki.gnustep.org/index.php/ObjC2_FAQ) for more information about GNUstep.
 
+## Imports
+
+The following imports and includes are automatically provided:
+
+```
+#import <Foundation/Foundation.h>
+#import <Foundation/NSAutoreleasePool.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSDebug.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSObjCRuntime.h>
+#include <string.h>
+#import <GNUstepBase/GSObjCRuntime.h>
+#import <CW/CWTest.h>
+``` 
 
 # Unit Testing API
 
 Running simply equal test:
-
 
 ```
 describe(@"String not match", ^() {

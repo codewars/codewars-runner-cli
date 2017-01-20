@@ -74,7 +74,9 @@
     }
     else
     {
-        NSLog(@"%@", [NSString stringWithFormat:@"<FAILED::>Expected \"%@\" but instead got \"%@\"\n", a, b]);
+        NSString* expectedClass = NSStringFromClass([a class]);
+        NSString* actualClass = NSStringFromClass([b class]);
+        NSLog(@"%@", [NSString stringWithFormat:@"<FAILED::>Expected \"%@\" (%@) but instead got \"%@\" (%@)\n", a, expectedClass, b, actualClass]);
     }
 }
 
@@ -82,7 +84,8 @@
 {
     if ([a isEqual: b])
     {
-        NSLog(@"%@", [NSString stringWithFormat:@"<FAILED::>Expected \"%@\" to not equal \"%@\"\n", a, b]);
+        NSString* aClass = NSStringFromClass([a class]);
+        NSLog(@"%@", [NSString stringWithFormat:@"<FAILED::>Value is not supposed to equal \"%@\" (%@)\n", a, aClass]);
     }
     else
     {
