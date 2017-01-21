@@ -203,6 +203,7 @@ describe( 'objc runner', function(){
 				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				expect(buffer.stdout).to.contain('<IT::>should pass');
 				expect(buffer.stdout).to.contain('<DESCRIBE::>String not match');
+				expect(buffer.stderr).to.equal('');
 				done();
 			});
 		});
