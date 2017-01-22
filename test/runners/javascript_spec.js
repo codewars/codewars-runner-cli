@@ -585,6 +585,33 @@ describe( 'javascript runner', function(){
                         done();
                     });
             });
+
+            describe('Fix #259', function() {
+                it('should prevent global reassignment cheat', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        languageVersion: '6.6.0',
+                        code: `
+                        global = Object.assign({}, global);
+                        global.Test = Object.assign({}, Test);
+                        var od = global.Test.describe;
+                        global.Test.describe = function() {
+                          return od("Fake test suite", function() {
+                            Test.it('fake test', function() {
+                              Test.expect(true);
+                            });
+                          });
+                        };
+                        `,
+                        fixture: `Test.describe('Fail', function() { Test.it('should fail', function() { Test.expect(false); }); });`,
+                        testFramework: 'cw-2'
+                    }, function(buffer) {
+                        expect(buffer.stdout).to.not.contain('<PASSED::>');
+                        expect(buffer.stdout).to.contain('<ERROR::>');
+                        done();
+                    });
+                });
+            });
         });
 
 
