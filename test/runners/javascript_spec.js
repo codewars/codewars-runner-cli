@@ -585,6 +585,88 @@ describe( 'javascript runner', function(){
                         done();
                     });
             });
+
+
+            describe('Test.randomNumber()', function() {
+                it('should generate random integer in range [0, 100]', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        languageVersion: '6.6.0',
+                        code: 'const a = Array.from({length: 1000}, _ => Test.randomNumber());',
+                        fixture: 'Test.expect(a.every(x => Number.isInteger(x) && x >= 0 && x <= 100));',
+                        testFramework: 'cw-2'
+                    }, function(buffer) {
+                        expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+                        done();
+                    });
+                });
+                it('should be uniformly distributed', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        languageVersion: '6.6.0',
+                        code: 'const a = Array.from({length: 101}, _ => 0); for (let i = 0; i < 1e7; ++i) ++a[Test.randomNumber()];',
+                        fixture: 'Test.expect(a.every(x => Math.abs(1 - 100*x/1e7) <= 0.2));',
+                        testFramework: 'cw-2'
+                    }, function(buffer) {
+                        expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+                        done();
+                    });
+                });
+            });
+
+            describe('Test.randomize(array)', function() {
+                it('should return a new Array', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        languageVersion: '6.6.0',
+                        code: 'const a = Array.from({length: 100}, (_, i) => i), b = Test.randomize(a);',
+                        fixture: 'Test.expect(a !== b);',
+                        testFramework: 'cw-2'
+                    }, function(buffer) {
+                        expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+                        done();
+                    });
+                });
+                it('should shuffle elements', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        languageVersion: '6.6.0',
+                        code: 'const a = Array.from({length: 100}, (_, i) => i), b = Test.randomize(a);',
+                        fixture: 'Test.assertNotDeepEquals(a, b);',
+                        testFramework: 'cw-2'
+                    }, function(buffer) {
+                        expect(buffer.stdout).to.contain('<PASSED::>');
+                        done();
+                    });
+                });
+                it('should contain same elements', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        languageVersion: '6.6.0',
+                        code: 'const a = Array.from({length: 100}, (_, i) => i), b = Test.randomize(a);',
+                        fixture: 'Test.assertDeepEquals(a, b.sort((a, b) => a - b));',
+                        testFramework: 'cw-2'
+                    }, function(buffer) {
+                        expect(buffer.stdout).to.contain('<PASSED::>');
+                        done();
+                    });
+                });
+            });
+
+            describe('Test.sample(array)', function() {
+                it('should pick random element from array', function(done) {
+                    runner.run({
+                        language: 'javascript',
+                        languageVersion: '6.6.0',
+                        code: 'const a = Array.from({length: 100}, (_, i) => i), b = Array.from({length: 100}, _ => Test.sample(a));',
+                        fixture: 'Test.expect(b.every(x => a.includes(x)));',
+                        testFramework: 'cw-2'
+                    }, function(buffer) {
+                        expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+                        done();
+                    });
+                });
+            });
         });
 
 
