@@ -2,7 +2,8 @@
 try
 {
     var util = require('util'),
-        deepEquals = require('lodash').isEqual,
+        _ = require('lodash'),
+        deepEquals = _.isEqual,
         Promise = require("bluebird");
     
     require('./chai-display');
@@ -464,28 +465,14 @@ try
         },
         randomNumber: function ()
         {
-            return Math.round(Math.random() * 100)
+            return _.random(100);
         },
         randomToken: function ()
         {
             return Math.random().toString(36).substr(8)
         },
-        randomize: function (array)
-        {
-            var arr = array.concat(), i = arr.length, j, x;
-            while (i)
-            {
-                j = (Math.random() * i) | 0;
-                x = arr[--i];
-                arr[i] = arr[j];
-                arr[j] = x;
-            }
-            return arr;
-        },
-        sample: function (array)
-        {
-            return array[~~(array.length * Math.random())]
-        },
+        randomize: _.shuffle,
+        sample: _.sample,
         escapeHtml: function (html) {
             return Test.display.escapeHtml(html);
         },
