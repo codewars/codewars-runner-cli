@@ -53,7 +53,7 @@ describe( 'javascript runner', function(){
                     `
                 }, function (buffer) {
                     expect(buffer.stdout).to.contain("test 123");
-                    expect(buffer.shellResult.stdout.length).to.be.gt(0);
+                    expect(buffer.shell.stdout.length).to.be.gt(0);
                     done();
                 });
             });

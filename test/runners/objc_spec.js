@@ -170,18 +170,18 @@ describe( 'objc runner', function(){
 			runner.run({
 				language: 'objc',
 				code: 'NSString* Foo (NSString *str){return str;}',
-				fixture: [
-					'describe(@"String match", ^() {',
-						'it(@"should not match", ^() {',
-							'equal(@"Blah", Foo(@"Blah1"));',
-						'});',
-					'});'
-				].join('\n')
+				fixture: `
+					describe(@"String match", ^() {
+						it(@"should not match", ^() {
+							equal(@"Blah", Foo(@"Blah1"));
+						});
+					});
+				`
 			}, function(buffer) {
 				console.log(buffer);
 				expect(buffer.stdout).to.contain('<DESCRIBE::>String match');
 				expect(buffer.stdout).to.contain('<IT::>should not match');
-				expect(buffer.stdout).to.contain('<FAILED::>Expected "Blah" but instead got "Blah1"');
+				expect(buffer.stdout).to.contain('<FAILED::>Expected "Blah" (NSConstantString) but instead got "Blah1" (NSConstantString)');
 				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				done();
 			});
@@ -193,19 +193,21 @@ describe( 'objc runner', function(){
 				fixture: [
 					'describe(@"String not match", ^() {',
 						'it(@"should pass", ^() {',
-							'notEqual(@"Blah", Foo(@"Blah1"));',
+							'notEqual(@"Blah", Foo(@"Blah"));',
 						'});',
 					'});'
 				].join('\n')
 			}, function(buffer) {
 				console.log(buffer);
-				expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+				expect(buffer.stdout).to.contain('<FAILED::>Value is not supposed to equal "Blah" (NSConstantString)');
 				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				expect(buffer.stdout).to.contain('<IT::>should pass');
 				expect(buffer.stdout).to.contain('<DESCRIBE::>String not match');
+				expect(buffer.stderr).to.equal('');
 				done();
 			});
 		});
+
 		it('should perform unit testing and pass the test (test equal())', function(done) {
 			runner.run({
 				language: 'objc',
@@ -227,7 +229,7 @@ describe( 'objc runner', function(){
 				console.log(buffer);
                 console.log("buffer.stdout", buffer.stdout);
                 expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
-                expect(buffer.stdout).to.contain('<FAILED::>Expected "1" but instead got "2"');
+                expect(buffer.stdout).to.contain('<FAILED::>Expected "1" (NSIntNumber) but instead got "2" (NSIntNumber)');
                 expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				expect(buffer.stdout).to.contain('<IT::>should match int');
 				expect(buffer.stdout).to.contain('<IT::>should not match int');

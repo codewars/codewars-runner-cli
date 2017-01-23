@@ -6,13 +6,13 @@ cw:
 
     answer: |-
       NSString* String2x (NSString *str){
-        return str + str;
+        return [str stringByAppendingString:str];
       }
 
     fixture: |-
       describe(@"String2x", ^() {
         it(@"should return the string doubled", ^() {
-          equal(@"doubledouble", String2X(@"double");
-          notEqual(@"double", String2X(@"doubledouble");
+          equal(@"doubledouble", String2X(@"double"));
+          notEqual(@"double", String2X(@"doubledouble"));
         });
       });
