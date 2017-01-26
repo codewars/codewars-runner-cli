@@ -48,8 +48,8 @@ var message = module.exports.message = function message(msg, prefix)
  */  
 module.exports.write = function write(type, msg, opts) {
     opts = opts || {};
-    mode = (opts.mode || "").toUpperCase();
-    label = (opts.label || "");
+    var mode = (opts.mode || "").toUpperCase();
+    var label = (opts.label || "");
     if (opts.mode == 'JSON') {
         msg = JSON.stringify(msg);
     }
@@ -174,8 +174,8 @@ module.exports.explain = function explain(actual, expected, options) {
         options = {collapsed: options };
     }
 
-    options = options || {},
-    collapsed = options.collapsed ? "-" : "",
+    options = options || {};
+    var collapsed = options.collapsed ? "-" : "",
     diff = true;
 
     if (options.mode) {
