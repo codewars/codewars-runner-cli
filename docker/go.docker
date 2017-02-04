@@ -1,0 +1,54 @@
+FROM codewars/base-runner
+
+# <https://github.com/docker-library/golang/blob/master/1.7/Dockerfile>
+# gcc for cgo
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		g++ \
+		gcc \
+		libc6-dev \
+		make \
+		pkg-config \
+	&& rm -rf /var/lib/apt/lists/*
+
+ENV GOLANG_VERSION 1.7.5
+ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ENV GOLANG_DOWNLOAD_SHA256 2e4dd6c44f0693bef4e7b46cc701513d74c3cc44f2419bf519d7868b12931ac3
+
+RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
+	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& tar -C /usr/local -xzf golang.tar.gz \
+	&& rm golang.tar.gz
+
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+
+RUN go get github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
+RUN go get github.com/onsi/gomega         # fetches the matcher library
+
+
+ENV NPM_CONFIG_LOGLEVEL error
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+COPY package.json /tmp/package.json
+WORKDIR /tmp
+RUN npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+# ADD cli-runner and install node deps
+COPY . /runner
+WORKDIR /runner
+
+COPY frameworks/go/codewars $GOPATH/src/codewars
+RUN go install codewars/reporter
+
+USER codewarrior
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+
+# Run the test suite to make sure this thing works
+RUN mocha -t 5000 test/runners/go_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
