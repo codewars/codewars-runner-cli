@@ -11,7 +11,7 @@ A small subset of commands is supported that can be used to format output. They 
 - `<COMPLETEDIN::>`
 
 Prefixing a new line with these commands will cause that line to be formatted. 
-Since each new STDOUT line is considered a new peace of data, if you wish to format multiple lines as one 
+Since each new STDOUT line is considered a new piece of data, if you wish to format multiple lines as one 
 item (such as a multi line "passed" message), then you must replace all \n line feed characters with the `<:LF:>` token.
 
 For example, in Ruby, if you wanted to write a multi-line passed message:
