@@ -676,6 +676,33 @@ describe('javascript runner', function() {
           });
         });
       });
+
+      describe('Test.randomNumber()', function() {
+        it('should generate random integer in range [0, 100]', function(done) {
+          runner.run({
+            language: 'javascript',
+            languageVersion: '6.6.0',
+            code: 'const a = Array.from({length: 1000}, _ => Test.randomNumber());',
+            fixture: 'Test.expect(a.every(x => Number.isInteger(x) && x >= 0 && x <= 100));',
+            testFramework: 'cw-2'
+          }, function(buffer) {
+            expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+            done();
+          });
+        });
+        it('should be uniformly distributed', function(done) {
+          runner.run({
+            language: 'javascript',
+            languageVersion: '6.6.0',
+            code: 'const a = Array.from({length: 101}, _ => 0); for (let i = 0; i < 1e7; ++i) ++a[Test.randomNumber()];',
+            fixture: 'Test.expect(a.every(x => Math.abs(1 - 100*x/1e7) <= 0.2));',
+            testFramework: 'cw-2'
+          }, function(buffer) {
+            expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+            done();
+          });
+        });
+      });
     });
 
 
