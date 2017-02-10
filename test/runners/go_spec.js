@@ -20,7 +20,6 @@ describe( 'go runner', function(){
     });
 });
 
-
 describe('testing with Ginkgo', function() {
     afterEach(function cleanup(done) {
         exec('rm -rf /home/codewarrior/go/src/codewarrior', function(err, stdout, stderr) {
@@ -560,3 +559,13 @@ var _ = Describe("Pair", func() {
     });
 });
 
+
+describe('Examples', function() {
+    afterEach(function cleanup(done) {
+        exec('rm -rf /home/codewarrior/go/src/codewarrior', function(err, stdout, stderr) {
+            if (err) return done(err);
+            done();
+        });
+    });
+    runner.assertCodeExamples('go');
+});
