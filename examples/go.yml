@@ -1,0 +1,116 @@
+# These examples don't follow standard coding conventions
+# because YAML doesn't allow TABs.
+ginkgo:
+  fundamentals:
+    initial: |-
+      package fundamentals
+      var Websites = []string{}
+    answer: |-
+      package fundamentals
+      var Websites = []string{"codewars"}
+    fixture: |-
+      package fundamentals_test
+      import (
+        . "github.com/onsi/ginkgo"
+        . "github.com/onsi/gomega"
+        . "codewarrior/fundamentals"
+      )
+      var _ = Describe("Websites", func() {
+        It("should not be empty", func() {
+          Expect(Websites).NotTo(BeEmpty())
+        })
+        It("should have length 1", func() {
+          Expect(Websites).To(HaveLen(1))
+        })
+        It("should include codewars", func() {
+          Expect(Websites[0]).To(Equal("codewars"))
+        })
+      })
+
+  algorithms:
+    initial: |-
+      package kata
+      func TwoOldestAges(ages []int) [2]int {
+      }
+    answer: |-
+      package kata
+      func TwoOldestAges(ages []int) [2]int {
+        a, b := 0, 0
+        for _, v := range ages {
+          if v > b {
+            a, b = b, v
+          } else if v > a {
+            a = v
+          }
+        }
+        return [2]int{a, b}
+      }
+    fixture: |-
+      package kata_test
+      import (
+        . "github.com/onsi/ginkgo"
+        . "github.com/onsi/gomega"
+        . "codewarrior/kata"
+      )
+      var _ = Describe("TwoOldestAges", func() {
+        It("should return 45 and 87 for input []int{1,5,87,45,8,8}", func() {
+          Expect(TwoOldestAges([]int{1,5,87,45,8,8})).To(Equal([2]int{45,87}))
+        })
+        It("should return 18 and 83 for input []int{6,5,83,5,3,18}", func() {
+          Expect(TwoOldestAges([]int{6,5,83,5,3,18})).To(Equal([2]int{18,83}))
+        })
+      })
+
+  bug fixes:
+    initial: |-
+      package kata
+      func Add(a, b int) int {
+        a + b
+      }
+    answer: |-
+      package kata
+      func Add(a, b int) int {
+        return a + b
+      }
+    fixture: |-
+      package kata_test
+      import (
+        . "github.com/onsi/ginkgo"
+        . "github.com/onsi/gomega"
+        "codewarrior/kata"
+      )
+      var _ = Describe("Add", func() {
+        It("should add integers", func() {
+          Expect(kata.Add(1, 1)).To(Equal(2))
+        })
+      })
+
+  refactoring:
+    initial: |-
+      package person
+      // TODO: Define a struct Person having Name with method Greet
+      func Greet(myName, yourName string) string {
+        return "Hello " + yourName + ", my name is " + myName
+      }
+    answer: |-
+      package person
+      type Person struct {
+        Name string
+      }
+      func (p *Person) Greet(yourName string) string {
+        return "Hello " + yourName + ", my name is " + p.Name
+      }
+    fixture: |-
+      package person_test
+      import (
+        . "github.com/onsi/ginkgo"
+        . "github.com/onsi/gomega"
+        . "codewarrior/person"
+      )
+      var _ = Describe("Person", func() {
+        It("should greet", func() {
+          jack := Person{"Jack"}
+          Expect(jack.Greet("Jill")).To(Equal("Hello Jill, my name is Jack"))
+          Expect(jack.Greet("Mary")).To(Equal("Hello Mary, my name is Jack"))
+        })
+      })
