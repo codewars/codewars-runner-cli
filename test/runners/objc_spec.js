@@ -260,5 +260,23 @@ describe( 'objc runner', function(){
 				done();
 			});
 		});
+        it('should handle functions from standard library <math.h>', function(done) {
+           runner.run({
+               language: 'objc',
+               setup: false,
+               code:[
+                   '#import <Foundation/Foundation.h>',
+                   '#include <math.h>',
+                   'int main (int argc, const char * argv[]) {',
+                   'NSLog([NSNumber numberWithDouble: sqrt(pow(5, 2))]);',
+                   'return 0;',
+                   '}'
+               ].join('\n')
+            }, function(buffer) {
+                console.log("buffer", buffer);
+                expect(buffer.stdout).to.contain('5');
+                done();
+            });
+        });
 	});
 });
