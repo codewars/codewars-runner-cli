@@ -10,10 +10,23 @@ env OBJC_VOL /objc-vol
 env OBJC_GEN_DIR $OBJC_VOL/objc-gen
 env OBJC_SOURCE_DIR $OBJC_VOL/objc-source
 
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+RUN add-apt-repository 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main' 
+RUN wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add -
+
+RUN apt-key update
 RUN apt-get update
 RUN apt-get upgrade -y
 
-RUN apt-get install -y build-essential gobjc gobjc++ gnustep gnustep-devel libgnustep-base-dev clang gnustep-make llvm libblocksruntime-dev libdispatch-dev
+# Install pre-requisities
+RUN apt-get install -y cmake clang-3.9 lldb-3.9 llvm build-essential gobjc gobjc++ libblocksruntime-dev libkqueue-dev libpthread-workqueue-dev  libxml2-dev libjpeg-dev libtiff-dev libpng12-dev libcups2-dev libfreetype6-dev libcairo2-dev libxt-dev libgl1-mesa-dev libdispatch-dev
+  
+RUN ln -s /usr/bin/clang-3.9 /usr/bin/clang
+RUN ln -s /usr/bin/clang++-3.9 /usr/bin/clang++
+
+# Set clang as compiler
+ENV CC=clang
+ENV CXX=clang++
 
 # Add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
@@ -24,9 +37,11 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 ADD . /runner
 
 # Install libobjc and headers
-ADD frameworks/objc/objc /usr/include/GNUstep/objc
-ADD frameworks/objc/CW /usr/include/GNUstep/CW
-
+#ADD frameworks/objc/objc /usr/local/include/objc
+ADD frameworks/objc/CW /usr/local/include/CW
+# Reset the environment
+ENV LDFLAGS=
+ENV OBJCFLAGS=
 WORKDIR /runner
 
 # Run the test suite to make sure this thing works
