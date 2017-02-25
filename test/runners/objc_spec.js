@@ -268,8 +268,10 @@ describe( 'objc runner', function(){
                    '#import <Foundation/Foundation.h>',
                    '#include <math.h>',
                    'int main (int argc, const char * argv[]) {',
-                   'NSLog([NSNumber numberWithDouble: sqrt(pow(5, 2))]);',
-                   'return 0;',
+                     '@autoreleasepool{',
+                       'NSLog(@"%.f", sqrt(pow(5, 2)) );',
+                     '}',
+                     'return 0;',
                    '}'
                ].join('\n')
             }, function(buffer) {
