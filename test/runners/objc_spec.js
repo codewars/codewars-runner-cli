@@ -41,7 +41,7 @@ describe( 'objc runner', function(){
 				expect(buffer.stdout).to.contain('999');
 				done();
 			});
-		});
+		});		
 		it('should handle compile errors', function(done) {
 			runner.run({
 				language: 'objc',
@@ -280,5 +280,45 @@ describe( 'objc runner', function(){
                 done();
             });
         });
+        it('should support modern objc', function(done) {
+           runner.run({
+               language: 'objc',
+               setup: false,
+               code:`
+					#import <Foundation/Foundation.h>
+
+					NSNumber *ICKGetMaxProfit(NSArray<NSNumber *> *stockPricesYesterday, NSUInteger length) {
+					    NSInteger minPrice, maxProfit;
+
+					    NSCAssert1(length >= 2, 
+					        @"parameter length: expected 2 or more but got %lu", (unsigned long)length);
+
+					    minPrice = stockPricesYesterday[0].integerValue;
+					    maxProfit = stockPricesYesterday[1].integerValue - stockPricesYesterday[0].integerValue;
+
+					    for (NSUInteger i = 1; i < length; i++) {
+					        NSInteger currentPrice = stockPricesYesterday[i].integerValue;
+					        NSInteger potentialProfit = currentPrice - minPrice;
+
+					        maxProfit = MAX(maxProfit, potentialProfit);
+					        minPrice = MIN(minPrice, currentPrice);
+					    }
+
+					    return @(maxProfit);
+					}
+
+
+					int main (int argc, const char * argv[]) {
+					    NSArray *stockPricesYesterday = @[ @15, @20, @19];
+					    NSLog(@"%@", ICKGetMaxProfit(stockPricesYesterday,3));
+					    return 0;
+					}`
+            }, function(buffer) {
+                console.log("buffer", buffer);
+                expect(buffer.stdout).to.contain('5');
+                done();
+            });
+        });
+
 	});
 });
