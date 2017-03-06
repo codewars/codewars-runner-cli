@@ -3,8 +3,9 @@ var expect = require('chai').expect,
 
 describe( 'javascript runner', function(){
     describe( '.run', function(){
+
         runner.assertCodeExamples('javascript');
-        
+
         //----------------------------------------------------------------------------------------
         // Basics
         //----------------------------------------------------------------------------------------
@@ -20,6 +21,16 @@ describe( 'javascript runner', function(){
                 runner.run({language: 'javascript', code: 'console.log(JSON.stringify({a: 1}))'}, function (buffer) {
                     console.log(buffer.stderr);
                     expect(buffer.stdout).to.contain('{"a":1}');
+                    done();
+                });
+            });
+            it('should handle importing files from a gist', function (done) {
+                runner.run({
+                    language: 'javascript',
+                    code: 'console.log(require("./gist.js").name)',
+                    gist: '3acc7b81436ffe4ad20800e242ccaff6'
+                }, function (buffer) {
+                    expect(buffer.stdout).to.contain('Example Test');
                     done();
                 });
             });
@@ -47,7 +58,7 @@ describe( 'javascript runner', function(){
             it('should allow a shell script to be ran', function (done) {
                 runner.run({
                     language: 'javascript',
-                    shell: 'echo "test 123" >> /home/codewarrior/test.txt ; ls',
+                    bash: 'echo "test 123" >> /home/codewarrior/test.txt ; ls',
                     code: `
                         console.log(require('fs').readFileSync('/home/codewarrior/test.txt', 'utf8'));
                     `
@@ -301,6 +312,8 @@ describe( 'javascript runner', function(){
                     },
                     testFramework: 'mocha_bdd'},
                     function(buffer) {
+                        console.log(buffer.stdout);
+                        console.log(buffer.stderr);
                         expect(buffer.stdout).to.contain('<PASSED::>');
                         done();
                     });
@@ -321,11 +334,36 @@ describe( 'javascript runner', function(){
                     `,
                     testFramework: 'mocha_bdd'},
                     function(buffer) {
-                        console.log(buffer);
                         expect(buffer.stdout).to.contain('<PASSED::>');
                         done();
                     });
             });
+
+              describe ('projectMode support', function () {
+                it( 'should handle tests', function(done){
+                  runner.run({
+                      language: 'javascript',
+                      files: {
+                        'helper.js': 'module.exports.name = "helper"',
+                        'spec.js': `
+                            var helper = require("./helper.js");
+                            var assert = require("chai").assert;
+                            describe("test", function(){
+                                it("should have a name", function(){
+                                    assert.equal('helper', helper.name);
+                                })
+                            });
+                        `
+                      },
+                      testFramework: 'mocha_bdd'},
+                    function(buffer) {
+                      // console.log(buffer.stdout)
+                      // console.log(buffer.stderr)
+                      expect(buffer.stdout).to.contain('<PASSED::>');
+                      done();
+                    });
+                });
+              });
         });
 
 
@@ -462,6 +500,32 @@ describe( 'javascript runner', function(){
                     expect(buffer.stdout).to.include(`<DESCRIBE::>top\n<DESCRIBE::>2nd\n<IT::>should a\n`);
                     done();
                 });
+            });
+
+            describe ('projectMode support', function () {
+              it( 'should handle test cases', function(done){
+                runner.run({
+                    language: 'javascript',
+                    files: {
+                      'helper.js': 'module.exports.name = "helper"',
+                      'spec.js': `
+                          var helper = require("./helper.js");
+                          var assert = require("chai").assert;
+                          describe("test", function(){
+                              it("should have a name", function(){
+                                  assert.equal('helper', helper.name);
+                              })
+                          });
+                      `
+                    },
+                    testFramework: 'cw-2'},
+                  function(buffer) {
+                    // console.log(buffer.stdout)
+                    // console.log(buffer.stderr)
+                    expect(buffer.stdout).to.contain('<PASSED::>');
+                    done();
+                  });
+              });
             });
 
             describe("async handling", function() {
@@ -756,6 +820,24 @@ describe("test", function(){
                     expect(buffer.stdout).to.contain('\n<FAILED::>');
                     done();
                 });
+            });
+
+            it( 'should handle projectMode', function(done){
+                runner.run({
+                        language: 'javascript',
+                        files: {
+                            '.runner/config.json': '{}',
+                            '.runner/setup.sh': 'echo 123',
+                            'test.css': '.a {font-weight: bold}',
+                            'main.js': 'var a = {b: 2};',
+                            'spec.js': 'describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});'
+                        },
+                        testFramework: 'karma_bdd'
+                    },
+                    function(buffer) {
+                        expect(buffer.stdout).to.contain('<PASSED::>');
+                        done();
+                    });
             });
         });
 

@@ -28,6 +28,7 @@ ADD frameworks/objc/objc /usr/include/GNUstep/objc
 ADD frameworks/objc/CW /usr/include/GNUstep/CW
 
 WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
 
 # Run the test suite to make sure this thing works
 

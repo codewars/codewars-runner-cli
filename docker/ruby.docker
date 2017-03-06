@@ -159,6 +159,9 @@ RUN apt-get update && apt-get -y install csh tcsh
 # Install extra shell packages
 RUN apt-get update && apt-get -y install mlocate bc
 
+# allow codewarrior to install gems
+RUN chown codewarrior /usr/local/bundle
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
@@ -180,6 +183,7 @@ ENV HOME /home/codewarrior
 RUN mocha -t 5000 test/runners/ruby_spec.js
 #RUN mocha -t 5000 test/runners/sql_spec.js
 RUN mocha -t 5000 test/runners/shell_spec.js
+RUN sh /runner/lib/cleanup.sh
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly

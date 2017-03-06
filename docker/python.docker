@@ -78,6 +78,7 @@ RUN ln -s /home/codewarrior /workspace
 ADD . /runner
 
 WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
 
 # Run the test suite to make sure this thing works
 

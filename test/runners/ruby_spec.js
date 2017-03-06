@@ -4,7 +4,7 @@ var runner = require('../runner');
 
 describe('ruby runner', function () {
     describe('.run', function () {
-        runner.assertCodeExamples('ruby');
+        // runner.assertCodeExamples('ruby');
 
         it('should handle basic code evaluation', function (done) {
             runner.run({language: 'ruby', code: 'puts 42'}, function (buffer) {
@@ -22,21 +22,47 @@ describe('ruby runner', function () {
                 `,
                 githubRepo: 'jhoffner/test'
             }, function (buffer) {
+                console.log(buffer.stdout)
                 expect(buffer.stdout).to.contain('sample\n');
                 done();
             });
         });
 
-        it('should support run-shell-script', function (done) {
+        it('should support gist downloading', function (done) {
+          runner.run({
+            language: 'ruby',
+            code: 'puts `ls`',
+            setup: '# @config: gist 3acc7b81436ffe4ad20800e242ccaff6',
+          }, function (buffer) {
+            console.log(buffer.stdout)
+            expect(buffer.stdout).to.contain('gist.js\n');
+            done();
+          });
+        });
+
+        it('should support config bash-file', function (done) {
             runner.run({
                 language: 'ruby',
                 code: 'puts `ls`',
                 setup: `
-                    # @download-github-repo jhoffner/test
-                    # @run-shell-script start.sh
+                    # @config: github-repo jhoffner/test
+                    # @config: bash-file start.sh
                 `,
             }, function (buffer) {
                 expect(buffer.stdout).to.contain('test.txt\n');
+                done();
+            });
+        });
+
+        it('should support additional files', function (done) {
+            runner.run({
+                language: 'ruby',
+                code: 'puts `ls`',
+                files: {
+                  'myconfig.rb': 'puts 123'
+                }
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain('myconfig.rb');
                 done();
             });
         });
@@ -209,7 +235,7 @@ describe('ruby runner', function () {
             it('can run redis', function (done) {
                 runner.run({
                     language: 'ruby',
-                    code: [
+                    code: ['puts `ls`',
                         'fork do',
                         '    exec "redis-server"',
                         'end',

@@ -107,6 +107,21 @@ describe('python runner', function () {
                         done();
                     });
             });
+
+            it('should support project mode', function(done) {
+                runner.run({
+                    language: 'python',
+                    languageVersion: lv,
+                    testFramework: 'cw-2',
+                    files: {
+                        'spec.py': 'Test.expect(True)'
+                    }
+                }, function (buffer) {
+                    expect(buffer.stdout).to.include('<PASSED::>');
+                    done();
+                });
+
+            });
         });
         describe('unittest', function () {
             it('should handle a basic assertion', function (done) {

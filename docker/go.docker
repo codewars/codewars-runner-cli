@@ -38,6 +38,7 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 # ADD cli-runner and install node deps
 COPY . /runner
 WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
 
 COPY frameworks/go/codewars $GOPATH/src/codewars
 RUN go install codewars/reporter

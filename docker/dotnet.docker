@@ -17,14 +17,26 @@ RUN apt-get install -y mono-complete
 # Install F#
 RUN apt-get install -y fsharp
 
+# Install .NET Core SDK
+# TODO: add back in once support is completed, right now we are sticking with Mono only
+# RUN sh -c 'echo "deb [arch=amd64] http://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
+# RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
+# RUN apt-get update
+
+# RUN apt-get install -y dotnet-dev-1.0.0-rc3-004530
+
+RUN apt-get install -y nuget
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
 RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
+
 # ADD cli-runner
 ADD . /runner
 
+RUN ln -s /home/codewarrior /workspace
 WORKDIR /runner
 
 # Run the test suite to make sure this thing works
@@ -35,6 +47,7 @@ ENV USER codewarrior
 ENV HOME /home/codewarrior
 
 RUN mocha -t 10000 test/runners/{csharp,fsharp}_spec.js
+RUN sh /runner/lib/cleanup.sh
 RUN mono -V
 
 #timeout is a fallback in case an error with node

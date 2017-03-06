@@ -28,6 +28,7 @@ ADD . /runner
 
 # Working dir is /runner
 WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
 
 # add the spec formatter to the crystal directory so that everything is ran local
 ADD frameworks/crystal/formatter.cr /home/codewarrior/crystal/formatter.cr
