@@ -1,3 +1,22 @@
+unitkit:
+  reference:
+    initial: |-
+      #import <Foundation/Foundation.h>
+      NSString* String2x (NSString *str){
+      }
+    answer: |-
+      #import <Foundation/Foundation.h>
+      NSString* String2x (NSString *str){
+        return [str stringByAppendingString:str];
+      }
+    fixture: |-
+      @implementation TestSuite
+        - (void) testsIfReturnsADoubledString
+        {
+          UKStringsEqual(@"doubledouble", String2x(@"double"));
+          UKStringsNotEqual(@"double", String2x(@"double"));
+        }
+      @end
 cw:
   reference:
     initial: |-
@@ -14,4 +33,3 @@ cw:
           notEqual(@"double", String2x(@"doubledouble"));
         });
       });
-
