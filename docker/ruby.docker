@@ -137,11 +137,9 @@ RUN gem install ably --no-ri --no-rdoc
 
 USER codewarrior
 
-
 # Sample Database
 # http://www.postgresqltutorial.com/postgresql-sample-database/#
 
-ENV PGDATA /home/codewarrior/pg
 ADD sample_data /runner/sample_data
 RUN /usr/lib/postgresql/9.6/bin/pg_ctl -w start \
     && createdb -U codewarrior spec \
