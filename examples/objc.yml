@@ -1,4 +1,4 @@
-cw:
+unitkit:
   reference:
     initial: |-
       #import <Foundation/Foundation.h>
@@ -17,3 +17,19 @@ cw:
           UKStringsNotEqual(@"double", String2x(@"double"));
         }
       @end
+cw:
+  reference:
+    initial: |-
+      NSString* String2x (NSString *str){
+      }
+    answer: |-
+      NSString* String2x (NSString *str){
+        return [str stringByAppendingString:str];
+      }
+    fixture: |-
+      describe(@"String2x", ^() {
+        it(@"should return the string doubled", ^() {
+          equal(@"doubledouble", String2x(@"double"));
+          notEqual(@"double", String2x(@"doubledouble"));
+        });
+      });

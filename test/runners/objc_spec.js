@@ -166,140 +166,10 @@ describe( 'objc runner', function(){
 				done();
 			});
 		});
-		it('should perform unit testing', function(done) {
-			runner.run({
-				language: 'objc',
-				code: ' ',
-				fixture: `
-					@implementation TestSuite
-
-					+ (void)testAClassMethod
-					{
-					   UKPass();
-					}
-
-					- (void)testIfPass
-					{
-					    UKPass();
-					}
-
-					@end
-				`
-			}, function(buffer) {
-				//console.log(buffer);
-				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
-				expect(buffer.stdout).to.contain('<IT::>testAClassMethod');
-				expect(buffer.stdout).to.contain('<IT::>testIfPass');
-				expect(buffer.stdout).to.contain('<PASSED::>');
-				expect(buffer.stdout).to.not.contain('<FAILED::>');
-				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
-				done();
-			});
-		});
-		it('should perform unit testing and handling failures', function(done) {
-			runner.run({
-				language: 'objc',
-				code: ' ',
-				fixture: `
-					@implementation TestSuite
-
-					- (void) testsFailures
-					{
-					    UKFail();
-					    UKTrue(NO);
-					    UKFalse(YES);
-					    UKNil(@"fwip");
-					    UKNil(self);
-					    UKNotNil(nil);
-					    UKIntsEqual(3, 4);
-					    UKIntsNotEqual(3, 3);
-					    UKFloatsEqual(22.0, 33.0, 1.0);
-					    UKFloatsNotEqual(22.1, 22.2, 0.2);
-					    UKObjectsEqual(self, @"foo");
-					    UKObjectsNotEqual(self, self);
-					    UKObjectsSame(self, @"foo");
-					    UKObjectsNotSame(@"foo", @"foo");
-					    UKStringsEqual(@"fraggle", @"rock");
-					    UKStringsNotEqual(@"fraggle", @"fraggle");
-					    UKStringContains(@"fraggle", @"no");
-					    UKStringDoesNotContain(@"fraggle", @"fra");
-					}
-
-					@end
-				`
-			}, function(buffer) {
-				//console.log(buffer);
-				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
-				expect(buffer.stdout).to.contain('<IT::>testsFailures');
-				expect(buffer.stdout).to.not.contain('<PASSED::>');
-				expect(buffer.stdout).to.contain('<FAILED::>');
-				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
-				done();
-			});
-		});		
-		it('should perform unit testing with code', function(done) {
-			runner.run({
-				language: 'objc',
-				code: `
-					#import <Foundation/Foundation.h>
-
-					NSString* Foo (NSString *str){return str;}
-				`,
-				fixture: `
-					@implementation TestSuite
-
-					- (void) testsFoo
-					{
-						UKStringsEqual(@"Blah", Foo(@"Blah"));
-						UKStringsNotEqual(@"fraggle", Foo(@"Blah"));
-					}
-
-					@end
-				`
-			}, function(buffer) {
-				//console.log(buffer);
-				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
-				expect(buffer.stdout).to.contain('<IT::>testsFoo');
-				expect(buffer.stdout).to.contain('<PASSED::>');
-				expect(buffer.stdout).to.not.contain('<FAILED::>');
-				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
-				done();
-			});
-		});				
-		it('should perform unit testing handling exceptions', function(done) {
-			runner.run({
-				language: 'objc',
-				code: `
-					#import <Foundation/Foundation.h>
-
-					NSString* FooException (NSString *str){ 
-						[NSException raise:@"FooException" format:@"Custom exception"]; 
-						return str;
-					}
-				`,
-				fixture: `
-					@implementation TestSuite
-
-					- (void) testsFooException
-					{
-						UKRaisesException(FooException(@"Blah"));
-					}
-
-					@end
-				`
-			}, function(buffer) {
-				//console.log(buffer);
-				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
-				expect(buffer.stdout).to.contain('<IT::>testsFooException');
-				expect(buffer.stdout).to.contain('<PASSED::>');
-				expect(buffer.stdout).to.not.contain('<FAILED::>');
-				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
-				done();
-			});
-		});				
 		it('should handle unhandled exceptions', function(done) {
 			runner.run({
 				language: 'objc',
+				testFramework: 'unitkit',
 				code: `
 					#import <Foundation/Foundation.h>
 
@@ -423,5 +293,188 @@ describe( 'objc runner', function(){
 	        });
 	    });
 
+		describe('UnitKit', function() {
+			it('should perform unit testing', function(done) {
+				runner.run({
+					language: 'objc',
+					code: ' ',
+					testFramework: 'unitkit',
+					fixture: `
+						@implementation TestSuite
+
+						+ (void)testAClassMethod
+						{
+						   UKPass();
+						}
+
+						- (void)testIfPass
+						{
+						    UKPass();
+						}
+
+						@end
+					`
+				}, function(buffer) {
+					//console.log(buffer);
+					expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+					expect(buffer.stdout).to.contain('<IT::>testAClassMethod');
+					expect(buffer.stdout).to.contain('<IT::>testIfPass');
+					expect(buffer.stdout).to.contain('<PASSED::>');
+					expect(buffer.stdout).to.not.contain('<FAILED::>');
+					expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+					done();
+				});
+			});
+			it('should handling failures', function(done) {
+				runner.run({
+					language: 'objc',
+					code: ' ',
+					testFramework: 'unitkit',
+					fixture: `
+						@implementation TestSuite
+
+						- (void) testsFailures
+						{
+						    UKFail();
+						    UKTrue(NO);
+						    UKFalse(YES);
+						    UKNil(@"fwip");
+						    UKNil(self);
+						    UKNotNil(nil);
+						    UKIntsEqual(3, 4);
+						    UKIntsNotEqual(3, 3);
+						    UKFloatsEqual(22.0, 33.0, 1.0);
+						    UKFloatsNotEqual(22.1, 22.2, 0.2);
+						    UKObjectsEqual(self, @"foo");
+						    UKObjectsNotEqual(self, self);
+						    UKObjectsSame(self, @"foo");
+						    UKObjectsNotSame(@"foo", @"foo");
+						    UKStringsEqual(@"fraggle", @"rock");
+						    UKStringsNotEqual(@"fraggle", @"fraggle");
+						    UKStringContains(@"fraggle", @"no");
+						    UKStringDoesNotContain(@"fraggle", @"fra");
+						}
+
+						@end
+					`
+				}, function(buffer) {
+					//console.log(buffer);
+					expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+					expect(buffer.stdout).to.contain('<IT::>testsFailures');
+					expect(buffer.stdout).to.not.contain('<PASSED::>');
+					expect(buffer.stdout).to.contain('<FAILED::>');
+					expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+					done();
+				});
+			});		
+			it('should unit test with code', function(done) {
+				runner.run({
+					language: 'objc',
+					testFramework: 'unitkit',
+					code: `
+						#import <Foundation/Foundation.h>
+
+						NSString* Foo (NSString *str){return str;}
+					`,
+					fixture: `
+						@implementation TestSuite
+
+						- (void) testsFoo
+						{
+							UKStringsEqual(@"Blah", Foo(@"Blah"));
+							UKStringsNotEqual(@"fraggle", Foo(@"Blah"));
+						}
+
+						@end
+					`
+				}, function(buffer) {
+					//console.log(buffer);
+					expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+					expect(buffer.stdout).to.contain('<IT::>testsFoo');
+					expect(buffer.stdout).to.contain('<PASSED::>');
+					expect(buffer.stdout).to.not.contain('<FAILED::>');
+					expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+					done();
+				});
+			});				
+			it('should handling exceptions', function(done) {
+				runner.run({
+					language: 'objc',
+					testFramework: 'unitkit',
+					code: `
+						#import <Foundation/Foundation.h>
+
+						NSString* FooException (NSString *str){ 
+							[NSException raise:@"FooException" format:@"Custom exception"]; 
+							return str;
+						}
+					`,
+					fixture: `
+						@implementation TestSuite
+
+						- (void) testsFooException
+						{
+							UKRaisesException(FooException(@"Blah"));
+						}
+
+						@end
+					`
+				}, function(buffer) {
+					//console.log(buffer);
+					expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+					expect(buffer.stdout).to.contain('<IT::>testsFooException');
+					expect(buffer.stdout).to.contain('<PASSED::>');
+					expect(buffer.stdout).to.not.contain('<FAILED::>');
+					expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+					done();
+				});
+			});			
+		});	
+
+	    describe('CW', function() {
+			it('should perform unit testing and test for failure (test equal())', function(done) {
+				runner.run({
+					language: 'objc',
+					code: 'NSString* Foo (NSString *str){return str;}',
+					testFramework: 'cw',
+					fixture: `
+						describe(@"String match", ^() {
+							it(@"should not match", ^() {
+								equal(@"Blah", Foo(@"Blah1"));
+							});
+						});
+					`
+				}, function(buffer) {
+					console.log(buffer);
+					expect(buffer.stdout).to.contain('<DESCRIBE::>String match');
+					expect(buffer.stdout).to.contain('<IT::>should not match');
+					expect(buffer.stdout).to.contain('<FAILED::>Expected "Blah" (NSConstantString) but instead got "Blah1" (NSConstantString)');
+					expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+					done();
+				});
+			});
+			it('should perform unit testing and pass the test (test notEqual())', function(done) {
+				runner.run({
+					language: 'objc',
+					code: 'NSString* Foo (NSString *str){return str;}',
+					testFramework: 'cw',
+					fixture: [
+						'describe(@"String not match", ^() {',
+							'it(@"should pass", ^() {',
+								'notEqual(@"Blah", Foo(@"Blah"));',
+							'});',
+						'});'
+					].join('\n')
+				}, function(buffer) {
+					console.log(buffer);
+					expect(buffer.stdout).to.contain('<FAILED::>Value is not supposed to equal "Blah" (NSConstantString)');
+					expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+					expect(buffer.stdout).to.contain('<IT::>should pass');
+					expect(buffer.stdout).to.contain('<DESCRIBE::>String not match');
+					expect(buffer.stderr).to.equal('');
+					done();
+				});
+			});
+		});
 	});
 });
