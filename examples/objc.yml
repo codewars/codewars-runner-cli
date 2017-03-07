@@ -1,17 +1,19 @@
 cw:
   reference:
     initial: |-
+      #import <Foundation/Foundation.h>
       NSString* String2x (NSString *str){
       }
     answer: |-
+      #import <Foundation/Foundation.h>
       NSString* String2x (NSString *str){
         return [str stringByAppendingString:str];
       }
     fixture: |-
-      describe(@"String2x", ^() {
-        it(@"should return the string doubled", ^() {
-          equal(@"doubledouble", String2x(@"double"));
-          notEqual(@"double", String2x(@"doubledouble"));
-        });
-      });
-
+      @implementation TestSuite
+        - (void) testsIfReturnsADoubledString
+        {
+          UKStringsEqual(@"doubledouble", String2x(@"double"));
+          UKStringsNotEqual(@"double", String2x(@"double"));
+        }
+      @end

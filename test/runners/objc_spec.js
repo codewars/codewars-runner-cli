@@ -37,7 +37,7 @@ describe( 'objc runner', function(){
                     '}'
 				].join('\n')
 			}, function(buffer) {
-				console.log(buffer);
+				//console.log(buffer);
 				expect(buffer.stdout).to.contain('999');
 				done();
 			});
@@ -49,16 +49,16 @@ describe( 'objc runner', function(){
 				setupHeader: [
 					'int foo(void);'
 				].join('\n'),
-				code: [
-                    '#import <Foundation/Foundation.h>',
-                    'int main (int argc, const char * argv[]) {',
-                    'NSLog(@"A string: %i", noexists());',
-                    'return 0;',
-                    '}'
-				].join('\n')
+				code: `
+                    #import <Foundation/Foundation.h>
+	                    int main (int argc, const char * argv[]) {
+	                    NSLog(@"A string: %i", foo(noexists));
+	                    return 0;
+                    }
+                    `
 			}, function(buffer) {
-				console.log(buffer);
-				expect(buffer.stderr).to.contain('warning: implicit declaration of function \'noexists\'');
+				//console.log(buffer);
+				expect(buffer.stderr).to.contain("error: use of undeclared identifier 'noexists'");
 				done();
 			});
 		});
@@ -77,7 +77,7 @@ describe( 'objc runner', function(){
                     '}'
 				].join('\n')
 			}, function(buffer) {
-				console.log(buffer);
+				//console.log(buffer);
 				expect(buffer.stdout).to.contain('Square: 36');
 				done();
 			});
@@ -119,7 +119,7 @@ describe( 'objc runner', function(){
                     '}'
 				].join('\n')
 			}, function(buffer) {
-				console.log(buffer);
+				//console.log(buffer);
                 console.log("buffer.stderr", buffer.stderr.split("\n"));
                 expect(buffer.stdout).to.contain('Number of BankAccount instances = 2');
 				done();
@@ -161,105 +161,174 @@ describe( 'objc runner', function(){
                     '}'
 				].join('\n')
 			}, function(buffer) {
-				console.log(buffer);
+				//console.log(buffer);
 				expect(buffer.stdout).to.contain('Name: Codewars and the age is 108');
 				done();
 			});
 		});
-		it('should perform unit testing and test for failure (test equal())', function(done) {
+		it('should perform unit testing', function(done) {
 			runner.run({
 				language: 'objc',
-				code: 'NSString* Foo (NSString *str){return str;}',
+				code: ' ',
 				fixture: `
-					describe(@"String match", ^() {
-						it(@"should not match", ^() {
-							equal(@"Blah", Foo(@"Blah1"));
-						});
-					});
+					@implementation TestSuite
+
+					+ (void)testAClassMethod
+					{
+					   UKPass();
+					}
+
+					- (void)testIfPass
+					{
+					    UKPass();
+					}
+
+					@end
 				`
 			}, function(buffer) {
-				console.log(buffer);
-				expect(buffer.stdout).to.contain('<DESCRIBE::>String match');
-				expect(buffer.stdout).to.contain('<IT::>should not match');
-				expect(buffer.stdout).to.contain('<FAILED::>Expected "Blah" (NSConstantString) but instead got "Blah1" (NSConstantString)');
+				//console.log(buffer);
+				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+				expect(buffer.stdout).to.contain('<IT::>testAClassMethod');
+				expect(buffer.stdout).to.contain('<IT::>testIfPass');
+				expect(buffer.stdout).to.contain('<PASSED::>');
+				expect(buffer.stdout).to.not.contain('<FAILED::>');
 				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				done();
 			});
 		});
-		it('should perform unit testing and pass the test (test notEqual())', function(done) {
+		it('should perform unit testing and handling failures', function(done) {
 			runner.run({
 				language: 'objc',
-				code: 'NSString* Foo (NSString *str){return str;}',
-				fixture: [
-					'describe(@"String not match", ^() {',
-						'it(@"should pass", ^() {',
-							'notEqual(@"Blah", Foo(@"Blah"));',
-						'});',
-					'});'
-				].join('\n')
-			}, function(buffer) {
-				console.log(buffer);
-				expect(buffer.stdout).to.contain('<FAILED::>Value is not supposed to equal "Blah" (NSConstantString)');
-				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
-				expect(buffer.stdout).to.contain('<IT::>should pass');
-				expect(buffer.stdout).to.contain('<DESCRIBE::>String not match');
-				expect(buffer.stderr).to.equal('');
-				done();
-			});
-		});
+				code: ' ',
+				fixture: `
+					@implementation TestSuite
 
-		it('should perform unit testing and pass the test (test equal())', function(done) {
-			runner.run({
-				language: 'objc',
-				code: 'NSString* Foo (NSString *str){return str;}',
-				fixture: [
-					'describe(@"Compare types of numbers", ^() {',
-						'it(@"should match int", ^() {',
-							'equal(@1, @1);',
-						'});',
-						'it(@"should not match int", ^() {',
-							'equal(@1, @2);',
-						'});',
-						'it(@"should match float", ^() {',
-							'equal(@2.20, @2.2);',
-						'});',
-					'});'
-				].join('\n')
+					- (void) testsFailures
+					{
+					    UKFail();
+					    UKTrue(NO);
+					    UKFalse(YES);
+					    UKNil(@"fwip");
+					    UKNil(self);
+					    UKNotNil(nil);
+					    UKIntsEqual(3, 4);
+					    UKIntsNotEqual(3, 3);
+					    UKFloatsEqual(22.0, 33.0, 1.0);
+					    UKFloatsNotEqual(22.1, 22.2, 0.2);
+					    UKObjectsEqual(self, @"foo");
+					    UKObjectsNotEqual(self, self);
+					    UKObjectsSame(self, @"foo");
+					    UKObjectsNotSame(@"foo", @"foo");
+					    UKStringsEqual(@"fraggle", @"rock");
+					    UKStringsNotEqual(@"fraggle", @"fraggle");
+					    UKStringContains(@"fraggle", @"no");
+					    UKStringDoesNotContain(@"fraggle", @"fra");
+					}
+
+					@end
+				`
 			}, function(buffer) {
-				console.log(buffer);
-                console.log("buffer.stdout", buffer.stdout);
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
-                expect(buffer.stdout).to.contain('<FAILED::>Expected "1" (NSIntNumber) but instead got "2" (NSIntNumber)');
-                expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
-				expect(buffer.stdout).to.contain('<IT::>should match int');
-				expect(buffer.stdout).to.contain('<IT::>should not match int');
-				expect(buffer.stdout).to.contain('<IT::>should match float');
-				expect(buffer.stdout).to.contain('<DESCRIBE::>Compare types of numbers');
+				//console.log(buffer);
+				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+				expect(buffer.stdout).to.contain('<IT::>testsFailures');
+				expect(buffer.stdout).to.not.contain('<PASSED::>');
+				expect(buffer.stdout).to.contain('<FAILED::>');
+				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				done();
 			});
-		});
-		it('should perform unit testing and pass the test (test pass())', function(done) {
+		});		
+		it('should perform unit testing with code', function(done) {
 			runner.run({
 				language: 'objc',
-				code: 'NSString* Foo (NSString *str){return str;}',
-				fixture: [
-					'describe(@"True always equal true", ^() {',
-						'it(@"should pass", ^() {',
-							'pass(true == true);',
-						'});',
-					'});'
-				].join('\n')
+				code: `
+					#import <Foundation/Foundation.h>
+
+					NSString* Foo (NSString *str){return str;}
+				`,
+				fixture: `
+					@implementation TestSuite
+
+					- (void) testsFoo
+					{
+						UKStringsEqual(@"Blah", Foo(@"Blah"));
+						UKStringsNotEqual(@"fraggle", Foo(@"Blah"));
+					}
+
+					@end
+				`
 			}, function(buffer) {
-				console.log(buffer);
-                console.log("buffer.stdout", buffer.stdout);
-                console.log("buffer.stderr", buffer.stderr);
-                expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
-                expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
-				expect(buffer.stdout).to.contain('<IT::>should pass');
-				expect(buffer.stdout).to.contain('<DESCRIBE::>True always equal true');
+				//console.log(buffer);
+				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+				expect(buffer.stdout).to.contain('<IT::>testsFoo');
+				expect(buffer.stdout).to.contain('<PASSED::>');
+				expect(buffer.stdout).to.not.contain('<FAILED::>');
+				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
 				done();
 			});
-		});
+		});				
+		it('should perform unit testing handling exceptions', function(done) {
+			runner.run({
+				language: 'objc',
+				code: `
+					#import <Foundation/Foundation.h>
+
+					NSString* FooException (NSString *str){ 
+						[NSException raise:@"FooException" format:@"Custom exception"]; 
+						return str;
+					}
+				`,
+				fixture: `
+					@implementation TestSuite
+
+					- (void) testsFooException
+					{
+						UKRaisesException(FooException(@"Blah"));
+					}
+
+					@end
+				`
+			}, function(buffer) {
+				//console.log(buffer);
+				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+				expect(buffer.stdout).to.contain('<IT::>testsFooException');
+				expect(buffer.stdout).to.contain('<PASSED::>');
+				expect(buffer.stdout).to.not.contain('<FAILED::>');
+				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+				done();
+			});
+		});				
+		it('should handle unhandled exceptions', function(done) {
+			runner.run({
+				language: 'objc',
+				code: `
+					#import <Foundation/Foundation.h>
+
+					NSString* FooException (NSString *str){ 
+						[NSException raise:@"FooException" format:@"Custom exception"]; 
+						return str;
+					}
+				`,
+				fixture: `
+					@implementation TestSuite
+
+					- (void) testsFooUnhandledException
+					{
+						UKStringsEqual(@"Blah", FooException(@"Blah"));
+					}
+
+					@end
+				`
+			}, function(buffer) {
+				//console.log(buffer);
+				expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
+				expect(buffer.stdout).to.contain('<IT::>testsFooUnhandledException');
+				expect(buffer.stdout).to.not.contain('<PASSED::>');
+				expect(buffer.stdout).to.contain('<FAILED::>');
+				expect(buffer.stdout).to.contain('NSException: FooException Custom exception');
+				expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+				done();
+			});
+		});		
         it('should handle functions from standard library <math.h>', function(done) {
            runner.run({
                language: 'objc',
@@ -275,7 +344,7 @@ describe( 'objc runner', function(){
                    '}'
                ].join('\n')
             }, function(buffer) {
-                console.log("buffer", buffer);
+                //console.log(buffer);
                 expect(buffer.stdout).to.contain('5');
                 done();
             });
@@ -314,11 +383,45 @@ describe( 'objc runner', function(){
 					    return 0;
 					}`
             }, function(buffer) {
-                console.log("buffer", buffer);
+                //console.log(buffer);
                 expect(buffer.stdout).to.contain('5');
                 done();
             });
         });
+	    it('should get the return code', function(done) {
+	        var solution = `
+    			int main (int argc, const char * argv[]) {
+              		return 10;
+              	}
+            `;
+	        runner.run({
+	            language: 'objc',
+	            code: solution
+	        }, function(buffer) {
+	        	//console.log(buffer);
+	            expect(buffer.exitCode).to.equal(10);
+	            expect(buffer.exitSignal).to.equal(null);
+	            done();
+	        });
+	    });
+	    it('should catch signals on crash', function(done) {
+	        var solution = `
+	        	#import <Foundation/Foundation.h>
+	        	int main (int argc, const char * argv[]) {	
+	                  int *nullPointer = nil;
+	                  *nullPointer = 0;
+	            }
+	        `;
+	        runner.run({
+	            language: 'objc',
+	            code: solution
+	        }, function(buffer) {
+	        	//console.log(buffer);
+	            expect(buffer.exitCode).to.equal(null);
+	            expect(buffer.exitSignal).to.equal('SIGSEGV');
+	            done();
+	        });
+	    });
 
 	});
 });
