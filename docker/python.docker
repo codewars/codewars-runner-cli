@@ -4,11 +4,23 @@
 # Pull base image.
 FROM codewars/base-runner
 
-# Install Additional Python libraries
-RUN apt-get install -y python-pip python-numpy python-scipy python-pandas
+RUN apt-get update -qq
 
-# Install Python 3
-RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
+RUN apt-get install -y build-essential checkinstall
+
+# Install pip
+RUN apt-get install -y python-pip python3-pip
+
+# Install Python 3.6
+RUN add-apt-repository ppa:fkrull/deadsnakes
+RUN apt-get update -qq
+RUN apt-get install -y python3.6
+
+# Install Additional Python2 libraries
+RUN apt-get install -y python-numpy python-scipy python-pandas
+
+# Install Python3 libraries
+RUN apt-get install -y python3-numpy python3-scipy python3-pandas
 
 # Install Packages
 RUN pip install pymongo redis

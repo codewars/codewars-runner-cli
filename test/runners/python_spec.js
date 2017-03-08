@@ -3,7 +3,7 @@ var runner = require('../runner');
 
 describe('python runner', function () {
     // These specs are compatible with both Python 2 and 3
-    ['2', '3'].forEach(lv => {
+    ['2', '3', '3.6'].forEach(lv => {
         describe('.run', function () {
             runner.assertCodeExamples('python', lv);
 
