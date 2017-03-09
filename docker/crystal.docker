@@ -1,5 +1,6 @@
 FROM codewars/base-runner
 
+RUN apt-get update -qq
 RUN apt-get install apt-transport-https
 RUN curl https://dist.crystal-lang.org/apt/setup.sh | sudo bash
 RUN apt-get install -y crystal
