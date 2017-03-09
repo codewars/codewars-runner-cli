@@ -12,7 +12,7 @@ env OBJC_GEN_DIR $OBJC_VOL/objc-gen
 env OBJC_SOURCE_DIR $OBJC_VOL/objc-source
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-RUN add-apt-repository 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main' 
+RUN add-apt-repository 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
 RUN wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add -
 
 RUN apt-key update
@@ -22,7 +22,7 @@ RUN apt-get upgrade -y
 # Install pre-requisities
 RUN apt-get install -y cmake clang-3.9 lldb-3.9 llvm build-essential gobjc gobjc++ libblocksruntime-dev libkqueue-dev libpthread-workqueue-dev  libxml2-dev libjpeg-dev libtiff-dev libpng12-dev libcups2-dev libfreetype6-dev libcairo2-dev libxt-dev libgl1-mesa-dev libdispatch-dev
 RUN apt-get install -y git libxslt1-dev libffi-dev libssl-dev libgnutls-dev libgmp3-dev libjpeg-dev libtiff-dev libpng-dev libgif-dev libx11-dev libcairo2-dev libxft-dev libxmu-dev libsqlite3-dev
-  
+
 RUN ln -s /usr/bin/clang-3.9 /usr/bin/clang
 RUN ln -s /usr/bin/clang++-3.9 /usr/bin/clang++
 
@@ -45,7 +45,7 @@ RUN git clone https://github.com/nickhutchinson/libdispatch && cd libdispatch &&
 RUN git clone https://github.com/etoile/UnitKit && cd UnitKit && git clean -dfx
 
 # Install ICU
-WORKDIR /source/icu/source 
+WORKDIR /source/icu/source
 RUN ./configure && make && make install
 WORKDIR /source
 
@@ -57,18 +57,18 @@ WORKDIR /source
 
 # Install libobjc2
 WORKDIR /source/libobjc2
-RUN . /usr/GNUstep/System/Library/Makefiles/GNUstep.sh && cmake . -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_INSTALL_LIBDIR=/usr/lib -DCMAKE_ASM_COMPILER=clang -DTESTS=OFF 
+RUN . /usr/GNUstep/System/Library/Makefiles/GNUstep.sh && cmake . -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_INSTALL_LIBDIR=/usr/lib -DCMAKE_ASM_COMPILER=clang -DTESTS=OFF
 RUN . /usr/GNUstep/System/Library/Makefiles/GNUstep.sh && make -f Makefile
 RUN . /usr/GNUstep/System/Library/Makefiles/GNUstep.sh && make -f Makefile install
 WORKDIR /source
 
 # Install libdispatch
-WORKDIR /source/libdispatch 
+WORKDIR /source/libdispatch
 RUN ./configure && make && make install
 WORKDIR /source
 
 # add /usr/local/lib to libs search paths
-RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/my.conf 
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/my.conf
 RUN ldconfig
 
 ENV LDFLAGS="-L/usr/local/lib -ldispatch"
@@ -84,12 +84,12 @@ WORKDIR /source
 WORKDIR /source/base
 RUN . /usr/GNUstep/System/Library/Makefiles/GNUstep.sh && ./configure --disable-mixedabi && make && make install
 WORKDIR /source
-  
+
 # Install gnustep-gui
 WORKDIR /source/gui
 RUN . /usr/GNUstep/System/Library/Makefiles/GNUstep.sh && ./configure && make && make install
 WORKDIR /source
-  
+
 # Install gnustep-backend
 WORKDIR /source/back
 RUN . /usr/GNUstep/System/Library/Makefiles/GNUstep.sh && ./configure && make && make install
@@ -138,10 +138,11 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 ADD . /runner
 ADD frameworks/objc /usr/local/include
 
+RUN ln -s /home/codewarrior /workspace
+
 #set final user and workdir
 USER codewarrior
 WORKDIR /runner
-RUN ln -s /home/codewarrior /workspace
 
 # Run the test suite to make sure this thing works
 RUN mocha -t 5000 test/runners/objc_spec.js
