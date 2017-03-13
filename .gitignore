@@ -21,3 +21,4 @@ Dockerfile
 *.o
 *.hi
 \#*
+frameworks/csharp/extra

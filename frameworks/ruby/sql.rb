@@ -36,17 +36,28 @@ def split_sql_commands(sql)
   end
 end
 
-$sql = File.read('/home/codewarrior/solution.txt')
-$sql_cleaned = clean_sql($sql)
-$sql_commands = split_sql_commands($sql_cleaned)
+def read_file(file, delete = false)
+  if File.exists?(file)
+    File.read(file).tap do
+       `rm -rf #{file}` if delete
+    end
+  end
+end
+
+$sql = read_file('/workspace/solution.txt') || read_file('/workspace/solution.sql')
+if $sql
+    $sql_cleaned = clean_sql($sql)
+    $sql_commands = split_sql_commands($sql_cleaned)
+end
 
 # runs sql commands within a file. Useful for running external scripts such as importing data
 def run_sql_file(file, &block)
   sql = clean_sql(File.read(file))
 
-  split_sql_commands(sql).each do |cmd|
-    result = run_cmd(cmd)
-    block.call(cmd, result) if block
+  split_sql_commands(sql).map do |cmd|
+    run_cmd(cmd).tap do |result|
+      block.call(cmd, result) if block
+    end
   end
 end
 
@@ -112,10 +123,28 @@ def pluck_unique(column_name, results = last_results)
 end
 
 # connect the database
-
 begin
   Display.status "Connecting to database..."
-  eval(CONNECT_SQL)
+  # Setup database connection
+  DATABASE = ENV['DATABASE_NAME']
+
+  case ENV['DATABASE_TYPE']
+    when 'sqlite'
+      DB = Sequel.sqlite
+
+    when 'postgres'
+      DB = Sequel.connect("postgres://localhost/#{DATABASE}")
+  end
+
+  expected_file = read_file('/workspace/expected.sql', true)
+  if expected_file
+    eval <<-END
+      def expected
+        DB[%q(#{expected_file})].to_a
+      end
+    END
+  end
+
 rescue => ex
   if defined?(PG::ConnectionBad)
     if ex.is_a?(PG::ConnectionBad)
@@ -125,3 +154,5 @@ rescue => ex
     end
   end
 end
+
+

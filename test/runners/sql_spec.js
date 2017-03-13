@@ -34,7 +34,7 @@ describe('sql runner', function () {
     runner.assertCodeExamples('sql');
 
     describe('.run', function () {
-        
+
         describe('solution only', function() {
             it("should support sqlite", function(done) {
                 runner.run({
@@ -70,6 +70,21 @@ describe('sql runner', function () {
                     setup: itemsSetup,
                     code: query,
                     fixture: itemsFixture
+                }, function(buffer) {
+                    expect(buffer.stdout).to.contain('PASSED');
+                    done();
+                });
+            });
+
+            it("should support projectMode", function(done) {
+                runner.run({
+                    language: 'sql',
+                    languageVersion: 'sqlite',
+                    files: {
+                        'spec.rb': `require './setup.rb'\n${itemsFixture}`,
+                        'setup.rb': `require "/runner/frameworks/ruby/sql"\n${itemsSetup}`,
+                        'solution.sql': query
+                    }
                 }, function(buffer) {
                     expect(buffer.stdout).to.contain('PASSED');
                     done();
