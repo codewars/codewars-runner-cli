@@ -18,7 +18,9 @@ def select_cmd?(cmd)
 end
 
 def run_cmd(cmd)
-  select_cmd?(cmd) ? DB[cmd] : DB.run(cmd)
+  try_connection do
+    select_cmd?(cmd) ? DB[cmd] : DB.run(cmd)
+  end
 end
 
 def split_sql_commands(sql)
@@ -122,8 +124,26 @@ def pluck_unique(column_name, results = last_results)
   results.map {|r| r[column_name]}.uniq
 end
 
+def try_connection
+  begin
+    yield
+  rescue Sequel::DatabaseConnectionError => cex
+    Display.status "Connection error: #{cex.message}, retrying in 1 second..."
+    sleep 1
+    retry
+  rescue => ex
+    if defined?(PG::ConnectionBad)
+      if ex.is_a?(PG::ConnectionBad)
+        sleep 1
+        Display.status "Connection not ready, retrying in 1 second..."
+        retry
+      end
+    end
+  end
+end
+
 # connect the database
-begin
+try_connection do
   Display.status "Connecting to database..."
   # Setup database connection
   DATABASE = ENV['DATABASE_NAME']
@@ -144,15 +164,4 @@ begin
       end
     END
   end
-
-rescue => ex
-  if defined?(PG::ConnectionBad)
-    if ex.is_a?(PG::ConnectionBad)
-      sleep 1
-      Display.status "Connection not ready, retrying in 1 second..."
-      retry
-    end
-  end
 end
-
-
