@@ -415,6 +415,44 @@ var _ = Describe("Add", func() {
       done();
     });
   });
+
+  it('should support optional setup file', function(done) {
+    runner.run({
+      language: 'go',
+      setup: `
+package solution
+
+func add(a, b int) int {
+  return a + b
+}
+`,
+      solution: `
+package solution
+
+func Add(a, b int) int {
+  return add(a, b)
+}
+`,
+      fixture: `
+package solution_test
+
+import (
+  . "github.com/onsi/ginkgo"
+  . "github.com/onsi/gomega"
+  . "codewarrior/solution"
+)
+
+var _ = Describe("Add", func() {
+  It("should add integers", func() {
+    Expect(Add(1, 1)).To(Equal(2))
+  })
+})
+`
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<PASSED::>');
+      done();
+    });
+  });
 });
 
 
