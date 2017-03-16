@@ -1,0 +1,41 @@
+FROM codewars/base-runner
+
+ENV DMD_VERSION=2.073.2 DMD_PREFIX=/home/codewarrior/dlang
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc && \
+    curl -fsS -o /tmp/install.sh https://dlang.org/install.sh && \
+    bash /tmp/install.sh -p $DMD_PREFIX install -s "dmd-${DMD_VERSION}" && \
+    rm /tmp/install.sh && \
+    rm -rf /var/cache/apt && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf "$DMD_PREFIX/dmd-${DMD_VERSION}/linux/bin32" \
+           "$DMD_PREFIX/dmd-${DMD_VERSION}/linux/lib32" \
+           "$DMD_PREFIX/dmd-${DMD_VERSION}/html" \
+           "$DMD_PREFIX/dmd-${DMD_VERSION}/osx" \
+           "$DMD_PREFIX/dmd-${DMD_VERSION}/freebsd" \
+           "$DMD_PREFIX/dmd-${DMD_VERSION}/solaris" \
+           "$DMD_PREFIX/dmd-${DMD_VERSION}/windows" \
+           "$DMD_PREFIX/dub-1.0.0/dub.tar.gz" && \
+    chown -R codewarrior:codewarrior "$DMD_PREFIX"
+
+ENV PATH=$DMD_PREFIX/dub:$DMD_PREFIX/dmd-${DMD_VERSION}/linux/bin64:$PATH \
+    LD_LIBRARY_PATH=$DMD_PREFIX/dmd-${DMD_VERSION}/linux/lib64 \
+    LIBRARY_PATH=$DMD_PREFIX/dmd-${DMD_VERSION}/linux/lib64 \
+    DMD=dmd \
+    DC=dmd
+
+ENV NPM_CONFIG_LOGLEVEL error
+COPY package.json /tmp/package.json
+WORKDIR /tmp
+RUN npm install --production && mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+COPY . /runner
+WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
+
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+
+RUN mocha -t 5000 test/runners/d_spec.js
+ENTRYPOINT ["timeout", "15", "node"]
