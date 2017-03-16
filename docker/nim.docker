@@ -1,0 +1,35 @@
+FROM codewars/base-runner
+
+ENV NIM_VERSION=0.16.0 CSOURCES_VERSION=0.16.0
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV NPM_CONFIG_LOGLEVEL=error
+COPY package.json /tmp/package.json
+WORKDIR /tmp
+RUN npm install --production && mkdir -p /runner && cp -a /tmp/node_modules /runner
+RUN ln -s /home/codewarrior /workspace
+
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior PATH=/home/codewarrior/Nim/bin:$PATH
+
+RUN cd /home/codewarrior && \
+    curl -fsSL "https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz" | tar xz && \
+    mv "./Nim-$NIM_VERSION" ./Nim && \
+    cd ./Nim && \
+    curl -fsSL "https://github.com/nim-lang/csources/archive/v$CSOURCES_VERSION.tar.gz" | tar xz && \
+    mv "./csources-$CSOURCES_VERSION" ./csources && \
+    cd ./csources && \
+    sh build.sh && \
+    cd ../ && \
+    ./bin/nim c koch && \
+    ./koch boot -d:release && \
+    rm -rf ./ci ./csources ./icons ./tests ./web
+
+COPY . /runner
+WORKDIR /runner
+
+RUN mocha -t 5000 test/runners/nim_spec.js
+ENTRYPOINT ["timeout", "17", "node"]
