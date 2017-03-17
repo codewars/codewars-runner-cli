@@ -202,6 +202,16 @@ services:
     entrypoint: ''
     command: bash
 
+  nim-runner:
+    image: codewars/nim-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks/nim/codewars:/home/codewarrior/codewars
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   esolangs-runner:
     image: codewars/esolangs-runner
     volumes:

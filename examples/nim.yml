@@ -1,0 +1,26 @@
+unittest:
+  fundamentals:
+    initial: |-
+      var websites*: seq[string]
+    answer: |-
+      var websites* = @["codewars"]
+    fixture: |-
+      import unittest, codewars/formatter
+      import solution
+      addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
+      suite "fundamentals":
+        test "codewars":
+          check(websites == @["codewars"])
+  bug fixes:
+    initial: |-
+      proc add*(a, b: int): int =
+        var result = a + b
+    answer: |-
+      proc add*(a, b: int): int = a + b
+    fixture: |-
+      import unittest, codewars/formatter
+      import solution
+      addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
+      suite "add":
+        test "1 + 1 = 2":
+          check(add(1, 1) == 2)
