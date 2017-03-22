@@ -37,7 +37,7 @@ describe('java runner', function () {
                     + '        System.out.println("test out");\n'
                     + '}}'
             }, function (buffer) {
-                expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\ntest out\n<PASSED::>Test Passed<:LF:>\n');
+                expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
                 done();
             });
         });
@@ -59,7 +59,7 @@ describe('java runner', function () {
                     + '        System.out.println("test out");\n'
                     + '}}'
             }, function (buffer) {
-                expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\n<FAILED::>Failed Message expected:<5> but was:<3><:LF:>\n');
+                expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\n\n<FAILED::>Failed Message expected:<5> but was:<3><:LF:>\n');
                 done();
             });
         });
