@@ -8,13 +8,14 @@ import java.io.PrintWriter;
 
 public class CwRunListener extends RunListener
 {
-    private boolean failed;
+    private boolean failed; //false by default
+    
     public void testFailure(final Failure failure)
     {
         failed = true;
         final String msg = failure.getMessage();
         final boolean hasMessage =  msg != null && msg.length() > 0;
-        System.out.println(String.format("\n<FAILED::>%s<:LF:>", formatMessage(hasMessage ? msg : "Runtime Error Occurred")));
+        System.out.println( String.format("\n<FAILED::>%s<:LF:>", hasMessage ? formatMessage(msg) : "Runtime Error Occurred") );
         if(!hasMessage && failure.getException() != null) {
             System.out.println(formatException(failure.getException()));
         }
@@ -22,7 +23,6 @@ public class CwRunListener extends RunListener
     public void testStarted(final Description description)
     {
         System.out.println(String.format("\n<DESCRIBE::>%s<:LF:>", formatMessage(description.getDisplayName())));
-        failed = false;
     }
     public void testFinished(final Description description)
     {
@@ -38,13 +38,12 @@ public class CwRunListener extends RunListener
             return "";
         }
         StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        ex.printStackTrace(pw);
+        ex.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
     private static String formatMessage(final String s)
     {
-        if(s == null){
+        if(null == s){
             return "";
         }
         return s.replaceAll("\n", "<:LF:>");
