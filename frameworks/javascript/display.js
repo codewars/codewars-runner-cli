@@ -237,10 +237,12 @@ module.exports.explain = function explain(actual, expected, options) {
     
     if (options.arguments) {
         var details = "";
-        options.arguments.forEach(function(v, i) {
-            if (i > 0) details += "\n\n";
-            details += "<label>Argument " + i + ":</label>\n";
-            details += util.inspect(v);
+        options.arguments.forEach(function(value, index) {
+            if (index > 0) {
+              details += "\n\n";
+            }
+            details += "<label>Argument " + index + ":</label>\n";
+            details += util.inspect(value);
         });
 
         display.tab("Arguments", details);
@@ -251,7 +253,9 @@ module.exports.explain = function explain(actual, expected, options) {
         display.tab("Context", util.inspect(options.context));
     }
 
-    if (options.swap) display.write("SWAP");
+    if (options.swap) {
+      display.write("SWAP");
+    }
 }
 
 module.exports.getPackages = function() {
