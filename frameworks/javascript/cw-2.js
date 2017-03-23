@@ -41,7 +41,9 @@ try
     process.on('uncaughtException', function (err) {
         if (async) {
             Test.handleError(err);
-            if (asyncDone) asyncDone();
+            if (asyncDone){
+              asyncDone();
+            }
         }
     });
 
@@ -117,7 +119,9 @@ try
             return JSON.stringify(obj, function(key, value){
                 if (typeof value === 'object' && value !== null) {
                     // Circular reference found, discard key
-                    if (cache.indexOf(value) !== -1) return "[Circular]";
+                    if (cache.indexOf(value) !== -1){
+                      return "[Circular]";
+                    }
                 }
                 // Store value in our collection
                 cache.push(value);
@@ -169,7 +173,9 @@ try
                             afterCallbacks = [];
                         }
 
-                        if (failed.length > 0) throw failed[0];
+                        if (failed.length > 0) {
+                          throw failed[0];
+                        }
 
                         async = false;
                         resolve();
@@ -177,7 +183,9 @@ try
 
                     Test.display.write("DESCRIBE", msg);
                     fn();
-                    if (async) describeNext();
+                    if (async) {
+                      describeNext();
+                    }
                 }
                 catch (ex)
                 {
@@ -185,14 +193,18 @@ try
                 }
                 finally
                 {
-                    if (!async && describing.length) describing.pop()();
+                    if (!async && describing.length) {
+                      describing.pop()();
+                    }
                 }
             });
 
         },
         it: function (msg, fn)
         {
-            if (!describing.length) throw '"it" calls must be invoked within a parent "describe" context';
+            if (!describing.length) {
+              throw '"it" calls must be invoked within a parent "describe" context';
+            }
             var asyncIt = (async && fn.length > 0);
 
             var begin = function() {
@@ -236,7 +248,9 @@ try
                     Test.handleError(ex);
                 }
                 finally {
-                    if (!asyncIt) done();
+                    if (!asyncIt) {
+                      done();
+                    }
                 }
             }
 
@@ -464,11 +478,11 @@ try
         },
         randomNumber: function ()
         {
-            return Math.round(Math.random() * 100)
+            return Math.round(Math.random() * 100);
         },
         randomToken: function ()
         {
-            return Math.random().toString(36).substr(8)
+            return Math.random().toString(36).substr(8);
         },
         randomize: function (array)
         {
