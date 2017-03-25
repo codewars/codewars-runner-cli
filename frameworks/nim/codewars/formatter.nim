@@ -24,11 +24,11 @@ proc newCodewarsOutputFormatter*(): CodewarsOutputFormatter =
   )
 
 method suiteStarted*(f: CodewarsOutputFormatter, suiteName: string) =
-  echo("<DESCRIBE::>" & escapeLF(suiteName))
+  echo("\n<DESCRIBE::>" & escapeLF(suiteName))
   f.suiteStartTime = epochTime()
 
 method testStarted*(f: CodewarsOutputFormatter, testName: string) =
-  echo("<IT::>" & escapeLF(testName))
+  echo("\n<IT::>" & escapeLF(testName))
   f.testErrors.setLen(0)
   f.testStackTrace.setLen(0)
   f.testStartTime = epochTime()
@@ -42,9 +42,9 @@ method testEnded*(f: CodewarsOutputFormatter, testResult: TestResult) =
   let ms = (epochTime() - f.testStartTime)*1000
   case testResult.status:
   of OK:
-    echo("<PASSED::>OK")
+    echo("\n<PASSED::>OK")
   of SKIPPED:
-    echo("<LOG::>Skipped")
+    echo("\n<LOG::>Skipped")
   of FAILED:
     # TODO: stack trace. borrowing JUnitOutputFormatter's for now
     let failureMsg = if f.testStackTrace.len > 0 and f.testErrors.len > 0:
@@ -62,17 +62,17 @@ method testEnded*(f: CodewarsOutputFormatter, testResult: TestResult) =
         errs.add(f.testErrors[i])
 
     if f.testStackTrace.len > 0:
-      echo("<ERROR::>Test Error")
+      echo("\n<ERROR::>Test Error")
       if errs.len > 0:
-        echo("<LOG:ESC:Error>" & escapeLF(removePrefix(failureMsg & "\n" & errs)))
+        echo("\n<LOG:ESC:Error>" & escapeLF(removePrefix(failureMsg & "\n" & errs)))
       else:
-        echo("<LOG:ESC:Error>" & escapeLF(removePrefix(failureMsg)))
-      echo("<TAB::Stack Trace>" & escapeLF(f.testStackTrace))
+        echo("\n<LOG:ESC:Error>" & escapeLF(removePrefix(failureMsg)))
+      echo("\n<TAB::Stack Trace>" & escapeLF(f.testStackTrace))
     else:
-      echo("<FAILED::>" & escapeLF(removePrefix(failureMsg)))
-      if errs.len > 0: echo("<LOG:ESC:Failure>" & escapeLF(errs))
-  echo("<COMPLETEDIN::>" & ms.formatFloat(ffDecimal, precision=4))
+      echo("\n<FAILED::>" & escapeLF(removePrefix(failureMsg)))
+      if errs.len > 0: echo("\n<LOG:ESC:Failure>" & escapeLF(errs))
+  echo("\n<COMPLETEDIN::>" & ms.formatFloat(ffDecimal, precision=4))
 
 method suiteEnded*(f: CodewarsOutputFormatter) =
   let ms = (epochTime() - f.suiteStartTime)*1000
-  echo("<COMPLETEDIN::>", ms.formatFloat(ffDecimal, precision=4))
+  echo("\n<COMPLETEDIN::>", ms.formatFloat(ffDecimal, precision=4))
