@@ -416,6 +416,50 @@ var _ = Describe("Add", func() {
     });
   });
 
+  it('should have formatting commands on independent lines', function(done) {
+    runner.run({
+      language: 'go',
+      solution: `
+package solution
+import "fmt"
+
+func Add(a, b int) int {
+  fmt.Printf("a = %d, b = %d", a, b)
+  return a + b
+}
+
+func Sub(a, b int) int {
+  fmt.Printf("a = %d, b = %d", a, b)
+  return a + b
+}
+`,
+      fixture: `
+package solution_test
+
+import (
+  . "github.com/onsi/ginkgo"
+  . "github.com/onsi/gomega"
+  . "codewarrior/solution"
+)
+
+var _ = Describe("Add", func() {
+  It("should add integers", func() {
+    Expect(Add(1, 1)).To(Equal(2))
+  })
+})
+var _ = Describe("Sub", func() {
+  It("should subtract integers", func() {
+    Expect(Sub(1, 1)).To(Equal(0))
+  })
+})
+`
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('a = 1, b = 1\n<PASSED::>');
+      expect(buffer.stdout).to.contain('a = 1, b = 1\n<FAILED::>');
+      done();
+    });
+  });
+
   it('should support optional setup file', function(done) {
     runner.run({
       language: 'go',
