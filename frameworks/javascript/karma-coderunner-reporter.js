@@ -1,5 +1,3 @@
-/* eslint node: true */
-
 'use strict';
 var util = require('util');
 
