@@ -416,6 +416,50 @@ var _ = Describe("Add", func() {
     });
   });
 
+  it('should have formatting commands on independent lines', function(done) {
+    runner.run({
+      language: 'go',
+      solution: `
+package solution
+import "fmt"
+
+func Add(a, b int) int {
+  fmt.Printf("a = %d, b = %d", a, b)
+  return a + b
+}
+
+func Sub(a, b int) int {
+  fmt.Printf("a = %d, b = %d", a, b)
+  return a + b
+}
+`,
+      fixture: `
+package solution_test
+
+import (
+  . "github.com/onsi/ginkgo"
+  . "github.com/onsi/gomega"
+  . "codewarrior/solution"
+)
+
+var _ = Describe("Add", func() {
+  It("should add integers", func() {
+    Expect(Add(1, 1)).To(Equal(2))
+  })
+})
+var _ = Describe("Sub", func() {
+  It("should subtract integers", func() {
+    Expect(Sub(1, 1)).To(Equal(0))
+  })
+})
+`
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('a = 1, b = 1\n<PASSED::>');
+      expect(buffer.stdout).to.contain('a = 1, b = 1\n<FAILED::>');
+      done();
+    });
+  });
+
   it('should support optional setup file', function(done) {
     runner.run({
       language: 'go',
@@ -451,149 +495,6 @@ var _ = Describe("Add", func() {
     }, function(buffer) {
       expect(buffer.stdout).to.contain('<PASSED::>');
       done();
-    });
-  });
-});
-
-
-describe('Gomega matchers', function() {
-  afterEach(function cleanup(done) {
-    exec('rm -rf /home/codewarrior/go/src/codewarrior', function(err, stdout, stderr) {
-      if (err) return done(err);
-      done();
-    });
-  });
-
-  describe('Equal(x)', function() {
-    it('should provide descriptive error message', function(done) {
-      runner.run({
-        language: 'go',
-        solution: `
-package solution
-
-func Add(a, b int) int {
-  return a - b
-}
-`,
-        fixture: `
-package solution_test
-
-import (
-  . "github.com/onsi/ginkgo"
-  . "github.com/onsi/gomega"
-  . "codewarrior/solution"
-)
-
-var _ = Describe("Add", func() {
-  It("should add integers", func() {
-    Expect(Add(1, 1)).To(Equal(2))
-  })
-})
-`
-      }, function(buffer) {
-        expect(buffer.stdout).to.contain('<FAILED::>');
-        expect(buffer.stdout).to.contain('Expected<:LF:>    <int>: 0<:LF:>to equal<:LF:>    <int>: 2');
-        done();
-      });
-    });
-  });
-
-  describe('BeEmpty()', function() {
-    it('should provide descriptive error message', function(done) {
-      runner.run({
-        language: 'go',
-        solution: `
-package empty
-
-func Empty() []int {
-  return []int{1}
-}
-`,
-        fixture: `
-package empty_test
-import (
-  . "github.com/onsi/ginkgo"
-  . "github.com/onsi/gomega"
-  . "codewarrior/empty"
-)
-
-var _ = Describe("Empty", func() {
-  It("should be empty", func() {
-    Expect(Empty()).To(BeEmpty())
-  })
-})
-`
-      }, function(buffer) {
-        expect(buffer.stdout).to.contain('<FAILED::>');
-        expect(buffer.stdout).to.contain('Expected<:LF:>    <[]int | len:1, cap:1>: [1]<:LF:>to be empty');
-        done();
-      });
-    });
-  });
-
-  describe('HaveLen(count)', function() {
-    it('should provide descriptive error message', function(done) {
-      runner.run({
-        language: 'go',
-        solution: `
-package pair
-
-func Pair(a, b int) []int {
-  return []int{a}
-}
-`,
-        fixture: `
-package pair_test
-import (
-  . "github.com/onsi/ginkgo"
-  . "github.com/onsi/gomega"
-  . "codewarrior/pair"
-)
-
-var _ = Describe("Pair", func() {
-  It("should have length of 2", func() {
-    Expect(Pair(1, 2)).To(HaveLen(2))
-  })
-})
-`
-      }, function(buffer) {
-        expect(buffer.stdout).to.contain('<FAILED::>');
-        expect(buffer.stdout).to.contain('Expected<:LF:>    <[]int | len:1, cap:1>: [1]<:LF:>to have length 2');
-        done();
-      });
-    });
-  });
-
-  describe('HaveCap(count)', function() {
-    it('should provide descriptive error message', function(done) {
-      runner.run({
-        language: 'go',
-        solution: `
-package pair
-
-func Pair(a, b int) []int {
-  return []int{a}
-}
-`,
-        fixture: `
-package pair_test
-import (
-  . "github.com/onsi/ginkgo"
-  . "github.com/onsi/gomega"
-  . "codewarrior/pair"
-)
-
-var _ = Describe("Pair", func() {
-  It("should have length of 2", func() {
-    Expect(Pair(1, 2)).To(HaveCap(2))
-  })
-})
-`
-      }, function(buffer) {
-        expect(buffer.stdout).to.contain('<FAILED::>');
-        expect(buffer.stdout).to.contain('Expected<:LF:>    <[]int | len:1, cap:1>: [1]<:LF:>to have capacity 2');
-        done();
-      });
     });
   });
 });

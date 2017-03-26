@@ -40,39 +40,39 @@ func (r *cwReporter) SpecWillRun(spec *types.SpecSummary) {
 			if ok {
 				m := len(r.specs)
 				for j := i; j <= m; j++ {
-					fmt.Println("<COMPLETEDIN::>")
+					fmt.Println("\n<COMPLETEDIN::>")
 					delete(r.specs, j)
 				}
 			}
 			r.specs[i] = id
-			fmt.Printf("<DESCRIBE::>%s\n", escape(v))
+			fmt.Printf("\n<DESCRIBE::>%s\n", escape(v))
 		}
 	}
-	fmt.Printf("<IT::>%s\n", escape(spec.ComponentTexts[n-1]))
+	fmt.Printf("\n<IT::>%s\n", escape(spec.ComponentTexts[n-1]))
 }
 
 func (r *cwReporter) SpecDidComplete(spec *types.SpecSummary) {
 	switch spec.State {
 	case types.SpecStatePassed:
-		fmt.Println("<PASSED::>Test Passed")
+		fmt.Println("\n<PASSED::>Test Passed")
 	case types.SpecStateFailed:
-		fmt.Println("<FAILED::>Test Failed")
-		fmt.Printf("<LOG:ESC:>%s\n", escape(spec.Failure.Message))
+		fmt.Println("\n<FAILED::>Test Failed")
+		fmt.Printf("\n<LOG:ESC:>%s\n", escape(spec.Failure.Message))
 	case types.SpecStatePanicked:
-		fmt.Printf("<ERROR::>%s\n", escape(spec.Failure.Message))
-		fmt.Printf("<LOG::Panic>%s\n", escape(spec.Failure.ForwardedPanic))
-		fmt.Printf("<TAB::Stack Trace>%s\n", escape(spec.Failure.Location.FullStackTrace))
+		fmt.Printf("\n<ERROR::>%s\n", escape(spec.Failure.Message))
+		fmt.Printf("\n<LOG::Panic>%s\n", escape(spec.Failure.ForwardedPanic))
+		fmt.Printf("\n<TAB::Stack Trace>%s\n", escape(spec.Failure.Location.FullStackTrace))
 	case types.SpecStateTimedOut:
 	case types.SpecStateSkipped:
 	case types.SpecStatePending:
 	}
-	fmt.Printf("<COMPLETEDIN::>%.4f\n", spec.RunTime.Seconds()*1000)
+	fmt.Printf("\n<COMPLETEDIN::>%.4f\n", spec.RunTime.Seconds()*1000)
 }
 
 func (r *cwReporter) SpecSuiteDidEnd(summary *types.SuiteSummary) {
 	m := len(r.specs)
 	for j := 1; j <= m; j++ {
-		fmt.Println("<COMPLETEDIN::>")
+		fmt.Println("\n<COMPLETEDIN::>")
 	}
 }
 
