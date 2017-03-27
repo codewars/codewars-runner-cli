@@ -4,9 +4,9 @@ try
     var util = require('util'),
         deepEquals = require('lodash').isEqual,
         Promise = require("bluebird");
-    
+
     require('./chai-display');
-    
+
     var fnToString = Function.toString;
     Function.prototype.toString = function ()
     {
@@ -109,7 +109,7 @@ try
         },
 
         display: require('./display'),
-        
+
         // we use this instead of util.inspect so that we can support the indent option and json options
         stringify: function(obj, indent)
         {
@@ -382,7 +382,7 @@ try
                 Test.expect(false, msg, options);
             }
         },
-		    assertNotDeepEquals: function (actual, expected, msg, options) {
+        assertNotDeepEquals: function (actual, expected, msg, options) {
             if (!deepEquals(actual, expected)) {
                 options = options || {};
                 options.successMsg = options.successMsg || 'Value not deep equals ' + Test.inspect(expected);
@@ -501,7 +501,7 @@ try
 
     Object.freeze(Test.display);
     Object.freeze(Test);
-    
+
     Object.defineProperty(global, 'Test', {
         writable: false,
         configurable: false,
