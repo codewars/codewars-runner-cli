@@ -3,29 +3,29 @@ var runner = require('../runner');
 
 
 describe('lua runner', function(){
-    describe('.run', function(){
-        it('should handle basic code evaluation', function(done){
-            runner.run({language: 'lua', code: 'print(42)'}, function(buffer) {
-                expect(buffer.stdout).to.equal('42\n');
-                done();
-            });
-        });
+  describe('.run', function(){
+    it('should handle basic code evaluation', function(done){
+      runner.run({language: 'lua', code: 'print(42)'}, function(buffer) {
+        expect(buffer.stdout).to.equal('42\n');
+        done();
+      });
     });
+  });
 });
 
 
 describe('busted', function() {
-    it('should handle basic code assertion', function(done) {
-        runner.run({
-          language: 'lua',
-          solution: `
+  it('should handle basic code assertion', function(done) {
+    runner.run({
+      language: 'lua',
+      solution: `
 local kata = {}
 function kata.add(a, b)
   return a + b
 end
 return kata
 `,
-          fixture: `
+      fixture: `
 local kata = require 'solution'
 describe("add", function()
   it("should add numbers", function()
@@ -33,23 +33,23 @@ describe("add", function()
   end)
 end)
 `
-        }, function(buffer) {
-            expect(buffer.stdout).to.contain('<PASSED::>');
-            done();
-        });
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<PASSED::>');
+      done();
     });
+  });
 
-    it('should handle basic code assertion failure', function(done) {
-        runner.run({
-          language: 'lua',
-          solution: `
+  it('should handle basic code assertion failure', function(done) {
+    runner.run({
+      language: 'lua',
+      solution: `
 local kata = {}
 function kata.add(a, b)
   return a - b
 end
 return kata
 `,
-          fixture: `
+      fixture: `
 local kata = require 'solution'
 describe("add", function()
   it("should add numbers", function()
@@ -57,23 +57,23 @@ describe("add", function()
   end)
 end)
 `
-        }, function(buffer) {
-            expect(buffer.stdout).to.contain('<FAILED::>');
-            done();
-        });
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<FAILED::>');
+      done();
     });
+  });
 
-    it('should handle mixed success and failure', function(done) {
-        runner.run({
-          language: 'lua',
-          solution: `
+  it('should handle mixed success and failure', function(done) {
+    runner.run({
+      language: 'lua',
+      solution: `
 local kata = {}
 function kata.add(a, b)
   return a - b
 end
 return kata
 `,
-          fixture: `
+      fixture: `
 local kata = require 'solution'
 describe("add", function()
   it("should add numbers", function()
@@ -84,17 +84,17 @@ describe("add", function()
   end)
 end)
 `
-        }, function(buffer) {
-            expect(buffer.stdout).to.contain('<PASSED::>');
-            expect(buffer.stdout).to.contain('<FAILED::>');
-            done();
-        });
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<PASSED::>');
+      expect(buffer.stdout).to.contain('<FAILED::>');
+      done();
     });
+  });
 
-    it('should handle error', function(done) {
-        runner.run({
-          language: 'lua',
-          solution: `
+  it('should handle error', function(done) {
+    runner.run({
+      language: 'lua',
+      solution: `
 local kata = {}
 function kata.add(a, b)
   error("Error")
@@ -102,7 +102,7 @@ function kata.add(a, b)
 end
 return kata
 `,
-          fixture: `
+      fixture: `
 local kata = require 'solution'
 describe("add", function()
   it("should add numbers", function()
@@ -110,24 +110,24 @@ describe("add", function()
   end)
 end)
 `
-        }, function(buffer) {
-            expect(buffer.stdout).to.contain('<ERROR::>');
-            expect(buffer.stdout).to.contain('./solution.lua:4: Error');
-            done();
-        });
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<ERROR::>');
+      expect(buffer.stdout).to.contain('./solution.lua:4: Error');
+      done();
     });
+  });
 
-    it('should output nested describes', function(done) {
-        runner.run({
-          language: 'lua',
-          solution: `
+  it('should output nested describes', function(done) {
+    runner.run({
+      language: 'lua',
+      solution: `
 local kata = {}
 function kata.add(a, b)
   return a + b
 end
 return kata
 `,
-          fixture: `
+      fixture: `
 -- from busted website
 describe("Busted unit testing framework", function()
   describe("should be awesome", function()
@@ -159,26 +159,26 @@ describe("Busted unit testing framework", function()
   end)
 end)
 `
-        }, function(buffer) {
-            const nested = [
-              '<DESCRIBE::>',
-              '  <DESCRIBE::>',
-              '    <IT::><PASSED::><COMPLETEDIN::>',
-              '    <IT::><PASSED::><COMPLETEDIN::>',
-              '    <IT::><PASSED::><COMPLETEDIN::>',
-              '    <IT::><PASSED::><COMPLETEDIN::>',
-              '  <COMPLETEDIN::>',
-              '<COMPLETEDIN::>'
-            ].join('').replace(/\s/g, '');
-            expect(buffer.stdout.match(/<(?:DESCRIBE|IT|PASSED|COMPLETEDIN)::>/g).join('')).to.equal(nested);
-            done();
-        });
+    }, function(buffer) {
+      const nested = [
+        '<DESCRIBE::>',
+        '  <DESCRIBE::>',
+        '    <IT::><PASSED::><COMPLETEDIN::>',
+        '    <IT::><PASSED::><COMPLETEDIN::>',
+        '    <IT::><PASSED::><COMPLETEDIN::>',
+        '    <IT::><PASSED::><COMPLETEDIN::>',
+        '  <COMPLETEDIN::>',
+        '<COMPLETEDIN::>'
+      ].join('').replace(/\s/g, '');
+      expect(buffer.stdout.match(/<(?:DESCRIBE|IT|PASSED|COMPLETEDIN)::>/g).join('')).to.equal(nested);
+      done();
     });
+  });
 
-    it('should allow solution to log', function(done) {
-        runner.run({
-          language: 'lua',
-          solution: `
+  it('should allow solution to log', function(done) {
+    runner.run({
+      language: 'lua',
+      solution: `
 local kata = {}
 function kata.add(a, b)
   print(a)
@@ -187,7 +187,7 @@ function kata.add(a, b)
 end
 return kata
 `,
-          fixture: `
+      fixture: `
 require 'busted.runner'()
 local kata = require 'solution'
 
@@ -197,15 +197,15 @@ describe("add", function()
   end)
 end)
 `
-        }, function(buffer) {
-            expect(buffer.stdout).to.contain('<PASSED::>');
-            expect(buffer.stdout).to.contain('1');
-            expect(buffer.stdout).to.contain('2');
-            done();
-        });
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<PASSED::>');
+      expect(buffer.stdout).to.contain('1');
+      expect(buffer.stdout).to.contain('2');
+      done();
     });
+  });
 });
 
 describe('Examples', function() {
-    runner.assertCodeExamples('lua');
+  runner.assertCodeExamples('lua');
 });
