@@ -34,11 +34,11 @@ describe('typescript runner', function() {
                                 assert.equal(3, solution.a.b);
                             })
                         });`,
-        testFramework: 'mocha_bdd'},
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  done();
-                });
+        testFramework: 'mocha_bdd'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        done();
+      });
     });
     it('should handle failures', function(done) {
       runner.run({
@@ -56,11 +56,11 @@ describe('typescript runner', function() {
                         })
                       })
                     });`,
-        testFramework: 'mocha_bdd'},
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<FAILED::>');
-                  done();
-                });
+        testFramework: 'mocha_bdd'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<FAILED::>');
+        done();
+      });
     });
     it('should handle errors', function(done) {
       runner.run({
@@ -70,7 +70,7 @@ describe('typescript runner', function() {
                       /// <reference path="/runner/typings/mocha/index.d.ts" />
                       /// <reference path="/runner/typings/chai/index.d.ts" />
                       import solution = require("./solution");
-                      import {assert} from "chai"; 
+                      import {assert} from "chai";
                       describe("test", function(){
                         describe("failures", function(){
                             it("should be 1", function(){
@@ -79,11 +79,11 @@ describe('typescript runner', function() {
                         })
                       });
                     `,
-        testFramework: 'mocha_bdd'},
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<ERROR::>');
-                  done();
-                });
+        testFramework: 'mocha_bdd'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<ERROR::>');
+        done();
+      });
     });
   });
 });

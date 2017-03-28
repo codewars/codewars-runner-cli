@@ -162,11 +162,10 @@ describe('javascript runner', function() {
                         var div = <div><h3>Test</h3></div>;
                         console.log(render(div));
                     `
-        },
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<div><h3>Test</h3></div>');
-                      done();
-                    });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<div><h3>Test</h3></div>');
+          done();
+        });
       });
 
       it('should handle react syntax using 0.10.x', function(done) {
@@ -180,11 +179,10 @@ describe('javascript runner', function() {
                         var div = <div><h3>Test</h3></div>;
                         console.log(render(div));
                     `
-        },
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<div><h3>Test</h3></div>');
-                      done();
-                    });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<div><h3>Test</h3></div>');
+          done();
+        });
       });
 
       it('should load libraries', function(done) {
@@ -254,33 +252,33 @@ describe('javascript runner', function() {
           language: 'javascript',
           code: 'var a = {b: 2};console.log(this);',
           fixture: 'var assert = require("chai").assert;describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});',
-          testFramework: 'mocha_bdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+          testFramework: 'mocha_bdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
       it('should handle no trailing semicolons', function(done) {
         runner.run({
           language: 'javascript',
           code: 'var a = 2',
           fixture: 'var assert = require("chai").assert;describe("test", function(){it("should be 2", function(){assert.equal(2, a);})});',
-          testFramework: 'mocha_bdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+          testFramework: 'mocha_bdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
       it('should handle failures', function(done) {
         runner.run({
           language: 'javascript',
           code: 'var a = {b: 2};',
           fixture: 'var assert = require("chai").assert;describe("test", function(){describe("failures", function(){it("should be 1", function(){assert.equal(1, a.b);})})});',
-          testFramework: 'mocha_bdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<FAILED::>');
-                      done();
-                    });
+          testFramework: 'mocha_bdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          done();
+        });
       });
 
       it('should handle errors', function(done) {
@@ -288,11 +286,11 @@ describe('javascript runner', function() {
           language: 'javascript',
           code: 'var a = {b: 2};',
           fixture: 'describe("test", function(){describe("failures", function(){it("should be 1", function(){throw new Error("test error");})})});',
-          testFramework: 'mocha_bdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<ERROR::>');
-                      done();
-                    });
+          testFramework: 'mocha_bdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<ERROR::>');
+          done();
+        });
       });
 
       it('should support options files', function(done) {
@@ -307,16 +305,14 @@ describe('javascript runner', function() {
                             });
                         });
                     `,
-          files: {
-            "config.js": "module.exports.name = 'example';"
-          },
-          testFramework: 'mocha_bdd'},
-                    function(buffer) {
-                      console.log(buffer.stdout);
-                      console.log(buffer.stderr);
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+          files: {"config.js": "module.exports.name = 'example';"},
+          testFramework: 'mocha_bdd'
+        }, function(buffer) {
+          console.log(buffer.stdout);
+          console.log(buffer.stderr);
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
 
       it('should load chai-display', function(done) {
@@ -332,11 +328,11 @@ describe('javascript runner', function() {
                             });
                         });
                     `,
-          testFramework: 'mocha_bdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+          testFramework: 'mocha_bdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
 
       describe('projectMode support', function() {
@@ -355,13 +351,13 @@ describe('javascript runner', function() {
                             });
                         `
             },
-            testFramework: 'mocha_bdd'},
-                    function(buffer) {
-                      // console.log(buffer.stdout)
-                      // console.log(buffer.stderr)
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+            testFramework: 'mocha_bdd'
+          }, function(buffer) {
+            // console.log(buffer.stdout)
+            // console.log(buffer.stderr)
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            done();
+          });
         });
       });
     });
@@ -377,44 +373,44 @@ describe('javascript runner', function() {
           language: 'javascript',
           code: 'var a = {b: 2};console.log(this);',
           fixture: 'var assert = require("chai").assert;suite("test", function(){test("should be 2", function(){assert.equal(2, a.b);})});',
-          testFramework: 'mocha_tdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+          testFramework: 'mocha_tdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
       it('should handle failures', function(done) {
         runner.run({
           language: 'javascript',
           code: 'var a = {b: 2};',
           fixture: 'var assert = require("assert"); suite("test", function(){suite("failures", function(){test("should be 1", function(){assert.equal(1, a.b);})})});',
-          testFramework: 'mocha_tdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<FAILED::>');
-                      done();
-                    });
+          testFramework: 'mocha_tdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          done();
+        });
       });
       it('should handle chai failures', function(done) {
         runner.run({
           language: 'javascript',
           code: 'var a = {b: 2};',
           fixture: 'var assert = require("chai").assert; suite("test", function(){suite("failures", function(){test("should be 1", function(){assert.equal(1, a.b);})})});',
-          testFramework: 'mocha_tdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<FAILED::>');
-                      done();
-                    });
+          testFramework: 'mocha_tdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          done();
+        });
       });
       it('should handle errors', function(done) {
         runner.run({
           language: 'javascript',
           code: 'var a = {b: 2};',
           fixture: 'suite("test", function(){suite("failures", function(){test("should be 1", function(){throw new Error("test error");})})});',
-          testFramework: 'mocha_tdd'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<ERROR::>');
-                      done();
-                    });
+          testFramework: 'mocha_tdd'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<ERROR::>');
+          done();
+        });
       });
     });
 
@@ -518,13 +514,13 @@ describe('javascript runner', function() {
                           });
                       `
             },
-            testFramework: 'cw-2'},
-                  function(buffer) {
-                    // console.log(buffer.stdout)
-                    // console.log(buffer.stderr)
-                    expect(buffer.stdout).to.contain('<PASSED::>');
-                    done();
-                  });
+            testFramework: 'cw-2'
+          }, function(buffer) {
+            // console.log(buffer.stdout)
+            // console.log(buffer.stderr)
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            done();
+          });
         });
       });
 
@@ -540,11 +536,10 @@ describe('javascript runner', function() {
                             });
                         `,
             testFramework: 'cw-2'
-          },
-                    function(buffer) {
-                      expect(buffer.stdout).to.include("<ERROR::>`it` function timed out. Function ran longer than 2ms\n<COMPLETEDIN::>");
-                      done();
-                    });
+          }, function(buffer) {
+            expect(buffer.stdout).to.include("<ERROR::>`it` function timed out. Function ran longer than 2ms\n<COMPLETEDIN::>");
+            done();
+          });
         });
 
         it('should render in proper order', function(done) {
@@ -563,34 +558,37 @@ describe('javascript runner', function() {
                             });
                         `,
             testFramework: 'cw-2'
-          },
-                    function(buffer) {
-                      expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == \'ok\'\n<COMPLETEDIN::>");
-                      done();
-                    });
+          }, function(buffer) {
+            expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == \'ok\'\n<COMPLETEDIN::>");
+            done();
+          });
         });
       });
 
       describe('error handling', function() {
         it('should handle a mix of failures and successes', function(done) {
-          runner.run({language: 'javascript',
+          runner.run({
+            language: 'javascript',
             code:'var a = 1',
             fixture: 'describe("test", function(){\n' +
                                 'it("test1", function(){ Test.expect(false) });' +
                                 'it("test2", function(){ Test.expect(true)});})',
-            testFramework: 'cw-2'}, function(buffer) {
+            testFramework: 'cw-2'
+          }, function(buffer) {
             expect(buffer.stdout).to.contain('<FAILED::>Value is not what was expected');
             expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
             done();
           });
         });
         it('should gracefully handle custom errors', function(done) {
-          runner.run({language: 'javascript',
+          runner.run({
+            language: 'javascript',
             code:'var a = 1',
             fixture: 'describe("test", function(){\n' +
                                 'it("test1", function(){ throw "boom!" });' +
                                 'it("test2", function(){ Test.expect(true)});})',
-            testFramework: 'cw-2'}, function(buffer) {
+            testFramework: 'cw-2'
+          }, function(buffer) {
             expect(buffer.stdout).to.contain('<ERROR::>');
             expect(buffer.stdout).to.contain('boom!');
             expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
@@ -598,12 +596,14 @@ describe('javascript runner', function() {
           });
         });
         it('should gracefully handle reference errors', function(done) {
-          runner.run({language: 'javascript',
+          runner.run({
+            language: 'javascript',
             code:'var a = 1',
             fixture: 'describe("test", function(){\n' +
                                 'it("test1", function(){ b.test() });' +
                                 'it("test2", function(){ Test.expect(true)});})',
-            testFramework: 'cw-2'}, function(buffer) {
+            testFramework: 'cw-2'
+          }, function(buffer) {
             expect(buffer.stdout).to.contain('<ERROR::>');
             expect(buffer.stdout).to.contain('<:LF:>');
             expect(buffer.stdout).to.contain('ReferenceError:');
@@ -613,11 +613,13 @@ describe('javascript runner', function() {
           });
         });
         it('should gracefully top level handle reference errors', function(done) {
-          runner.run({language: 'javascript',
+          runner.run({
+            language: 'javascript',
             code:'b.test()',
             fixture: 'describe("test", function(){\n' +
                                 'it("test2", function(){ Test.expect(true)});})',
-            testFramework: 'cw-2'}, function(buffer) {
+            testFramework: 'cw-2'
+          }, function(buffer) {
             expect(buffer.stdout).to.contain('<ERROR::>');
             expect(buffer.stdout).to.contain('<:LF:>');
             expect(buffer.stdout).to.contain('ReferenceError:');
@@ -640,14 +642,12 @@ describe('javascript runner', function() {
                             });
                         });
                     `,
-          files: {
-            "config.js": "module.exports.name = 'example';"
-          },
-          testFramework: 'cw-2'},
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+          files: {"config.js": "module.exports.name = 'example';"},
+          testFramework: 'cw-2'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
 
       describe('Fix #259', function() {
@@ -690,11 +690,9 @@ describe('javascript runner', function() {
           code: 'var a = {b: 2};',
           fixture: 'describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});',
           testFramework: 'karma_bdd'
-        },
-                    function() {
-                      done();
-                    }
-                );
+        }, function() {
+          done();
+        });
       });
       it('should handle basic tests', function(done) {
         runner.run({
@@ -702,11 +700,10 @@ describe('javascript runner', function() {
           code: 'var a = {b: 2};',
           fixture: 'describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});',
           testFramework: 'karma_bdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
       it('should handle loading Angular', function(done) {
         runner.run({
@@ -730,12 +727,11 @@ describe("test", function(){
     }));
 });`,
           testFramework: 'karma_bdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<IT::>should multiply');
-                  expect(buffer.stdout).to.contain('\n<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+          expect(buffer.stdout).to.contain('\n<PASSED::>');
+          done();
+        });
       });
 
       it('should handle failures', function(done) {
@@ -759,12 +755,11 @@ describe("test", function(){
     }));
 });`,
           testFramework: 'karma_bdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<IT::>should multiply');
-                  expect(buffer.stdout).to.contain('\n<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+          expect(buffer.stdout).to.contain('\n<FAILED::>');
+          done();
+        });
       });
 
       it('should handle code errors', function(done) {
@@ -788,11 +783,10 @@ describe("test", function(){
     }));
 });`,
           testFramework: 'karma_bdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<FAILED::>');
+          done();
+        });
       });
 
       it('should handle test errors', function(done) {
@@ -817,11 +811,10 @@ describe("test", function(){
     }));
 });`,
           testFramework: 'karma_bdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<FAILED::>');
+          done();
+        });
       });
 
       it('should handle projectMode', function(done) {
@@ -835,11 +828,10 @@ describe("test", function(){
             'spec.js': 'describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});'
           },
           testFramework: 'karma_bdd'
-        },
-                    function(buffer) {
-                      expect(buffer.stdout).to.contain('<PASSED::>');
-                      done();
-                    });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
     });
 
@@ -855,11 +847,10 @@ describe("test", function(){
           code: 'var a = {b: 2};',
           fixture: 'suite("test", function(){test("should be 2", function(){assert.equal(2, a.b);})});',
           testFramework: 'karma_tdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
       it('should handle loading Angular', function(done) {
         runner.run({
@@ -883,12 +874,11 @@ suite("test", function(){
     }));
 });`,
           testFramework: 'karma_tdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<IT::>should multiply');
-                  expect(buffer.stdout).to.contain('\n<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+          expect(buffer.stdout).to.contain('\n<PASSED::>');
+          done();
+        });
       });
 
       it('should handle failures', function(done) {
@@ -912,12 +902,11 @@ suite("test", function(){
     }));
 });`,
           testFramework: 'karma_tdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<IT::>should multiply');
-                  expect(buffer.stdout).to.contain('\n<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<IT::>should multiply');
+          expect(buffer.stdout).to.contain('\n<FAILED::>');
+          done();
+        });
       });
 
       it('should handle code errors', function(done) {
@@ -941,11 +930,10 @@ suite("test", function(){
     }));
 });`,
           testFramework: 'karma_tdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<FAILED::>');
+          done();
+        });
       });
 
       it('should handle test errors', function(done) {
@@ -970,11 +958,10 @@ suite("test", function(){
     }));
 });`,
           testFramework: 'karma_tdd'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<FAILED::>');
+          done();
+        });
       });
     });
   });

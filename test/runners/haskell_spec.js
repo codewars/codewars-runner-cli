@@ -6,7 +6,8 @@ describe('haskell runner', function() {
     runner.assertCodeExamples('haskell');
 
     it('should handle basic code evaluation', function(done) {
-      runner.run({language: 'haskell',
+      runner.run({
+        language: 'haskell',
         code: 'main = putStrLn "42"'
       }, function(buffer) {
         expect(buffer.stdout).to.equal('42\n');
@@ -538,7 +539,8 @@ describe('haskell runner', function() {
   });
   describe('haskell', function() {
     it('can handle SQLite interaction', function(done) {
-      runner.run({language: 'haskell',
+      runner.run({
+        language: 'haskell',
         code: [
           '{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies #-}',
           '{-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts, MultiParamTypeClasses #-}',

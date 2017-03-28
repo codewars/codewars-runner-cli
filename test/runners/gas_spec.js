@@ -5,7 +5,8 @@ var runner = require('../runner');
 describe('gas runner', function() {
   describe('.run', function() {
     it('should handle basic code evaluation (no libc)', function(done) {
-      runner.run({language: 'gas',
+      runner.run({
+        language: 'gas',
         code: [
           '   .global _start',
           '   .text',
@@ -20,14 +21,15 @@ describe('gas runner', function() {
           '   syscall',
           'message:',
           '   .ascii "PV = nRT"'
-        ].join('\n')},
-                function(buffer) {
-                  expect(buffer.stdout).to.equal('PV = nRT');
-                  done();
-                });
+        ].join('\n')
+      }, function(buffer) {
+        expect(buffer.stdout).to.equal('PV = nRT');
+        done();
+      });
     });
     it('should handle basic code evaluation (with libc)', function(done) {
-      runner.run({language: 'gas',
+      runner.run({
+        language: 'gas',
         code: [
           '   .global  main',
           '   .text',
@@ -37,11 +39,11 @@ describe('gas runner', function() {
           '   ret',
           'message:',
           '   .asciz "Gas works with libc, too"'
-        ].join('\n')},
-                function(buffer) {
-                  expect(buffer.stdout).to.equal('Gas works with libc, too\n');
-                  done();
-                });
+        ].join('\n')
+      }, function(buffer) {
+        expect(buffer.stdout).to.equal('Gas works with libc, too\n');
+        done();
+      });
     });
   });
 });

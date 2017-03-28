@@ -5,7 +5,8 @@ var runner = require('../runner');
 describe('java runner', function() {
   describe('.run', function() {
     it('should handle basic code evaluation', function(done) {
-      runner.run({language: 'java',
+      runner.run({
+        language: 'java',
         code: [
           'class Solution {',
           '   static void main(String[] args){',
@@ -20,7 +21,8 @@ describe('java runner', function() {
   });
   describe('junit', function() {
     it('should handle basic junit tests', function(done) {
-      runner.run({language: 'java',
+      runner.run({
+        language: 'java',
         code: 'public class Solution {\n'
                     + '    public Solution(){}\n'
                     + '    public int testthing(){return 3;}\n'
@@ -42,7 +44,8 @@ describe('java runner', function() {
       });
     });
     it('should handle junit tests failing', function(done) {
-      runner.run({language: 'java',
+      runner.run({
+        language: 'java',
         code: 'public class Solution {\n'
                     + '    public Solution(){}\n'
                     + '    public int testthing(){return 3;}\n'
@@ -64,7 +67,8 @@ describe('java runner', function() {
       });
     });
     it('should report junit messages', function(done) {
-      runner.run({language: 'java',
+      runner.run({
+        language: 'java',
         code: 'public class Solution {\n'
                     + '    public Solution(){}\n'
                     + '    public String testthing(){ return null; }\n'
