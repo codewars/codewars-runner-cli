@@ -691,7 +691,9 @@ describe( 'javascript runner', function(){
           fixture: 'describe("test", function(){it("should be 2", function(){assert.equal(2, a.b);})});',
           testFramework: 'karma_bdd'
         },
-                    function(){ done(); }
+                    function(){
+                      done(); 
+                    }
                 );
       });
       it( 'should handle basic tests', function(done){

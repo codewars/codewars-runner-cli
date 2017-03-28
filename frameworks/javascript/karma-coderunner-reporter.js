@@ -42,7 +42,8 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
       print('IT', result.description);
       if(result.success) {
         print('PASSED', result.time + 'ms');
-      } else {
+      }
+      else {
         print('FAILED', result.log);
       }
       print('COMPLETEDIN');

@@ -18,9 +18,10 @@ if (global.process) {
   });
 }
 
-function combineMessages(msgs, separator)
-{
-  return msgs.filter(function (m){ return m != null;}).join(separator)
+function combineMessages(msgs, separator){
+  return msgs.filter(function (m){
+    return m != null;
+  }).join(separator)
 }
 
 /**
@@ -29,14 +30,11 @@ function combineMessages(msgs, separator)
  *  then all values will be combined with a - between them, with null values filtered out.
  * @param {string} prefix If prefix is provided it will be prepended with a - character for readability
  */
-var message = module.exports.message = function message(msg, prefix)
-{
-  if (typeof msg == 'function')
-    {
+var message = module.exports.message = function message(msg, prefix){
+  if (typeof msg == 'function')    {
     msg = msg()
   }
-  else if (typeof msg == 'array')
-    {
+  else if (typeof msg == 'array')    {
     msg = combineMessages(msg, ' - ')
   }
   msg = prefix ? (prefix + ' - ' + msg) : msg;
@@ -108,25 +106,20 @@ module.exports.inspect = function inspect(obj, label, tab) {
 var format = module.exports.format = function format(obj, options) {
   options = options || {};
   var out = '';
-  if (typeof obj == 'string')
-    {
+  if (typeof obj == 'string')    {
     out = obj;
   }
-  else if (typeof obj == 'function')
-    {
+  else if (typeof obj == 'function')    {
     out = obj.toString();
   }
-  else
-    {
+  else    {
     if (obj && obj !== true){
 
             // for backwards compatibility we will support the indent option
-      if (options.indent || options.json)
-            {
+      if (options.indent || options.json)            {
         out = Test.stringify(obj, options.indent ? 4 : 0)
       }
-      else
-            {
+      else            {
         out = util.inspect(obj, options);
       }
     }

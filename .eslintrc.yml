@@ -8,13 +8,18 @@ rules:
   indent:
     - error
     - 2
+  brace-style:
+    - error
+    - stroustrup
   linebreak-style:
     - error
     - unix
-  quotes:
-    - off
+
   semi:
     - error
     - always
+
+  quotes:
+    - off
   no-console:
     - off
