@@ -43,7 +43,7 @@ describe('ocaml runner', function() {
         console.log(buffer);
         expect(buffer.stdout).to.contain("<DESCRIBE::>Person\n<IT::>.greet\n<PASSED::>");
         done();
-      })
+      });
     });
-  })
+  });
 });

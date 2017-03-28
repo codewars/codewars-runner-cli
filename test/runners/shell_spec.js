@@ -24,7 +24,7 @@ describe('shell runner', function() {
                       end
                     `
         }, function(buffer) {
-          console.log(buffer.stdout)
+          console.log(buffer.stdout);
           expect(buffer.stdout).to.contain('<PASSED::>');
           done();
         });

@@ -18,7 +18,7 @@ chai.use(function(_chai, util) {
         context: this._context
       });
     }
-  }
+  };
 
   chai.Assertion.addMethod('withArguments', function() {
     this._arguments = [].slice.apply(arguments);

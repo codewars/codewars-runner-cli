@@ -37,7 +37,7 @@ describe('swift runner', function() {
   });
   describe('cw-2', function() {
     it('should handle a basic assertion', function(done) {
-      var code = 'let a = 1;'
+      var code = 'let a = 1;';
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -51,7 +51,7 @@ describe('swift runner', function() {
                     });
     });
     it('should handle a basic assert_equals', function(done) {
-      var code = 'let a = 1;'
+      var code = 'let a = 1;';
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -65,7 +65,7 @@ describe('swift runner', function() {
                     });
     });
     it('should handle a basic assert_equals with arrays', function(done) {
-      var code = 'let a = [1, 2, 3]; let b = [1, 2, 3]'
+      var code = 'let a = [1, 2, 3]; let b = [1, 2, 3]';
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -79,7 +79,7 @@ describe('swift runner', function() {
                     });
     });
     it('should handle a basic assert_equals with array slices', function(done) {
-      var code = 'let a = [1, 2, 3]; let b = [1, 2, 3]'
+      var code = 'let a = [1, 2, 3]; let b = [1, 2, 3]';
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -204,7 +204,7 @@ describe('swift runner', function() {
                             return a + b
                         }
                     }
-                `
+                `;
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -234,10 +234,10 @@ describe('swift runner', function() {
         testFramework: 'xctest'
       },
                     function(buffer) {
-                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest')
-                      expect(buffer.stdout).to.contain('<IT::>testAddCheck')
-                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
-                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>')
+                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest');
+                      expect(buffer.stdout).to.contain('<IT::>testAddCheck');
+                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
                       done();
                     });
     });
@@ -249,7 +249,7 @@ describe('swift runner', function() {
                             return -1
                         }
                     }
-                `
+                `;
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -273,8 +273,8 @@ describe('swift runner', function() {
         testFramework: 'xctest'
       },
                     function(buffer) {
-                      expect(buffer.stdout).to.contain('<FAILED::>testAddCheck')
-                      expect(buffer.stdout).to.contain('<ERROR::>testAddCheck : XCTAssertEqual failed: ("-1") is not equal to ("3") - calc.add(1, 2) <:LF:> should be 3\n')
+                      expect(buffer.stdout).to.contain('<FAILED::>testAddCheck');
+                      expect(buffer.stdout).to.contain('<ERROR::>testAddCheck : XCTAssertEqual failed: ("-1") is not equal to ("3") - calc.add(1, 2) <:LF:> should be 3\n');
                       done();
                     });
     });
@@ -294,7 +294,7 @@ describe('swift runner', function() {
                             return a * b
                         }
                     }
-                `
+                `;
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -334,14 +334,14 @@ describe('swift runner', function() {
         testFramework: 'xctest'
       },
                     function(buffer) {
-                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest')
-                      expect(buffer.stdout).to.contain('<IT::>testAddCheck')
-                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
-                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>')
-                      expect(buffer.stdout).to.contain('<IT::>testSubCheck')
-                      expect(buffer.stdout).to.contain('<ERROR::>testSubCheck')
-                      expect(buffer.stdout).to.contain('<FAILED::>testSubCheck')
-                      expect(buffer.stdout).to.contain('<IT::>testMulCheck')
+                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest');
+                      expect(buffer.stdout).to.contain('<IT::>testAddCheck');
+                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+                      expect(buffer.stdout).to.contain('<IT::>testSubCheck');
+                      expect(buffer.stdout).to.contain('<ERROR::>testSubCheck');
+                      expect(buffer.stdout).to.contain('<FAILED::>testSubCheck');
+                      expect(buffer.stdout).to.contain('<IT::>testMulCheck');
                       done();
                     });
     });
@@ -361,7 +361,7 @@ describe('swift runner', function() {
                             return a * b
                         }
                     }
-                `
+                `;
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -387,11 +387,11 @@ describe('swift runner', function() {
         testFramework: 'xctest'
       },
                     function(buffer) {
-                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest')
-                      expect(buffer.stdout).to.contain('<IT::>testCalculator')
-                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
-                      expect(buffer.stdout).to.contain('<FAILED::>XCTAssertEqual failed:')
-                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>')
+                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest');
+                      expect(buffer.stdout).to.contain('<IT::>testCalculator');
+                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                      expect(buffer.stdout).to.contain('<FAILED::>XCTAssertEqual failed:');
+                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
                       done();
                     });
     });
@@ -402,7 +402,7 @@ describe('swift runner', function() {
                             return "hello, codewars!"
                         }
                     }
-                `
+                `;
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -433,10 +433,10 @@ describe('swift runner', function() {
         testFramework: 'xctest'
       },
                     function(buffer) {
-                      expect(buffer.stdout).to.contain('<DESCRIBE::>GreetingsTest')
-                      expect(buffer.stdout).to.contain('<IT::>testSayHello')
-                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
-                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>')
+                      expect(buffer.stdout).to.contain('<DESCRIBE::>GreetingsTest');
+                      expect(buffer.stdout).to.contain('<IT::>testSayHello');
+                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                      expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
                       done();
                     });
     });
@@ -459,7 +459,7 @@ describe('swift runner', function() {
                             return "Hello, \(other), I am \(name), it's nice to meet you!"
                         }
                     }
-                `
+                `;
       runner.run({
         language: 'swift',
         languageVersion: '3',
@@ -491,12 +491,12 @@ describe('swift runner', function() {
         testFramework: 'xctest'
       },
                     function(buffer) {
-                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest')
-                      expect(buffer.stdout).to.contain('<IT::>testAddCheck')
-                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
-                      expect(buffer.stdout).to.contain('<DESCRIBE::>PersonTest')
-                      expect(buffer.stdout).to.contain('<IT::>testGreet')
-                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed')
+                      expect(buffer.stdout).to.contain('<DESCRIBE::>CalculatorTest');
+                      expect(buffer.stdout).to.contain('<IT::>testAddCheck');
+                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+                      expect(buffer.stdout).to.contain('<DESCRIBE::>PersonTest');
+                      expect(buffer.stdout).to.contain('<IT::>testGreet');
+                      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
                       done();
                     });
     });

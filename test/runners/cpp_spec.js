@@ -195,7 +195,7 @@ describe('cpp runner', function() {
           expect(cIndex).to.be.below(aIndex);
           done();
         });
-      })
+      });
 
       it('should record std output', function(done) {
         runner.run({
@@ -265,7 +265,7 @@ describe('cpp runner', function() {
           expect(buffer.stdout).to.contain('<PASSED::>');
           done();
         });
-      })
+      });
 
       it('should only display errors once', function(done) {
         runner.run({
@@ -296,7 +296,7 @@ describe('cpp runner', function() {
           expect(buffer.stdout.match(/Expected: equal to b/g).length).to.equal(1);
           done();
         });
-      })
+      });
 
       it('should work with the virtual bug fix example', function(done) {
         runner.run({
@@ -344,7 +344,7 @@ describe('cpp runner', function() {
           expect(buffer.stdout).to.contain('<PASSED::>');
           done();
         });
-      })
+      });
 
       it('should handle inheritance like a champ', function(done) {
         runner.run({
@@ -388,7 +388,7 @@ describe('cpp runner', function() {
           expect(buffer.stdout).to.contain('<PASSED::>');
           done();
         });
-      })
+      });
 
     });
 

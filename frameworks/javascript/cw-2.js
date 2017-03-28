@@ -49,7 +49,7 @@ try {
     else if (describing.length) {
       describing.pop()();
     }
-  }
+  };
 
   var _expect = function(passed, failMsg, options) {
     options = options || {};
@@ -84,14 +84,14 @@ try {
         throw error;
       }
     }
-  }
+  };
 
     // convenience method for adding a default failed callback to an options
   var _failed = function(options, callback) {
-    options = options || {}
+    options = options || {};
     options.failed = options.failed || callback;
     return options;
-  }
+  };
 
   var Test = {
         // when called, it will set a flag to cause all failed tests to explain the expected/actual results
@@ -124,7 +124,7 @@ try {
             // bad format for typical use cases.
       if (Array.isArray(obj)) {
         return "[" + obj.map(function(v) {
-          return Test.inspect(v)
+          return Test.inspect(v);
         }).join(", ") + "]";
       }
       else {
@@ -192,7 +192,7 @@ try {
         var start = new Date(),
           timeout,
           done = function() {
-            if (timeout) clearTimeout(timeout)
+            if (timeout) clearTimeout(timeout);
 
             var ms = new Date() - start;
             Test.display.write("COMPLETEDIN", ms);
@@ -225,7 +225,7 @@ try {
         finally {
           if (!asyncIt) done();
         }
-      }
+      };
 
             // if async then we queue everything up first
       if (async) {
@@ -286,13 +286,13 @@ try {
       _expect(false, message);
     },
     expect: function(passed, message, options) {
-      _expect(passed, message, options)
+      _expect(passed, message, options);
     },
     assertSimilar: function(actual, expected, msg, options) {
-      this.assertEquals(Test.inspect(actual), Test.inspect(expected), msg, options)
+      this.assertEquals(Test.inspect(actual), Test.inspect(expected), msg, options);
     },
     assertNotSimilar: function(actual, expected, msg, options) {
-      this.assertNotEquals(Test.inspect(actual), Test.inspect(expected), msg, options)
+      this.assertNotEquals(Test.inspect(actual), Test.inspect(expected), msg, options);
     },
     assertEquals: function(actual, expected, msg, options) {
       if (typeof(msg) == 'object') {
@@ -396,22 +396,22 @@ try {
 
       try {
         fn();
-        Test.expect(true)
+        Test.expect(true);
       }
       catch (ex) {
         if (ex.name == 'TestError') {
           throw ex;
         }
         else {
-          msg += ': ' + ex.toString()
-          Test.expect(false, msg)
+          msg += ': ' + ex.toString();
+          Test.expect(false, msg);
         }
       }
     },
     expectError: function(msg, fn, options) {
       if (!fn) {
         fn = msg;
-        msg = 'Expected an error to be thrown'
+        msg = 'Expected an error to be thrown';
       }
 
       var passed = false;
@@ -420,16 +420,16 @@ try {
       }
       catch (ex) {
         console.log('<b>Expected error was thrown:</b> ' + ex.toString());
-        passed = true
+        passed = true;
       }
 
-      Test.expect(passed, msg, options)
+      Test.expect(passed, msg, options);
     },
     randomNumber: function() {
-      return Math.round(Math.random() * 100)
+      return Math.round(Math.random() * 100);
     },
     randomToken: function() {
-      return Math.random().toString(36).substr(8)
+      return Math.random().toString(36).substr(8);
     },
     randomize: function(array) {
       var arr = array.concat(), i = arr.length, j, x;
@@ -442,7 +442,7 @@ try {
       return arr;
     },
     sample: function(array) {
-      return array[~~(array.length * Math.random())]
+      return array[~~(array.length * Math.random())];
     },
     escapeHtml: function(html) {
       return Test.display.escapeHtml(html);
@@ -451,7 +451,7 @@ try {
       this.name = "TestError";
       this.message = (message || "");
     }
-  }
+  };
 
 //    Test.Error.prototype = require('assert').AssertionError.prototype;
   Test.Error.prototype = Error.prototype;
@@ -463,23 +463,23 @@ try {
     writable: false,
     configurable: false,
     value: Test
-  })
+  });
   Object.defineProperty(global, 'describe', {
     writable: false,
     value: Test.describe
-  })
+  });
   Object.defineProperty(global, 'it', {
     writable: false,
     value: Test.it
-  })
+  });
   Object.defineProperty(global, 'before', {
     writable: false,
     value: Test.before
-  })
+  });
   Object.defineProperty(global, 'after', {
     writable: false,
     value: Test.after
-  })
+  });
 
 
 }

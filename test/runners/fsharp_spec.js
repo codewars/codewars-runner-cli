@@ -38,8 +38,8 @@ describe('fsharp runner', function() {
         console.log(buffer);
         expect(buffer.stdout).to.contain("<IT::>Person/.greet\n<PASSED::>Person/.greet\n<COMPLETEDIN::>");
         done();
-      })
-    })
+      });
+    });
     it('should be able to handle a failing test', function(done) {
       runner.run({
         language: 'fsharp',
@@ -63,7 +63,7 @@ describe('fsharp runner', function() {
         expect(buffer.stdout).to.contain("<IT::>Broken/test\n<FAILED::><:LF:>Broken test");
         expect(buffer.stdout).to.contain("\n<COMPLETEDIN::>");
         done();
-      })
-    })
+      });
+    });
   });
 });

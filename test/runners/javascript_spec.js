@@ -542,7 +542,7 @@ describe('javascript runner', function() {
             testFramework: 'cw-2'
           },
                     function(buffer) {
-                      expect(buffer.stdout).to.include("<ERROR::>`it` function timed out. Function ran longer than 2ms\n<COMPLETEDIN::>")
+                      expect(buffer.stdout).to.include("<ERROR::>`it` function timed out. Function ran longer than 2ms\n<COMPLETEDIN::>");
                       done();
                     });
         });
@@ -565,7 +565,7 @@ describe('javascript runner', function() {
             testFramework: 'cw-2'
           },
                     function(buffer) {
-                      expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == \'ok\'\n<COMPLETEDIN::>")
+                      expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == \'ok\'\n<COMPLETEDIN::>");
                       done();
                     });
         });

@@ -22,7 +22,7 @@ describe('ruby runner', function() {
                 `,
         githubRepo: 'jhoffner/test'
       }, function(buffer) {
-        console.log(buffer.stdout)
+        console.log(buffer.stdout);
         expect(buffer.stdout).to.contain('sample\n');
         done();
       });
@@ -34,7 +34,7 @@ describe('ruby runner', function() {
         code: 'puts `ls`',
         setup: '# @config: gist 3acc7b81436ffe4ad20800e242ccaff6',
       }, function(buffer) {
-        console.log(buffer.stdout)
+        console.log(buffer.stdout);
         expect(buffer.stdout).to.contain('gist.js\n');
         done();
       });
@@ -92,7 +92,7 @@ describe('ruby runner', function() {
                             'it("test2") { Test.expect(true) }\n' +
                             'end',
             testFramework: 'cw-2'}, function(buffer) {
-            console.log(buffer.stdout)
+            console.log(buffer.stdout);
             expect(buffer.stdout).to.contain('<FAILED::>Value is not what was expected');
             expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
             done();
