@@ -2,18 +2,18 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 
-describe( 'php runner', function(){
-  describe( '.run', function(){
+describe('php runner', function() {
+  describe('.run', function() {
     runner.assertCodeExamples('php');
 
-    it( 'should handle basic code evaluation', function(done){
+    it('should handle basic code evaluation', function(done) {
       runner.run({language: 'php', solution: 'echo 42;'}, function(buffer) {
         expect(buffer.stdout).to.equal('42');
         done();
       });
     });
 
-    it( 'should handle bad syntax', function(done){
+    it('should handle bad syntax', function(done) {
       runner.run({
         language: 'php',
         solution: `fliggaflagam!!!`
@@ -23,7 +23,7 @@ describe( 'php runner', function(){
       });
     });
 
-    it( 'should handle thrown exceptions', function(done){
+    it('should handle thrown exceptions', function(done) {
       runner.run({
         language: 'php',
         solution: `throw new Exception('Rawr!');`
@@ -33,7 +33,7 @@ describe( 'php runner', function(){
       });
     });
 
-    it( 'should handle undefined functions', function(done){
+    it('should handle undefined functions', function(done) {
       runner.run({
         language: 'php',
         solution: `fliggaflagam();`
@@ -43,7 +43,7 @@ describe( 'php runner', function(){
       });
     });
 
-    it( 'should handle the latest and greatest of PHP 7', function(done){
+    it('should handle the latest and greatest of PHP 7', function(done) {
       runner.run({
         language: 'php',
         solution: `
@@ -138,7 +138,7 @@ describe( 'php runner', function(){
                 });
       });
 
-      it( 'should handle thrown exceptions', function(done){
+      it('should handle thrown exceptions', function(done) {
         runner.run({
           language: 'php',
           code: `
@@ -212,7 +212,7 @@ describe( 'php runner', function(){
                 });
       });
 
-      it( 'should render console output', function(done){
+      it('should render console output', function(done) {
         runner.run({
           language: 'php',
           code: `
@@ -238,7 +238,7 @@ describe( 'php runner', function(){
                 });
       });
 
-      it( 'should handle console output without linewraps', function(done){
+      it('should handle console output without linewraps', function(done) {
         runner.run({
           language: 'php',
           code: `
@@ -371,7 +371,7 @@ describe( 'php runner', function(){
                 });
       });
 
-      it( 'should handle thrown exceptions', function(done){
+      it('should handle thrown exceptions', function(done) {
         runner.run({
           language: 'php',
           code: `

@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 
-describe('arm runner', function () {
+describe('arm runner', function() {
     // commenting out for now since we dont care and this just throws timeout errors sometimes
     //describe('.run', function () {
     //    it('should handle basic code evaluation (no libc)', function (done) {

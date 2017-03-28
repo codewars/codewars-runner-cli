@@ -2,9 +2,9 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 
-describe('gas runner', function () {
-  describe('.run', function () {
-    it('should handle basic code evaluation (no libc)', function (done) {
+describe('gas runner', function() {
+  describe('.run', function() {
+    it('should handle basic code evaluation (no libc)', function(done) {
       runner.run({language: 'gas',
         code: [
           '   .global _start',
@@ -21,12 +21,12 @@ describe('gas runner', function () {
           'message:',
           '   .ascii "PV = nRT"'
         ].join('\n')},
-                function (buffer) {
+                function(buffer) {
                   expect(buffer.stdout).to.equal('PV = nRT');
                   done();
                 });
     });
-    it('should handle basic code evaluation (with libc)', function (done) {
+    it('should handle basic code evaluation (with libc)', function(done) {
       runner.run({language: 'gas',
         code: [
           '   .global  main',
@@ -38,7 +38,7 @@ describe('gas runner', function () {
           'message:',
           '   .asciz "Gas works with libc, too"'
         ].join('\n')},
-                function (buffer) {
+                function(buffer) {
                   expect(buffer.stdout).to.equal('Gas works with libc, too\n');
                   done();
                 });

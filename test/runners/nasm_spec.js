@@ -2,9 +2,9 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 
-describe('nasm runner', function () {
-  describe('.run', function () {
-    it('should handle basic code evaluation (no libc)', function (done) {
+describe('nasm runner', function() {
+  describe('.run', function() {
+    it('should handle basic code evaluation (no libc)', function(done) {
       runner.run({language: 'nasm',
         code: [
           '   global  _start',
@@ -21,12 +21,12 @@ describe('nasm runner', function () {
           'message:',
           'db      "Hello, Netwide Assembler!", 25'
         ].join('\n')},
-                function (buffer) {
+                function(buffer) {
                   expect(buffer.stdout).to.equal('Hello, Netwide Assembler!');
                   done();
                 });
     });
-    it('should handle basic code evaluation (with libc)', function (done) {
+    it('should handle basic code evaluation (with libc)', function(done) {
       runner.run({language: 'nasm',
         code: [
           '   global  main',
@@ -39,7 +39,7 @@ describe('nasm runner', function () {
           'message:',
           'db      "Netwide Assembler together with LIBC!  Let\'s Port Codewars From Rails to THIS! \\m/", 0'
         ].join('\n')},
-                function (buffer) {
+                function(buffer) {
                   expect(buffer.stdout).to.equal('Netwide Assembler together with LIBC!  Let\'s Port Codewars From Rails to THIS! \\m/\n');
                   done();
                 });

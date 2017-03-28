@@ -1,11 +1,11 @@
 var expect = require('chai').expect;
 var runner = require('../runner');
 
-describe( 'objc runner', function(){
-  describe( '.run', function(){
+describe('objc runner', function() {
+  describe('.run', function() {
     runner.assertCodeExamples('objc');
 
-    it( 'should handle basic code evaluation', function(done){
+    it('should handle basic code evaluation', function(done) {
       runner.run({
         language: 'objc',
         setup: false,

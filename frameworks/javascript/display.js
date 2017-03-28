@@ -8,7 +8,7 @@ var util = require('util'),
 if (global.process) {
   global.process.execArgv = null;
   global.process._eval = null;
-  global.process.exit = function () {
+  global.process.exit = function() {
   };
 
   Object.defineProperty(global.process, "_eval", {
@@ -18,8 +18,8 @@ if (global.process) {
   });
 }
 
-function combineMessages(msgs, separator){
-  return msgs.filter(function (m){
+function combineMessages(msgs, separator) {
+  return msgs.filter(function(m) {
     return m != null;
   }).join(separator)
 }
@@ -30,11 +30,11 @@ function combineMessages(msgs, separator){
  *  then all values will be combined with a - between them, with null values filtered out.
  * @param {string} prefix If prefix is provided it will be prepended with a - character for readability
  */
-var message = module.exports.message = function message(msg, prefix){
-  if (typeof msg == 'function')    {
+var message = module.exports.message = function message(msg, prefix) {
+  if (typeof msg == 'function') {
     msg = msg()
   }
-  else if (typeof msg == 'array')    {
+  else if (typeof msg == 'array') {
     msg = combineMessages(msg, ' - ')
   }
   msg = prefix ? (prefix + ' - ' + msg) : msg;
@@ -43,7 +43,7 @@ var message = module.exports.message = function message(msg, prefix){
 
 /**
  * Base method for writing custom output tokens.
- */  
+ */
 module.exports.write = function write(type, msg, opts) {
   opts = opts || {};
   var mode = (opts.mode || "").toUpperCase();
@@ -51,7 +51,7 @@ module.exports.write = function write(type, msg, opts) {
   if (opts.mode == 'JSON') {
     msg = JSON.stringify(msg);
   }
-    
+
   msg = display.format(display.message(msg));
   console.log("<" + type.toUpperCase() + ":" + mode + ":" + label + ">" + msg);
 }
@@ -67,7 +67,7 @@ module.exports.log = function(msg, opts) {
  * Convenience method so that you dont have to write display.write("TAB", msg, opts) but instead display.tab(label, msg, mode)
  */
 module.exports.tab = function tab(label, msg, mode) {
-  display.write("TAB", msg, { label: label || "???", mode: mode });
+  display.write("TAB", msg, {label: label || "???", mode: mode});
 }
 
 /**
@@ -83,7 +83,7 @@ module.exports.json = function json(obj, label, tab) {
  * Writes a propertly to the last displayed token
  */
 module.exports.prop = function prop(name, value) {
-  display.write("PROP", value, { label: name });
+  display.write("PROP", value, {label: name});
 }
 
 /**
@@ -106,24 +106,24 @@ module.exports.inspect = function inspect(obj, label, tab) {
 var format = module.exports.format = function format(obj, options) {
   options = options || {};
   var out = '';
-  if (typeof obj == 'string')    {
+  if (typeof obj == 'string') {
     out = obj;
   }
-  else if (typeof obj == 'function')    {
+  else if (typeof obj == 'function') {
     out = obj.toString();
   }
-  else    {
-    if (obj && obj !== true){
+  else {
+    if (obj && obj !== true) {
 
             // for backwards compatibility we will support the indent option
-      if (options.indent || options.json)            {
+      if (options.indent || options.json) {
         out = Test.stringify(obj, options.indent ? 4 : 0)
       }
-      else            {
+      else {
         out = util.inspect(obj, options);
       }
     }
-    else{
+    else {
       out = ('' + obj);
     }
   }
@@ -164,7 +164,7 @@ module.exports.explainJson = function explainJson(actual, expected, collapsed) {
 module.exports.explain = function explain(actual, expected, options) {
     // allow true to be passed in as a shortcut to setting collapsed
   if (options === true || options === false) {
-    options = {collapsed: options };
+    options = {collapsed: options};
   }
 
   options = options || {};
@@ -215,7 +215,7 @@ module.exports.explain = function explain(actual, expected, options) {
     collapsed = !diff;
   }
 
-  display.log(expected, { label: collapsed + "Expected", mode: options.mode} );
+  display.log(expected, {label: collapsed + "Expected", mode: options.mode});
 
     // allows you to setup a special class for a log container
   if (options.className) {
@@ -227,7 +227,7 @@ module.exports.explain = function explain(actual, expected, options) {
   if (diff) {
     display.tab("Diff", "", "DIFF");
   }
-    
+
   if (options.arguments) {
     var details = "";
     options.arguments.forEach(function(v, i) {
@@ -253,6 +253,6 @@ module.exports.getPackages = function() {
 }
 
 module.exports.availablePackages = function(label) {
-  var packages = display.getPackages(); 
+  var packages = display.getPackages();
   display.json(packages, label);
 }

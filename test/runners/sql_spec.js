@@ -30,10 +30,10 @@ end
 puts "database = #{DATABASE}"
 `
 
-describe('sql runner', function () {
+describe('sql runner', function() {
   runner.assertCodeExamples('sql');
 
-  describe('.run', function () {
+  describe('.run', function() {
 
     describe('solution only', function() {
       it("should support sqlite", function(done) {

@@ -54,7 +54,7 @@ var run = require('./lib/runner').run,
             abbr: 'v',
             flag: true,
             help: 'Print version and exit',
-            callback: function () {
+            callback: function() {
               return require('./lib/config').version;
             }
           }

@@ -15,6 +15,52 @@ rules:
     - error
     - unix
 
+  keyword-spacing:
+    - error
+    - before: true
+      after: true
+  space-before-blocks:
+    - error
+    - always
+  space-before-function-paren:
+    - error
+    - anonymous: never
+      named: never
+  func-call-spacing:
+    - error
+    - never
+  space-in-parens:
+    - error
+    - never
+  arrow-spacing:
+    - error
+    - before: true
+      after: true
+  block-spacing:
+    - error
+    - always
+  array-bracket-spacing:
+    - error
+    - never
+  object-curly-spacing:
+    - error
+    - never
+  semi-spacing:
+    - error
+    - before: false
+      after: true
+  template-curly-spacing:
+    - error
+    - never
+
+  no-multi-spaces:
+    - error
+  no-trailing-spaces:
+    - error
+  eol-last:
+    - error
+    - always
+
   semi:
     - error
     - always

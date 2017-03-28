@@ -80,7 +80,7 @@ describe('elixir runner', function() {
           });
         });
       });
-            
+
       describe('no fixtures', function() {
               // Due to ExUnit.start, it can add COMPLETEDIN:: at the end.
               // That's why we match with .contain and not .equal

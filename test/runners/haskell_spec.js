@@ -1,19 +1,19 @@
 var expect = require('chai').expect,
   runner = require('../runner');
 
-describe('haskell runner', function () {
-  describe('.run', function () {
+describe('haskell runner', function() {
+  describe('.run', function() {
     runner.assertCodeExamples('haskell');
 
-    it('should handle basic code evaluation', function (done) {
+    it('should handle basic code evaluation', function(done) {
       runner.run({language: 'haskell',
         code: 'main = putStrLn "42"'
-      }, function (buffer) {
+      }, function(buffer) {
         expect(buffer.stdout).to.equal('42\n');
         done();
       });
     });
-    it('should handle running a module with imports', function (done) {
+    it('should handle running a module with imports', function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -24,12 +24,12 @@ describe('haskell runner', function () {
           'main :: IO ()',
           'main = putStr $ show $ powerset [1..3]'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         expect(buffer.stdout).to.equal('[[1,2,3],[1,2],[1,3],[1],[2,3],[2],[3],[]]');
         done();
       });
     });
-    it('should handle setup code', function (done) {
+    it('should handle setup code', function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -44,12 +44,12 @@ describe('haskell runner', function () {
           'powerset :: [a] -> [[a]]',
           'powerset = filterM (const [True,False])'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         expect(buffer.stdout).to.equal('[[1,2,3],[1,2],[1,3],[1],[2,3],[2],[3],[]]');
         done();
       });
     });
-    it('should handle skipping module declaration', function (done) {
+    it('should handle skipping module declaration', function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -63,15 +63,15 @@ describe('haskell runner', function () {
           'powerset :: [a] -> [[a]]',
           'powerset = filterM (const [True,False])'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         expect(buffer.stdout).to.equal('[[1,2,3],[1,2],[1,3],[1],[2,3],[2],[3],[]]');
         done();
       });
     });
   });
 
-  describe('codewars test framework (hspec)', function () {
-    it('should be able to run a basic test', function (done) {
+  describe('codewars test framework (hspec)', function() {
+    it('should be able to run a basic test', function(done) {
       runner.run({
         language: 'haskell',
         code: 'module Foo where',
@@ -84,7 +84,7 @@ describe('haskell runner', function () {
           '    it "returns the first element of a list" $ do',
           '      head [23 ..] `shouldBe` (23 :: Int)'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
         expect(buffer.stdout).to.contain('<IT::>returns the first element of a list');
@@ -92,7 +92,7 @@ describe('haskell runner', function () {
         done();
       });
     });
-    it("should work even if test module name isn't specified", function (done) {
+    it("should work even if test module name isn't specified", function(done) {
       runner.run({
         language: 'haskell',
         code: 'module Foo where',
@@ -104,7 +104,7 @@ describe('haskell runner', function () {
           '    it "returns the first element of a list" $ do',
           '      head [23 ..] `shouldBe` (23 :: Int)'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
         expect(buffer.stdout).to.contain('<IT::>returns the first element of a list');
@@ -112,7 +112,7 @@ describe('haskell runner', function () {
         done();
       });
     });
-    it("should work be able to import the code", function (done) {
+    it("should work be able to import the code", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -129,7 +129,7 @@ describe('haskell runner', function () {
           '    it "is 1" $ do',
           '      x `shouldBe` (1 :: Int)'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>x');
         expect(buffer.stdout).to.contain('<IT::>is 1');
@@ -137,7 +137,7 @@ describe('haskell runner', function () {
         done();
       });
     });
-    it("should be able to import the code even when code module name is unspecified (the default is module name for the code is 'Main')", function (done) {
+    it("should be able to import the code even when code module name is unspecified (the default is module name for the code is 'Main')", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -154,14 +154,14 @@ describe('haskell runner', function () {
           '    it "is 1" $ do',
           '      x `shouldBe` (1 :: Int)'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>x');
         expect(buffer.stdout).to.contain('<IT::>is 1');
         done();
       });
     });
-    it("should report when something is wrong", function (done) {
+    it("should report when something is wrong", function(done) {
       runner.run({
         language: 'haskell',
         code: 'x = 1',
@@ -174,7 +174,7 @@ describe('haskell runner', function () {
           '    it "is 2" $ do',
           '      x `shouldBe` 2'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>x');
         expect(buffer.stdout).to.contain('<IT::>is 2');
@@ -183,7 +183,7 @@ describe('haskell runner', function () {
         done();
       });
     });
-    it("should print as a side effect", function (done) {
+    it("should print as a side effect", function(done) {
       runner.run({
         language: 'haskell',
         code: 'x = do putStrLn "Test" ; return 1',
@@ -197,7 +197,7 @@ describe('haskell runner', function () {
           '      xval <- x',
           '      xval `shouldBe` 1'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>x');
         expect(buffer.stdout).to.contain('Test\n<IT::>prints and returns 1');
@@ -205,7 +205,7 @@ describe('haskell runner', function () {
         done();
       });
     });
-    it("should fail fast", function (done) {
+    it("should fail fast", function(done) {
       runner.run({
         language: 'haskell',
         code: 'x = 1',
@@ -220,7 +220,7 @@ describe('haskell runner', function () {
           '    it "should never get here" $ do',
           '      x `shouldBe` 3'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>x');
         expect(buffer.stdout).to.contain('<IT::>is not really 2');
@@ -231,7 +231,7 @@ describe('haskell runner', function () {
         done();
       });
     });
-    it("should report exceptions as errors", function (done) {
+    it("should report exceptions as errors", function(done) {
       runner.run({
         language: 'haskell',
         code: 'x = head []',
@@ -244,7 +244,7 @@ describe('haskell runner', function () {
           '    it "should throw" $ do',
           '      x `shouldBe` 2'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>exception');
         expect(buffer.stdout).to.contain('<IT::>should throw');
@@ -252,7 +252,7 @@ describe('haskell runner', function () {
         done();
       });
     });
-    it("should be able to hide a module from the code code", function (done) {
+    it("should be able to hide a module from the code code", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -269,14 +269,14 @@ describe('haskell runner', function () {
           '    it "Data.Monoid is hidden" $ do',
           '      hidden $ Module \"Data.Monoid\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Data.Monoid is hidden');
         expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
         done();
       });
     });
-    it("should fail if a module which is supposed to be hidden is not", function (done) {
+    it("should fail if a module which is supposed to be hidden is not", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -294,14 +294,14 @@ describe('haskell runner', function () {
           '    it "Data.Monoid is not hidden!" $ do',
           '      hidden $ Module \"Data.Monoid\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Data.Monoid is not hidden!');
         expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Data.Monoid');
         done();
       });
     });
-    it("should recognize when things are hidden from a particular module", function (done) {
+    it("should recognize when things are hidden from a particular module", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -319,14 +319,14 @@ describe('haskell runner', function () {
           '    it "Data.List.reverse is hidden" $ do',
           '      hidden $ FromModule \"Data.List\" \"reverse\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Data.List.reverse is hidden');
         expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
         done();
       });
     });
-    it("should fail when a symbol from a module that ought to be hidden is not", function (done) {
+    it("should fail when a symbol from a module that ought to be hidden is not", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -344,14 +344,14 @@ describe('haskell runner', function () {
           '    it "Data.List.intercalate is not hidden!" $ do',
           '      hidden $ FromModule \"Data.List\" \"intercalate\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Data.List.intercalate is not hidden!');
         expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Data.List.intercalate');
         done();
       });
     });
-    it("should fail when a symbol from a module that ought to be hidden is not because the whole module was imported", function (done) {
+    it("should fail when a symbol from a module that ought to be hidden is not because the whole module was imported", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -369,14 +369,14 @@ describe('haskell runner', function () {
           '    it "Data.List.intercalate is not hidden, because the whole module was imported!" $ do',
           '      hidden $ FromModule \"Data.List\" \"intercalate\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Data.List.intercalate is not hidden, because the whole module was imported!');
         expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Data.List.intercalate');
         done();
       });
     });
-    it("should fail when a symbol from a module that ought to be hidden is not because it wasn't hidden properly", function (done) {
+    it("should fail when a symbol from a module that ought to be hidden is not because it wasn't hidden properly", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -395,14 +395,14 @@ describe('haskell runner', function () {
           '    it "Control.Monad.>=> is not hidden, because we forgot!" $ do',
           '      hidden $ FromModule \"Control.Monad\" \">=>\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Control.Monad.>=> is not hidden, because we forgot!');
         expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Control.Monad.>=>');
         done();
       });
     });
-    it("should fail when a function is hidden once in a module, but later imported", function (done) {
+    it("should fail when a function is hidden once in a module, but later imported", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -422,14 +422,14 @@ describe('haskell runner', function () {
           '    it "Control.Monad.>=> is not hidden, because we imported it after all!" $ do',
           '      hidden $ FromModule \"Control.Monad\" \">=>\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Control.Monad.>=> is not hidden, because we imported it after all!');
         expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Control.Monad.>=>');
         done();
       });
     });
-    it("should fail when a function is hidden once in a module, but later imported as qualified", function (done) {
+    it("should fail when a function is hidden once in a module, but later imported as qualified", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -449,14 +449,14 @@ describe('haskell runner', function () {
           '    it "Control.Monad.>=> is not hidden, because we imported Control.Monad qualified!" $ do',
           '      hidden $ FromModule \"Control.Monad\" \">=>\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Control.Monad.>=> is not hidden, because we imported Control.Monad qualified!');
         expect(buffer.stdout).to.contain('<FAILED::>Import declarations must hide Control.Monad.>=>');
         done();
       });
     });
-    it("should be able to hide Prelude functions", function (done) {
+    it("should be able to hide Prelude functions", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -474,14 +474,14 @@ describe('haskell runner', function () {
           '    it "Prelude.reverse is hidden" $ do',
           '      hidden $ FromModule \"Prelude\" \"reverse\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Prelude.reverse is hidden');
         expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
         done();
       });
     });
-    it("should detect when we failed to hide a Prelude function", function (done) {
+    it("should detect when we failed to hide a Prelude function", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -498,14 +498,14 @@ describe('haskell runner', function () {
           '    it "Prelude.reverse is NOT hidden!" $ do',
           '      hidden $ FromModule \"Prelude\" \"reverse\"'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Prelude.reverse is NOT hidden!');
         expect(buffer.stdout).to.contain('<FAILED::>');
         done();
       });
     });
-    it("should detect when we hid a Prelude function, even when we forgot to say our module name", function (done) {
+    it("should detect when we hid a Prelude function, even when we forgot to say our module name", function(done) {
       runner.run({
         language: 'haskell',
         code: [
@@ -527,7 +527,7 @@ describe('haskell runner', function () {
           '      let testInput = [1..10]',
           '      Main.reverse testInput `shouldBe` reverse testInput',
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Prelude.reverse is indeed hidden');
         expect(buffer.stdout).to.contain('Main.reverse is functionally the same as Prelude.reverse');
@@ -536,8 +536,8 @@ describe('haskell runner', function () {
       });
     });
   });
-  describe('haskell', function () {
-    it('can handle SQLite interaction', function (done) {
+  describe('haskell', function() {
+    it('can handle SQLite interaction', function(done) {
       runner.run({language: 'haskell',
         code: [
           '{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies #-}',
@@ -616,7 +616,7 @@ describe('haskell runner', function () {
           '                                 , Movie "Mad Max" 1979 95',
           '                                 , Movie "Mad Max 2: The Road Warrior" 1981 100]'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain('Test Passed');
         done();
