@@ -86,7 +86,7 @@ try {
     }
   };
 
-    // convenience method for adding a default failed callback to an options
+  // convenience method for adding a default failed callback to an options
   var _failed = function(options, callback) {
     options = options || {};
     options.failed = options.failed || callback;
@@ -94,34 +94,34 @@ try {
   };
 
   var Test = {
-        // when called, it will set a flag to cause all failed tests to explain the expected/actual results
+    // when called, it will set a flag to cause all failed tests to explain the expected/actual results
     explainAll: function(mode) {
       alwaysExplain = mode || true;
     },
 
     display: require('./display'),
 
-        // we use this instead of util.inspect so that we can support the indent option and json options
+    // we use this instead of util.inspect so that we can support the indent option and json options
     stringify: function(obj, indent) {
       var cache = [];
       return JSON.stringify(obj, function(key, value) {
         if (typeof value === 'object' && value !== null) {
-                    // Circular reference found, discard key
+          // Circular reference found, discard key
           if (cache.indexOf(value) !== -1) return "[Circular]";
         }
-                // Store value in our collection
+        // Store value in our collection
         cache.push(value);
         return value;
       }, indent);
     },
 
-        // backwards compatibility
+    // backwards compatibility
     format: function(obj, options) {
       Test.display.format(obj, options);
     },
     inspect: function(obj) {
-            // format arrays ourselves since long arrays end up getting broken out into separate lines, which is often a
-            // bad format for typical use cases.
+      // format arrays ourselves since long arrays end up getting broken out into separate lines, which is often a
+      // bad format for typical use cases.
       if (Array.isArray(obj)) {
         return "[" + obj.map(function(v) {
           return Test.inspect(v);
@@ -152,8 +152,8 @@ try {
             var ms = new Date() - start;
             Test.display.write("COMPLETEDIN", ms);
 
-                        // TODO: right now before/after blocks don't work very well with multi level describes so they
-                        // should only be used at the top level
+            // TODO: right now before/after blocks don't work very well with multi level describes so they
+            // should only be used at the top level
             if (!describing.length) {
               beforeCallbacks = [];
               afterCallbacks = [];
@@ -227,11 +227,11 @@ try {
         }
       };
 
-            // if async then we queue everything up first
+      // if async then we queue everything up first
       if (async) {
         asyncIts.push(begin);
       }
-            // otherwise just run it
+      // otherwise just run it
       else {
         begin();
       }
@@ -242,8 +242,8 @@ try {
     after: function(cb) {
       afterCallbacks.push(cb);
     },
-        // handles an error and writes the appropriate output. If a function is provided it will handle the error
-        // if the function errors, and then rethrow the exception
+    // handles an error and writes the appropriate output. If a function is provided it will handle the error
+    // if the function errors, and then rethrow the exception
     handleError: function(ex) {
       if (typeof ex == "function") {
         try {
@@ -261,9 +261,9 @@ try {
         Test.display.write("ERROR", Test.trace(ex));
       }
     },
-        // clean up the stack trace of the exception so that it doesn't give confusing results.
-        // Results would be confusing because the user submitted code is compiled into a script where
-        // additional code is injected and line numbers will not match.
+    // clean up the stack trace of the exception so that it doesn't give confusing results.
+    // Results would be confusing because the user submitted code is compiled into a script where
+    // additional code is injected and line numbers will not match.
     trace: function(ex) {
       return (ex.stack || ex.toString() || '')
                 .toString()
@@ -453,7 +453,7 @@ try {
     }
   };
 
-//    Test.Error.prototype = require('assert').AssertionError.prototype;
+  //    Test.Error.prototype = require('assert').AssertionError.prototype;
   Test.Error.prototype = Error.prototype;
 
   Object.freeze(Test.display);

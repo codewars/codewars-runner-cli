@@ -115,7 +115,7 @@ var format = module.exports.format = function format(obj, options) {
   else {
     if (obj && obj !== true) {
 
-            // for backwards compatibility we will support the indent option
+      // for backwards compatibility we will support the indent option
       if (options.indent || options.json) {
         out = Test.stringify(obj, options.indent ? 4 : 0);
       }
@@ -127,8 +127,8 @@ var format = module.exports.format = function format(obj, options) {
       out = ('' + obj);
     }
   }
-    // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
-    // the linebreak will be treated as a new data item.
+  // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
+  // the linebreak will be treated as a new data item.
   return out.replace(/\n/g, '<:LF:>');
 };
 
@@ -162,7 +162,7 @@ module.exports.explainJson = function explainJson(actual, expected, collapsed) {
  * @param options
  */
 module.exports.explain = function explain(actual, expected, options) {
-    // allow true to be passed in as a shortcut to setting collapsed
+  // allow true to be passed in as a shortcut to setting collapsed
   if (options === true || options === false) {
     options = {collapsed: options};
   }
@@ -175,9 +175,9 @@ module.exports.explain = function explain(actual, expected, options) {
     if (typeof(options.mode) == 'string') {
       options.mode = options.mode.toUpperCase();
     }
-        // if mode is not a string, then its expected to be an explain boolean and we can throw it away.
-        // doing this allows us to have pass mode strings as explain values within wrapping functions.
-        // see cw-2.js Test.assertEquals
+    // if mode is not a string, then its expected to be an explain boolean and we can throw it away.
+    // doing this allows us to have pass mode strings as explain values within wrapping functions.
+    // see cw-2.js Test.assertEquals
     else {
       options.mode = null;
     }
@@ -187,17 +187,17 @@ module.exports.explain = function explain(actual, expected, options) {
 
   if (options.mode == 'JSON') {
     diff = actual && expected;
-        // if (typeof(actual) != 'string') {
-        //     actual = JSON.stringify(actual);
-        // }
-        //
-        // if (typeof(expected) != 'string') {
-        //     expected = JSON.stringify(expected);
-        // }
+    // if (typeof(actual) != 'string') {
+    //     actual = JSON.stringify(actual);
+    // }
+    //
+    // if (typeof(expected) != 'string') {
+    //     expected = JSON.stringify(expected);
+    // }
 
     diff = diff && actual != expected;
   }
-    // string mode is a special mode for this method which just means inspect as direct strings
+  // string mode is a special mode for this method which just means inspect as direct strings
   else if (options.mode == 'STRING') {
     options.mode = null;
     actual = actual ? actual.toString() : actual;
@@ -210,14 +210,14 @@ module.exports.explain = function explain(actual, expected, options) {
     actual = util.inspect(actual);
   }
 
-    // if collapsed is not specifically set, then we will only collapse if values are equal by default
+  // if collapsed is not specifically set, then we will only collapse if values are equal by default
   if (collapsed == null || collapsed == undefined) {
     collapsed = !diff;
   }
 
   display.log(expected, {label: collapsed + "Expected", mode: options.mode});
 
-    // allows you to setup a special class for a log container
+  // allows you to setup a special class for a log container
   if (options.className) {
     display.prop("className", options.className);
   }

@@ -4,7 +4,7 @@ var runner = require('../runner');
 
 describe('ruby runner', function() {
   describe('.run', function() {
-        // runner.assertCodeExamples('ruby');
+    // runner.assertCodeExamples('ruby');
 
     it('should handle basic code evaluation', function(done) {
       runner.run({language: 'ruby', code: 'puts 42'}, function(buffer) {
@@ -124,8 +124,8 @@ describe('ruby runner', function() {
             expect(buffer.stdout).to.contain('<:LF:>');
             expect(buffer.stdout).to.contain('NoMethodError:');
             expect(buffer.stdout).to.not.contain('from /cli-runner/');
-                        // expect(buffer.stdout).to.not.contain('-e:');
-                        // expect(buffer.stdout).to.not.contain('cw-2.rb');
+            // expect(buffer.stdout).to.not.contain('-e:');
+            // expect(buffer.stdout).to.not.contain('cw-2.rb');
             expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
             done();
           });

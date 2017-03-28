@@ -82,8 +82,8 @@ describe('elixir runner', function() {
       });
 
       describe('no fixtures', function() {
-              // Due to ExUnit.start, it can add COMPLETEDIN:: at the end.
-              // That's why we match with .contain and not .equal
+        // Due to ExUnit.start, it can add COMPLETEDIN:: at the end.
+        // That's why we match with .contain and not .equal
         it('handles correctly empty fixture', function(done) {
           runner.run({language: 'elixir', code: 'IO.puts "Hello"', fixture: '', testFramework: 'ex_unit'}, function(buffer) {
             expect(buffer.stdout).to.contain('Hello\n');

@@ -6,9 +6,9 @@ describe('javascript runner', function() {
 
     runner.assertCodeExamples('javascript');
 
-        //----------------------------------------------------------------------------------------
-        // Basics
-        //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // Basics
+    //----------------------------------------------------------------------------------------
 
     describe('basics', function() {
       it('should handle basic code evaluation', function(done) {
@@ -69,19 +69,19 @@ describe('javascript runner', function() {
         });
       });
 
-            // it('should be able to handle large output data', function (done) {
-            //     runner.run({
-            //         language: 'javascript',
-            //         code: `
-            //             for(i = 0;i < 9999; i++){
-            //                 console.log(i * 10);
-            //             }
-            //         `
-            //     }, function (buffer) {
-            //         expect(buffer.stderr).to.equal('');
-            //         done();
-            //     });
-            // });
+      // it('should be able to handle large output data', function (done) {
+      //     runner.run({
+      //         language: 'javascript',
+      //         code: `
+      //             for(i = 0;i < 9999; i++){
+      //                 console.log(i * 10);
+      //             }
+      //         `
+      //     }, function (buffer) {
+      //         expect(buffer.stderr).to.equal('');
+      //         done();
+      //     });
+      // });
 
       it('should handle es6 code evaluation', function(done) {
         runner.run({language: 'javascript', code: 'let a = 42; console.log(42);'}, function(buffer) {
@@ -110,7 +110,7 @@ describe('javascript runner', function() {
                         mongoose.Promise = global.Promise;
                         mongoose.connect('mongodb://localhost/spec');
                         var Cat = mongoose.model('Cat', { name: String });
-        
+
                         var kitty = new Cat({ name: 'Zildjian' });
                         kitty.save(function (err) {
                           if (err) {
@@ -134,10 +134,10 @@ describe('javascript runner', function() {
           code: `
                         var redis = require('redis'),
                             Promise = require('bluebird');
-        
+
                         Promise.promisifyAll(redis.RedisClient.prototype);
                         var client = redis.createClient();
-        
+
                         client.setAsync("foo", "bar").then(_ => {
                             client.getAsync("foo").then( v => {
                                 console.log(v);
@@ -214,7 +214,7 @@ describe('javascript runner', function() {
                               console.log(row.id + ": " + row.info);
                           });
                         });
-        
+
                         db.close();
                     `
         }, function(buffer) {
@@ -244,9 +244,9 @@ describe('javascript runner', function() {
     });
 
 
-        //----------------------------------------------------------------------------------------
-        // Mocha BDD
-        //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // Mocha BDD
+    //----------------------------------------------------------------------------------------
 
     describe('mocha bdd', function() {
       it('should handle outputting objects', function(done) {
@@ -367,9 +367,9 @@ describe('javascript runner', function() {
     });
 
 
-        //----------------------------------------------------------------------------------------
-        // Mocha TDD
-        //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // Mocha TDD
+    //----------------------------------------------------------------------------------------
 
     describe('mocha tdd', function() {
       it('should handle outputting objects', function(done) {
@@ -419,9 +419,9 @@ describe('javascript runner', function() {
     });
 
 
-        //----------------------------------------------------------------------------------------
-        // CW-2
-        //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // CW-2
+    //----------------------------------------------------------------------------------------
 
     describe('cw-2', function() {
       it('should handle outputting objects', function(done) {
@@ -437,7 +437,7 @@ describe('javascript runner', function() {
         });
       });
       it('should handle outputting objects with 0.10.33', function(done) {
-                // only 0.10.33 allows us to declare a without var
+        // only 0.10.33 allows us to declare a without var
         runner.run({
           language: 'javascript',
           languageVersion: '0.10.33',
@@ -679,9 +679,9 @@ describe('javascript runner', function() {
     });
 
 
-        //----------------------------------------------------------------------------------------
-        // Karma BDD
-        //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // Karma BDD
+    //----------------------------------------------------------------------------------------
 
     describe('karma bdd', function() {
       it('warmup test', function(done) {
@@ -844,9 +844,9 @@ describe("test", function(){
     });
 
 
-        //----------------------------------------------------------------------------------------
-        // Karma TDD
-        //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // Karma TDD
+    //----------------------------------------------------------------------------------------
 
     describe('karma tdd', function() {
       it('should handle basic tests', function(done) {
