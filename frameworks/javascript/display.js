@@ -112,20 +112,17 @@ var format = module.exports.format = function format(obj, options) {
   else if (typeof obj == 'function') {
     out = obj.toString();
   }
-  else {
-    if (obj && obj !== true) {
-
-      // for backwards compatibility we will support the indent option
-      if (options.indent || options.json) {
-        out = Test.stringify(obj, options.indent ? 4 : 0);
-      }
-      else {
-        out = util.inspect(obj, options);
-      }
+  else if (obj && obj !== true) {
+    // for backwards compatibility we will support the indent option
+    if (options.indent || options.json) {
+      out = Test.stringify(obj, options.indent ? 4 : 0);
     }
     else {
-      out = ('' + obj);
+      out = util.inspect(obj, options);
     }
+  }
+  else {
+    out = ('' + obj);
   }
   // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
   // the linebreak will be treated as a new data item.

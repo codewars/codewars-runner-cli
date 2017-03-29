@@ -11,6 +11,10 @@ rules:
   brace-style:
     - error
     - stroustrup
+  no-lonely-if:
+    - error
+  no-else-return:
+    - error
   linebreak-style:
     - error
     - unix

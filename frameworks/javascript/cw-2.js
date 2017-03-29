@@ -127,9 +127,7 @@ try {
           return Test.inspect(v);
         }).join(", ") + "]";
       }
-      else {
-        return util.inspect(obj);
-      }
+      return util.inspect(obj);
     },
     log: function(msg, opts) {
       Test.display.log(msg, opts);
