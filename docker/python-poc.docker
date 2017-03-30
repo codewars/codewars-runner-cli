@@ -1,0 +1,24 @@
+FROM codewars/base-runner
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    checkinstall \
+    python3 \
+    python3-pip
+
+ENV NPM_CONFIG_LOGLEVEL warn
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+RUN ln -s /home/codewarrior /workspace
+
+COPY . /runner
+
+WORKDIR /runner
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+RUN mocha -t 5000 test/runners/python_poc_spec.js
+
+ENTRYPOINT ["timeout", "15", "node"]
