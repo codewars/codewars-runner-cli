@@ -25,8 +25,6 @@ try {
     async = false,
     asyncIts = null,
     asyncDone = null,
-    correct = 0,
-    incorrect = 0,
     failed = [],
     beforeCallbacks = [],
     afterCallbacks = [],
@@ -61,8 +59,6 @@ try {
       if (options.passed) {
         options.passed(successMsg, options);
       }
-
-      correct++;
     }
     else {
       failMsg = failMsg || 'Value is not what was expected';
