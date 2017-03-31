@@ -20,8 +20,7 @@ try {
     }
   };
 
-  var methodCalls = {},
-    describing = [],
+  var describing = [],
     async = false,
     asyncIts = null,
     asyncDone = null,
