@@ -3,9 +3,9 @@ var net = require('net'),
   fs = require('fs');
 
 // Creates a new TCP server. The handler argument is automatically set as a listener for the 'connection' event
-var server = net.createServer(function (socket) {
+var server = net.createServer(function(socket) {
 
-    // Every time someone connects, tell them hello and then close the connection.
+  // Every time someone connects, tell them hello and then close the connection.
   console.log("Connection from " + socket.remoteAddress);
   socket.end("Hello World\n");
 

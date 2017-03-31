@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 var runner = require('../runner');
 
-describe('scala runner', function () {
-  describe('.run', function () {
-    it('should handle basic code evaluation', function (done) {
+describe('scala runner', function() {
+  describe('.run', function() {
+    it('should handle basic code evaluation', function(done) {
       var code = [
         'object HelloWorld {',
         'def main(args: Array[String]) {',
@@ -12,13 +12,13 @@ describe('scala runner', function () {
         '}'
       ].join('\n');
 
-      runner.run({language: 'scala', code: code}, function (buffer) {
+      runner.run({language: 'scala', code: code}, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.equal("Hello, world!\n");
         done();
       });
     });
-    it('should handle setup code and imports', function (done) {
+    it('should handle setup code and imports', function(done) {
       runner.run({
         language: 'scala',
         setup: [
@@ -38,7 +38,7 @@ describe('scala runner', function () {
           '  println(last(List(1,2,3,4,5)))',
           '}'
         ].join('\n')
-      }, function (buffer) {
+      }, function(buffer) {
         expect(buffer.stdout).to.contain('Starting tests...');
         expect(buffer.stdout).to.contain('5');
         done();

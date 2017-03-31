@@ -2,18 +2,18 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 
-describe( 'php runner', function(){
-  describe( '.run', function(){
+describe('php runner', function() {
+  describe('.run', function() {
     runner.assertCodeExamples('php');
 
-    it( 'should handle basic code evaluation', function(done){
+    it('should handle basic code evaluation', function(done) {
       runner.run({language: 'php', solution: 'echo 42;'}, function(buffer) {
         expect(buffer.stdout).to.equal('42');
         done();
       });
     });
 
-    it( 'should handle bad syntax', function(done){
+    it('should handle bad syntax', function(done) {
       runner.run({
         language: 'php',
         solution: `fliggaflagam!!!`
@@ -23,7 +23,7 @@ describe( 'php runner', function(){
       });
     });
 
-    it( 'should handle thrown exceptions', function(done){
+    it('should handle thrown exceptions', function(done) {
       runner.run({
         language: 'php',
         solution: `throw new Exception('Rawr!');`
@@ -33,7 +33,7 @@ describe( 'php runner', function(){
       });
     });
 
-    it( 'should handle undefined functions', function(done){
+    it('should handle undefined functions', function(done) {
       runner.run({
         language: 'php',
         solution: `fliggaflagam();`
@@ -43,7 +43,7 @@ describe( 'php runner', function(){
       });
     });
 
-    it( 'should handle the latest and greatest of PHP 7', function(done){
+    it('should handle the latest and greatest of PHP 7', function(done) {
       runner.run({
         language: 'php',
         solution: `
@@ -70,11 +70,10 @@ describe( 'php runner', function(){
                         $test->assert_equals(double(1, 2), 2);
                     `,
           testFramework: 'cw-2'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
 
       it('should be able to reference preloaded code', function(done) {
@@ -95,11 +94,10 @@ describe( 'php runner', function(){
                         $test->assert_equals(theConstant(), SomeClass::CONSTANT);
                     `,
           testFramework: 'cw-2'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
 
       it('should handle failed tests', function(done) {
@@ -114,11 +112,10 @@ describe( 'php runner', function(){
                         $test->assert_equals(double(1), 6);
                     `,
           testFramework: 'cw-2'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          done();
+        });
       });
 
       it('should handle bad assertions', function(done) {
@@ -131,14 +128,13 @@ describe( 'php runner', function(){
                         $test->assert_equals(CONSTANT, 'apples');
                     `,
           testFramework: 'cw-2'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<FAILED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          done();
+        });
       });
 
-      it( 'should handle thrown exceptions', function(done){
+      it('should handle thrown exceptions', function(done) {
         runner.run({
           language: 'php',
           code: `
@@ -148,11 +144,10 @@ describe( 'php runner', function(){
                         throw new Exception('Roffle!');
                     `,
           testFramework: 'cw-2'
-        },
-                function(buffer) {
-                  expect(buffer.stderr).to.contain('Roffle!');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stderr).to.contain('Roffle!');
+          done();
+        });
       });
     });
 
@@ -174,11 +169,10 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
       it('should handle multiple tests', function(done) {
         runner.run({
@@ -203,16 +197,15 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<IT::>testDouble\n');
-                  expect(buffer.stdout).to.contain('\n<IT::>testDouble2\n');
-                  expect(buffer.stdout).to.contain('\n<IT::>testDouble3\n');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<IT::>testDouble\n');
+          expect(buffer.stdout).to.contain('\n<IT::>testDouble2\n');
+          expect(buffer.stdout).to.contain('\n<IT::>testDouble3\n');
+          done();
+        });
       });
 
-      it( 'should render console output', function(done){
+      it('should render console output', function(done) {
         runner.run({
           language: 'php',
           code: `
@@ -230,15 +223,14 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  expect(buffer.stdout).to.contain('this was a triumph');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          expect(buffer.stdout).to.contain('this was a triumph');
+          done();
+        });
       });
 
-      it( 'should handle console output without linewraps', function(done){
+      it('should handle console output without linewraps', function(done) {
         runner.run({
           language: 'php',
           code: `
@@ -257,13 +249,12 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('\n<PASSED::>');
-                  expect(buffer.stdout).to.contain('huge success');
-                  expect(buffer.stdout).to.contain('this was a triumph');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<PASSED::>');
+          expect(buffer.stdout).to.contain('huge success');
+          expect(buffer.stdout).to.contain('this was a triumph');
+          done();
+        });
       });
 
       it('should be able to reference preloaded code', function(done) {
@@ -289,11 +280,10 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          done();
+        });
       });
 
       it('should handle failed tests', function(done) {
@@ -313,12 +303,11 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<FAILED::>');
-                  expect(buffer.stdout).to.not.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.not.contain('<PASSED::>');
+          done();
+        });
       });
 
 
@@ -339,13 +328,12 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<FAILED::>');
-                  expect(buffer.stdout).to.contain('hello, Joe');
-                  expect(buffer.stdout).to.contain('Hello, Joe');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.contain('hello, Joe');
+          expect(buffer.stdout).to.contain('Hello, Joe');
+          done();
+        });
       });
 
       it('should handle bad assertions', function(done) {
@@ -363,15 +351,14 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<FAILED::>');
-                  expect(buffer.stdout).to.not.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.not.contain('<PASSED::>');
+          done();
+        });
       });
 
-      it( 'should handle thrown exceptions', function(done){
+      it('should handle thrown exceptions', function(done) {
         runner.run({
           language: 'php',
           code: `
@@ -386,11 +373,10 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('Waffles!');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('Waffles!');
+          done();
+        });
       });
 
       it('should fail on PHP errors', function(done) {
@@ -410,14 +396,12 @@ describe( 'php runner', function(){
                         }
                     `,
           testFramework: 'phpunit'
-        },
-                function(buffer) {
-                  expect(buffer.stdout).to.contain('<FAILED::>');
-                  expect(buffer.stdout).to.not.contain('<PASSED::>');
-                  done();
-                });
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.not.contain('<PASSED::>');
+          done();
+        });
       });
     });
-
   });
 });

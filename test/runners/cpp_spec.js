@@ -1,11 +1,11 @@
 var expect = require('chai').expect;
 var runner = require('../runner');
 
-describe('cpp runner', function () {
-  describe('.run', function () {
+describe('cpp runner', function() {
+  describe('.run', function() {
     runner.assertCodeExamples('cpp');
 
-    it('should handle basic code evaluation', function (done) {
+    it('should handle basic code evaluation', function(done) {
       var code = `
                 #include <iostream>
                 int main() { 
@@ -13,13 +13,13 @@ describe('cpp runner', function () {
                 }
            `;
 
-      runner.run({language: 'cpp', code: code}, function (buffer) {
+      runner.run({language: 'cpp', code: code}, function(buffer) {
         expect(buffer.stdout).to.equal("Hello World");
         done();
       });
     });
 
-    it('should handle C++11 nonsense', function (done) {
+    it('should handle C++11 nonsense', function(done) {
       var code = `
                 #include "stdio.h"
                 int main() {
@@ -28,13 +28,13 @@ describe('cpp runner', function () {
                 }
             `;
 
-      runner.run({language: 'cpp', code: code}, function (buffer) {
+      runner.run({language: 'cpp', code: code}, function(buffer) {
         expect(buffer.stdout).to.equal("Finally, lambdas in C++.  Now if we had typeclasses, purity and laziness we might have a reasonable functional programming language.");
         done();
       });
     });
 
-    it('should handle C++14 digit seperators', function (done) {
+    it('should handle C++14 digit seperators', function(done) {
       var code = `
                 #include <iostream>
                 int main() {
@@ -43,13 +43,13 @@ describe('cpp runner', function () {
                 }
             `;
 
-      runner.run({language: 'cpp', code: code}, function (buffer) {
+      runner.run({language: 'cpp', code: code}, function(buffer) {
         expect(buffer.stdout).to.equal("10000000\n");
         done();
       });
     });
 
-    it('should handle compile errors', function (done) {
+    it('should handle compile errors', function(done) {
       var code = `
                 int main() {
                     fudge();
@@ -57,7 +57,7 @@ describe('cpp runner', function () {
                 }
             `;
 
-      runner.run({language: 'cpp', code: code}, function (buffer) {
+      runner.run({language: 'cpp', code: code}, function(buffer) {
         expect(buffer.stderr).to.contain("use of undeclared identifier \'fudge\'");
         expect(buffer.stderr).to.contain("use of undeclared identifier \'doubleFudge\'");
         expect(buffer.stderr).to.contain("2 errors generated.");
@@ -65,7 +65,7 @@ describe('cpp runner', function () {
       });
     });
 
-    it('should handle setup code and imports', function (done) {
+    it('should handle setup code and imports', function(done) {
       runner.run({
         language: 'cpp',
         setup: `
@@ -77,13 +77,13 @@ describe('cpp runner', function () {
                         std::cout << square(6);
                     }
                 `
-      }, function (buffer) {
+      }, function(buffer) {
         expect(buffer.stdout).to.equal('36');
         done();
       });
     });
 
-    it('should handle importing classes and member functions', function (done) {
+    it('should handle importing classes and member functions', function(done) {
       runner.run({
         language: 'cpp',
         setup: `
@@ -102,14 +102,14 @@ describe('cpp runner', function () {
                         std::cout << p.tastes();
                     }
                 `
-      }, function (buffer) {
+      }, function(buffer) {
         expect(buffer.stdout).to.equal('good');
         done();
       });
     });
 
     describe('igloo bdd', function() {
-      it( 'should handle basic assertions', function(done){
+      it('should handle basic assertions', function(done) {
         runner.run({
           language: 'cpp',
           code: `
@@ -132,7 +132,7 @@ describe('cpp runner', function () {
         });
       });
 
-      it( 'should handle basic failures', function(done){
+      it('should handle basic failures', function(done) {
         runner.run({
           language: 'cpp',
           code: `
@@ -195,9 +195,9 @@ describe('cpp runner', function () {
           expect(cIndex).to.be.below(aIndex);
           done();
         });
-      })
+      });
 
-      it( 'should record std output', function(done){
+      it('should record std output', function(done) {
         runner.run({
           language: 'cpp',
           code: `
@@ -265,7 +265,7 @@ describe('cpp runner', function () {
           expect(buffer.stdout).to.contain('<PASSED::>');
           done();
         });
-      })
+      });
 
       it('should only display errors once', function(done) {
         runner.run({
@@ -296,7 +296,7 @@ describe('cpp runner', function () {
           expect(buffer.stdout.match(/Expected: equal to b/g).length).to.equal(1);
           done();
         });
-      })
+      });
 
       it('should work with the virtual bug fix example', function(done) {
         runner.run({
@@ -344,7 +344,7 @@ describe('cpp runner', function () {
           expect(buffer.stdout).to.contain('<PASSED::>');
           done();
         });
-      })
+      });
 
       it('should handle inheritance like a champ', function(done) {
         runner.run({
@@ -388,7 +388,7 @@ describe('cpp runner', function () {
           expect(buffer.stdout).to.contain('<PASSED::>');
           done();
         });
-      })
+      });
 
     });
 

@@ -2,9 +2,9 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 
-describe( 'fsharp runner', function(){
-  describe( '.run', function(){
-    it( 'should handle basic code evaluation', function(done){
+describe('fsharp runner', function() {
+  describe('.run', function() {
+    it('should handle basic code evaluation', function(done) {
       runner.run({language: 'fsharp', code: 'printfn "42"'}, function(buffer) {
         expect(buffer.stdout).to.equal('42\n');
         done();
@@ -12,10 +12,10 @@ describe( 'fsharp runner', function(){
     });
   });
 
-  describe('using Fuchu for testing', function(){
+  describe('using Fuchu for testing', function() {
     runner.assertCodeExamples('fsharp');
 
-    it('should be able to run a basic test', function(done){
+    it('should be able to run a basic test', function(done) {
       runner.run({
         language: 'fsharp',
         code: [
@@ -34,13 +34,13 @@ describe( 'fsharp runner', function(){
           '       ]',
           'end'
         ].join('\n')
-      }, function(buffer){
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain("<IT::>Person/.greet\n<PASSED::>Person/.greet\n<COMPLETEDIN::>");
         done();
-      })
-    })
-    it('should be able to handle a failing test', function(done){
+      });
+    });
+    it('should be able to handle a failing test', function(done) {
       runner.run({
         language: 'fsharp',
         code: [
@@ -58,12 +58,12 @@ describe( 'fsharp runner', function(){
           '       ]',
           'end'
         ].join('\n')
-      }, function(buffer){
+      }, function(buffer) {
         console.log(buffer);
         expect(buffer.stdout).to.contain("<IT::>Broken/test\n<FAILED::><:LF:>Broken test");
         expect(buffer.stdout).to.contain("\n<COMPLETEDIN::>");
         done();
-      })
-    })
+      });
+    });
   });
 });

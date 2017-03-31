@@ -1,11 +1,11 @@
 var expect = require('chai').expect;
 var runner = require('../runner');
 
-describe( 'objc runner', function(){
-  describe( '.run', function(){
+describe('objc runner', function() {
+  describe('.run', function() {
     runner.assertCodeExamples('objc');
 
-    it( 'should handle basic code evaluation', function(done){
+    it('should handle basic code evaluation', function(done) {
       runner.run({
         language: 'objc',
         setup: false,
@@ -37,7 +37,7 @@ describe( 'objc runner', function(){
           '}'
         ].join('\n')
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.stdout).to.contain('999');
         done();
       });
@@ -57,7 +57,7 @@ describe( 'objc runner', function(){
                     }
                     `
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.stderr).to.contain("error: use of undeclared identifier 'noexists'");
         done();
       });
@@ -77,7 +77,7 @@ describe( 'objc runner', function(){
           '}'
         ].join('\n')
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.stdout).to.contain('Square: 36');
         done();
       });
@@ -119,7 +119,7 @@ describe( 'objc runner', function(){
           '}'
         ].join('\n')
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         console.log("buffer.stderr", buffer.stderr.split("\n"));
         expect(buffer.stdout).to.contain('Number of BankAccount instances = 2');
         done();
@@ -161,7 +161,7 @@ describe( 'objc runner', function(){
           '}'
         ].join('\n')
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.stdout).to.contain('Name: Codewars and the age is 108');
         done();
       });
@@ -189,7 +189,7 @@ describe( 'objc runner', function(){
                     @end
                 `
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
         expect(buffer.stdout).to.contain('<IT::>testsFooUnhandledException');
         expect(buffer.stdout).to.not.contain('<PASSED::>');
@@ -214,7 +214,7 @@ describe( 'objc runner', function(){
           '}'
         ].join('\n')
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.stdout).to.contain('5');
         done();
       });
@@ -253,7 +253,7 @@ describe( 'objc runner', function(){
                         return 0;
                     }`
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.stdout).to.contain('5');
         done();
       });
@@ -268,7 +268,7 @@ describe( 'objc runner', function(){
         language: 'objc',
         code: solution
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.exitCode).to.equal(10);
         expect(buffer.exitSignal).to.equal(null);
         done();
@@ -286,7 +286,7 @@ describe( 'objc runner', function(){
         language: 'objc',
         code: solution
       }, function(buffer) {
-                //console.log(buffer);
+        //console.log(buffer);
         expect(buffer.exitCode).to.equal(null);
         expect(buffer.exitSignal).to.equal('SIGSEGV');
         done();
@@ -315,7 +315,7 @@ describe( 'objc runner', function(){
                         @end
                     `
         }, function(buffer) {
-                    //console.log(buffer);
+          //console.log(buffer);
           expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
           expect(buffer.stdout).to.contain('<IT::>testAClassMethod');
           expect(buffer.stdout).to.contain('<IT::>testIfPass');
@@ -358,7 +358,7 @@ describe( 'objc runner', function(){
                         @end
                     `
         }, function(buffer) {
-                    //console.log(buffer);
+          //console.log(buffer);
           expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
           expect(buffer.stdout).to.contain('<IT::>testsFailures');
           expect(buffer.stdout).to.not.contain('<PASSED::>');
@@ -388,7 +388,7 @@ describe( 'objc runner', function(){
                         @end
                     `
         }, function(buffer) {
-                    //console.log(buffer);
+          //console.log(buffer);
           expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
           expect(buffer.stdout).to.contain('<IT::>testsFoo');
           expect(buffer.stdout).to.contain('<PASSED::>');
@@ -420,7 +420,7 @@ describe( 'objc runner', function(){
                         @end
                     `
         }, function(buffer) {
-                    //console.log(buffer);
+          //console.log(buffer);
           expect(buffer.stdout).to.contain('<DESCRIBE::>TestSuite');
           expect(buffer.stdout).to.contain('<IT::>testsFooException');
           expect(buffer.stdout).to.contain('<PASSED::>');

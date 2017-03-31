@@ -37,12 +37,13 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
   };
 
   this.onSpecComplete = function(browser, result) {
-    if(!result.skipped) {
+    if (!result.skipped) {
       _renderSuites((result.suite || []).slice());
       print('IT', result.description);
-      if(result.success) {
+      if (result.success) {
         print('PASSED', result.time + 'ms');
-      } else {
+      }
+      else {
         print('FAILED', result.log);
       }
       print('COMPLETEDIN');
@@ -57,14 +58,14 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
     var currentSuites = suites.slice();
     var finalSuites = [];
     var i;
-    while(specSuites.length && specSuites[0] === currentSuites[0]) {
+    while (specSuites.length && specSuites[0] === currentSuites[0]) {
       finalSuites.push(specSuites.shift());
       currentSuites.shift();
     }
-    for(i = 0; i < currentSuites.length; i++) {
+    for (i = 0; i < currentSuites.length; i++) {
       print('COMPLETEDIN');
     }
-    for(i = 0; i < specSuites.length; i++) {
+    for (i = 0; i < specSuites.length; i++) {
       print('DESCRIBE', specSuites[i]);
     }
     suites = finalSuites.concat(specSuites);

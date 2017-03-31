@@ -16,7 +16,7 @@ items = DB[:items] # Create a dataset
 items.insert(:name => 'a', :price => 10)
 items.insert(:name => 'b', :price => 35)
 items.insert(:name => 'c', :price => 20)
-`
+`;
 
 var query = 'SELECT * FROM items ORDER BY price DESC';
 
@@ -28,12 +28,12 @@ describe :items do
 end
 
 puts "database = #{DATABASE}"
-`
+`;
 
-describe('sql runner', function () {
+describe('sql runner', function() {
   runner.assertCodeExamples('sql');
 
-  describe('.run', function () {
+  describe('.run', function() {
 
     describe('solution only', function() {
       it("should support sqlite", function(done) {

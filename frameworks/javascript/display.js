@@ -8,7 +8,7 @@ var util = require('util'),
 if (global.process) {
   global.process.execArgv = null;
   global.process._eval = null;
-  global.process.exit = function () {
+  global.process.exit = function() {
   };
 
   Object.defineProperty(global.process, "_eval", {
@@ -18,9 +18,10 @@ if (global.process) {
   });
 }
 
-function combineMessages(msgs, separator)
-{
-  return msgs.filter(function (m){ return m != null;}).join(separator)
+function combineMessages(msgs, separator) {
+  return msgs.filter(function(m) {
+    return m != null;
+  }).join(separator);
 }
 
 /**
@@ -29,23 +30,20 @@ function combineMessages(msgs, separator)
  *  then all values will be combined with a - between them, with null values filtered out.
  * @param {string} prefix If prefix is provided it will be prepended with a - character for readability
  */
-var message = module.exports.message = function message(msg, prefix)
-{
-  if (typeof msg == 'function')
-    {
-    msg = msg()
+var message = module.exports.message = function message(msg, prefix) {
+  if (typeof msg == 'function') {
+    msg = msg();
   }
-  else if (typeof msg == 'array')
-    {
-    msg = combineMessages(msg, ' - ')
+  else if (typeof msg == 'array') {
+    msg = combineMessages(msg, ' - ');
   }
   msg = prefix ? (prefix + ' - ' + msg) : msg;
   return msg || '';
-}
+};
 
 /**
  * Base method for writing custom output tokens.
- */  
+ */
 module.exports.write = function write(type, msg, opts) {
   opts = opts || {};
   var mode = (opts.mode || "").toUpperCase();
@@ -53,24 +51,24 @@ module.exports.write = function write(type, msg, opts) {
   if (opts.mode == 'JSON') {
     msg = JSON.stringify(msg);
   }
-    
+
   msg = display.format(display.message(msg));
   console.log("<" + type.toUpperCase() + ":" + mode + ":" + label + ">" + msg);
-}
+};
 
 /**
  * Convenience method so that you dont have to write display.write("LOG", msg, opts) but instead display.log(msg, opts)
  */
 module.exports.log = function(msg, opts) {
   display.write("LOG", msg, opts);
-}
+};
 
 /**
  * Convenience method so that you dont have to write display.write("TAB", msg, opts) but instead display.tab(label, msg, mode)
  */
 module.exports.tab = function tab(label, msg, mode) {
-  display.write("TAB", msg, { label: label || "???", mode: mode });
-}
+  display.write("TAB", msg, {label: label || "???", mode: mode});
+};
 
 /**
  * Convenience method for rendering the passed in object as JSON
@@ -79,14 +77,14 @@ module.exports.tab = function tab(label, msg, mode) {
  */
 module.exports.json = function json(obj, label, tab) {
   display.write(tab ? 'TAB' : 'LOG', obj, {label: label, mode: 'JSON'});
-}
+};
 
 /**
  * Writes a propertly to the last displayed token
  */
 module.exports.prop = function prop(name, value) {
-  display.write("PROP", value, { label: name });
-}
+  display.write("PROP", value, {label: name});
+};
 
 /**
  * renders an inspection of the object passed in. Similar to console.dir but allows the ability
@@ -97,7 +95,7 @@ module.exports.prop = function prop(name, value) {
  */
 module.exports.inspect = function inspect(obj, label, tab) {
   display.write(tab ? "TAB" : "LOG", util.inspect(obj), {label: label});
-}
+};
 
 /**
  *  formats an value to be outputted. If a function is provided then it will be evaluated,
@@ -108,36 +106,28 @@ module.exports.inspect = function inspect(obj, label, tab) {
 var format = module.exports.format = function format(obj, options) {
   options = options || {};
   var out = '';
-  if (typeof obj == 'string')
-    {
+  if (typeof obj == 'string') {
     out = obj;
   }
-  else if (typeof obj == 'function')
-    {
+  else if (typeof obj == 'function') {
     out = obj.toString();
   }
-  else
-    {
-    if (obj && obj !== true){
-
-            // for backwards compatibility we will support the indent option
-      if (options.indent || options.json)
-            {
-        out = Test.stringify(obj, options.indent ? 4 : 0)
-      }
-      else
-            {
-        out = util.inspect(obj, options);
-      }
+  else if (obj && obj !== true) {
+    // for backwards compatibility we will support the indent option
+    if (options.indent || options.json) {
+      out = Test.stringify(obj, options.indent ? 4 : 0);
     }
-    else{
-      out = ('' + obj);
+    else {
+      out = util.inspect(obj, options);
     }
   }
-    // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
-    // the linebreak will be treated as a new data item.
+  else {
+    out = ('' + obj);
+  }
+  // replace linebreaks with LF so that they can be converted back to line breaks later. Otherwise
+  // the linebreak will be treated as a new data item.
   return out.replace(/\n/g, '<:LF:>');
-}
+};
 
 
 /**
@@ -150,7 +140,7 @@ module.exports.escapeHtml = function escapeHtml(html) {
         .replace(/'/g, '&#39;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
-}
+};
 
 /**
  * Renders a set of tabs explaining the difference between two JSON values.
@@ -160,7 +150,7 @@ module.exports.escapeHtml = function escapeHtml(html) {
  */
 module.exports.explainJson = function explainJson(actual, expected, collapsed) {
   display.explain(actual, expected, {collapsed: collapsed, mode: 'JSON'});
-}
+};
 
 /**
  * Renders a set of tabs, with an optional diff tab if the values are actually different
@@ -169,9 +159,9 @@ module.exports.explainJson = function explainJson(actual, expected, collapsed) {
  * @param options
  */
 module.exports.explain = function explain(actual, expected, options) {
-    // allow true to be passed in as a shortcut to setting collapsed
+  // allow true to be passed in as a shortcut to setting collapsed
   if (options === true || options === false) {
-    options = {collapsed: options };
+    options = {collapsed: options};
   }
 
   options = options || {};
@@ -182,9 +172,9 @@ module.exports.explain = function explain(actual, expected, options) {
     if (typeof(options.mode) == 'string') {
       options.mode = options.mode.toUpperCase();
     }
-        // if mode is not a string, then its expected to be an explain boolean and we can throw it away.
-        // doing this allows us to have pass mode strings as explain values within wrapping functions.
-        // see cw-2.js Test.assertEquals
+    // if mode is not a string, then its expected to be an explain boolean and we can throw it away.
+    // doing this allows us to have pass mode strings as explain values within wrapping functions.
+    // see cw-2.js Test.assertEquals
     else {
       options.mode = null;
     }
@@ -194,17 +184,17 @@ module.exports.explain = function explain(actual, expected, options) {
 
   if (options.mode == 'JSON') {
     diff = actual && expected;
-        // if (typeof(actual) != 'string') {
-        //     actual = JSON.stringify(actual);
-        // }
-        //
-        // if (typeof(expected) != 'string') {
-        //     expected = JSON.stringify(expected);
-        // }
+    // if (typeof(actual) != 'string') {
+    //     actual = JSON.stringify(actual);
+    // }
+    //
+    // if (typeof(expected) != 'string') {
+    //     expected = JSON.stringify(expected);
+    // }
 
     diff = diff && actual != expected;
   }
-    // string mode is a special mode for this method which just means inspect as direct strings
+  // string mode is a special mode for this method which just means inspect as direct strings
   else if (options.mode == 'STRING') {
     options.mode = null;
     actual = actual ? actual.toString() : actual;
@@ -217,14 +207,14 @@ module.exports.explain = function explain(actual, expected, options) {
     actual = util.inspect(actual);
   }
 
-    // if collapsed is not specifically set, then we will only collapse if values are equal by default
+  // if collapsed is not specifically set, then we will only collapse if values are equal by default
   if (collapsed == null || collapsed == undefined) {
     collapsed = !diff;
   }
 
-  display.log(expected, { label: collapsed + "Expected", mode: options.mode} );
+  display.log(expected, {label: collapsed + "Expected", mode: options.mode});
 
-    // allows you to setup a special class for a log container
+  // allows you to setup a special class for a log container
   if (options.className) {
     display.prop("className", options.className);
   }
@@ -234,7 +224,7 @@ module.exports.explain = function explain(actual, expected, options) {
   if (diff) {
     display.tab("Diff", "", "DIFF");
   }
-    
+
   if (options.arguments) {
     var details = "";
     options.arguments.forEach(function(v, i) {
@@ -252,14 +242,14 @@ module.exports.explain = function explain(actual, expected, options) {
   }
 
   if (options.swap) display.write("SWAP");
-}
+};
 
 module.exports.getPackages = function() {
   var buffer = require('child_process').execSync('npm ls --json');
   return JSON.parse(buffer.toString());
-}
+};
 
 module.exports.availablePackages = function(label) {
-  var packages = display.getPackages(); 
+  var packages = display.getPackages();
   display.json(packages, label);
-}
+};

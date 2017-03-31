@@ -2,9 +2,9 @@ var expect = require('chai').expect;
 var runner = require('../runner');
 
 
-describe( 'kotlin runner', function(){
-  describe( '.run', function(){
-    it( 'should handle basic code evaluation', function(done){
+describe('kotlin runner', function() {
+  describe('.run', function() {
+    it('should handle basic code evaluation', function(done) {
       runner.run({
         language: 'kotlin',
         code: `
@@ -17,7 +17,7 @@ fun main(args : Array<String>) {
         done();
       });
     });
-    it( 'should handle setup code', function(done){
+    it('should handle setup code', function(done) {
       runner.run({
         language: 'kotlin',
         setup: `
