@@ -3,7 +3,6 @@ var display = require('./display'),
 
 // setup chai to render success messages, which it normally doesn't do when used with CW-2
 chai.use(function(_chai, util) {
-  var _assert = chai.Assertion.prototype.assert;
   chai.Assertion.prototype.assert = function(expr, msg, negateMsg, expected, _actual, showDiff) {
     var ok = util.test(this, arguments),
       result = ok ? 'passed' : 'failed';
