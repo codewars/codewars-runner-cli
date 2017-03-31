@@ -20,20 +20,14 @@ try {
     }
   };
 
-  var methodCalls = {},
-    describing = [],
+  var describing = [],
     async = false,
     asyncIts = null,
     asyncDone = null,
-    correct = 0,
-    incorrect = 0,
     failed = [],
     beforeCallbacks = [],
     afterCallbacks = [],
     alwaysExplain = false;
-
-  $$_SUCCESS__ = null;
-  $STDOUT = [];
 
   process.on('uncaughtException', function(err) {
     if (async) {
@@ -42,7 +36,7 @@ try {
     }
   });
 
-  describeNext = function() {
+  var describeNext = function() {
     if (asyncIts.length > 0) {
       asyncIts.shift()();
     }
@@ -64,8 +58,6 @@ try {
       if (options.passed) {
         options.passed(successMsg, options);
       }
-
-      correct++;
     }
     else {
       failMsg = failMsg || 'Value is not what was expected';
@@ -299,7 +291,7 @@ try {
       }
 
       if (actual !== expected) {
-        explain = options && options.explain ? options.explain : alwaysExplain;
+        var explain = options && options.explain ? options.explain : alwaysExplain;
 
         if (explain) {
           Test.expect(false, msg || "Values should be equal", _failed(options, function() {
@@ -316,14 +308,14 @@ try {
         Test.expect(true, null, options);
       }
     },
-    assertNotEquals: function(a, b, msg, options) {
+    assertNotEquals: function(actual, expected, msg, options) {
       if (typeof(msg) == 'object') {
         options = msg;
         msg = null;
       }
 
-      if (a === b) {
-        explain = options && options.explain ? options.explain : alwaysExplain;
+      if (actual === expected) {
+        var explain = options && options.explain ? options.explain : alwaysExplain;
 
         if (explain) {
           Test.expect(false, msg || "Values should not equal each other", _failed(options, function() {
@@ -331,14 +323,14 @@ try {
           }));
         }
         else {
-          msg = Test.display.message('Values should not be equal: ' + Test.inspect(a), msg);
+          msg = Test.display.message('Values should not be equal: ' + Test.inspect(actual), msg);
           Test.expect(false, msg, options);
         }
 
       }
       else {
         options = options || {};
-        options.successMsg = options.successMsg || 'Value != ' + Test.inspect(b);
+        options.successMsg = options.successMsg || 'Value != ' + Test.inspect(expected);
         Test.expect(true, null, options);
       }
     },
