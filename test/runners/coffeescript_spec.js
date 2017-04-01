@@ -13,6 +13,21 @@ describe('coffeescript runner', function() {
       });
     });
 
+    it('should handle basic code evaluation', function(done) {
+      runner.run({
+        language: 'coffeescript',
+        code: [
+          'fill = (container, liquid = "coffee") ->',
+          '  "Filling the #{container} with #{liquid}..."',
+          '',
+          'console.log fill("cup")',
+        ].join('\n')
+      }, function(buffer) {
+        expect(buffer.stdout).to.equal('Filling the cup with coffee...\n');
+        done();
+      });
+    });
+
     describe('cw-2', function() {
       it('should handle a basic assertion', function(done) {
         runner.run({language: 'coffeescript', code: 'a = 1', fixture: 'Test.expect a == 1', testFramework: 'cw-2'}, function(buffer) {
