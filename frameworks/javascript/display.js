@@ -33,7 +33,7 @@ module.exports.message = function message(msg, prefix) {
   if (typeof msg == 'function') {
     msg = msg();
   }
-  else if (typeof msg == 'array') {
+  else if (Array.isArray(msg)) {
     msg = combineMessages(msg, ' - ');
   }
   msg = prefix ? (prefix + ' - ' + msg) : msg;
