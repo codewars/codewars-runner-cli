@@ -1,7 +1,6 @@
 
 var util = require('util'),
   isEqual = require('underscore').isEqual,
-  chai = require('chai'),
   display = module.exports;
 
 // prevent anyone from peeking at the code we passed in
