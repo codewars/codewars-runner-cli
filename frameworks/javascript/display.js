@@ -29,7 +29,7 @@ function combineMessages(msgs, separator) {
  *  then all values will be combined with a - between them, with null values filtered out.
  * @param {string} prefix If prefix is provided it will be prepended with a - character for readability
  */
-var message = module.exports.message = function message(msg, prefix) {
+module.exports.message = function message(msg, prefix) {
   if (typeof msg == 'function') {
     msg = msg();
   }
@@ -102,7 +102,7 @@ module.exports.inspect = function inspect(obj, label, tab) {
  *  any line breaks will be replaced with <:BR:> so that the entire message is considered
  *  one group of data.
  */
-var format = module.exports.format = function format(obj, options) {
+module.exports.format = function format(obj, options) {
   options = options || {};
   var out = '';
   if (typeof obj == 'string') {
