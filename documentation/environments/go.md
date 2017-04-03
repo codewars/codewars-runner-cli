@@ -4,9 +4,7 @@ Code is executed within a Dockerized Ubuntu 14.04 container.
 
 ## Language
 
-[go1.7](https://golang.org/doc/go1.7) (go1.7.5 2017/01/26)
-
-## Packages
+[go1.8](https://golang.org/doc/go1.8) (go1.8 2017/02/16)
 
 ## Testing
 
@@ -66,6 +64,16 @@ func TestKata(t *testing.T) {
 }
 ```
 
+Preloaded code is just another file ('setup.go') in the package.
+
+```go
+package kata
+
+const foo = "bar" // package scoped
+
+type Point struct{ x, y float64 } // exported
+```
+
 ### Matchers
 
 ```go
@@ -74,65 +82,5 @@ Expect(ACTUAL).ToNot(M)
 Expect(ACTUAL).NotTo(M)
 ```
 
-See [onsi.github.io/gomega/#provided-matchers](http://onsi.github.io/gomega/#provided-matchers) for details.
-
-- Asserting Equivalence
-  - Equal(expected interface{})
-  - BeEquivalentTo(expected interface{})
-  - BeIdenticalTo(expected interface{})
-  - BeAssignableToTypeOf(expected interface)
-
-- Asserting Presence
-  - BeNil()
-  - BeZero()
-
-- Asserting Truthiness
-  - BeTrue()
-  - BeFalse()
-
-- Asserting on Errors
-  - HaveOccurred()
-  - Succeed()
-  - MatchError(expected interface{})
-
-- Working with Channels
-  - BeClosed()
-  - Receive()
-  - BeSent(value interface{})
-
-- Working with files
-  - BeAnExistingFile()
-  - BeARegularFile()
-  - BeADirectory()
-
-- Working with Strings, JSON and YAML
-  - ContainSubstring(substr string, args ...interface{})
-  - HavePrefix(prefix string, args ...interface{})
-  - HaveSuffix(suffix string, args ...interface{})
-  - MatchRegexp(regexp string, args ...interface{})
-  - MatchJSON(json interface{})
-  - MatchYAML(yaml interface{})
-
-- Working with Collections
-  - BeEmpty()
-  - HaveLen(count int)
-  - HaveCap(count int)
-  - ContainElement(element interface{})
-  - ConsistOf(element ...interface{})
-  - HaveKey(key interface{})
-  - HaveKeyWithValue(key interface{}, value interface{})
-
-- Working with Numbers and Times
-  - BeNumerically(comparator string, compareTo ...interface{})
-  - BeTemporally(comparator string, compareTo time.Time, threshold ...time.Duration)
-
-- Asserting on Panics
-  - Panic()
-
-- Composing Matchers
-  - And(matchers ...GomegaMatcher)
-  - SatisfyAll(matchers ...GomegaMatcher)
-  - Or(matchers ...GomegaMatcher)
-  - SatisfyAny(matchers ...GomegaMatcher)
-  - Not(matcher GomegaMatcher)
-  - WithTransform(transform interface{}, matcher GomegaMatcher)
+- [Provided Matchers](http://onsi.github.io/gomega/#provided-matchers)
+- [Custom Matchers](https://onsi.github.io/gomega/#adding-your-own-matchers)
