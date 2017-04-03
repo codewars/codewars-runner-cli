@@ -171,6 +171,16 @@ services:
     entrypoint: ''
     command: bash
 
+  go-runner:
+    image: codewars/go-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript:
     image: codewars/node-runner
@@ -639,3 +649,20 @@ services:
       - ./frameworks/objc/CW:/usr/include/GNUstep/CW
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/objc_spec.js'
+
+  go:
+    image: codewars/go-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./frameworks:/runner/frameworks
+    entrypoint: 'node run -l go'
+
+  go_test:
+    image: codewars/go-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    entrypoint: 'mocha -t 5000 test/runners/go_spec.js'
