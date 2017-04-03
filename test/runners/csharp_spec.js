@@ -1,6 +1,5 @@
 var expect = require('chai').expect,
-  runner = require('../runner'),
-  fs = require('fs');
+  runner = require('../runner');
 
 describe('c# runner', function() {
   describe('.run', function() {
