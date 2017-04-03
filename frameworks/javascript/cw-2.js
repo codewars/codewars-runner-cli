@@ -416,7 +416,7 @@ try {
       Test.expect(passed, msg, options);
     },
     randomNumber: function() {
-      return Math.round(Math.random() * 100);
+      return Math.floor(Math.random() * 101);
     },
     randomToken: function() {
       return Math.random().toString(36).substr(8);
