@@ -698,3 +698,19 @@ services:
       - ./test:/runner/test
     entrypoint: ''
     entrypoint: 'mocha -t 5000 test/runners/go_spec.js'
+
+  nim:
+    image: codewars/nim-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./frameworks/nim/codewars:/home/codewarrior/codewars
+    entrypoint: 'node run -l nim'
+
+  nim_test:
+    image: codewars/nim-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks/nim/codewars:/home/codewarrior/codewars
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/nim_spec.js'
