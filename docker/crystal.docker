@@ -1,5 +1,6 @@
 FROM codewars/base-runner
 
+RUN apt-get update -qq
 RUN apt-get install apt-transport-https
 RUN curl https://dist.crystal-lang.org/apt/setup.sh | sudo bash
 RUN apt-get install -y crystal
@@ -28,6 +29,7 @@ ADD . /runner
 
 # Working dir is /runner
 WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
 
 # add the spec formatter to the crystal directory so that everything is ran local
 ADD frameworks/crystal/formatter.cr /home/codewarrior/crystal/formatter.cr

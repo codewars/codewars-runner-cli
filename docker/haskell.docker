@@ -47,6 +47,7 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
 ADD . /runner
 WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
 
 # Run the test suite to make sure this thing works
 USER codewarrior

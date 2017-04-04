@@ -47,6 +47,7 @@ RUN ln -s /home/codewarrior /workspace
 # ADD cli-runner and install node deps
 ADD . /runner
 WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
 
 # Run the test suite to make sure this thing works
 

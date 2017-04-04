@@ -1,0 +1,105 @@
+busted:
+  fundamentals:
+    initial: |-
+      local t = {}
+      t.websites = {}
+      return t
+    answer: |-
+      local t = {}
+      t.websites = {"codewars"}
+      return t
+    fixture: |-
+      local s = require 'solution'
+      describe("websites", function()
+        it("should include codewars", function()
+          assert.are.same({"codewars"}, s.websites)
+        end)
+      end)
+
+  algorithms:
+    initial: |-
+      local t = {}
+      function t.twoOldestAges(ages)
+      end
+      return t
+    answer: |-
+      local t = {}
+      function t.twoOldestAges(ages)
+        local a, b = 0, 0
+        for _, v in ipairs(ages) do
+          if     v > b then a, b = b, v
+          elseif v > a then a = v
+          else
+          end
+        end
+        return a, b
+      end
+      return t
+    fixture: |-
+      local s = require 'solution'
+      describe("twoOldestAges", function()
+        it("should return 45 and 87 for input {1,5,87,45,8,8}", function()
+          assert.are.same({45, 87}, {s.twoOldestAges({1,5,87,45,8,8})})
+        end)
+        it("should return 18 and 83 for input {6,5,83,5,3,18}", function()
+          assert.are.same({18, 83}, {s.twoOldestAges({6,5,83,5,3,18})})
+        end)
+      end)
+
+  bug fixes:
+    initial: |-
+      local t = {}
+      function t.add(a, b)
+        a + b
+      end
+      return t
+    answer: |-
+      local t = {}
+      function t.add(a, b)
+        return a + b
+      end
+      return t
+    fixture: |-
+      local s = require 'solution'
+      describe("add", function()
+        it("add numbers", function()
+          assert.are.same(2, s.add(1, 1))
+          assert.are.same(1, s.add(1, 0))
+        end)
+      end)
+
+  refactoring:
+    initial: |-
+      -- TODO: Rewrite in object oriented way
+      -- me = Person:new(myName)
+      -- me:greet(yourName)
+      -- me:greet(anotherName)
+      local t = {}
+      function t.greet(myName, yourName)
+        return "Hello " .. yourName .. ", my name is " .. myName
+      end
+      return t
+    answer: |-
+      local Person = {name = ""}
+      function Person:new(name)
+        local o = {}
+        setmetatable(o, self)
+        o.name = name
+        self.__index = self
+        return o
+      end
+      function Person:greet(yourName)
+        return "Hello " .. yourName .. ", my name is " .. self.name
+      end
+      local t = {}
+      t.Person = Person
+      return t
+    fixture: |-
+      local s = require 'solution'
+      describe("Person", function()
+        it("should greet", function()
+          local jack = s.Person:new("Jack")
+          assert.are.same("Hello Jill, my name is Jack", jack:greet("Jill"))
+          assert.are.same("Hello Mary, my name is Jack", jack:greet("Mary"))
+        end)
+      end)

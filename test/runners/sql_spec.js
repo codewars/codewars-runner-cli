@@ -16,7 +16,7 @@ items = DB[:items] # Create a dataset
 items.insert(:name => 'a', :price => 10)
 items.insert(:name => 'b', :price => 35)
 items.insert(:name => 'c', :price => 20)
-`
+`;
 
 var query = 'SELECT * FROM items ORDER BY price DESC';
 
@@ -28,67 +28,82 @@ describe :items do
 end
 
 puts "database = #{DATABASE}"
-`
+`;
 
-describe('sql runner', function () {
-    runner.assertCodeExamples('sql');
+describe('sql runner', function() {
+  runner.assertCodeExamples('sql');
 
-    describe('.run', function () {
-        
-        describe('solution only', function() {
-            it("should support sqlite", function(done) {
-                runner.run({
-                    language: 'sql',
-                    languageVersion: 'sqlite',
-                    setup: itemsSetup,
-                    code: query
-                }, function(buffer) {
-                    expect(buffer.stdout).to.contain('"name":"c"');
-                    done();
-                });
-            });
+  describe('.run', function() {
 
-            it("should support postgres", function(done) {
-                runner.run({
-                    language: 'sql',
-                    languageVersion: 'postgres',
-                    setup: itemsSetup,
-                    code: query
-                }, function(buffer) {
-                    console.log(buffer.stdout);
-                    expect(buffer.stdout).to.contain('"name":"c"');
-                    done();
-                });
-            });
+    describe('solution only', function() {
+      it("should support sqlite", function(done) {
+        runner.run({
+          language: 'sql',
+          languageVersion: 'sqlite',
+          setup: itemsSetup,
+          code: query
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('"name":"c"');
+          done();
         });
+      });
 
-        describe("rspec", function() {
-            it("should support sqlite", function(done) {
-                runner.run({
-                    language: 'sql',
-                    languageVersion: 'sqlite',
-                    setup: itemsSetup,
-                    code: query,
-                    fixture: itemsFixture
-                }, function(buffer) {
-                    expect(buffer.stdout).to.contain('PASSED');
-                    done();
-                });
-            });
-
-            it("should support postgres", function(done) {
-                runner.run({
-                    language: 'sql',
-                    languageVersion: 'postgres',
-                    setup: itemsSetup,
-                    code: query,
-                    fixture: itemsFixture
-                }, function(buffer) {
-                    expect(buffer.stdout).to.contain('PASSED');
-                    expect(buffer.stdout).to.contain('database = spec');
-                    done();
-                });
-            });
+      it("should support postgres", function(done) {
+        runner.run({
+          language: 'sql',
+          languageVersion: 'postgres',
+          setup: itemsSetup,
+          code: query
+        }, function(buffer) {
+          console.log(buffer.stdout);
+          expect(buffer.stdout).to.contain('"name":"c"');
+          done();
         });
+      });
     });
+
+    describe("rspec", function() {
+      it("should support sqlite", function(done) {
+        runner.run({
+          language: 'sql',
+          languageVersion: 'sqlite',
+          setup: itemsSetup,
+          code: query,
+          fixture: itemsFixture
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('PASSED');
+          done();
+        });
+      });
+
+      it("should support projectMode", function(done) {
+        runner.run({
+          language: 'sql',
+          languageVersion: 'sqlite',
+          files: {
+            'spec.rb': `require './setup.rb'\n${itemsFixture}`,
+            'setup.rb': `require "/runner/frameworks/ruby/sql"\n${itemsSetup}`,
+            'solution.sql': query
+          }
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('PASSED');
+          done();
+        });
+      });
+
+      it("should support postgres", function(done) {
+        runner.run({
+          language: 'sql',
+          languageVersion: 'postgres',
+          setup: itemsSetup,
+          code: query,
+          fixture: itemsFixture
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('PASSED');
+          expect(buffer.stdout).to.contain('database = spec');
+          done();
+        });
+      });
+    });
+  });
 });

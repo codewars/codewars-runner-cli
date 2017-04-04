@@ -60,10 +60,10 @@ module Spec
       if result.exception
         puts "<ERROR::>#{Spec.format_message(result.exception.to_s)}"
       end
+      puts "<COMPLETEDIN::>"
     end
 
     def finish
-      # puts "<COMPLETEDIN::>"
     end
   end
 end

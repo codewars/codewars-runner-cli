@@ -47,6 +47,7 @@ ADD . /runner
 WORKDIR /runner/jvm-runner
 RUN LEIN_ROOT=true lein do clean, test, uberjar
 
+RUN ln -s /home/codewarrior /workspace
 WORKDIR /runner
 RUN npm install
 
