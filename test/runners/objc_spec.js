@@ -104,20 +104,33 @@ describe( 'objc runner', function(){
                     '+ (int) totalOpen;',
                     '@end'
 				].join('\n'),
-				code: [
-                    'int main (int argc, const char * argv[]) {',
-                    'NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];',
-                    'BankAccount *account1, *account2;',
-                    'account1 = [[BankAccount newAlloc] init];',
-                    'account2 = [[BankAccount newAlloc] init];',
-                    'int count = [BankAccount totalOpen];',
-                    'NSLog (@"Number of BankAccount instances = %i", count);',
-                    '[account1 release];',
-                    '[account2 release];',
-                    '[pool drain];',
-                    'return 0;',
-                    '}'
-				].join('\n')
+				code: `
+                    int main (int argc, const char * argv[]) {
+		                #if !__has_feature(objc_arc)
+		                    // Manual memory management
+		                    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+		                #else
+		                    // ARC enabled, do nothing...
+		                #endif
+	                    
+	                    BankAccount *account1, *account2;
+	                    account1 = [[BankAccount newAlloc] init];
+	                    account2 = [[BankAccount newAlloc] init];
+	                    int count = [BankAccount totalOpen];
+	                    NSLog (@"Number of BankAccount instances = %i", count);
+	
+		                #if !__has_feature(objc_arc)
+		                    // Manual memory management
+		                    [account1 release];
+		                    [account2 release];
+		                    [pool drain];
+		                #else
+		                    // ARC enabled, do nothing...
+		                #endif
+
+	                    return 0;
+                    }
+                `
 			}, function(buffer) {
 				//console.log(buffer);
                 console.log("buffer.stderr", buffer.stderr.split("\n"));
@@ -148,18 +161,31 @@ describe( 'objc runner', function(){
                     '- (void)printName;',
                     '@end'
 				].join('\n'),
-				code: [
-                    'int main (int argc, const char * argv[]) {',
-                        'NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];',
-                        'SimpleClass *simple = [[SimpleClass alloc] init];',
-                        'simple.name = @"Codewars";',
-                        'simple.age = 108;',
-                        '[simple printName];',
-                        '[simple release];',
-                        '[pool drain];',
-                    'return 0;',
-                    '}'
-				].join('\n')
+				code: `
+                    int main (int argc, const char * argv[]) {
+		                #if !__has_feature(objc_arc)
+		                    // Manual memory management
+		                    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+		                #else
+		                    // ARC enabled, do nothing...
+		                #endif
+
+                        SimpleClass *simple = [[SimpleClass alloc] init];
+                        simple.name = @"Codewars";
+                        simple.age = 108;
+	                    [simple printName];
+	                    
+		                #if !__has_feature(objc_arc)
+		                    // Manual memory management
+	                        [simple release];
+	                        [pool drain];
+		                #else
+		                    // ARC enabled, do nothing...
+		                #endif                        
+
+                    return 0;
+                    }
+				`
 			}, function(buffer) {
 				//console.log(buffer);
 				expect(buffer.stdout).to.contain('Name: Codewars and the age is 108');
