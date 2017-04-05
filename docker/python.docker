@@ -4,11 +4,23 @@
 # Pull base image.
 FROM codewars/base-runner
 
-# Install Additional Python libraries
-RUN apt-get install -y python-pip python-numpy python-scipy python-pandas
+RUN apt-get update -qq
 
-# Install Python 3
-RUN apt-get install -y python3-pip python3-numpy python3-scipy python3-pandas
+RUN apt-get install -y build-essential checkinstall
+
+# Install pip
+RUN apt-get install -y python-pip python3-pip
+
+# Install Python 3.6
+RUN add-apt-repository ppa:fkrull/deadsnakes
+RUN apt-get update -qq
+RUN apt-get install -y python3.6
+
+# Install Additional Python2 libraries
+RUN apt-get install -y python-numpy python-scipy python-pandas
+
+# Install Python3 libraries
+RUN apt-get install -y python3-numpy python3-scipy python3-pandas
 
 # Install Packages
 RUN pip install pymongo redis
@@ -52,6 +64,20 @@ RUN pip3 install -U pycrypto
 
 # Install gmpy2 for Python2/Python3
 RUN apt-get install -y python-gmpy2 python3-gmpy2
+
+# Install beautiful soup
+RUN apt-get install -y python-bs4
+
+# Install some misc popular packages
+RUN pip install pypattyrn python_jwt jws cerberus colander tox altair pygal
+RUN pip3 install coala-bears pypattyrn cerberus colander tox pygal
+
+# Install pylint
+RUN apt-get install -y pylint
+
+# Install additional DB related packages
+RUN pip install pickledb tinydb ZODB dataset psycopg2 queries
+RUN pip3 install pickledb tinydb ZODB dataset psycopg2 queries
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json

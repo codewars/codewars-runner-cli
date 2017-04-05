@@ -11,17 +11,18 @@ For example, if you were executing JavaScript and wanted to pull down the conten
 before the JavaScript code is ran, you could provide the following setup code:
  
 ```javascript
-// @download-github-repo someuser/somerepo
+// @config: githubRepo someuser/somerepo
 ```
 
 Here it is defined for Ruby:
+
 ```ruby
-# @download-github-repo someuser/somerepo
+# @config: githubRepo someuser/somerepo
 ```
 
 ## Supported Configuration Statements
 
-### `@download-github-repo`
+### `@config: github-repo`
 
 The entire contents of a github repository will be pulled into the same working directory as the code that is being executed.
 
@@ -29,22 +30,44 @@ A few things to note:
 
 - You should keep the download as light as possible, it adds load time to the request
 - If you want to download a specific branch, you can do it using this format `:username/:reponame/tarball/:branchname`
-- Targetting specific folders of a repo is not supported. If you want to share a single repo for use with multiple languages, use unique branches instead.
+- Targetting specific folders of a repo is not supported. If you want to share a single repo for use with multiple 
+languages, use unique branches instead.
 
+### `@config: gist`
 
-### `@run-shell-script`
-
-This statement is useful when combined with the download-github-repo statement. It specifies a shell script within the 
-download that should be executed before the code is ran. This script is given its own 10 second timeout which doesn't 
-apply to the main code execution timeout.
+The entire contents of a gist will be pulled into the same working directory as the code that is being executed. 
+You should provide the gist id as the parameter value.
 
 **Example:**
 
 ```
-@run-shell-script start.sh
+@config: gist 3acc7b81436ffe4ad20800e242ccaff6
 ```
 
-### `@use-database` (SQL only)
+
+### `@config: bash-file`
+
+This statement specifies a bash  script within the working directory that should be executed before the code is ran. 
+This script is given its own 10 second timeout which doesn't apply to the main code execution timeout.
+
+**Example:**
+
+```
+@config: bashFile start.sh
+```
+
+### `@config: bash`
+
+This statement specifies a bash script that should be executed before the code is executed. This is inline bash code 
+that will be evaluated, not a bash file
+
+**Example:**
+
+```
+@config: bash echo "this runs before the solution is executed"
+```
+
+### `@config: use-database` (SQL only)
 
 This statement is available when running SQL. Currently its usage is further limited to being used only for PostgreSQL.
 It determines a existing database already on the image that should be used. By default, the only database available on 
@@ -53,5 +76,24 @@ the image is `dvdrental`, which points to this [sample database](http://www.post
 **Example:**
 
 ```
-@use-database dvdrental
+@config: use-database dvdrental
+```
+
+### `@config: include-external` (JavaScript - Karma Only)
+
+This statement is available when running JavaScript with a Karma framework. It will automatically include
+pre-downloaded libraries. Preloaded libraries include:
+
+- angular@1.2
+- angular@1.3
+- angular@1.4
+- angular@1.5
+
+These are provided for convenience. If you need other libraries, you should instead use githubRepo to clone the files 
+you need into the working directory
+ 
+**Example:**
+
+```
+@config: include-external angular@1.5
 ```

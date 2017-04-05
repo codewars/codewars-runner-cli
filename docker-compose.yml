@@ -106,6 +106,7 @@ services:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
+      - ./templates:/runner/templates
       - ./test:/runner/test
     entrypoint: ''
     command: bash
@@ -170,6 +171,16 @@ services:
     entrypoint: ''
     command: bash
 
+  go-runner:
+    image: codewars/go-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript:
     image: codewars/node-runner
@@ -182,6 +193,8 @@ services:
 
   javascript_test:
     image: codewars/node-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -191,6 +204,8 @@ services:
 
   coffeescript:
     image: codewars/node-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -200,6 +215,8 @@ services:
 
   coffeescript_test:
     image: codewars/node-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -219,6 +236,8 @@ services:
 
   typescript_test:
     image: codewars/node-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -237,6 +256,8 @@ services:
 
   python_test:
     image: codewars/python-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -255,6 +276,8 @@ services:
 
   python3_test:
     image: codewars/python-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -273,6 +296,8 @@ services:
 
   ruby_test:
     image: codewars/ruby-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -291,6 +316,8 @@ services:
 
   shell_test:
     image: codewars/ruby-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -309,6 +336,8 @@ services:
 
   haskell_test:
     image: codewars/haskell-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -327,6 +356,8 @@ services:
 
   java_test:
     image: codewars/jvm-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -363,6 +394,8 @@ services:
 
   php_test:
     image: codewars/alt-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -381,6 +414,8 @@ services:
 
   cpp_test:
     image: codewars/systems-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -399,6 +434,8 @@ services:
 
   c_test:
     image: codewars/systems-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -412,15 +449,19 @@ services:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
+      - ./templates:/runner/templates
       - ./test:/runner/test
     entrypoint: 'node run -l csharp'
 
   csharp_test:
     image: codewars/dotnet-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
+      - ./templates:/runner/templates
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/csharp_spec.js'
 
@@ -435,6 +476,8 @@ services:
 
   fsharp_test:
     image: codewars/dotnet-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -453,6 +496,8 @@ services:
 
   elixir_test:
     image: codewars/erlang-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -471,6 +516,8 @@ services:
 
   erlang_test:
     image: codewars/erlang-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -480,6 +527,8 @@ services:
 
   rust_test:
     image: codewars/rust-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -489,6 +538,8 @@ services:
 
   dart_test:
     image: codewars/dart-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -498,6 +549,8 @@ services:
 
   kotlin:
     image: codewars/jvm-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -507,6 +560,8 @@ services:
 
   kotlin_test:
     image: codewars/jvm-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -525,6 +580,8 @@ services:
 
   crystal_test:
     image: codewars/crystal-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -543,6 +600,8 @@ services:
 
   ocaml_test:
     image: codewars/ocaml-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -561,6 +620,8 @@ services:
 
   swift_test:
     image: codewars/swift-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -579,6 +640,8 @@ services:
 
   objc_test:
     image: codewars/objc-runner
+    environment:
+      - NODE_ENV=test
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
@@ -586,3 +649,20 @@ services:
       - ./frameworks/objc/CW:/usr/include/GNUstep/CW
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/objc_spec.js'
+
+  go:
+    image: codewars/go-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./frameworks:/runner/frameworks
+    entrypoint: 'node run -l go'
+
+  go_test:
+    image: codewars/go-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    entrypoint: 'mocha -t 5000 test/runners/go_spec.js'

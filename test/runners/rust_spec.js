@@ -16,7 +16,7 @@ describe('rust runner', function() {
         done();
       });
     });
-    
+
     it('should handle invalid code', function(done) {
       runner.run({
         language: 'rust',
@@ -30,7 +30,7 @@ describe('rust runner', function() {
         done();
       });
     });
-    
+
     it('should allow mods inside setup', function(done) {
       runner.run({
         language: 'rust',
@@ -53,7 +53,7 @@ describe('rust runner', function() {
         done();
       });
     });
-    
+
     it('should handle basic tests', function(done) {
       runner.run({
         language: 'rust',
@@ -75,7 +75,7 @@ describe('rust runner', function() {
         done();
       });
     });
-    
+
     it('should handle tests with setup', function(done) {
       runner.run({
         language: 'rust',
@@ -108,7 +108,7 @@ describe('rust runner', function() {
         done();
       });
     });
-    
+
     it('should handle broken and unused code', function(done) {
       runner.run({
         language: 'rust',
@@ -148,7 +148,7 @@ describe('rust runner', function() {
         done();
       });
     });
-    
+
     it('should ignore unused code warnings', function(done) {
       runner.run({
         language: 'rust',
@@ -185,7 +185,7 @@ describe('rust runner', function() {
         done();
       });
     });
-    
+
     it('should handle failed tests', function(done) {
       runner.run({
         language: 'rust',

@@ -78,20 +78,25 @@ RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
 RUN sudo apt-get update && apt-get install -y postgresql postgresql-contrib
 ENV PATH /usr/lib/postgresql/9.6/bin:$PATH
-RUN su codewarrior -c "/usr/lib/postgresql/9.6/bin/initdb -D /home/codewarrior/pg"
+RUN mkdir /pgdata
+RUN chown codewarrior /pgdata
+USER codewarrior
+RUN /usr/lib/postgresql/9.6/bin/initdb -D /pgdata/pg
+ENV PGDATA /pgdata/pg
+USER root
 RUN usermod -G postgres codewarrior
 
 # Install RabbitMQ
-RUN echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-RUN wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
-RUN apt-get update && apt-get install -y rabbitmq-server
+# RUN echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+# RUN wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+# RUN apt-get update && apt-get install -y rabbitmq-server
 
 # Install CouchDB
-RUN add-apt-repository ppa:couchdb/stable -y
-RUN apt-get update && apt-get install -y couchdb
+# RUN add-apt-repository ppa:couchdb/stable -y
+# RUN apt-get update && apt-get install -y couchdb
 
 # Install Cairo graphics
-RUN apt-get install -y libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+# RUN apt-get install -y libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 
 RUN mkdir /.npm-global
 RUN npm config set prefix '/.npm-global'
