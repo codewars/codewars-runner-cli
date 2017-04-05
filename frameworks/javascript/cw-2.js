@@ -356,6 +356,12 @@ try {
         Test.expect(false, msg, options);
       }
     },
+    assertFuzzyEquals: function (actual, expected, msg = "") {
+      Test.expect(expected === 0 ? Math.abs(actual) <= 1e-9 : Math.abs((expected - actual) / expected) <= 1e-9, msg === "" ? "Actual value " + actual + " is not sufficiently close to expected value " + expected + " (accepted relative error: 1e-9)" : msg);
+    },
+    assertNotFuzzyEquals: function (actual, expected, msg = "") {
+      Test.expect(expected === 0 ? Math.abs(actual) > 1e-9 : Math.abs((expected - actual) / expected) > 1e-9, msg === "" ? "Actual value " + actual + " too close to expected value " + expected + " (rejected relative error: 1e-9)" : msg);
+    },
     assertContains: function(actual, expected, msg, options) {
       if (actual.indexOf(expected) >= 0) {
         options = options || {};
