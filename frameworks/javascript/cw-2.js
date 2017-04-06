@@ -356,11 +356,27 @@ try {
         Test.expect(false, msg, options);
       }
     },
-    assertFuzzyEquals: function (actual, expected, msg = "") {
-      Test.expect(expected === 0 ? Math.abs(actual) <= 1e-9 : Math.abs((expected - actual) / expected) <= 1e-9, msg === "" ? "Actual value " + actual + " is not sufficiently close to expected value " + expected + " (accepted relative error: 1e-9)" : msg);
+    assertApproxEquals: function (actual, expected, msg, options) {
+      // Compares two floating point values and checks whether they are approximately equal to each other
+      options = options || {};
+      msg = Test.display.message('Expected actual value ' + actual + ' to approximately equal expected value ' + expected + ' (accepted relative error: 1e-9)', msg);
+      if (expected === 0) {
+        Test.expect(Math.abs(actual) <= 1e-9, msg, options);
+      }
+      else {
+        Test.expect(Math.abs((expected - actual) / expected) <= 1e-9, msg, options);
+      }
     },
-    assertNotFuzzyEquals: function (actual, expected, msg = "") {
-      Test.expect(expected === 0 ? Math.abs(actual) > 1e-9 : Math.abs((expected - actual) / expected) > 1e-9, msg === "" ? "Actual value " + actual + " too close to expected value " + expected + " (rejected relative error: 1e-9)" : msg);
+    assertNotApproxEquals: function (actual, unexpected, msg, options) {
+      // Compares two floating point values and checks whether they are sufficiently different from each other
+      options = options || {};
+      msg = Test.display.message('Actual value ' + actual + ' should not approximately equal unexpected value ' + unexpected + ' (rejected relative error: 1e-9)', msg);
+      if (unexpected === 0) {
+        Test.expect(Math.abs(actual) > 1e-9, msg, options);
+      }
+      else {
+        Test.expect(Math.abs((unexpected - actual) / unexpected) > 1e-9, msg, options);
+      }
     },
     assertContains: function(actual, expected, msg, options) {
       if (actual.indexOf(expected) >= 0) {
