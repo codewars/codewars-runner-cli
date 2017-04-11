@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UnitKit/UnitKit.h>
 
+#ifndef __has_feature         // Optional of course.
+  #define __has_feature(x) 0  // Compatibility with non-clang compilers.
+#endif
+#ifndef __has_extension
+  #define __has_extension __has_feature // Compatibility with pre-3.0 compilers.
+#endif
+
 #ifndef CWRunner_h
 #define CWRunner_h
 @interface CWRunner: NSObject
@@ -42,8 +49,13 @@
 }
 
 - (void) dealloc {
- [runner release];
- [super dealloc];
+	#if !__has_feature(objc_arc)
+	    // Manual memory management
+		[runner release];
+		[super dealloc];
+	#else
+	    // ARC enabled, do nothing...
+	#endif
 }
 
 - (void)reportStatus: (BOOL)cond
@@ -80,6 +92,18 @@
 	Ivar _ivarReleasing = class_getInstanceVariable(cls, "_releasing");
 	id _releasing;
 
+	//selecting hidden method
+	SEL aSelector = NSSelectorFromString(@"runTestNamed:onInstance:ofClass:");
+	id (*runTestNamed)(id, SEL, NSString *, BOOL, Class);
+
+	if ( [runner respondsToSelector:aSelector] ) {
+		// Get the hidden method, returns the IMP
+		runTestNamed = (void *)[runner methodForSelector:aSelector];
+	}  else {
+		// method doesn't exits, throw an error!
+		[NSException raise:@"CWRunnerException" format:@"runTestNamed not found"]; 
+	}
+
     for (NSString *testMethodName in testMethods)
     {
     	NSLog(@"<IT::>%s",testMethodName.UTF8String);
@@ -89,13 +113,8 @@
         {
             @autoreleasepool
             {
-
-				#pragma clang diagnostic push
-				#pragma clang diagnostic ignored "-Wobjc-method-access"
-                [runner runTestNamed: testMethodName
-                        onInstance: instance
-                           ofClass: testClass];
-				#pragma clang diagnostic pop
+				// runTestNamed is just a C function, so we can call it directly.
+				id returnValue = runTestNamed(runner, aSelector, testMethodName, instance, testClass);
             }
         }
         @catch (NSException *exception)
@@ -113,36 +132,46 @@
 
 - (void)runSuite: (Class)testClass
 {
-	    NSLog(@"<DESCRIBE::>%s", class_getName(testClass));
-	    NSDate *startSuiteDate = [NSDate date];
+    NSLog(@"<DESCRIBE::>%s", class_getName(testClass));
+    NSDate *startSuiteDate = [NSDate date];
 
-		//[runner runTestsInBundle: [NSBundle mainBundle]];
-		//[runner runTestsWithClassNames: @[@"TestSuite"] principalClass:[testSuite class]];
-		//[runner runTestsInClass: [testSuite class]];
+	//[runner runTestsInBundle: [NSBundle mainBundle]];
+	//[runner runTestsWithClassNames: @[@"TestSuite"] principalClass:[testSuite class]];
+	//[runner runTestsInClass: [testSuite class]];
 
-	    NSArray *testMethods = nil;
+    //selecting hidden method
+    SEL aSelector = NSSelectorFromString(@"filterTestMethodNames:");	      
+    NSArray * (*filterTestMethodNames)(id, SEL, NSArray *);
 
-	    /* Test class methods */
+	if ( [runner respondsToSelector:aSelector] ) {
+		// Get the hidden method, returns the IMP
+		filterTestMethodNames = (void *)[runner methodForSelector:aSelector];
+	} else {
+		// method doesn't exits, throw an error!
+		[NSException raise:@"CWRunnerException" format:@"filterTestMethodNames not found"]; 
+	}
 
-	    if (testClass != nil)
-	    {
-	    	#pragma clang diagnostic push
-			#pragma clang diagnostic ignored "-Wobjc-method-access"
-	        testMethods = [runner filterTestMethodNames: UKTestMethodNamesFromClass(objc_getMetaClass(class_getName(testClass)))];
-	        #pragma clang diagnostic pop
-	    }
-	    [self runTests: testMethods onInstance: NO ofClass: testClass];
+    NSArray *testMethods = nil;
 
-	    /* Test instance methods */
+    /* Test class methods */
 
-		#pragma clang diagnostic push
-		#pragma clang diagnostic ignored "-Wobjc-method-access"
-	    testMethods = [runner filterTestMethodNames: UKTestMethodNamesFromClass(testClass)];
-	    #pragma clang diagnostic pop
-	    [self runTests: testMethods onInstance: YES ofClass: testClass];
+    if (testClass != nil)
+    {
+		// filterTestMethodNames is just a C function, so we can call it directly.
+		testMethods = filterTestMethodNames(runner, aSelector, UKTestMethodNamesFromClass(objc_getMetaClass(class_getName(testClass))) );
+    }
 
-	    /* Test suite completed */
-		NSLog(@"<COMPLETEDIN::>%d", (int)([[NSDate date] timeIntervalSinceDate: startSuiteDate] * 1000));
+    [self runTests: testMethods onInstance: NO ofClass: testClass];
+
+    /* Test instance methods */
+	
+	// filterTestMethodNames is just a C function, so we can call it directly.
+	testMethods = filterTestMethodNames(runner, aSelector, UKTestMethodNamesFromClass(testClass) );
+
+    [self runTests: testMethods onInstance: YES ofClass: testClass];
+
+    /* Test suite completed */
+	NSLog(@"<COMPLETEDIN::>%d", (int)([[NSDate date] timeIntervalSinceDate: startSuiteDate] * 1000));
 }
 @end
 

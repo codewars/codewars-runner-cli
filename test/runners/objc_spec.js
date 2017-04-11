@@ -104,20 +104,33 @@ describe('objc runner', function() {
           '+ (int) totalOpen;',
           '@end'
         ].join('\n'),
-        code: [
-          'int main (int argc, const char * argv[]) {',
-          'NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];',
-          'BankAccount *account1, *account2;',
-          'account1 = [[BankAccount newAlloc] init];',
-          'account2 = [[BankAccount newAlloc] init];',
-          'int count = [BankAccount totalOpen];',
-          'NSLog (@"Number of BankAccount instances = %i", count);',
-          '[account1 release];',
-          '[account2 release];',
-          '[pool drain];',
-          'return 0;',
-          '}'
-        ].join('\n')
+        code:  `
+	        int main (int argc, const char * argv[]) {
+            #if !__has_feature(objc_arc)
+              // Manual memory management
+              NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+            #else
+              // ARC enabled, do nothing...
+            #endif
+            
+            BankAccount *account1, *account2;
+            account1 = [[BankAccount newAlloc] init];
+            account2 = [[BankAccount newAlloc] init];
+            int count = [BankAccount totalOpen];
+            NSLog (@"Number of BankAccount instances = %i", count);
+
+            #if !__has_feature(objc_arc)
+              // Manual memory management
+              [account1 release];
+              [account2 release];
+              [pool drain];
+            #else
+              // ARC enabled, do nothing...
+            #endif
+
+            return 0;
+        }
+	    `
       }, function(buffer) {
         //console.log(buffer);
         console.log("buffer.stderr", buffer.stderr.split("\n"));
@@ -148,18 +161,31 @@ describe('objc runner', function() {
           '- (void)printName;',
           '@end'
         ].join('\n'),
-        code: [
-          'int main (int argc, const char * argv[]) {',
-          'NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];',
-          'SimpleClass *simple = [[SimpleClass alloc] init];',
-          'simple.name = @"Codewars";',
-          'simple.age = 108;',
-          '[simple printName];',
-          '[simple release];',
-          '[pool drain];',
-          'return 0;',
-          '}'
-        ].join('\n')
+        code:  `
+					int main (int argc, const char * argv[]) {
+					#if !__has_feature(objc_arc)
+				    // Manual memory management
+				    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+					#else
+					  // ARC enabled, do nothing...
+					#endif
+
+					  SimpleClass *simple = [[SimpleClass alloc] init];
+					  simple.name = @"Codewars";
+					  simple.age = 108;
+					  [simple printName];
+					  
+					#if !__has_feature(objc_arc)
+					  // Manual memory management
+					  [simple release];
+					  [pool drain];
+					#else
+					  // ARC enabled, do nothing...
+					#endif                        
+
+					return 0;
+					}
+				`
       }, function(buffer) {
         //console.log(buffer);
         expect(buffer.stdout).to.contain('Name: Codewars and the age is 108');
@@ -289,6 +315,182 @@ describe('objc runner', function() {
         //console.log(buffer);
         expect(buffer.exitCode).to.equal(null);
         expect(buffer.exitSignal).to.equal('SIGSEGV');
+        done();
+      });
+    });
+    it('should not support manual memory management with ARC', function(done) {
+      runner.run({
+        language: 'objc',
+        languageVersion: 'objc-arc',
+        setup: false,
+        code:`
+        #import <Foundation/Foundation.h>
+          int main (int argc, const char * argv[]) {
+            NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+            NSLog(@"Hello World");
+            [pool drain];
+          return 0;
+          }`
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain("error: 'NSAutoreleasePool' is unavailable: Not available with automatic reference counting");
+        done();
+      });
+    });
+
+    it('should comply about blocks as not id, when block is not casted', function(done) {
+      runner.run({
+        language: 'objc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+            NSMutableArray<int(^)(void)> * initBlocksArray(){ 
+
+              return [ NSMutableArray arrayWithObjects:^{ return 100; }, ^{ return 200; },nil ];
+            }            
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSMutableArray<int(^)(void)> * blocks = initBlocksArray();
+                NSLog(@"%d", blocks[1]() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain("error: called object type 'id' is not a function or function pointer");
+        done();
+      });
+    });
+    it('should support casted blocks', function(done) {
+      runner.run({
+        language: 'objc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSMutableArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // this is a stack block, it SHOULD be copied if assigned
+
+              NSLog(@"three is: %@", blockThree );
+
+              NSMutableArray *array = [NSMutableArray arrayWithObjects:blockOne, [[blockThree copy] autorelease], nil];
+
+              return array;
+            }            
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSMutableArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"%d", ((int(^)(void))blocks[1])() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteStackBlock');
+        expect(buffer.stdout).to.contain('200');
+        done();
+      });
+    });
+    it('should support blocks with ARC', function(done) {
+      runner.run({
+        language: 'objc',
+        languageVersion: 'objc-arc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSMutableArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // with ARC this is a malloc block
+
+              NSLog(@"three is: %@", blockThree );
+
+              NSMutableArray *array = [NSMutableArray arrayWithObjects:blockOne, blockThree, nil];
+
+              return array;
+            }           
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSMutableArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"result: %d", ((int(^)(void))blocks[1])() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteMallocBlock');
+        expect(buffer.stdout).to.contain('result: 200');
+        done();
+      });
+    });
+    it('should support blocks without cast on NSArray', function(done) {
+      runner.run({
+        language: 'objc',
+        languageVersion: 'objc-arc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // with ARC this is a malloc block
+
+              NSLog(@"three is: %@", blockThree );
+
+              return @[blockOne, blockThree];              
+            }           
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"result: %d",blocks[1]() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteMallocBlock');
+        expect(buffer.stdout).to.contain('result: 200');
+        done();
+      });
+    });
+    it('should support blocks without cast on NSArray', function(done) {
+      runner.run({
+        language: 'objc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // this is a stack block, it SHOULD be copied if assigned
+
+              NSLog(@"three is: %@", blockThree );
+
+              return @[blockOne, [[blockThree copy] autorelease]];              
+            }           
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"result: %d",blocks[1]() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteStackBlock');
+        expect(buffer.stdout).to.contain('result: 200');
         done();
       });
     });
@@ -474,7 +676,7 @@ describe('objc runner', function() {
           expect(buffer.stderr).to.equal('');
           done();
         });
-      });
+      });      
     });
   });
 });
