@@ -319,6 +319,164 @@ describe('objc runner', function() {
       });
     });
 
+    it('should comply about blocks as not id, when block is not casted', function(done) {
+      runner.run({
+        language: 'objc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+            NSMutableArray<int(^)(void)> * initBlocksArray(){ 
+
+              return [ NSMutableArray arrayWithObjects:^{ return 100; }, ^{ return 200; },nil ];
+            }            
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSMutableArray<int(^)(void)> * blocks = initBlocksArray();
+                NSLog(@"%d", blocks[1]() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain("error: called object type 'id' is not a function or function pointer");
+        done();
+      });
+    });
+    it('should support casted blocks', function(done) {
+      runner.run({
+        language: 'objc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSMutableArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // this is a stack block, it SHOULD be copied if assigned
+
+              NSLog(@"three is: %@", blockThree );
+
+              NSMutableArray *array = [NSMutableArray arrayWithObjects:blockOne, [[blockThree copy] autorelease], nil];
+
+              return array;
+            }            
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSMutableArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"%d", ((int(^)(void))blocks[1])() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteStackBlock');
+        expect(buffer.stdout).to.contain('200');
+        done();
+      });
+    });
+    it('should support blocks with ARC', function(done) {
+      runner.run({
+        language: 'objc',
+        languageVersion: 'objc-arc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSMutableArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // with ARC this is a malloc block
+
+              NSLog(@"three is: %@", blockThree );
+
+              NSMutableArray *array = [NSMutableArray arrayWithObjects:blockOne, blockThree, nil];
+
+              return array;
+            }           
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSMutableArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"result: %d", ((int(^)(void))blocks[1])() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteMallocBlock');
+        expect(buffer.stdout).to.contain('result: 200');
+        done();
+      });
+    });
+    it('should support blocks without cast on NSArray', function(done) {
+      runner.run({
+        language: 'objc',
+        languageVersion: 'objc-arc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // with ARC this is a malloc block
+
+              NSLog(@"three is: %@", blockThree );
+
+              return @[blockOne, blockThree];              
+            }           
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"result: %d",blocks[1]() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteMallocBlock');
+        expect(buffer.stdout).to.contain('result: 200');
+        done();
+      });
+    });
+    it('should support blocks without cast on NSArray', function(done) {
+      runner.run({
+        language: 'objc',
+        setup: false,
+        code:`
+            #import <Foundation/Foundation.h>
+
+            NSArray<int(^)(void)> * initBlocksArray(){ 
+
+              int(^blockOne)(void) = ^{ return 100; };  // this is a global block
+              int(^blockTwo)(void) = ^{ return 200; };  // this is a global block
+              int(^blockThree)(void) = ^{ return blockTwo(); };  // this is a stack block, it SHOULD be copied if assigned
+
+              NSLog(@"three is: %@", blockThree );
+
+              return @[blockOne, [[blockThree copy] autorelease]];              
+            }           
+
+            int main (int argc, const char * argv[]) {
+              @autoreleasepool{
+                NSArray<int(^)(void)> * blocks = initBlocksArray();
+
+                NSLog(@"result: %d",blocks[1]() );
+                return 0;
+              }
+            }`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('three is: <_NSConcreteStackBlock');
+        expect(buffer.stdout).to.contain('result: 200');
+        done();
+      });
+    });
+
     describe('UnitKit', function() {
       it('should perform unit testing', function(done) {
         runner.run({
@@ -500,7 +658,7 @@ describe('objc runner', function() {
           expect(buffer.stderr).to.equal('');
           done();
         });
-      });
+      });      
     });
   });
 });
