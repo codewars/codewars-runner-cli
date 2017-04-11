@@ -483,7 +483,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: 'mocha -t 5000 test/runners/fsharp_spec.js'
+    entrypoint: 'mocha -t 7000 test/runners/fsharp_spec.js'
 
   elixir:
     image: codewars/erlang-runner

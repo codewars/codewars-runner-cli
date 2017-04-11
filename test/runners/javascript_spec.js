@@ -705,6 +705,88 @@ describe('javascript runner', function() {
       });
     });
 
+    describe('Test.assertApproxEquals', function () {
+      it("should allow for minor floating point errors and compare them as equal", function(done) {
+        runner.run({language: 'javascript', code: 'var a = 2.00000000004', fixture: 'Test.assertApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it("should allow for minor floating point errors and compare them as equal (2)", function(done) {
+        runner.run({language: 'javascript', code: 'var a = 1.99999999996', fixture: 'Test.assertApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it("should handle 0 properly and not throw DivisionByZeroError", function(done) {
+        runner.run({language: 'javascript', code: 'var a = 0.00000000009', fixture: 'Test.assertApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it("should handle 0 properly and not throw DivisionByZeroError (2)", function(done) {
+        runner.run({language: 'javascript', code: 'var a = -0.00000000009', fixture: 'Test.assertApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it("should fail tests where the relative error is greater than 1e-9", function(done) {
+        runner.run({language: 'javascript', code: 'var a = 3.004', fixture: 'Test.assertApproxEquals(a, 3);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.contain('\n');
+          done();
+        });
+      });
+      it("should fail tests where the relative error is greater than 1e-9 (2)", function(done) {
+        runner.run({language: 'javascript', code: 'var a = 2.996', fixture: 'Test.assertApproxEquals(a, 3);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.contain('\n');
+          done();
+        });
+      });
+    });
+
+    describe('Test.assertNotApproxEquals', function() {
+      it('should pass tests where the two values are outside the rejected relative error', function(done) {
+        runner.run({language: 'javascript', code: 'var a = 2.004', fixture: 'Test.assertNotApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it('should pass tests where the two values are outside the rejected relative error (2)', function(done) {
+        runner.run({language: 'javascript', code: 'var a = 1.996', fixture: 'Test.assertNotApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it('should handle 0 properly and not throw DivisionByZeroError', function(done) {
+        runner.run({language: 'javascript', code: 'var a = -0.009', fixture: 'Test.assertNotApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it('should handle 0 properly and not throw DivisionByZeroError (2)', function(done) {
+        runner.run({language: 'javascript', code: 'var a = 0.009', fixture: 'Test.assertNotApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          done();
+        });
+      });
+      it('should fail a test where the two floats are within the rejected relative error', function(done) {
+        runner.run({language: 'javascript', code: 'var a = 3.00000000004', fixture: 'Test.assertNotApproxEquals(a, 3);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.contain('\n');
+          done();
+        });
+      });
+      it('should fail a test where the two floats are within the rejected relative error (2)', function(done) {
+        runner.run({language: 'javascript', code: 'var a = 2.99999999996', fixture: 'Test.assertNotApproxEquals(a, 3);', testFramework: 'cw-2'}, function(buffer) {
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          expect(buffer.stdout).to.contain('\n');
+          done();
+        });
+      });
+    });
+
 
     //----------------------------------------------------------------------------------------
     // Karma BDD

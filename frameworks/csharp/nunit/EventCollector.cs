@@ -133,7 +133,7 @@ namespace NUnit.ConsoleRunner
 				if (testResult.Results != null) Console.WriteLine(testResult.Results.Count);
 				if (testResult.AssertCount > 1)
 				{
-					Display.Passed(String.Format("{0} passed", AssertionsName(testResult.AssertCount - 1)));
+					Display.Log(String.Format("{0} passed", AssertionsName(testResult.AssertCount - 1)));
 				}
 
 				Display.Failed(testResult.Message);
