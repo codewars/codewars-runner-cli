@@ -318,6 +318,24 @@ describe('objc runner', function() {
         done();
       });
     });
+    it('should not support manual memory management with ARC', function(done) {
+      runner.run({
+        language: 'objc',
+        languageVersion: 'objc-arc',
+        setup: false,
+        code:`
+        #import <Foundation/Foundation.h>
+          int main (int argc, const char * argv[]) {
+            NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+            NSLog(@"Hello World");',
+            [pool drain];
+          return 0;
+          }`
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain("error: 'NSAutoreleasePool' is unavailable: Not available with automatic reference counting");
+        done();
+      });
+    });
 
     it('should comply about blocks as not id, when block is not casted', function(done) {
       runner.run({
