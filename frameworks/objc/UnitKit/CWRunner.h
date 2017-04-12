@@ -38,7 +38,7 @@
 
 	runner = [UKRunner new];
 	[[UKTestHandler handler] setQuiet: NO];
-	handler = [UKTestHandler handler];  
+	handler = [UKTestHandler handler];
 	handler.delegate = self;
 
 	_testsPassed = 0;
@@ -64,26 +64,24 @@
              message: (NSString *)msg
 {
 	if (cond)
-    {
-    	_testsPassed++;
- 		NSLog(@"<PASSED::>Test Passed\n");
-    }
-    else
-    {    	
-    	_testsFailed++;
-    	NSString *message = [msg stringByReplacingOccurrencesOfString:@"\n" withString:@"<:LF:>"];
-        NSLog(@"<FAILED::>%s:%i:%s\n", filename, line, message.UTF8String);
-    }
-    NSLog(@"<COMPLETEDIN::>%d", (int)([[NSDate date] timeIntervalSinceDate: startTestDate] * 1000));
+  {
+      _testsPassed++;
+      NSLog(@"<PASSED::>Test Passed\n");
+  }
+  else
+  {
+      _testsFailed++;
+      NSString *message = [msg stringByReplacingOccurrencesOfString:@"\n" withString:@"<:LF:>"];
+      NSLog(@"<FAILED::>%s:%i:%s\n", filename, line, message.UTF8String);
+  }
 }
 
 - (void)reportWarning: (NSString *)message
 {
-	_testsFailed++; 
+	_testsFailed++;
 	_exceptionsReported++;
     message = [message stringByReplacingOccurrencesOfString:@"\n" withString:@"<:LF:>"];
     NSLog(@"<FAILED::>%s\n", message.UTF8String);
-    NSLog(@"<COMPLETEDIN::>%d", (int)([[NSDate date] timeIntervalSinceDate: startTestDate] * 1000));
 }
 
 - (void)runTests: (NSArray *)testMethods onInstance: (BOOL)instance ofClass: (Class)testClass
@@ -101,7 +99,7 @@
 		runTestNamed = (void *)[runner methodForSelector:aSelector];
 	}  else {
 		// method doesn't exits, throw an error!
-		[NSException raise:@"CWRunnerException" format:@"runTestNamed not found"]; 
+		[NSException raise:@"CWRunnerException" format:@"runTestNamed not found"];
 	}
 
     for (NSString *testMethodName in testMethods)
@@ -125,8 +123,9 @@
                                              inClass: testClass
                                                 hint: hint];
         }
-        
+
         object_setIvar(runner,_ivarReleasing, 0);
+        NSLog(@"<COMPLETEDIN::>%d", (int)([[NSDate date] timeIntervalSinceDate: startTestDate] * 1000));
     }
 }
 
@@ -140,7 +139,7 @@
 	//[runner runTestsInClass: [testSuite class]];
 
     //selecting hidden method
-    SEL aSelector = NSSelectorFromString(@"filterTestMethodNames:");	      
+    SEL aSelector = NSSelectorFromString(@"filterTestMethodNames:");
     NSArray * (*filterTestMethodNames)(id, SEL, NSArray *);
 
 	if ( [runner respondsToSelector:aSelector] ) {
@@ -148,7 +147,7 @@
 		filterTestMethodNames = (void *)[runner methodForSelector:aSelector];
 	} else {
 		// method doesn't exits, throw an error!
-		[NSException raise:@"CWRunnerException" format:@"filterTestMethodNames not found"]; 
+		[NSException raise:@"CWRunnerException" format:@"filterTestMethodNames not found"];
 	}
 
     NSArray *testMethods = nil;
@@ -164,7 +163,7 @@
     [self runTests: testMethods onInstance: NO ofClass: testClass];
 
     /* Test instance methods */
-	
+
 	// filterTestMethodNames is just a C function, so we can call it directly.
 	testMethods = filterTestMethodNames(runner, aSelector, UKTestMethodNamesFromClass(testClass) );
 
