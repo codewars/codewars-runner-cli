@@ -33,7 +33,7 @@ docker_rm:
 docker_rmi: docker_rm
 	docker rmi $(docker images -q -f dangling=true)
 
-clean: docker_rm_exited docker_rmi_temporary
+clean: docker_rmi
 
 deep-clean: docker_rmi
 
