@@ -1,6 +1,11 @@
 sudo: required
 
-language: javascript
+language: node_js
+node_js:
+  - "6"
+
+# skip `npm install` <https://docs.travis-ci.com/user/customizing-the-build#Skipping-the-Installation-Step>
+install: true
 
 services:
   - docker
@@ -9,5 +14,8 @@ after_success:
   - docker ps -a
   - docker images -a
 
+before_script:
+  - npm install -g eslint
 script:
+  - eslint '**/*.js'
   - make recent
