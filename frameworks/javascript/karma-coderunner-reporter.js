@@ -7,18 +7,18 @@ function print(type, text) {
 }
 
 function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) {
-	// extend the base reporter
+  // extend the base reporter
   baseReporterDecorator(this);
 
   var suites = [];
 
   this.onRunStart = function() {
-		// nothing to do
+    // nothing to do
   };
 
-  this.onBrowserStart = function(browser) {
-		// We could include the browser as an outer suite, but we're only running on PhantomJS, so there's no real benefit
-		// print('DESCRIBE', browser.toString());
+  this.onBrowserStart = function(browser) { // eslint-disable-line no-unused-vars
+    // We could include the browser as an outer suite, but we're only running on PhantomJS, so there's no real benefit
+    // print('DESCRIBE', browser.toString());
   };
 
   this.onBrowserError = function(browser, error) {
@@ -27,13 +27,13 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
 
   this.onBrowserLog = function(browser, log, type) {
     let msg = helper.isString(log) ? log.replace(/^'|'$/g, '') : util.inspect(log);
-		// if(typeof console[type] !== 'function') type = 'log';
+    // if(typeof console[type] !== 'function') type = 'log';
     console[type](msg);
   };
 
-  this.onBrowserComplete = function(browser) {
-		// We could include the browser as an outer suite, but we're only running on PhantomJS, so there's no real benefit
-		// print('COMPLETEDIN');
+  this.onBrowserComplete = function(browser) { // eslint-disable-line no-unused-vars
+    // We could include the browser as an outer suite, but we're only running on PhantomJS, so there's no real benefit
+    // print('COMPLETEDIN');
   };
 
   this.onSpecComplete = function(browser, result) {
@@ -50,7 +50,7 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
     }
   };
 
-  this.onRunComplete = function(browsers, results) {
+  this.onRunComplete = function(browsers, results) { // eslint-disable-line no-unused-vars
     _renderSuites([]);
   };
 
