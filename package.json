@@ -33,6 +33,8 @@
     "Insti",
     "cris"
   ],
+  "repository": "codewars/codewars-runner-cli",
+  "bugs": "https://github.com/codewars/codewars-runner-cli/issues",
   "scripts": {
     "osx-test": "./node_modules/.bin/mocha -t 5000 test/runners/{objc,swift}_spec",
     "js-test": "mocha -t 5000 test/runners/javascript_spec",
@@ -41,7 +43,6 @@
     "ruby-test": "./node_modules/.bin/mocha -t 5000 test/runners/ruby_spec",
     "dart-test": "./node_modules/.bin/mocha -t 5000 test/runners/dart_spec"
   },
-  "repository": "codewars/codewars-runner-cli",
   "dependencies": {
     "ably": "*",
     "ansi-to-html": "^0.4.1",
