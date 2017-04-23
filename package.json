@@ -35,6 +35,7 @@
   ],
   "repository": "codewars/codewars-runner-cli",
   "bugs": "https://github.com/codewars/codewars-runner-cli/issues",
+  "license": "AGPL-3.0",
   "scripts": {
     "osx-test": "./node_modules/.bin/mocha -t 5000 test/runners/{objc,swift}_spec",
     "js-test": "mocha -t 5000 test/runners/javascript_spec",
