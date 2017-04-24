@@ -16,7 +16,7 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
     // nothing to do
   };
 
-  this.onBrowserStart = function(browser) { // eslint-disable-line no-unused-vars
+  this.onBrowserStart = function(browser) {
     // We could include the browser as an outer suite, but we're only running on PhantomJS, so there's no real benefit
     // print('DESCRIBE', browser.toString());
   };
@@ -31,7 +31,7 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
     console[type](msg);
   };
 
-  this.onBrowserComplete = function(browser) { // eslint-disable-line no-unused-vars
+  this.onBrowserComplete = function(browser) {
     // We could include the browser as an outer suite, but we're only running on PhantomJS, so there's no real benefit
     // print('COMPLETEDIN');
   };
@@ -50,7 +50,7 @@ function CodeRunnerReporter(baseReporterDecorator, formatError, config, helper) 
     }
   };
 
-  this.onRunComplete = function(browsers, results) { // eslint-disable-line no-unused-vars
+  this.onRunComplete = function(browsers, results) {
     _renderSuites([]);
   };
 

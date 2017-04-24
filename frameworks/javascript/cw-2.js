@@ -125,7 +125,7 @@ try {
       Test.display.log(msg, opts);
     },
     describe: function(msg, asyncTimeout, fn) {
-      return new Promise(function(resolve, reject) { // eslint-disable-line no-unused-vars
+      return new Promise(function(resolve, reject) {
         if (!fn) {
           fn = asyncTimeout;
           asyncTimeout = false;
