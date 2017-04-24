@@ -114,7 +114,7 @@ module.exports.format = function format(obj, options) {
   else if (obj && obj !== true) {
     // for backwards compatibility we will support the indent option
     if (options.indent || options.json) {
-      out = Test.stringify(obj, options.indent ? 4 : 0);
+      out = global.Test.stringify(obj, options.indent ? 4 : 0);
     }
     else {
       out = util.inspect(obj, options);

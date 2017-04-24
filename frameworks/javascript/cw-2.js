@@ -356,7 +356,7 @@ try {
         Test.expect(false, msg, options);
       }
     },
-    assertApproxEquals: function (actual, expected, msg, options) {
+    assertApproxEquals: function(actual, expected, msg, options) {
       // Compares two floating point values and checks whether they are approximately equal to each other
       options = options || {};
       msg = Test.display.message('Expected actual value ' + actual + ' to approximately equal expected value ' + expected + ' (accepted relative error: 1e-9)', msg);
@@ -367,7 +367,7 @@ try {
         Test.expect(Math.abs((expected - actual) / expected) <= 1e-9, msg, options);
       }
     },
-    assertNotApproxEquals: function (actual, unexpected, msg, options) {
+    assertNotApproxEquals: function(actual, unexpected, msg, options) {
       // Compares two floating point values and checks whether they are sufficiently different from each other
       options = options || {};
       msg = Test.display.message('Actual value ' + actual + ' should not approximately equal unexpected value ' + unexpected + ' (rejected relative error: 1e-9)', msg);

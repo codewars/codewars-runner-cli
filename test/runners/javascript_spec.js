@@ -705,7 +705,7 @@ describe('javascript runner', function() {
       });
     });
 
-    describe('Test.assertApproxEquals', function () {
+    describe('Test.assertApproxEquals', function() {
       it("should allow for minor floating point errors and compare them as equal", function(done) {
         runner.run({language: 'javascript', code: 'var a = 2.00000000004', fixture: 'Test.assertApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
           expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
