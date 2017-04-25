@@ -69,7 +69,7 @@ RUN apt-get install -y python-gmpy2 python3-gmpy2
 RUN apt-get install -y python-bs4
 
 # Install some misc popular packages
-RUN pip install pypattyrn python_jwt jws cerberus colander tox altair pygal
+RUN pip install pypattyrn python_jwt jws cerberus colander tox pygal
 RUN pip3 install coala-bears pypattyrn cerberus colander tox pygal
 
 # Install pylint
