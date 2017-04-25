@@ -6,6 +6,36 @@
     "name": "Jake Hoffner",
     "email": "jake@codewars.com"
   },
+  "contributors": [
+    "xcthulhu",
+    "azhao12345",
+    "kazk",
+    "Dan-Nolan",
+    "pibi",
+    "OverZealous",
+    "javatlacati",
+    "DonaldKellett",
+    "spencerwi",
+    "lteacher",
+    "jasondebolt",
+    "idofilus",
+    "ssineriz",
+    "wizzup",
+    "eugene-bulkin",
+    "codeneomatrix",
+    "nrakochy",
+    "lilsweetcaligula",
+    "funkymonkeymonk",
+    "nathandoctor",
+    "amitpatra",
+    "DHDawson",
+    "Dentzil",
+    "Insti",
+    "cris"
+  ],
+  "repository": "codewars/codewars-runner-cli",
+  "bugs": "https://github.com/codewars/codewars-runner-cli/issues",
+  "license": "AGPL-3.0",
   "scripts": {
     "osx-test": "./node_modules/.bin/mocha -t 5000 test/runners/{objc,swift}_spec",
     "js-test": "mocha -t 5000 test/runners/javascript_spec",
@@ -13,10 +43,6 @@
     "cs-test": "./node_modules/.bin/mocha -t 5000 test/runners/csharp_spec",
     "ruby-test": "./node_modules/.bin/mocha -t 5000 test/runners/ruby_spec",
     "dart-test": "./node_modules/.bin/mocha -t 5000 test/runners/dart_spec"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/codewars/runner.git"
   },
   "dependencies": {
     "ably": "*",

@@ -6,7 +6,7 @@ CONTAINERS=node dotnet jvm python ruby alt rust julia systems dart crystal ocaml
 # recent containers should be updated when adding or modifying a language, so that
 # the travis build process will test it. The process cant test all languages
 # without timing out so this is required to get passed that issue.
-RECENT_CONTAINERS=objc
+RECENT_CONTAINERS=node
 
 ALL_CONTAINERS=${CONTAINERS} base
 

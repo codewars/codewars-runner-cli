@@ -676,7 +676,7 @@ describe('objc runner', function() {
           expect(buffer.stderr).to.equal('');
           done();
         });
-      });      
+      });
     });
   });
 });
