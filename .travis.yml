@@ -4,8 +4,8 @@ language: node_js
 node_js:
   - "6"
 
-# skip `npm install` <https://docs.travis-ci.com/user/customizing-the-build#Skipping-the-Installation-Step>
-install: true
+install:
+  - npm install -g eslint
 
 services:
   - docker
@@ -14,8 +14,26 @@ after_success:
   - docker ps -a
   - docker images -a
 
-before_script:
-  - npm install -g eslint
+env:
+  matrix:
+    - TEST_IMG=node
+    - TEST_IMG=dotnet
+    - TEST_IMG=jvm
+    - TEST_IMG=python
+    - TEST_IMG=ruby
+    - TEST_IMG=alt
+    - TEST_IMG=rust
+    - TEST_IMG=julia
+    - TEST_IMG=systems
+    - TEST_IMG=dart
+    - TEST_IMG=crystal
+    - TEST_IMG=ocaml
+#    - TEST_IMG=swift
+    - TEST_IMG=haskell
+    - TEST_IMG=objc
+    - TEST_IMG=go
+    - TEST_IMG=lua
+
 script:
   - eslint '**/*.js'
-  - make recent
+  - make $TEST_IMG
