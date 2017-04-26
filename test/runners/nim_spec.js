@@ -1,23 +1,8 @@
+"use strict";
 const expect = require('chai').expect;
 const runner = require('../runner');
-const exec = require('child_process').exec;
 
 describe('nim runner', function() {
-  afterEach(function cleanup(done) {
-    exec([
-      'rm -rf',
-      '/home/codewarrior/nimcache',
-      '/home/codewarrior/solution',
-      '/home/codewarrior/fixture',
-      '/home/codewarrior/solution.txt',
-      '/home/codewarrior/solution.nim',
-      '/home/codewarrior/fixture.nim',
-    ].join(' '), function(err) {
-      if (err) return done(err);
-      done();
-    });
-  });
-
   it('should compile and run Nim code', function(done) {
     runner.run({
       language: 'nim',
@@ -145,20 +130,6 @@ describe('nim runner', function() {
 });
 
 describe('Examples', function() {
-  afterEach(function cleanup(done) {
-    exec([
-      'rm -rf',
-      '/home/codewarrior/nimcache',
-      '/home/codewarrior/solution',
-      '/home/codewarrior/fixture',
-      '/home/codewarrior/solution.txt',
-      '/home/codewarrior/solution.nim',
-      '/home/codewarrior/fixture.nim',
-    ].join(' '), function(err) {
-      if (err) return done(err);
-      done();
-    });
-  });
   runner.assertCodeExamples('nim');
 });
 
