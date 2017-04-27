@@ -1,7 +1,7 @@
 
 var util = require('util'),
-  isEqual = require('underscore').isEqual,
-  display = module.exports;
+    isEqual = require('underscore').isEqual,
+    display = module.exports;
 
 // prevent anyone from peeking at the code we passed in
 if (global.process) {
@@ -165,7 +165,7 @@ module.exports.explain = function explain(actual, expected, options) {
 
   options = options || {};
   var collapsed = options.collapsed ? "-" : "",
-    diff = true;
+      diff = true;
 
   if (options.mode) {
     if (typeof(options.mode) == 'string') {

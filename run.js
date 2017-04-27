@@ -1,5 +1,5 @@
 var run = require('./lib/runner').run,
-  opts = require("nomnom")
+    opts = require("nomnom")
         .options({
           code: {
             abbr: 'c',
