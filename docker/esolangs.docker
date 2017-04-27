@@ -1,0 +1,19 @@
+# Pull base image.
+FROM codewars/base-runner
+
+# Install "bf" Fast Brainf**k Interpreter
+RUN apt-get update && apt-get install -y --no-install-recommends bf
+
+# ADD cli-runner and install node deps
+ADD . /runner
+
+RUN ln -s /home/codewarrior /workspace
+
+# Set environment variables
+ENV HOME /home/codewarrior
+USER codewarrior
+ENV USER codewarrior
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]
