@@ -1,0 +1,59 @@
+# BUILD-USING:    docker build -t codewars/runner-jvm .
+# TEST-USING:     docker run --rm -i -t --name=test-runner-jvm --entrypoint=/bin/bash codewars/runner-jvm -s
+# RUN-USING:      docker run --rm --name=runner-jvm codewars/runner-jvm --help
+
+# Pull base image.
+FROM codewars/base-runner
+
+# Needed to run add-apt-repository
+RUN apt-get -y install software-properties-common
+
+# Install Java 8
+# RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get update
+# http://askubuntu.com/a/190674
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
+
+# Install dependencies binaries
+RUN mkdir -p /usr/local
+WORKDIR /usr/local
+
+# Checkout binaries
+RUN  wget -q https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.10.zip && unzip apache-groovy-binary-2.4.10.zip
+RUN  wget -q https://bitbucket.org/kobo/groovyserv-mirror/downloads/groovyserv-1.1.0-bin.zip && unzip groovyserv-1.1.0-bin.zip
+
+# Setup Groovy
+RUN mv groovy-2.4.10 groovy
+ENV PATH /usr/local/groovy/bin:${PATH}
+
+# Setup GroovyServ
+RUN mv groovyserv-1.1.0 groovyserv
+ENV PATH /usr/local/groovyserv/bin:${PATH}
+
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+# ADD cli-runner and install node deps
+ADD . /runner
+
+RUN ln -s /home/codewarrior /workspace
+WORKDIR /runner
+RUN npm install
+
+# Run the test suite to make sure this thing works
+USER codewarrior
+
+# Set environment variables
+ENV TIMEOUT 10000
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN mocha -t $TIMEOUT test/runners/java_spec.js
+
+#timeout is a fallback in case an error with node
+#prevents it from exiting properly
+ENTRYPOINT ["timeout", "15", "node"]

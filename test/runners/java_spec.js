@@ -7,13 +7,14 @@ describe('java runner', function() {
     it('should handle basic code evaluation', function(done) {
       runner.run({
         language: 'java',
-        code: [
-          'class Solution {',
-          '   static void main(String[] args){',
-          '        System.out.println("42");',
-          '   }',
-          '}'].join('\n')
+        code: [`
+          class Solution {
+             public static void main(String[] args){
+                  System.out.println("42");
+             }
+          }`].join('\n')
       }, function(buffer) {
+        console.log(buffer);
         expect(buffer.stdout).to.contain('42\n');
         done();
       });
