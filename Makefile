@@ -54,6 +54,8 @@ push:
 	docker push codewars/ocaml-runner
 	docker push codewars/objc-runner
 	docker push codewars/swift-runner || true
+	# Try adding my esolangs-runner here to see if it works
+	docker push codewars/esolangs-runner || true
 
 pull:
 	docker pull codewars/base-runner
@@ -72,3 +74,5 @@ pull:
 	docker pull codewars/ocaml-runner
 	docker pull codewars/objc-runner
 	docker pull codewars/swift-runner || true
+	# Try adding my esolangs-runner here to see if it works
+	docker pull codewars/esolangs-runner || true
