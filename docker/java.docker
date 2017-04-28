@@ -1,6 +1,5 @@
 # BUILD-USING:    docker build -t codewars/runner-jvm .
-# TEST-USING:     docker run --rm -i -t --name=test-runner-jvm --entrypoint=/bin/bash codewars/runner-jvm -s
-# RUN-USING:      docker run --rm --name=runner-jvm codewars/runner-jvm --help
+# EXAMPLE USAGE:  (Hello world): docker run --rm --name=runner-jvm codewars/runner-jvm run -l java -c $'class Solution {\npublic static void main(String[] args){\nSystem.out.println("Hello world");\n}}'
 
 # Pull base image.
 FROM codewars/base-runner
@@ -17,6 +16,8 @@ RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-s
     echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 RUN apt-get install -y oracle-java8-installer
 
+RUN apt-get install -y unzip
+
 # Install dependencies binaries
 RUN mkdir -p /usr/local
 WORKDIR /usr/local
@@ -27,6 +28,7 @@ RUN  wget -q https://bitbucket.org/kobo/groovyserv-mirror/downloads/groovyserv-1
 
 # Setup Groovy
 RUN mv groovy-2.4.10 groovy
+ENV GROOVY_HOME /usr/local/groovy/
 ENV PATH /usr/local/groovy/bin:${PATH}
 
 # Setup GroovyServ
@@ -45,15 +47,23 @@ RUN ln -s /home/codewarrior /workspace
 WORKDIR /runner
 RUN npm install
 
+RUN /usr/local/groovyserv/bin/setup.sh
+RUN groovyserver -t 20 --debug || echo "server connection error"; groovyclient -Ct 120 -Cdebug -e "println 'Hello from GroovyServ'"
+
 # Run the test suite to make sure this thing works
 USER codewarrior
 
 # Set environment variables
-ENV TIMEOUT 10000
+ENV TIMEOUT 120000
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN mocha -t $TIMEOUT test/runners/java_spec.js
+RUN groovyserver -t 20 --debug || echo "server connection error"; mocha -t ${TIMEOUT} test/runners/java_spec.js
 
+USER root
+RUN echo '#!/bin/bash\ngroovyserver -t 10 -q || echo ""\n timeout 15 node "$@"'>/runner/entrypoint.sh ; chmod +x /runner/entrypoint.sh 
+
+USER codewarrior
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
-ENTRYPOINT ["timeout", "15", "node"]
+ENTRYPOINT ["/runner/entrypoint.sh"]
+
