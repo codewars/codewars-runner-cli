@@ -4,6 +4,11 @@ FROM codewars/base-runner
 # Install "bf" Fast Brainf**k Interpreter
 RUN apt-get update && apt-get install -y --no-install-recommends bf
 
+# add the package json first to a tmp directory and build, copy over so that we don't rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
 # ADD cli-runner and install node deps
 ADD . /runner
 
