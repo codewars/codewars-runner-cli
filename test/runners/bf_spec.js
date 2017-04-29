@@ -1,5 +1,5 @@
-var expect = require('chai').expect,
-    runner = require('../runner');
+var expect = require('chai').expect;
+var runner = require('../runner');
 
 describe("BF Runner", function () {
   describe(".run", function () {
