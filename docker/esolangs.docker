@@ -14,7 +14,8 @@ ENV HOME /home/codewarrior
 USER codewarrior
 ENV USER codewarrior
 
-# Run BF Test Suite to make sure it works
+# Switch to /runner directory and run BF Test Suite to make sure it works
+WORKDIR /runner
 RUN mocha -t 10000 test/runners/bf_spec.js
 
 #timeout is a fallback in case an error with node
