@@ -91,7 +91,7 @@ Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));
         expect(buffer.stdout).to.not.contain('<ERROR::>');
         expect(buffer.stdout).to.contain('H');
         expect(buffer.stdout).to.contain(String.fromCharCode(15));
-        expect(buffer.stdout).to.contain(String.fromCharCode(64));
+        expect(buffer.stdout).to.contain(String.fromCharCode(180));
         done();
       });
     });
