@@ -242,6 +242,35 @@ describe('busted', function() {
       done();
     });
   });
+
+  it('should have output format commands on independent lines', function(done) {
+    runner.run({
+      language: 'lua',
+      solution: [
+        `local kata = {}`,
+        `function kata.add(a, b)`,
+        `  io.write(a)`,
+        `  io.write(b)`,
+        `  return a + b`,
+        `end`,
+        `return kata`,
+      ].join('\n'),
+      fixture: [
+        `require 'busted.runner'()`,
+        `local kata = require 'solution'`,
+        ``,
+        `describe("add", function()`,
+        `  it("should add numbers", function()`,
+        `    assert.are.same(3, kata.add(1, 2))`,
+        `  end)`,
+        `end)`,
+      ].join('\n')
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('12');
+      expect(buffer.stdout).to.contain('\n<PASSED::>');
+      done();
+    });
+  });
 });
 
 describe('Examples', function() {
