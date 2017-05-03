@@ -204,6 +204,43 @@ end)
       done();
     });
   });
+
+  it('should support opts.setup', function(done) {
+    runner.run({
+      language: 'lua',
+      setup: `
+local setup = {}
+function setup.add(a, b)
+  return a + b
+end
+setup.answer = 42
+return setup
+`,
+      solution: `
+local setup = require 'setup'
+return {
+  add = setup.add,
+  ans = setup.answer
+}
+`,
+      fixture: `
+local kata = require 'solution'
+describe("add", function()
+  it("should add numbers", function()
+    assert.are.same(2, kata.add(1, 1))
+  end)
+  it("should have 42", function()
+    assert.are.same(42, kata.ans)
+  end)
+end)
+`
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<PASSED::>');
+      done();
+    });
+  });
+
+
 });
 
 describe('Examples', function() {
