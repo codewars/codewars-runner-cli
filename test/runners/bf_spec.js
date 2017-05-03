@@ -62,4 +62,20 @@ describe("BF Runner", function() {
       });
     });
   });
+  describe('Test Integration', function() {
+    it('should handle "Hello World" program with no input provided', function(done) {
+      runner.run({
+        language: 'bf',
+        code: '++++++++++[>+++>+++++++>+++++++++>++++++++++>+++++++++++<<<<<-]>>++.>>+.>--..+++.<<<<++.>>---.>>.+++.------.<-.<<<+.',
+        fixture: 'Test.assertEquals(runBF(), "Hello World!");',
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        expect(buffer.stdout).to.not.contain('<FAILED::>');
+        expect(buffer.stdout).to.not.contain('<ERROR::>');
+        expect(buffer.stdout).to.contain('Hello World!');
+        done();
+      });
+    });
+  });
 });
