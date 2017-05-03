@@ -80,10 +80,10 @@ describe("BF Runner", function() {
     it('should handle basic input and pass it to the BF program when provided', function(done) {
       runner.run({
         language: 'bf',
-        code: ',>,<[->[->+>+<<]>>[-<<+>>]<<<]>>.',
+        code: ',>,<[->[->>+<<]>>[-<+<+>>]<<<]>>.',
         fixture: 'Test.assertEquals(runBF(String.fromCharCode(9, 8)), "H");\
 Test.assertEquals(runBF(String.fromCharCode(3, 5)), String.fromCharCode(15));\
-Test.assertEquals(runBF(String.fromCharCode(10, 32)), String.fromCharCode(64));',
+Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));',
         testFramework: 'cw-2'
       }, function(buffer) {
         expect(buffer.stdout).to.contain('<PASSED::>');
