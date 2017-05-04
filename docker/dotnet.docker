@@ -52,6 +52,7 @@ ENV USER codewarrior
 ENV HOME /home/codewarrior
 
 # RUN mocha -t 10000 test/runners/{csharp,fsharp}_spec.js
+RUN mocha -t 10000 test/runners/fsharp_spec.js
 RUN sh /runner/lib/cleanup.sh
 RUN mono -V
 
