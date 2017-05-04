@@ -1,11 +1,14 @@
 # Pull base image.
 FROM codewars/base-runner
 
-# Install "bf" Fast Brainf**k Interpreter (Solution Only Mode)
+# Install "bf" Fast Brainf**k Interpreter
 RUN apt-get update && apt-get install -y --no-install-recommends bf
 
-# Install "beef" flexible Brainf**k Interpreter (Test Integration Mode)
+# Install "beef" flexible Brainf**k Interpreter (just in case)
 RUN apt-get update && apt-get install -y --no-install-recommends beef
+
+# Install "bfs-buffer" to deal with extended ASCII characters
+RUN npm install bfs-buffer
 
 # add the package json first to a tmp directory and build, copy over so that we don't rebuild every time
 ADD package.json /tmp/package.json
