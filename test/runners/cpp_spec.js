@@ -8,7 +8,7 @@ describe('cpp runner', function() {
     it('should handle basic code evaluation', function(done) {
       var code = `
                 #include <iostream>
-                int main() { 
+                int main() {
                     printf("Hello World");
                 }
            `;
@@ -247,7 +247,7 @@ describe('cpp runner', function() {
                         list<int> results = two_oldest_ages({ 1, 5, 87, 45, 8, 8 });
                         Describe(two_oldest_ages_test)
                         {
-                            It(should_return_the_oldest) 
+                            It(should_return_the_oldest)
                             {
                                 Assert::That(results.front(), Equals(45));
                             }
@@ -350,9 +350,9 @@ describe('cpp runner', function() {
         runner.run({
           language: 'cpp',
           setup: `
-                        class Base 
+                        class Base
                         {
-                        public: 
+                        public:
                             virtual int big_number() = 0;
                             int member_var = 42;
                         };
@@ -370,7 +370,7 @@ describe('cpp runner', function() {
                         Thing t;
                         Describe(inheritance_tests)
                         {
-                            It(should_access_the_base_var) 
+                            It(should_access_the_base_var)
                             {
                                 Assert::That(t.member_var, Equals(42));
                             }
@@ -390,7 +390,23 @@ describe('cpp runner', function() {
         });
       });
 
+      it('should have output format commands on independent line', function(done) {
+        runner.run({
+          language: 'cpp',
+          code: '//',
+          fixture: [
+            `Describe(foo) {`,
+            ` It(bar) {`,
+            `   std::cout << "foo";`,
+            `   Assert::That(1, Equals(2));`,
+            ` }`,
+            `};`
+          ].join('\n')
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain("\n<FAILED::>");
+          done();
+        });
+      });
     });
-
   });
 });
