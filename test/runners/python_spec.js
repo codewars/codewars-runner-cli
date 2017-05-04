@@ -48,7 +48,7 @@ describe('python runner', function() {
           fixture: 'test.expect(a == 1)',
           testFramework: 'cw-2'
         }, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
@@ -60,7 +60,7 @@ describe('python runner', function() {
           fixture: 'test.assert_equals(a, 1)',
           testFramework: 'cw-2'
         }, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
@@ -73,7 +73,7 @@ describe('python runner', function() {
           fixture: 'test.assert_equals(b, 2)',
           testFramework: 'cw-2'
         }, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
@@ -85,7 +85,7 @@ describe('python runner', function() {
           fixture: 'test.expect(a == 2)',
           testFramework: 'cw-2'
         }, function(buffer) {
-          expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
+          expect(buffer.stdout).to.equal('\n<FAILED::>Value is not what was expected\n');
           done();
         });
       });
@@ -111,7 +111,7 @@ describe('python runner', function() {
           testFramework: 'cw-2',
           files: {'spec.py': 'Test.expect(True)'}
         }, function(buffer) {
-          expect(buffer.stdout).to.include('<PASSED::>');
+          expect(buffer.stdout).to.include('\n<PASSED::>');
           done();
         });
       });
@@ -184,4 +184,44 @@ describe('python runner', function() {
       });
     });
   });
+});
+
+describe('Output format commands', function() {
+  for (const v of ['2', '3', '3.6']) {
+    it(`should be on independent lines (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `import sys`,
+          `sys.stdout.write('foo')`,
+          `test.assert_equals(a, 2)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<FAILED::>');
+        done();
+      });
+    });
+
+    it(`should be on independent lines (Python${v} unittest)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'unittest',
+        code: 'a = 1',
+        fixture: [
+          `import sys`,
+          `class Test(unittest.TestCase):`,
+          `  def test_assert(self):`,
+          `    sys.stdout.write('foo')`,
+          `    self.assertEqual(a, 2)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<FAILED::>');
+        done();
+      });
+    });
+  }
 });
