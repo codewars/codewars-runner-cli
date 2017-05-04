@@ -7,7 +7,10 @@ describe('ruby runner', function() {
     // runner.assertCodeExamples('ruby');
 
     it('should handle basic code evaluation', function(done) {
-      runner.run({language: 'ruby', code: 'puts 42'}, function(buffer) {
+      runner.run({
+        language: 'ruby',
+        code: 'puts 42'
+      }, function(buffer) {
         expect(buffer.stdout).to.equal('42\n');
         done();
       });
@@ -16,10 +19,10 @@ describe('ruby runner', function() {
     it('should support githubRepo downloading', function(done) {
       runner.run({
         language: 'ruby',
-        code: `
-                    require "sample"
-                    puts Sample.new.message
-                `,
+        code: [
+          'require "sample"',
+          'puts Sample.new.message',
+        ].join('\n'),
         githubRepo: 'jhoffner/test'
       }, function(buffer) {
         console.log(buffer.stdout);
@@ -44,10 +47,10 @@ describe('ruby runner', function() {
       runner.run({
         language: 'ruby',
         code: 'puts `ls`',
-        setup: `
-                    # @config: github-repo jhoffner/test
-                    # @config: bash-file start.sh
-                `,
+        setup: [
+          '# @config: github-repo jhoffner/test',
+          '# @config: bash-file start.sh',
+        ].join('\n'),
       }, function(buffer) {
         expect(buffer.stdout).to.contain('test.txt\n');
         done();
@@ -98,10 +101,12 @@ describe('ruby runner', function() {
           runner.run({
             language: 'ruby',
             code: 'a = 1',
-            fixture: 'describe "test" do\n' +
-                            'it("test1") { Test.expect(false) }\n' +
-                            'it("test2") { Test.expect(true) }\n' +
-                            'end',
+            fixture: [
+              'describe "test" do',
+              '  it("test1") { Test.expect(false) }',
+              '  it("test2") { Test.expect(true) }',
+              'end',
+            ].join('\n'),
             testFramework: 'cw-2'
           }, function(buffer) {
             console.log(buffer.stdout);
@@ -114,10 +119,12 @@ describe('ruby runner', function() {
           runner.run({
             language: 'ruby',
             code: 'a = 1',
-            fixture: 'describe "test" do\n' +
-                            'it("test1") { raise "boom!" }\n' +
-                            'it("test2") { Test.expect(true)}\n' +
-                            'end',
+            fixture: [
+              'describe "test" do',
+              '  it("test1") { raise "boom!" }',
+              '  it("test2") { Test.expect(true) }',
+              'end',
+            ].join('\n'),
             testFramework: 'cw-2'
           }, function(buffer) {
             expect(buffer.stdout).to.contain('<ERROR::>');
@@ -130,10 +137,12 @@ describe('ruby runner', function() {
           runner.run({
             language: 'ruby',
             code: 'a = 1',
-            fixture: 'describe "test" do\n' +
-                            'it("test1") { a.idontexist() }\n' +
-                            'it("test2") { Test.expect(true)}\n' +
-                            'end',
+            fixture: [
+              'describe "test" do',
+              '  it("test1") { a.idontexist() }',
+              '  it("test2") { Test.expect(true) }',
+              'end',
+            ].join('\n'),
             testFramework: 'cw-2'
           }, function(buffer) {
             expect(buffer.stdout).to.contain('<ERROR::>');
@@ -152,14 +161,14 @@ describe('ruby runner', function() {
             language: 'ruby',
             code: [
               "def example",
-              "   Test.expect(true);",
-              "   raise 'early error'",
+              "  Test.expect(true);",
+              "  raise 'early error'",
               "end"
             ].join("\n"),
             fixture: [
               'describe "test" do',
-              '   it("test1") { example }',
-              '   it("test2") { Test.expect(false)}',
+              '  it("test1") { example }',
+              '  it("test2") { Test.expect(false) }',
               'end'
             ].join('\n'),
             testFramework: 'cw-2'
