@@ -12,7 +12,7 @@ defmodule CWRunner do
     |> case do
       :ok -> :ok
       {:error, message} ->
-        IO.puts "<ERROR::>" <> message
+        IO.puts "\n<ERROR::>" <> message
     end
   end
 
