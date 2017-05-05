@@ -92,5 +92,53 @@ Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));
         done();
       });
     });
+    it('should provide a useful error message for invalid BF code', function(done) {
+      runner.run({
+        language: 'bf',
+        code: '++++++++++[>+++>+++++++>+++++++++>++++[++++++>+++++++++++<<<<<-]>>++.>>+.>--..+++.<<<<++.>>---.>>.+++.------.<-.<<<+.',
+        fixture: 'Test.assertEquals(runBF(), "Hello World!");',
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain('Error');
+        done();
+      });
+    });
+    it('should provide a useful error message for invalid BF code (2)', function(done) {
+      runner.run({
+        language: 'bf',
+        code: '++++++++++[>+++>+++++++>+++++++++>++++++]++++>++++++]+++++<<<<<-]>>++.>>+.>--..+++.<<<<++.>>---.>>.+++.------.<-.<<<+.',
+        fixture: 'Test.assertEquals(runBF(), "Hello World!");',
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain('Error');
+        done();
+      });
+    });
+    it('should provide a useful error meesage for invalid BF code (3)', function(done) {
+      runner.run({
+        language: 'bf',
+        code: ',>[[,<[->[->>+<<]>>[-<+<+[>>]<<<]>>[.[[',
+        fixture: `Test.assertEquals(runBF(String.fromCharCode(9, 8)), "H");
+Test.assertEquals(runBF(String.fromCharCode(3, 5)), String.fromCharCode(15));
+Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain('Error');
+        done();
+      });
+    });
+    it('should provide a useful error meesage for invalid BF code (4)', function(done) {
+      runner.run({
+        language: 'bf',
+        code: ',>,<[->[-]>>+<<]]>]>[-<]]]]]+<+>]>]]<<<]]>>].]',
+        fixture: `Test.assertEquals(runBF(String.fromCharCode(9, 8)), "H");
+Test.assertEquals(runBF(String.fromCharCode(3, 5)), String.fromCharCode(15));
+Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stderr).to.contain('Error');
+        done();
+      });
+    });
   });
 });
