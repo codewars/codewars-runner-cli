@@ -149,6 +149,27 @@ describe('php runner', function() {
           done();
         });
       });
+
+      it('should have output format command on independent line', function(done) {
+        runner.run({
+          language: 'php',
+          testFramework: 'cw-2',
+          solution: '//',
+          fixture: [
+            '$test->describe("tests", function() {',
+            '  global $test;',
+            '  $test->it("test", function() {',
+            '    global $test;',
+            '    echo "foo";',
+            '    $test->assert_equals(1, 2);',
+            '  });',
+            '});',
+          ].join('\n'),
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('\n<FAILED::>');
+          done();
+        });
+      });
     });
 
     describe('phpunit', function() {
