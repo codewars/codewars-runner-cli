@@ -174,5 +174,34 @@ Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));
         done();
       });
     });
+    it('should handle a basic failed test properly', function(done) {
+      runner.run({
+        language: 'bf',
+        code: '++++++++++[>++++++++++>+++++++++++>+++>++++++++++++<<<<-]>++++.---.>--..+++.>++.>-.<<.+++.------.<-.',
+        fixture: `Test.assertEquals(runBF(), "Hello World!");`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stdout).to.not.contain('<PASSED::>');
+        expect(buffer.stdout).to.contain('<FAILED::>');
+        expect(buffer.stdout).to.not.contain('<ERROR::>');
+        done();
+      });
+    });
+    it('should handle a mixture of passed and failed tests', function(done) {
+      runner.run({
+        language: 'bf',
+        code: '+++++++++++++++.',
+        fixture: `Test.assertEquals(runBF(String.fromCharCode(3, 5)), String.fromCharCode(15));
+Test.assertEquals(runBF(String.fromCharCode(9, 8)), "H");
+Test.assertEquals(runBF(String.fromCharCode(5, 3)), String.fromCharCode(15));
+Test.assertEquals(runBF(String.fromCharCode(32, 10)), String.fromCharCode(64));`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        expect(buffer.stdout).to.contain('<FAILED::>');
+        expect(buffer.stdout).to.not.contain('<ERROR::>');
+        done();
+      });
+    });
   });
 });
