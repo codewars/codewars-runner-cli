@@ -108,10 +108,10 @@ Test.assertEquals(runBF(String.fromCharCode(127, 45)), String.fromCharCode(83));
         done();
       });
     });
-    it('should set the cell value under the pointer as 0 when EOF is reached as per the standard implementation', function(done) {
+    it('should set the cell under the pointer to -1 when EOF is reached which is 1 of the 3 possible standard implementations as described in http://www.hevanet.com/cristofd/brainfuck/epistle.html', function(done) {
       runner.run({
         language: 'bf',
-        code: ',[.,]',
+        code: ',+[-.,+]',
         fixture: `Test.assertEquals(runBF("Codewars"), "Codewars");
 Test.assertEquals(runBF("@jhoffner"), "@jhoffner");
 Test.assertEquals(runBF("@kazk"), "@kazk");
