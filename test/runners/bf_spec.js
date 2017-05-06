@@ -92,6 +92,21 @@ Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));
         done();
       });
     });
+    it('should have 8-bit cells that wrap as per the standard implementation', function(done) {
+      runner.run({
+        language: 'bf',
+        code: ',>,<[->[->>+<<]>>[-<+<+>>]<<<]>>.',
+        fixture: `Test.assertEquals(runBF(String.fromCharCode(32, 10)), String.fromCharCode(64));
+Test.assertEquals(runBF(String.fromCharCode(48, 49)), String.fromCharCode(48));
+Test.assertEquals(runBF(String.fromCharCode(127, 45)), String.fromCharCode(83));`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        expect(buffer.stdout).to.not.contain('<FAILED::>');
+        expect(buffer.stdout).to.not.contain('<ERROR::>');
+        done();
+      });
+    });
     it('should provide a useful error message for invalid BF code', function(done) {
       runner.run({
         language: 'bf',
