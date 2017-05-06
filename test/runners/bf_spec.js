@@ -83,7 +83,8 @@ describe("BF Runner", function() {
         code: ',>,<[->[->>+<<]>>[-<+<+>>]<<<]>>.',
         fixture: `Test.assertEquals(runBF(String.fromCharCode(9, 8)), "H");
 Test.assertEquals(runBF(String.fromCharCode(3, 5)), String.fromCharCode(15));
-Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));`,
+Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));
+Test.assertEquals(runBF(String.fromCharCode(1, 1)), String.fromCharCode(1));`,
         testFramework: 'cw-2'
       }, function(buffer) {
         expect(buffer.stdout).to.contain('<PASSED::>');
@@ -99,6 +100,20 @@ Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));
         fixture: `Test.assertEquals(runBF(String.fromCharCode(32, 10)), String.fromCharCode(64));
 Test.assertEquals(runBF(String.fromCharCode(48, 49)), String.fromCharCode(48));
 Test.assertEquals(runBF(String.fromCharCode(127, 45)), String.fromCharCode(83));`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        expect(buffer.stdout).to.not.contain('<FAILED::>');
+        expect(buffer.stdout).to.not.contain('<ERROR::>');
+        done();
+      });
+    });
+    it('should deal with input containing extended ASCII characters properly', function(done) {
+      runner.run({
+        language: 'bf',
+        code: ',>,<[->[->>+<<]>>[-<+<+>>]<<<]>>.',
+        fixture: `Test.assertEquals(runBF(String.fromCharCode(177, 209)), String.fromCharCode(129));
+Test.assertEquals(runBF(String.fromCharCode(255, 255)), String.fromCharCode(1));`,
         testFramework: 'cw-2'
       }, function(buffer) {
         expect(buffer.stdout).to.contain('<PASSED::>');
