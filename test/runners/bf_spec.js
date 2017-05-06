@@ -126,20 +126,6 @@ Test.assertEquals(runBF("BF"), "BF");`,
         done();
       });
     });
-    it('should deal with input containing extended ASCII characters properly', function(done) {
-      runner.run({
-        language: 'bf',
-        code: ',>,<[->[->>+<<]>>[-<+<+>>]<<<]>>.',
-        fixture: `Test.assertEquals(runBF(String.fromCharCode(177, 209)), String.fromCharCode(129));
-Test.assertEquals(runBF(String.fromCharCode(255, 255)), String.fromCharCode(1));`,
-        testFramework: 'cw-2'
-      }, function(buffer) {
-        expect(buffer.stdout).to.contain('<PASSED::>');
-        expect(buffer.stdout).to.not.contain('<FAILED::>');
-        expect(buffer.stdout).to.not.contain('<ERROR::>');
-        done();
-      });
-    });
     it('should provide a useful error message for invalid BF code', function(done) {
       runner.run({
         language: 'bf',
