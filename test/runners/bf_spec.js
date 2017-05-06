@@ -108,6 +108,24 @@ Test.assertEquals(runBF(String.fromCharCode(127, 45)), String.fromCharCode(83));
         done();
       });
     });
+    it('should set the cell value under the pointer as 0 when EOF is reached as per the standard implementation', function(done) {
+      runner.run({
+        language: 'bf',
+        code: ',[.,]',
+        fixture: `Test.assertEquals(runBF("Codewars"), "Codewars");
+Test.assertEquals(runBF("@jhoffner"), "@jhoffner");
+Test.assertEquals(runBF("@kazk"), "@kazk");
+Test.assertEquals(runBF("@donaldsebleung"), "@donaldsebleung");
+Test.assertEquals(runBF("Brainf**k"), "Brainf**k");
+Test.assertEquals(runBF("BF"), "BF");`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        expect(buffer.stdout).to.not.contain('<FAILED::>');
+        expect(buffer.stdout).to.not.contain('<ERROR::>');
+        done();
+      });
+    });
     it('should deal with input containing extended ASCII characters properly', function(done) {
       runner.run({
         language: 'bf',
