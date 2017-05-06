@@ -203,5 +203,31 @@ Test.assertEquals(runBF(String.fromCharCode(32, 10)), String.fromCharCode(64));`
         done();
       });
     });
+    it('should handle errors properly when spec methods are being used (JavaScript CW-2 Framework Specific Test)', function(done) {
+      runner.run({
+        language: 'bf',
+        code: '++++++++++[>+++>+++++++>+++++++++>++++++]++++>++++++]+++++<<<<<-]>>++.>>+.>--..+++.<<<<++.>>---.>>.+++.------.<-.<<<+.',
+        fixture: `Test.describe("Your BF Hello World Program", function() {
+  var program = require('fs').readFileSync('/home/codewarrior/solution.txt', 'utf8');
+  Test.it('should return the string "Hello World!"', function() {
+    Test.assertEquals(runBF(), "Hello World!");
+  });
+  Test.it("should be shorter than 110 characters", function() {
+    Test.expect(program.length < 110, "Your BF program must be shorter than 110 characters");
+  });
+  Test.it("should not contain any comments (i.e. non-command characters)", function() {
+    Test.expect(!/[^+\\-.,\\[\\]<>]/.test(program), "Your program should not contain comments");
+  });
+});`,
+        testFramework: 'cw-2'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<DESCRIBE::>');
+        expect(buffer.stdout).to.contain('<IT::>');
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        expect(buffer.stdout).to.contain('<FAILED::>');
+        expect(buffer.stdout).to.contain('<ERROR::>');
+        done();
+      });
+    });
   });
 });
