@@ -4,6 +4,9 @@ language: node_js
 node_js:
   - "6"
 
+before_install:
+  - sudo apt-get update && sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
+  - docker --version
 install:
   - npm install -g eslint@3.19.0
 
@@ -39,4 +42,9 @@ env:
 
 script:
   - eslint '**/*.js'
-  - make $TEST_IMG
+  - cp docker/${TEST_IMG}.docker ./Dockerfile
+  - if docker pull codewars/${TEST_IMG}-runner; then
+      docker build --cache-from codewars/${TEST_IMG}-runner -t codewars/${TEST_IMG}-runner .;
+    else
+      docker build -t codewars/${TEST_IMG}-runner .;
+    fi
