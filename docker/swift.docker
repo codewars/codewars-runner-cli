@@ -5,70 +5,89 @@ FROM codewars/base-runner
 
 # Optionally mount '/swift-vol' on ephemeral storage vol for faster
 # installing of packages, compiling, etc.
-env SWIFT_VOL /swift-vol
-env SWIFT_GEN_DIR $SWIFT_VOL/swift-gen
-env SWIFT_SOURCE_DIR $SWIFT_VOL/swift-source
+ENV SWIFT_VOL=/swift-vol \
+    SWIFT_GEN_DIR=/swift-vol/swift-gen \
+    SWIFT_SOURCE_ROOT=/swift-vol/swift-source
+
+COPY frameworks/swift/xctest /tmp/frameworks/swift/xctest
 
 # Install required dependencies for building Swift.
 # See https://github.com/apple/swift
-RUN apt-get update
-RUN apt-get -y upgrade
-RUN apt-get install -y curl rsync cmake git ninja-build clang python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev
-
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    curl \
+    rsync \
+    cmake \
+    git \
+    ninja-build \
+    python \
+    uuid-dev \
+    libicu-dev \
+    icu-devtools \
+    libbsd-dev \
+    libedit-dev \
+    libxml2-dev \
+    libsqlite3-dev \
+    swig \
+    libpython-dev \
+    libncurses5-dev \
+    pkg-config \
+    libblocksruntime-dev \
+    libcurl4-openssl-dev \
+    clang-3.6 \
+ && rm -rf /var/lib/apt/lists/* \
+ && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 100 \
+ && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 100 \
 # Install cmake (Cmake version must be at least 3.4.3)
-RUN wget http://www.cmake.org/files/v3.5/cmake-3.5.2.tar.gz
-RUN tar xzf cmake-3.5.2.tar.gz
-RUN cd cmake-3.5.2 && ./configure && make && sudo make install
-RUN sudo rm -f /usr/bin/cmake
-RUN sudo ln -s /usr/local/bin/cmake /usr/bin/cmake
+ && curl -fsSL https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz | tar xz -C /usr/local --strip-component=1 \
+ && update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force
 
-# Install clang
-RUN apt-get install -y clang-3.6
-RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 100
-RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 100
-
+ENV SWIFT_TAG=swift-3.1-RELEASE
 # Downalod all Swift related Git repos.
 # See https://github.com/apple/swift
-WORKDIR $SWIFT_SOURCE_DIR
-RUN git clone https://github.com/apple/swift.git && ./swift/utils/update-checkout --clone
-RUN git clone https://github.com/ninja-build/ninja.git && cd ninja && git checkout release
-
+WORKDIR $SWIFT_SOURCE_ROOT
+RUN git clone --depth 1 --branch $SWIFT_TAG https://github.com/apple/swift.git \
+ && ./swift/utils/update-checkout --clone --tag $SWIFT_TAG \
 # Copy our custom codewars standard output files to the swift-corelibs-xctest directory.
-COPY frameworks/swift/xctest/PrintObserver.swift $SWIFT_SOURCE_DIR/swift-corelibs-xctest/Sources/XCTest/Private/PrintObserver.swift
-COPY frameworks/swift/xctest/XCTAssert.swift $SWIFT_SOURCE_DIR/swift-corelibs-xctest/Sources/XCTest/Public/XCTAssert.swift
-
+ && cp /tmp/frameworks/swift/xctest/PrintObserver.swift $SWIFT_SOURCE_ROOT/swift-corelibs-xctest/Sources/XCTest/Private/PrintObserver.swift \
+ && cp /tmp/frameworks/swift/xctest/XCTAssert.swift $SWIFT_SOURCE_ROOT/swift-corelibs-xctest/Sources/XCTest/Public/XCTAssert.swift \
 # Copy our custom build-presets file to the swift directory.
-COPY frameworks/swift/xctest/codewars-build-presets.ini $SWIFT_SOURCE_DIR/swift/codewars-build-presets.ini
-
+ && cp /tmp/frameworks/swift/xctest/cw-build-presets.ini $SWIFT_SOURCE_ROOT/swift/cw-build-presets.ini \
 # Build Swift
-WORKDIR $SWIFT_SOURCE_DIR/swift
-RUN utils/build-script --preset-file=codewars-build-presets.ini --preset=codewars_linux_1404 install_destdir=$SWIFT_GEN_DIR installable_package=$SWIFT_GEN_DIR/swift.tar.gz
-env PATH $SWIFT_GEN_DIR/usr/bin:$PATH
-
+ && cd $SWIFT_SOURCE_ROOT/swift \
+ && utils/build-script --dry-run \
+    --preset-file=cw-build-presets.ini \
+    --preset=codewars \
+    install_destdir=$SWIFT_GEN_DIR \
+    installable_package=$SWIFT_GEN_DIR/swift.tar.gz \
+ && utils/build-script \
+    --preset-file=cw-build-presets.ini \
+    --preset=codewars \
+    install_destdir=$SWIFT_GEN_DIR \
+    installable_package=$SWIFT_GEN_DIR/swift.tar.gz \
 # Remove swift source code to save space on the image.
-RUN rm -rf $SWIFT_SOURCE_DIR/*
-
+ && rm -rf $SWIFT_SOURCE_ROOT/* \
 # Change permissions so we maybe don't have to use the --privileged docker run flag.
-RUN chmod -R a+rx $SWIFT_VOL/*
+ && chmod -R a+rx $SWIFT_VOL/*
+
+ENV PATH $SWIFT_GEN_DIR/usr/bin:$PATH
 
 # Add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+COPY package.json /tmp/package.json
+RUN cd /tmp \
+ && npm install --production \
+ && mkdir -p /runner \
+ && cp -a /tmp/node_modules /runner \
+ && ln -s /home/codewarrior /workspace
 
 # ADD cli-runner and install node deps
-ADD . /runner
+COPY . /runner
 
 WORKDIR /runner
-RUN ln -s /home/codewarrior /workspace
 
 # Run the test suite to make sure this thing works
-
 USER codewarrior
-
-# Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 5000 test/runners/swift_spec.js
 
 # timeout is a fallback in case an error with node
