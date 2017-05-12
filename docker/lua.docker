@@ -24,9 +24,6 @@ RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 COPY . /runner
 WORKDIR /runner
 
-COPY frameworks/lua /home/codewarrior/lua
-RUN chown -R codewarrior:codewarrior /home/codewarrior/lua
-
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
