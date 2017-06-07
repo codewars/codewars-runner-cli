@@ -36,6 +36,7 @@ env:
     - TEST_IMG=java
     - TEST_IMG=esolangs
     - TEST_IMG=chapel
+    - TEST_IMG=nim
 
 script:
   - eslint '**/*.js'
