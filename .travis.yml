@@ -33,6 +33,7 @@ env:
     - TEST_IMG=objc
     - TEST_IMG=go
     - TEST_IMG=lua
+    - TEST_IMG=d
 
 script:
   - eslint '**/*.js'
