@@ -787,6 +787,104 @@ describe('javascript runner', function() {
       });
     });
 
+    describe('Fix Codewars/codewars.com#962', function() {
+      describe('Test.assertApproxEquals', function() {
+        it('should allow for an absolute error range of 1e-9 when the actual value returned is 0', function(done) {
+          runner.run({language: 'javascript', code: 'var a = 0', fixture: `Test.assertApproxEquals(a, 1e-15);
+Test.assertApproxEquals(a, 1e-14);
+Test.assertApproxEquals(a, 1e-13);
+Test.assertApproxEquals(a, 1e-12);
+Test.assertApproxEquals(a, 1e-11);
+Test.assertApproxEquals(a, 1e-10);
+Test.assertApproxEquals(a, 1e-9);
+Test.assertApproxEquals(a, -1e-9);
+Test.assertApproxEquals(a, -1e-10);
+Test.assertApproxEquals(a, -1e-11);
+Test.assertApproxEquals(a, -1e-12);
+Test.assertApproxEquals(a, -1e-13);
+Test.assertApproxEquals(a, -1e-14);
+Test.assertApproxEquals(a, -1e-15);`, testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            expect(buffer.stdout).to.not.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should allow for an absolute error range of *no more than* 1e-9 when the actual value returned is 0', function(done) {
+          runner.run({language: 'javascript', code: 'var a = 0', fixture: `Test.assertApproxEquals(a, 1e-8);
+Test.assertApproxEquals(a, 1e-7);
+Test.assertApproxEquals(a, 1e-6);
+Test.assertApproxEquals(a, 1e-5);
+Test.assertApproxEquals(a, 1e-4);
+Test.assertApproxEquals(a, 1e-3);
+Test.assertApproxEquals(a, 1e-2);
+Test.assertApproxEquals(a, 1e-1);
+Test.assertApproxEquals(a, 1);
+Test.assertApproxEquals(a, -1);
+Test.assertApproxEquals(a, -1e-1);
+Test.assertApproxEquals(a, -1e-2);
+Test.assertApproxEquals(a, -1e-3);
+Test.assertApproxEquals(a, -1e-4);
+Test.assertApproxEquals(a, -1e-5);
+Test.assertApproxEquals(a, -1e-6);
+Test.assertApproxEquals(a, -1e-7);
+Test.assertApproxEquals(a, -1e-8);`, testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.not.contain('<PASSED::>');
+            expect(buffer.stdout).to.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+      });
+      describe('Test.assertNotApproxEquals', function() {
+        it('should reject an absolute difference of 1e-9 or less if the actual value is 0', function(done) {
+          runner.run({language: 'javascript', code: 'var a = 0', fixture: `Test.assertNotApproxEquals(a, 1e-15);
+Test.assertNotApproxEquals(a, 1e-14);
+Test.assertNotApproxEquals(a, 1e-13);
+Test.assertNotApproxEquals(a, 1e-12);
+Test.assertNotApproxEquals(a, 1e-11);
+Test.assertNotApproxEquals(a, 1e-10);
+Test.assertNotApproxEquals(a, 1e-9);
+Test.assertNotApproxEquals(a, -1e-9);
+Test.assertNotApproxEquals(a, -1e-10);
+Test.assertNotApproxEquals(a, -1e-11);
+Test.assertNotApproxEquals(a, -1e-12);
+Test.assertNotApproxEquals(a, -1e-13);
+Test.assertNotApproxEquals(a, -1e-14);
+Test.assertNotApproxEquals(a, -1e-15);`, testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.not.contain('<PASSED::>');
+            expect(buffer.stdout).to.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should accept an absolute difference greater than 1e-9 if the actual value is 0', function(done) {
+          runner.run({language: 'javascript', code: 'var a = 0', fixture: `Test.assertNotApproxEquals(a, 1e-8);
+Test.assertNotApproxEquals(a, 1e-7);
+Test.assertNotApproxEquals(a, 1e-6);
+Test.assertNotApproxEquals(a, 1e-5);
+Test.assertNotApproxEquals(a, 1e-4);
+Test.assertNotApproxEquals(a, 1e-3);
+Test.assertNotApproxEquals(a, 1e-2);
+Test.assertNotApproxEquals(a, 1e-1);
+Test.assertNotApproxEquals(a, 1);
+Test.assertNotApproxEquals(a, -1);
+Test.assertNotApproxEquals(a, -1e-1);
+Test.assertNotApproxEquals(a, -1e-2);
+Test.assertNotApproxEquals(a, -1e-3);
+Test.assertNotApproxEquals(a, -1e-4);
+Test.assertNotApproxEquals(a, -1e-5);
+Test.assertNotApproxEquals(a, -1e-6);
+Test.assertNotApproxEquals(a, -1e-7);
+Test.assertNotApproxEquals(a, -1e-8);`, testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            expect(buffer.stdout).to.not.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+      });
+    });
 
     //----------------------------------------------------------------------------------------
     // Karma BDD

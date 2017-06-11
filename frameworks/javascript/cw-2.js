@@ -360,8 +360,8 @@ try {
       // Compares two floating point values and checks whether they are approximately equal to each other
       options = options || {};
       msg = Test.display.message('Expected actual value ' + actual + ' to approximately equal expected value ' + expected + ' (accepted relative error: 1e-9)', msg);
-      if (expected === 0) {
-        Test.expect(Math.abs(actual) <= 1e-9, msg, options);
+      if (expected === 0 || actual === 0) {
+        Test.expect(Math.abs(actual) <= 1e-9 && Math.abs(expected) <= 1e-9, msg, options);
       }
       else {
         Test.expect(Math.abs((expected - actual) / expected) <= 1e-9, msg, options);
@@ -373,6 +373,9 @@ try {
       msg = Test.display.message('Actual value ' + actual + ' should not approximately equal unexpected value ' + unexpected + ' (rejected relative error: 1e-9)', msg);
       if (unexpected === 0) {
         Test.expect(Math.abs(actual) > 1e-9, msg, options);
+      }
+      else if (actual === 0) {
+        Test.expect(Math.abs(unexpected) > 1e-9, msg, options);
       }
       else {
         Test.expect(Math.abs((unexpected - actual) / unexpected) > 1e-9, msg, options);
