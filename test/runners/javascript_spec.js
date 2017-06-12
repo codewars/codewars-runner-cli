@@ -835,6 +835,38 @@ Test.assertApproxEquals(a, -1e-8);`, testFramework: 'cw-2'}, function(buffer) {
             done();
           });
         });
+        it('should treat 1e-9 as an absolute error margin and not a relative one when Math.abs(expected) <= 1 (passing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1e-8 - 1e-10, 1e-8 - 1e-11, 1e-8 - 1e-12, 1e-8 - 1e-13, 1e-8 - 1e-14, 1e-8 - 1e-15, 1e-8 + 1e-15, 1e-8 + 1e-14, 1e-8 + 1e-13, 1e-8 + 1e-12, 1e-8 + 1e-11, 1e-8 + 1e-10], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertApproxEquals(a[i], 1e-8); Test.assertApproxEquals(b[i], -1e-8); }', testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            expect(buffer.stdout).to.not.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should treat 1e-9 as an absolute error margin and not a relative one when Math.abs(expected) <= 1 (failing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1e-8 - 1e-8, 1e-8 - 1e-7, 1e-8 - 1e-6, 1e-8 - 1e-5, 1e-8 - 1e-4, 1e-8 - 1e-3, 1e-8 - 1e-2, 1e-8 - 1e-1, 1e-8 + 1e-1, 1e-8 + 1e-2, 1e-8 + 1e-3, 1e-8 + 1e-4, 1e-8 + 1e-5, 1e-8 + 1e-6, 1e-8 + 1e-7, 1e-8 + 1e-8], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertApproxEquals(a[i], 1e-8); Test.assertApproxEquals(b[i], -1e-8); }', testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.not.contain('<PASSED::>');
+            expect(buffer.stdout).to.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should treat 1e-9 as a relative error margin and not an absolute one when Math.abs(expected) > 1 (passing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1000000 - 1e-8, 1000000 - 1e-7, 1000000 - 1e-6, 1000000 - 1e-5, 1000000 - 1e-4, 1000000 + 1e-4, 1000000 + 1e-5, 1000000 + 1e-6, 1000000 + 1e-7, 1000000 + 1e-8], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertApproxEquals(a[i], 1000000); Test.assertApproxEquals(b[i], -1000000); }', testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            expect(buffer.stdout).to.not.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should treat 1e-9 as a relative error margin and not an absolute one when Math.abs(expected) > 1 (failing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1000000 - 1e-2, 1000000 - 1e-1, 1000000 - 1, 1000000 - 10, 1000000 - 100, 1000000 + 100, 1000000 + 10, 1000000 + 1, 1000000 + 1e-1, 1000000 + 1e-2], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertApproxEquals(a[i], 1000000); Test.assertApproxEquals(b[i], -1000000); }', testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.not.contain('<PASSED::>');
+            expect(buffer.stdout).to.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
       });
       describe('Test.assertNotApproxEquals', function() {
         it('should reject an absolute difference of 1e-9 or less if the actual value is 0', function(done) {
@@ -877,6 +909,38 @@ Test.assertNotApproxEquals(a, -1e-5);
 Test.assertNotApproxEquals(a, -1e-6);
 Test.assertNotApproxEquals(a, -1e-7);
 Test.assertNotApproxEquals(a, -1e-8);`, testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            expect(buffer.stdout).to.not.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should treat 1e-9 as an absolute error margin and not a relative one when Math.abs(unexpected) <= 1 (failing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1e-8 - 1e-10, 1e-8 - 1e-11, 1e-8 - 1e-12, 1e-8 - 1e-13, 1e-8 - 1e-14, 1e-8 - 1e-15, 1e-8 + 1e-15, 1e-8 + 1e-14, 1e-8 + 1e-13, 1e-8 + 1e-12, 1e-8 + 1e-11, 1e-8 + 1e-10], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertNotApproxEquals(a[i], 1e-8); Test.assertNotApproxEquals(b[i], -1e-8); }', testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.not.contain('<PASSED::>');
+            expect(buffer.stdout).to.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should treat 1e-9 as an absolute error margin and not a relative one when Math.abs(unexpected) <= 1 (passing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1e-8 - 1e-8, 1e-8 - 1e-7, 1e-8 - 1e-6, 1e-8 - 1e-5, 1e-8 - 1e-4, 1e-8 - 1e-3, 1e-8 - 1e-2, 1e-8 - 1e-1, 1e-8 + 1e-1, 1e-8 + 1e-2, 1e-8 + 1e-3, 1e-8 + 1e-4, 1e-8 + 1e-5, 1e-8 + 1e-6, 1e-8 + 1e-7, 1e-8 + 1e-8], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertNotApproxEquals(a[i], 1e-8); Test.assertNotApproxEquals(b[i], -1e-8); }', testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.contain('<PASSED::>');
+            expect(buffer.stdout).to.not.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should treat 1e-9 as a relative error margin and not an absolute one when Math.abs(unexpected) > 1 (failing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1000000 - 1e-8, 1000000 - 1e-7, 1000000 - 1e-6, 1000000 - 1e-5, 1000000 - 1e-4, 1000000 + 1e-4, 1000000 + 1e-5, 1000000 + 1e-6, 1000000 + 1e-7, 1000000 + 1e-8], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertNotApproxEquals(a[i], 1000000); Test.assertNotApproxEquals(b[i], -1000000); }', testFramework: 'cw-2'}, function(buffer) {
+            expect(buffer.stdout).to.not.contain('<PASSED::>');
+            expect(buffer.stdout).to.contain('<FAILED::>');
+            expect(buffer.stdout).to.not.contain('<ERROR::>');
+            done();
+          });
+        });
+        it('should treat 1e-9 as a relative error margin and not an absolute one when Math.abs(unexpected) > 1 (passing tests only)', function(done) {
+          runner.run({language: 'javascript', code: 'var a = [1000000 - 1e-2, 1000000 - 1e-1, 1000000 - 1, 1000000 - 10, 1000000 - 100, 1000000 + 100, 1000000 + 10, 1000000 + 1, 1000000 + 1e-1, 1000000 + 1e-2], b = a.map(n => -n)', fixture: 'for (let i = 0; i < a.length; i++) { Test.assertNotApproxEquals(a[i], 1000000); Test.assertNotApproxEquals(b[i], -1000000); }', testFramework: 'cw-2'}, function(buffer) {
             expect(buffer.stdout).to.contain('<PASSED::>');
             expect(buffer.stdout).to.not.contain('<FAILED::>');
             expect(buffer.stdout).to.not.contain('<ERROR::>');
