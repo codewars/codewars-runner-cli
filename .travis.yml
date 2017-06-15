@@ -23,7 +23,7 @@ env:
     - TEST_IMG=ruby
     - TEST_IMG=alt
     - TEST_IMG=rust
-    - TEST_IMG=julia
+#    - TEST_IMG=julia
     - TEST_IMG=systems
     - TEST_IMG=dart
     - TEST_IMG=crystal
@@ -33,6 +33,7 @@ env:
     - TEST_IMG=objc
     - TEST_IMG=go
     - TEST_IMG=lua
+    - TEST_IMG=java
 
 script:
   - eslint '**/*.js'
