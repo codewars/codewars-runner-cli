@@ -6,16 +6,16 @@ module Spec
   end
 
   def self.example(msg, mode = "")
-    puts format_message("<LOG:#{mode.upcase}:Example>#{msg}")
+    puts format_message("\n<LOG:#{mode.upcase}:Example>#{msg}")
   end
 
   def self.log(msg, mode = "", label = "")
-    puts format_message("<LOG:#{mode.upcase}:#{label}>#{msg}")
+    puts format_message("\n<LOG:#{mode.upcase}:#{label}>#{msg}")
   end
 
   class RootContext
     def print_results(elapsed_time)
-      puts "<COMPLETEDIN::>#{Spec.to_human(elapsed_time)}"
+      puts "\n<COMPLETEDIN::>#{Spec.to_human(elapsed_time)}"
     end
   end
 
@@ -25,15 +25,15 @@ module Spec
     end
 
     def push(context)
-      puts "<DESCRIBE::>#{Spec.format_message(context.description)}"
+      puts "\n<DESCRIBE::>#{Spec.format_message(context.description)}"
     end
 
     def pop
-      puts "<COMPLETEDIN::>"
+      puts "\n<COMPLETEDIN::>"
     end
 
     def before_example(description)
-      puts "<IT::>#{Spec.format_message(description)}"
+      puts "\n<IT::>#{Spec.format_message(description)}"
     end
 
     def report(result)
@@ -49,18 +49,18 @@ module Spec
 
       case result.kind
         when :success
-          puts "<PASSED::>Test Passed"
+          puts "\n<PASSED::>Test Passed"
         when :fail
-          puts "<FAILED::>Test Failed: #{msg}"
+          puts "\n<FAILED::>Test Failed: #{msg}"
 
         when :error
-          puts "<ERROR::>#{msg}"
+          puts "\n<ERROR::>#{msg}"
       end
 
       if result.exception
-        puts "<ERROR::>#{Spec.format_message(result.exception.to_s)}"
+        puts "\n<ERROR::>#{Spec.format_message(result.exception.to_s)}"
       end
-      puts "<COMPLETEDIN::>"
+      puts "\n<COMPLETEDIN::>"
     end
 
     def finish
