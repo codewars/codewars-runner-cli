@@ -10,10 +10,10 @@ def format_message(message):
 
 def expect(passed=None, message=None, allow_raise=False):
     if passed:
-        print("<PASSED::>Test Passed")
+        print("\n<PASSED::>Test Passed")
     else:
         message = message or "Value is not what was expected"
-        print("<FAILED::>{0}".format(message))
+        print("\n<FAILED::>{0}".format(message))
         if allow_raise:
             raise AssertException(message)
 
@@ -49,13 +49,12 @@ def expect_error(message, function):
 
 
 def describe(message):
-    print("<DESCRIBE::>{0}".format(format_message(message)))
+    print("\n<DESCRIBE::>{0}".format(format_message(message)))
 
 
 def it(message):
-    print("<IT::>{0}".format(format_message(message)))
+    print("\n<IT::>{0}".format(format_message(message)))
 
 
 def display(type, message, label="", mode=""):
-    print("<{0}:{1}:{2}>{3}".format(type.upper(), mode.upper(), label, format_message(message)))
-
+    print("\n<{0}:{1}:{2}>{3}".format(type.upper(), mode.upper(), label, format_message(message)))

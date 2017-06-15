@@ -15,21 +15,21 @@ class CwTestResult(unittest.TestResult):
   #   super(CwTestResult, self).stopTestRun()
 
   def startTest(self, test):
-    print("<IT::>" + test._testMethodName)
+    print("\n<IT::>" + test._testMethodName)
     super(CwTestResult, self).startTest(test)
 
   def stopTest(self, test):
-    print("<COMPLETEDIN::>")
+    print("\n<COMPLETEDIN::>")
     super(CwTestResult, self).stopTest(test)
 
   def addSuccess(self, test):
-    print("<PASSED::>Test Passed")
+    print("\n<PASSED::>Test Passed")
     super(CwTestResult, self).addSuccess(test)
 
   def addFailure(self, test, err):
-    print("<FAILED::>" + formatMessage(err[1]))
+    print("\n<FAILED::>" + formatMessage(err[1]))
     super(CwTestResult, self).addFailure(test, err)
 
   def addError(self, test, err):
-    print("<ERROR::>Unhandled Exception: " + formatMessage(err[1]))
+    print("\n<ERROR::>Unhandled Exception: " + formatMessage(err[1]))
     super(CwTestResult, self).addError(test, err)
