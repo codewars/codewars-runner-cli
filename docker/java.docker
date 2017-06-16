@@ -48,7 +48,14 @@ WORKDIR /runner
 RUN npm install
 
 RUN /usr/local/groovyserv/bin/setup.sh
-RUN groovyserver -t 20 --debug || echo "server connection error"; groovyclient -Ct 120 -Cdebug -e "println 'Hello from GroovyServ'"
+
+# create a debug entry point to make running test code easier
+RUN echo '#!/bin/bash\ngroovyserver -t 20 --debug --authtoken groovy || echo "server connection error"\n "$@"'>/runner/debug.sh ; chmod +x /runner/debug.sh
+
+ # create a specific node entry point for running the node CLI executable with groovyserve started
+RUN echo '#!/bin/bash\ngroovyserver -t 10 -q --authtoken groovy || echo ""\n timeout 15 node "$@"'>/runner/nodeentry.sh ; chmod +x /runner/nodeentry.sh
+
+RUN /runner/debug.sh groovyclient -Ct 120 -Cdebug -Cauthtoken groovy -e "println 'Hello from GroovyServ'"
 
 # Run the test suite to make sure this thing works
 USER codewarrior
@@ -57,13 +64,9 @@ USER codewarrior
 ENV TIMEOUT 120000
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN groovyserver -t 20 --debug || echo "server connection error"; mocha -t ${TIMEOUT} test/runners/java_spec.js
-
-USER root
-RUN echo '#!/bin/bash\ngroovyserver -t 10 -q || echo ""\n timeout 15 node "$@"'>/runner/entrypoint.sh ; chmod +x /runner/entrypoint.sh 
+RUN /runner/debug.sh mocha -t ${TIMEOUT} test/runners/java_spec.js
 
 USER codewarrior
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
-ENTRYPOINT ["/runner/entrypoint.sh"]
+
+ENTRYPOINT ["/runner/nodeentry.sh"]
 
