@@ -1,0 +1,72 @@
+# BUILD-USING:    docker build -t codewars/runner-jvm .
+# EXAMPLE USAGE:  (Hello world): docker run --rm --name=runner-jvm codewars/runner-jvm run -l java -c $'class Solution {\npublic static void main(String[] args){\nSystem.out.println("Hello world");\n}}'
+
+# Pull base image.
+FROM codewars/base-runner
+
+# Needed to run add-apt-repository
+RUN apt-get -y install software-properties-common
+
+# Install Java 8
+# RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get update
+# http://askubuntu.com/a/190674
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
+
+RUN apt-get install -y unzip
+
+# Install dependencies binaries
+RUN mkdir -p /usr/local
+WORKDIR /usr/local
+
+# Checkout binaries
+RUN  wget -q https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.10.zip && unzip apache-groovy-binary-2.4.10.zip
+RUN  wget -q https://bitbucket.org/kobo/groovyserv-mirror/downloads/groovyserv-1.1.0-bin.zip && unzip groovyserv-1.1.0-bin.zip
+
+# Setup Groovy
+RUN mv groovy-2.4.10 groovy
+ENV GROOVY_HOME /usr/local/groovy/
+ENV PATH /usr/local/groovy/bin:${PATH}
+
+# Setup GroovyServ
+RUN mv groovyserv-1.1.0 groovyserv
+ENV PATH /usr/local/groovyserv/bin:${PATH}
+
+# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install --production
+RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+# ADD cli-runner and install node deps
+ADD . /runner
+
+RUN ln -s /home/codewarrior /workspace
+WORKDIR /runner
+RUN npm install
+
+RUN /usr/local/groovyserv/bin/setup.sh
+
+# create a debug entry point to make running test code easier
+RUN echo '#!/bin/bash\ngroovyserver -t 20 --debug --authtoken groovy || echo "server connection error"\n "$@"'>/runner/debug.sh ; chmod +x /runner/debug.sh
+
+ # create a specific node entry point for running the node CLI executable with groovyserve started
+RUN echo '#!/bin/bash\ngroovyserver -t 10 -q --authtoken groovy || echo ""\n timeout 15 node "$@"'>/runner/nodeentry.sh ; chmod +x /runner/nodeentry.sh
+
+RUN /runner/debug.sh groovyclient -Ct 120 -Cdebug -Cauthtoken groovy -e "println 'Hello from GroovyServ'"
+
+# Run the test suite to make sure this thing works
+USER codewarrior
+
+# Set environment variables
+ENV TIMEOUT 120000
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+RUN /runner/debug.sh mocha -t ${TIMEOUT} test/runners/java_spec.js
+
+USER codewarrior
+
+ENTRYPOINT ["/runner/nodeentry.sh"]
+
