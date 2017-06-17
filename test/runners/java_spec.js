@@ -185,7 +185,9 @@ describe('java runner', function() {
         expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
         done();
       });
-    });it('should handle packages', function(done) {
+    });
+
+    it('should handle packages', function(done) {
       runner.run({
         language: 'java',
         code: `
@@ -227,7 +229,9 @@ describe('java runner', function() {
           }
           
           class Helpers {
-          
+            static String out() {
+              return "test out";
+            }
           }
         `,
         fixture: `import static org.junit.Assert.assertEquals;
@@ -241,7 +245,7 @@ describe('java runner', function() {
                         public void myTestFunction(){
                             Challenge s = new Challenge();
                             assertEquals("wow", 3, s.testthing());
-                            System.out.println("test out");
+                            System.out.println(Helpers.out());
                     }}`
       }, function(buffer) {
         expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
