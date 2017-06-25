@@ -1,0 +1,24 @@
+cw-2:
+  reference:
+    initial: |-
+      # create an array called websites that has "codewars" as its only value
+
+    answer: |-
+      var websites = ['codewars'];
+
+    fixture: |-
+      # Use test.describe (or Test.describe) to describe your test suite
+      Test.describe("websites")
+
+      # Use "it" calls to describe the specific test case
+      Test.it("should have the value 'codewars' inside of it")
+
+      # assert equals will pass if both items equal each other (using ==). If
+      # the test fails, assert_equals will output a descriptive message indicating
+      # what the values were expected to be.
+      Test.assertEquals(['codewars'], websites)
+
+      # you can also use the lower level test.expect. If you use test.expect directly then
+      # you should provide a custom error message, as the default one will be pretty useless
+      # to users trying to pass the kata.
+      Test.expect(['codewars'] == websites, 'Array does not have correct value')
