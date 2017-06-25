@@ -64,7 +64,10 @@ module Test {
     expect(in_range, message, allow_raise);
   }
 
-  proc expectError(msg, function) {
+    // TODO: Error-Handling Methods
+    // Currently not supported?
+
+  /*proc expectError(msg, function) {
     var passed: bool = false;
     try {
       function();
@@ -82,7 +85,7 @@ module Test {
       passed = false;
     }
     expect(passed, msg);
-  }
+  }*/
 
   proc _format(msg) {
     return msg.replace("\n", "<:LF:>");
