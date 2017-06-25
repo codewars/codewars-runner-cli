@@ -1,0 +1,37 @@
+FROM codewars/base-runner
+
+# Set environment variables
+ENV USER codewarrior
+ENV HOME /home/codewarrior
+ENV CHPL_VERSION 1.15.0
+ENV CHPL_HOME /usr/local/chapel-${CHPL_VERSION}
+
+# Copy package json to tmp
+ADD package.json /tmp/package.json
+
+# Do npm install in tmp and setup cargo dir
+RUN \
+  cd /tmp && npm install --production && \
+  mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+# Download and build Chapel
+RUN mkdir $CHPL_HOME \
+  && apt-get update && apt-get install -y curl \
+  && curl -sSL "https://github.com/chapel-lang/chapel/releases/download/${CHPL_VERSION}/chapel-${CHPL_VERSION}.tar.gz" -o chapel.tar.gz \
+  && tar -xzf chapel.tar.gz -C /usr/local \
+  && rm -f chapel.tar.gz \
+  && cd $CHPL_HOME \
+  && make \
+  && cd ..
+
+ RUN $CHPL_HOME/util/printchplenv
+
+ENV CHPL_HOST_PLATFORM=linux64
+ENV PATH="$CHPL_HOME"/bin/$CHPL_HOST_PLATFORM:"$CHPL_HOME"/util:"$PATH"
+
+ADD . /runner
+WORKDIR /runner
+USER codewarrior
+
+RUN mocha -t 5000 test/runners/chapel_spec.js
+ENTRYPOINT ["timeout", "15", "node"]
