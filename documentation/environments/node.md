@@ -19,7 +19,7 @@ The following plugins are included:
 - transform-class-properties
 - transform-flow-strip-types
 
-### 6.x Babel Plugins
+### 6.x/8.x Babel Plugins
 
 The following presets are included:
 - stage-1
