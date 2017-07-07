@@ -23,7 +23,7 @@ env:
     - TEST_IMG=ruby
     - TEST_IMG=alt
     - TEST_IMG=rust
-#    - TEST_IMG=julia
+    - TEST_IMG=julia
     - TEST_IMG=systems
     - TEST_IMG=dart
     - TEST_IMG=crystal
