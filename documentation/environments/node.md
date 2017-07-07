@@ -74,44 +74,43 @@ The sandbox environment will timeout the code within 7 seconds. In the future, a
 The following packages have been installed:
 
 - async
+- baconjs
 - base64-js
+- bluebird
+- brain
 - brfs
 - buffer-equal
-- esprima
-- falafel
-- graph-paths 
-- bluebird
-- js-yaml
-- baconjs
 - chai
 - chai-change
 - chai-factories
 - chai-spies
 - chai-subset
+- dclassify
 - deku
-- mocha
-- redis
-- mongoose
-- mongodb
 - elasticsearch
+- esprima
 - expect
+- falafel
+- graph-paths 
 - immutable
-- quickcheck
+- js-yaml
+- karma
+- karma-chai
+- karma-mocha
+- karma-phantomjs-launcher
 - lodash
-- react
-- should
-- rx
+- mocha
+- mongodb
+- mongoose
+- natural
+- phantomjs
+- quickcheck
 - react
 - react-dom
-- brain
-- dclassify
-- natural
+- redis
+- rx
+- should
 - sqlite3
-- karma
-- karma-mocha
-- karma-chai
-- karma-phantomjs-launcher
-- phantomjs
 
 # Installed Services
 
