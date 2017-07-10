@@ -23,7 +23,7 @@ describe('julia runner', function() {
         `,
         testFramework: 'Test'
       }, function(buffer) {
-        expect(buffer.stdout).to.equal('("<PASSED::>Test Passed","<:LF:>\\n")');
+        expect(buffer.stdout).to.equal('("<PASSED::>Test Passed", "<:LF:>\\n")');
         done();
       });
     });
@@ -35,7 +35,7 @@ describe('julia runner', function() {
         fixture: 'facts(()->(@fact  a => 1) ,"test")',
         testFramework: 'Test'
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>test<:LF:>\n("<PASSED::>Test Passed","<:LF:>\\n")');
+        expect(buffer.stdout).to.contain('<DESCRIBE::>test<:LF:>\n("<PASSED::>Test Passed", "<:LF:>\\n")');
         done();
       });
     });
