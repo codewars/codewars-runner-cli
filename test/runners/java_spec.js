@@ -1,8 +1,13 @@
 var expect = require('chai').expect;
 var runner = require('../runner');
+var execSync = require('child_process').execSync;
 
 
 describe('java runner', function() {
+
+  console.log("Starting daemon with test run to ensure tests run within their allowed time...");
+  console.log(execSync('sh /runner/frameworks/java/prewarm.sh').toString());
+
   describe('.run', function() {
     it('should handle basic code evaluation', function(done) {
       runner.run({
@@ -41,23 +46,26 @@ describe('java runner', function() {
     it('should handle basic junit tests', function(done) {
       runner.run({
         language: 'java',
-        code: `public class Solution {
-                public Solution(){}
-                public int testthing(){return 3;}
-              }`,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    public class TestFixture {
-                        public TestFixture(){}
-                        @Test
-                        public void myTestFunction(){
-                            Solution s = new Solution();
-                            assertEquals("wow", 3, s.testthing());
-                            System.out.println("test out");
-                    }}`
+        code: `
+          public class Solution {
+            public Solution(){}
+            public int testthing(){return 3;}
+          }`,
+        fixture: `
+          import static org.junit.Assert.assertEquals;
+          import org.junit.Test;
+          import org.junit.runners.JUnit4;
+          public class TestFixture {
+              public TestFixture(){}
+              @Test
+              public void myTestFunction(){
+                  Solution s = new Solution();
+                  assertEquals("wow", 3, s.testthing());
+                  System.out.println("test out");
+                  System.err.println("error test");
+          }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
+        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
@@ -65,23 +73,25 @@ describe('java runner', function() {
     it('should handle junit tests failing', function(done) {
       runner.run({
         language: 'java',
-        code: `public class Solution {
-                        public Solution(){}
-                        public int testthing(){return 3;}
-                    }`,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    public class TestFixture {
-                        public TestFixture(){}
-                        @Test
-                        public void myTestFunction(){
-                            Solution s = new Solution();
-                            assertEquals("Failed Message", 5, s.testthing());
-                            System.out.println("test out");
-                    }}`
+        code: `
+          public class Solution {
+              public Solution(){}
+              public int testthing(){return 3;}
+          }`,
+        fixture: `
+          import static org.junit.Assert.assertEquals;
+          import org.junit.Test;
+          import org.junit.runners.JUnit4;
+          public class TestFixture {
+              public TestFixture(){}
+              @Test
+              public void myTestFunction(){
+                  Solution s = new Solution();
+                  assertEquals("Failed Message", 5, s.testthing());
+                  System.out.println("test out");
+          }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)<:LF:>\n\n<FAILED::>Failed Message expected:<5> but was:<3><:LF:>\n');
+        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)\n<FAILED::>Failed Message expected:<5> but was:<3>\n');
         done();
       });
     });
@@ -89,19 +99,21 @@ describe('java runner', function() {
     it('should report junit messages', function(done) {
       runner.run({
         language: 'java',
-        code: `public class Solution {
-                        public Solution(){}
-                        public String testthing(){ return null; }
-                    }`,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    public class TestFixture {
-                        @Test
-                        public void myTestFunction(){
-                            Solution s = new Solution();
-                            assertEquals("Failed Message", 1, s.testthing().length());
-                    }}`
+        code: `
+          public class Solution {
+              public Solution(){}
+              public String testthing(){ return null; }
+          }`,
+        fixture: `
+          import static org.junit.Assert.assertEquals;
+          import org.junit.Test;
+          import org.junit.runners.JUnit4;
+          public class TestFixture {
+              @Test
+              public void myTestFunction(){
+                  Solution s = new Solution();
+                  assertEquals("Failed Message", 1, s.testthing().length());
+          }}`
       }, function(buffer) {
         expect(buffer.stdout).to.contain('<FAILED::>Runtime Error Occurred');
         expect(buffer.stdout).to.contain('NullPointerException');
@@ -109,52 +121,28 @@ describe('java runner', function() {
       });
     });
 
-    it('should hide groovyserve warning', function(done) {
-      runner.run({
-        language: 'java',
-        code: `public class Solution {
-                        public Solution(){}
-                        public int testthing(){return 3;}
-                    }`,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    public class TestFixture {
-                        public TestFixture(){}
-                        @Test
-                        public void myTestFunction(){
-                            Solution s = new Solution();
-                            assertEquals("Failed Message", 5, s.testthing());
-                            System.stdout.println("test err");
-                    }}`
-      }, function(buffer) {
-        expect(buffer.stderr).to.contain('test err');
-        expect(buffer.stderr).to.not.contain('WARN: old authtoken');
-        expect(buffer.stderr).to.not.contain('1961 port');
-        done();
-      });
-    });
-
     it('should handle custom class names', function(done) {
       runner.run({
         language: 'java',
-        code: `public class Challenge {
-                public Challenge(){}
-                public int testthing(){return 3;}
-              }`,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    public class Fixture {
-                        public Fixture(){}
-                        @Test
-                        public void myTestFunction(){
-                            Challenge s = new Challenge();
-                            assertEquals("wow", 3, s.testthing());
-                            System.out.println("test out");
-                    }}`
+        code: `
+          public class Challenge {
+            public Challenge(){}
+            public int testthing(){return 3;}
+          }`,
+        fixture: `
+          import static org.junit.Assert.assertEquals;
+          import org.junit.Test;
+          import org.junit.runners.JUnit4;
+          public class Fixture {
+              public Fixture(){}
+              @Test
+              public void myTestFunction(){
+                  Challenge s = new Challenge();
+                  assertEquals("wow", 3, s.testthing());
+                  System.out.println("test out");
+          }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
+        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
@@ -163,54 +151,27 @@ describe('java runner', function() {
       runner.run({
         language: 'java',
         code: `
-              package stuff;
-              public class Challenge {
-                public Challenge(){}
-                public int testthing(){return 3;}
-              }`,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    import stuff.Challenge;
-                    
-                    public class Fixture {
-                        public Fixture(){}
-                        @Test
-                        public void myTestFunction(){
-                            Challenge s = new Challenge();
-                            assertEquals("wow", 3, s.testthing());
-                            System.out.println("test out");
-                    }}`
-      }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
-        done();
-      });
-    });
+          package stuff;
+          public class Challenge {
+            public Challenge(){}
+            public int testthing(){return 3;}
+          }`,
+        fixture: `
+          import static org.junit.Assert.assertEquals;
+          import org.junit.Test;
+          import org.junit.runners.JUnit4;
+          import stuff.Challenge;
 
-    it('should handle packages', function(done) {
-      runner.run({
-        language: 'java',
-        code: `
-              package stuff;
-              public class Challenge {
-                public Challenge(){}
-                public int testthing(){return 3;}
-              }`,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    import stuff.Challenge;
-                    
-                    public class Fixture {
-                        public Fixture(){}
-                        @Test
-                        public void myTestFunction(){
-                            Challenge s = new Challenge();
-                            assertEquals("wow", 3, s.testthing());
-                            System.out.println("test out");
-                    }}`
+          public class Fixture {
+              public Fixture(){}
+              @Test
+              public void myTestFunction(){
+                  Challenge s = new Challenge();
+                  assertEquals("wow", 3, s.testthing());
+                  System.out.println("test out");
+          }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
+        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
@@ -219,36 +180,138 @@ describe('java runner', function() {
       runner.run({
         language: 'java',
         code: `
-              package stuff;
-              public class Challenge {
-                public Challenge(){}
-                public int testthing(){return 3;}
-              }`,
+          public class Challenge {
+            public Challenge(){}
+            public int testthing(){return 3;}
+          }`,
         setup: `
           class Node<T> {
           }
-          
+
           class Helpers {
             static String out() {
               return "test out";
             }
           }
         `,
-        fixture: `import static org.junit.Assert.assertEquals;
-                    import org.junit.Test;
-                    import org.junit.runners.JUnit4;
-                    import stuff.Challenge;
-                    
-                    public class Fixture {
-                        public Fixture(){}
-                        @Test
-                        public void myTestFunction(){
-                            Challenge s = new Challenge();
-                            assertEquals("wow", 3, s.testthing());
-                            System.out.println(Helpers.out());
-                    }}`
+        fixture: `
+          import static org.junit.Assert.assertEquals;
+          import org.junit.Test;
+          import org.junit.runners.JUnit4;
+
+          public class Fixture {
+              public Fixture(){}
+              @Test
+              public void myTestFunction(){
+                  Challenge s = new Challenge();
+                  assertEquals("wow", 3, s.testthing());
+                  System.out.println(Helpers.out());
+          }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)<:LF:>\ntest out\n\n<PASSED::>Test Passed<:LF:>\n');
+        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
+        done();
+      });
+    });
+
+    it('should handle support split files', function(done) {
+      runner.run({
+        language: 'java',
+        code: `
+          public class Challenge {
+            public Challenge(){}
+            public int testthing(){return 3;}
+          }
+
+          // @config: split-file Helpers.java
+          public class Helpers {
+            static String out() {
+              return "test out";
+            }
+          }
+        `,
+        fixture: `
+          import static org.junit.Assert.assertEquals;
+          import org.junit.Test;
+          import org.junit.runners.JUnit4;
+
+          public class Fixture {
+              public Fixture(){}
+              @Test
+              public void myTestFunction(){
+                  Challenge s = new Challenge();
+                  assertEquals("wow", 3, s.testthing());
+                  System.out.println(Helpers.out());
+          }}`
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
+        done();
+      });
+    });
+  });
+
+  describe('spring', function() {
+    it('should handle basic junit tests', function(done) {
+      runner.run({
+        language: 'java',
+        code: `
+          package hello;
+
+          import org.springframework.boot.autoconfigure.*;
+          import org.springframework.stereotype.Controller;
+          import org.springframework.web.bind.annotation.RequestMapping;
+          import org.springframework.web.bind.annotation.ResponseBody;
+          
+          @Controller
+          @EnableAutoConfiguration
+          public class HomeController {
+          
+              @RequestMapping("/")
+              public @ResponseBody String greeting() {
+                  return "Hello World";
+              }
+          
+          }`,
+        setup: `
+          // @config: reference spring-boot
+
+          package hello;
+          
+          import org.springframework.boot.SpringApplication;
+          import org.springframework.boot.autoconfigure.SpringBootApplication;
+          
+          @SpringBootApplication
+          public class Application {
+          
+              public static void main(String[] args) {
+                  SpringApplication.run(Application.class, args);
+              }
+          }
+        `,
+        fixture: `
+          package hello;
+          import static org.assertj.core.api.Assertions.assertThat;
+
+          import org.junit.Test;
+          import org.junit.runner.RunWith;
+          import org.springframework.beans.factory.annotation.Autowired;
+          import org.springframework.boot.test.context.SpringBootTest;
+          import org.springframework.test.context.junit4.SpringRunner;
+          
+          @RunWith(SpringRunner.class)
+          @SpringBootTest
+          public class SmokeTest {
+          
+              @Autowired
+              private HomeController controller;
+          
+              @Test
+              public void contexLoads() throws Exception {
+                  assertThat(controller).isNotNull();
+              }
+          }`
+      }, function(buffer) {
+        console.log(buffer.stderr);
+        expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
         done();
       });
     });

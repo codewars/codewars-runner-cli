@@ -12,21 +12,26 @@ public class CwRunListener extends RunListener
         failed = true;
         final String msg = failure.getMessage();
         final boolean hasMessage =  msg != null && msg.length() > 0;
-        System.out.println(String.format("\n<FAILED::>%s<:LF:>", formatMessage(hasMessage ? msg : "Runtime Error Occurred")));
-        if(!hasMessage && failure.getException() != null) {
-            System.out.println(formatException(failure.getException()));
+        System.out.println(String.format("\n<FAILED::>%s", formatMessage(hasMessage ? msg : "Runtime Error Occurred")));
+        if(failure.getException() != null) {
+            String prefix = "";
+            if (hasMessage) {
+              prefix = "<LOG::-Exception Details>";
+            }
+
+            System.out.println(prefix + formatMessage(formatException(failure.getException())));
         }
     }
     public void testStarted(final Description description)
     {
-        System.out.println(String.format("\n<DESCRIBE::>%s<:LF:>", formatMessage(description.getDisplayName())));
+        System.out.println(String.format("\n<DESCRIBE::>%s", formatMessage(description.getDisplayName())));
         failed = false;
     }
     public void testFinished(final Description description)
     {
         if(!failed)
         {
-            System.out.println("\n<PASSED::>Test Passed<:LF:>");
+            System.out.println("\n<PASSED::>Test Passed");
         }
         System.out.println("\n<COMPLETEDIN::>");
     }

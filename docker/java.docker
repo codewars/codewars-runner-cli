@@ -35,38 +35,62 @@ ENV PATH /usr/local/groovy/bin:${PATH}
 RUN mv groovyserv-1.1.0 groovyserv
 ENV PATH /usr/local/groovyserv/bin:${PATH}
 
+# Install zip utils
+RUN apt-get install -y zip unzip --no-install-recommends
+
+# Install Gradle
+ENV GRADLE_HOME /usr/local/gradle
+ENV GRADLE_VERSION 4.0
+
+ARG GRADLE_DOWNLOAD_SHA256=56bd2dde29ba2a93903c557da1745cafd72cdd8b6b0b83c05a40ed7896b79dfe
+RUN set -o errexit -o nounset \
+	&& echo "Downloading Gradle" \
+	&& wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+	\
+	&& echo "Checking download hash" \
+	&& echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
+	\
+	&& echo "Installing Gradle" \
+	&& unzip gradle.zip \
+	&& rm gradle.zip \
+	&& mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
+	&& ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
+
+RUN mkdir /usr/local/.gradle
+RUN chown codewarrior /usr/local/.gradle
+
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production
 RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
-# ADD cli-runner and install node deps
-ADD . /runner
-
-RUN ln -s /home/codewarrior /workspace
 WORKDIR /runner
+ADD package.json /runner/package.json
 RUN npm install
 
-RUN /usr/local/groovyserv/bin/setup.sh
+# ADD cli-runner and install node deps
+ADD frameworks/java /runner/frameworks/java
+RUN chown codewarrior /runner/frameworks/java
+RUN ln -s /home/codewarrior /workspace
 
-# create a debug entry point to make running test code easier
-RUN echo '#!/bin/bash\ngroovyserver -t 20 --debug --authtoken groovy || echo "server connection error"\n "$@"'>/runner/debug.sh ; chmod +x /runner/debug.sh
+RUN gradle --version
 
- # create a specific node entry point for running the node CLI executable with groovyserve started
-RUN echo '#!/bin/bash\ngroovyserver -t 10 -q --authtoken groovy || echo ""\n timeout 15 node "$@"'>/runner/nodeentry.sh ; chmod +x /runner/nodeentry.sh
-
-RUN /runner/debug.sh groovyclient -Ct 120 -Cdebug -Cauthtoken groovy -e "println 'Hello from GroovyServ'"
-
-# Run the test suite to make sure this thing works
 USER codewarrior
+
+# pre-install the default referenced java libraries
+RUN cd /runner/frameworks/java && gradle --stacktrace --no-daemon compileTestJava
+
+ADD lib /runner/lib
+ADD *.js /runner/
+ADD frameworks/java/prewarm.sh /runner/prewarm.sh
 
 # Set environment variables
-ENV TIMEOUT 120000
 ENV USER codewarrior
 ENV HOME /home/codewarrior
-RUN /runner/debug.sh mocha -t ${TIMEOUT} test/runners/java_spec.js
+ADD test /runner/test
 
-USER codewarrior
+# Run the test suite to make sure this thing works
+RUN mocha -t 20000 /runner/test/runners/java_spec.js
 
-ENTRYPOINT ["/runner/nodeentry.sh"]
+ENTRYPOINT ["node"]
 
