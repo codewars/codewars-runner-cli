@@ -42,8 +42,8 @@ Within the setup code you can load any of these packages using reference config 
 
 **Setup Example:**
 ```java
-// @config reference guava
-// @config reference commons-lang3
+// @config: reference guava
+// @config: reference commons-lang3
 ```
 
  
@@ -61,8 +61,8 @@ When including the Spring framework via `spring-boot`, if other services are con
 
 Gradle is used as the build tool. Each time you run code, a fresh Docker container will be used. Under
 typical conditions the Gradle daemon should have already loaded, causing build times to typically fall within
-the 3 to 4 second range for trivial sized apps. However if the daemon has not finished loading then the build
-process may take over 10 seconds to complete.
+the 3 to 4 second range for trivial sized apps. However if the daemon has not finished loading then the build process
+will need to wait until the daemon is ready. This should not affect output walltime but may cause delays in code execution.
 
 # Timeout
 

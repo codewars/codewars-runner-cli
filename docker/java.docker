@@ -31,10 +31,6 @@ RUN mv groovy-2.4.10 groovy
 ENV GROOVY_HOME /usr/local/groovy/
 ENV PATH /usr/local/groovy/bin:${PATH}
 
-# Setup GroovyServ
-RUN mv groovyserv-1.1.0 groovyserv
-ENV PATH /usr/local/groovyserv/bin:${PATH}
-
 # Install zip utils
 RUN apt-get install -y zip unzip --no-install-recommends
 
