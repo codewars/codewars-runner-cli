@@ -253,7 +253,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: 'mocha -t 5000 test/runners/typescript_spec.js'
+    entrypoint: 'mocha -t 10000 test/runners/typescript_spec.js'
 
   python:
     image: codewars/python-runner
