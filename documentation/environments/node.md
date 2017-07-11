@@ -54,7 +54,7 @@ The solution, test fixture and optional setup/preloaded code are all combined in
 
 ## TypeScript
 
-Typescript 1.8 is supported. Only the Mocha test framework is available for testing.
+Typescript 2.4 is supported. Only the Mocha test framework is available for testing.
  
 The following typings are available:
 
@@ -106,6 +106,9 @@ The following packages have been installed:
 - karma-chai
 - karma-mocha
 - karma-phantomjs-launcher
+- karma-typescript
+- karma-typescript-angular2-transform
+- karma-typescript-es6-transform
 - lodash
 - mocha
 - mongodb
@@ -119,6 +122,18 @@ The following packages have been installed:
 - rx
 - should
 - sqlite3
+- support for Angular v4, including:
+    - @angular/common
+    - @angular/compiler
+    - @angular/core
+    - @angular/forms
+    - @angular/http
+    - @angular/platform-browser
+    - @angular/platform-browser-dynamic
+    - @angular/router
+    - core-js
+    - rxjs
+    - zone.js
 
 # Installed Services
 
