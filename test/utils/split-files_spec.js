@@ -2,7 +2,7 @@ const expect = require('chai').expect,
       split = require('../../lib/utils/split-files');
 
 describe('splitFiles', function() {
-  it ("should ignore files without splits", function() {
+  it("should ignore files without splits", function() {
     const content = `
       this is root content
             
