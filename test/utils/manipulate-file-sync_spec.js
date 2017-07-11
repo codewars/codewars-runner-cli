@@ -2,7 +2,7 @@ const expect = require('chai').expect,
       manipulateFileSync = require('../../lib/utils/manipulate-file-sync');
 
 describe('manipulateFileSync', function() {
-  it ("should support keeps", function() {
+  it("should support keeps", function() {
     const result = manipulateFileSync('/runner/frameworks/java/build.gradle', '/workspace/build.gradle', {
       keeps: [{
         target: /^dependencies {\n(  .*\n)*}/gm,

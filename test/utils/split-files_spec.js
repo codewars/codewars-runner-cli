@@ -1,5 +1,5 @@
 const expect = require('chai').expect,
-  split = require('../../lib/utils/split-files');
+      split = require('../../lib/utils/split-files');
 
 describe('splitFiles', function() {
   it ("should ignore files without splits", function() {
@@ -9,7 +9,7 @@ describe('splitFiles', function() {
       this is Stuff.java
       
       this is Other.java
-    `
+    `;
 
     const result = split(content);
 
@@ -18,7 +18,7 @@ describe('splitFiles', function() {
     expect(result.splits).to.eq(0);
   });
 
-  it ("should split into multiple files", function() {
+  it("should split into multiple files", function() {
     const content = `
       this is root content
       
@@ -29,7 +29,7 @@ describe('splitFiles', function() {
       // @config:split-file Other.java
       
       this is Other.java
-    `
+    `;
 
     const result = split(content);
 
