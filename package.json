@@ -50,6 +50,7 @@
     "bluebird": "*",
     "chai": "^3.5.0",
     "escape-html": "1.0.3",
+    "fs-extra": "^3.0.1",
     "js-yaml": "^3.8.3",
     "lodash": "^4.17.4",
     "mocha": "2.5.3",

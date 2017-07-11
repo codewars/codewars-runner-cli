@@ -35,6 +35,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
+      - ./listen.js:/runner/listen.js
     entrypoint: ''
     command: bash
 
@@ -373,7 +374,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: '/runner/debug.sh mocha -t 120000 test/runners/java_spec.js'
+    entrypoint: 'mocha -t 15000 test/runners/java_spec.js'
 
   clojure:
     image: codewars/jvm-runner
