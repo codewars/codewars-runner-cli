@@ -4,7 +4,15 @@ Code is executed within a Dockerized Ubuntu 14.04 container.
 
 ## JavaScript
 
-Node 0.10.33 and 6.0 are currently supported, each with the option of transpiling using Babel JS. Node 6.0 without babel is the recommended option due to it supporting most ES2015 features natively, and because it does not incur the additional transpilation performance penalty that Babel JS causes. 
+Node `0.10.33`, `6.11.0`, and `8.1.3` are currently supported, each with the option of transpiling using Babel JS. Node 6 without babel is the recommended option due to it supporting most ES2015 features natively, and because it does not incur the additional transpilation performance penalty that Babel JS causes.
+ 
+Node runtime versions can be specified in a forward-compatible manner using the following formats:
+ 
+- `0.10.x` or `0.10.x/babel`: Run on node 0.10 with or without Babel transpilation
+- `6.x` or `6.x/babel`: The same for Node 6
+- `8.x` or `8.x/babel`: The same for Node 8
+
+If no `languageVersion` is specified, the default is `6.x`.
 
 ### 0.10.x Babel Plugins
 
@@ -19,7 +27,7 @@ The following plugins are included:
 - transform-class-properties
 - transform-flow-strip-types
 
-### 6.x Babel Plugins
+### 6.x/8.x Babel Plugins
 
 The following presets are included:
 - stage-1
@@ -33,7 +41,7 @@ The following plugins are included:
 - transform-flow-strip-types
 
 ### How different JS code sections are treated
-a
+
 The solution, test fixture and optional setup/preloaded code are all combined into a single file. The test fixture is wrapped within its own clojure.
 
 ## CoffeeScript
@@ -74,44 +82,43 @@ The sandbox environment will timeout the code within 7 seconds. In the future, a
 The following packages have been installed:
 
 - async
+- baconjs
 - base64-js
+- bluebird
+- brain
 - brfs
 - buffer-equal
-- esprima
-- falafel
-- graph-paths 
-- bluebird
-- js-yaml
-- baconjs
 - chai
 - chai-change
 - chai-factories
 - chai-spies
 - chai-subset
+- dclassify
 - deku
-- mocha
-- redis
-- mongoose
-- mongodb
 - elasticsearch
+- esprima
 - expect
+- falafel
+- graph-paths 
 - immutable
-- quickcheck
+- js-yaml
+- karma
+- karma-chai
+- karma-mocha
+- karma-phantomjs-launcher
 - lodash
-- react
-- should
-- rx
+- mocha
+- mongodb
+- mongoose
+- natural
+- phantomjs
+- quickcheck
 - react
 - react-dom
-- brain
-- dclassify
-- natural
+- redis
+- rx
+- should
 - sqlite3
-- karma
-- karma-mocha
-- karma-chai
-- karma-phantomjs-launcher
-- phantomjs
 
 # Installed Services
 

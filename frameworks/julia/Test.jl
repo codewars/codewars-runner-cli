@@ -41,7 +41,7 @@ function getline()
         lookup = ccall(:jl_lookup_code_address, Any, (Ptr{Void}, Int32), frame, 0)
         if lookup != ()
             if issecond
-                return lookup[3]
+                return lookup[1][3]-3
             else
                 issecond = true
             end
@@ -52,17 +52,20 @@ end
 # Represents the result of a test. The `meta` dictionary is used to retain
 # information about the test, such as its file, line number, description, etc.
 #
-abstract Result
+abstract type Result end
+
 type Success <: Result
     expr::Expr
     val
     meta::Dict
 end
+
 type Failure <: Result
     expr::Expr
     val
     meta::Dict
 end
+
 type Error <: Result
     expr::Expr
     err::Exception
@@ -77,8 +80,6 @@ function format_line(s...)
     #apply(string,tuple(context...,s...,LF))
     string(tuple(context...,s...,LF))
 end
-
-
 
 # A TestSuite collects the results of a series of tests, as well as some
 # information about the tests such as their file and description.
@@ -111,18 +112,18 @@ pluralize(s::AbstractString , n::Number) = n == 1 ? s : AbstractString(s, "s")
 import Base.show
 
 function mistake(ex::Expr, actual)
-    x,y = ex.args
+    x,y = ex.args[2:end]
     "$(repr(x)) - expected: $(repr(y)) actual: $(actual)$(LF)"
 end
 
 function show(io::IO, f::Failure)
-    print(io, format_line("<FAILURE::>", mistake(f.expr, f.val)))
+    print(io, format_line("<FAILURE::>",mistake(f.expr, f.val)))
 end
 
 import Base.error
 function show(io::IO, e::Error)
     bt = replace(strip(sprint(io->Base.show_backtrace(io, e.backtrace)),'\n'), "\n", LF)
-    print(io, format_line("<ERROR::>", mistake(e.expr, e.err), bt))
+    print(io, format_line("<ERROR::>",mistake(e.expr, e.err), bt))
 end
 
 function show(io::IO, s::Success)
@@ -202,9 +203,8 @@ end
 #     #=> do_fact( () -> 1 == 1, :(1 => 1), ...)
 #
 macro fact(factex::Expr)
-    if factex.head == :(=>)
-        :(do_fact(() -> $(fact_pred(factex.args...)),$(Expr(:quote, factex)),Dict("line" => getline())))
-
+    if factex.args[1] == :(=>)
+        :(do_fact(() -> $(fact_pred(factex.args[2:end]...)),$(Expr(:quote, factex)),Dict("line" => getline())))
     else
         error("@fact doesn't support expression: $factex")
     end
