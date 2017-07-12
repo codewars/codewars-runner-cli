@@ -28,7 +28,7 @@ env:
     - TEST_IMG=dart
     - TEST_IMG=crystal
     - TEST_IMG=ocaml
-#    - TEST_IMG=swift
+    - TEST_IMG=swift
     - TEST_IMG=haskell
     - TEST_IMG=objc
     - TEST_IMG=go
