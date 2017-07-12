@@ -44,4 +44,4 @@ RUN /home/codewarrior/run_ocaml.sh mocha -t 5000 test/runners/ocaml_spec.js
 
 #timeout is a fallback in case an error with node
 #prevents it from exiting properly
-ENTRYPOINT ["/home/codewarrior/run_ocaml.sh", "timeout", "15", "node"]
+ENTRYPOINT ["/home/codewarrior/run_ocaml.sh", "node"]

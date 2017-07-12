@@ -34,4 +34,4 @@ WORKDIR /runner
 USER codewarrior
 
 RUN mocha -t 10000 test/runners/chapel_spec.js
-ENTRYPOINT ["timeout", "15", "node"]
+ENTRYPOINT ["node"]
