@@ -29,15 +29,15 @@ try {
         $this->describing = true;
 
         /* Format the "describe" block and run the tests */
-        echo "<DESCRIBE::>$msg\n";
+        echo "\n<DESCRIBE::>$msg\n";
         $fn();
       } catch (Exception $e) {
         /* If an error exists, output it to the user */
-        echo "<ERROR::>$e\n";
+        echo "\n<ERROR::>$e\n";
       } finally {
         /* Time the script and round to the nearest millisecond.  Output that to the user. */
         $dur = round((microtime(true) - $start) * 1000);
-        echo "<COMPLETEDIN::>$dur\n";
+        echo "\n<COMPLETEDIN::>$dur\n";
 
         /* The describe block has ended.  Reset "describing" */
         $this->describing = false;
@@ -56,14 +56,14 @@ try {
       if (!$this->describing) throw new Exception("\"it\" blocks must be called within \"describe\" blocks");
 
       /* Format "it" block */
-      echo "<IT::>$msg\n";
+      echo "\n<IT::>$msg\n";
       try {
         $fn();
       } catch (Exception $e) {
-        echo "<ERROR::>$e\n";
+        echo "\n<ERROR::>$e\n";
       } finally {
         /* Terminate current "it" block - almost forgot :o */
-        echo "<COMPLETEDIN::>\n";
+        echo "\n<COMPLETEDIN::>\n";
       }
     }
 
@@ -71,10 +71,10 @@ try {
     public function expect($passed, $msg = "Value was not what was expected") {
       if ($passed) {
         $this->passes++;
-        echo "<PASSED::>Test Passed\n";
+        echo "\n<PASSED::>Test Passed\n";
       } else {
         $this->fails++;
-        echo "<FAILED::>$msg\n";
+        echo "\n<FAILED::>$msg\n";
         if (!$this->describing) throw new Exception("Failed Test");
       }
     }

@@ -1,7 +1,7 @@
 var fs = require('fs'),
-  expect = require('chai').expect,
-  yaml = require('js-yaml'),
-  runner = require('../lib/runner');
+    expect = require('chai').expect,
+    yaml = require('js-yaml'),
+    runner = require('../lib/runner');
 
 module.exports.run = runner.run;
 

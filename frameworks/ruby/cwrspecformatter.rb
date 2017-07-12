@@ -14,7 +14,7 @@ class CwRSpecFormatter
   def format_exception(notification)
     format_message(notification.exception.message.split("\\n/tmp").first)
   end
-  
+
   def format_backtrace(notification)
     case SpecFormatter.backtrace_format
       when :simple
@@ -31,30 +31,30 @@ class CwRSpecFormatter
         LF_TOKEN + notification.formatted_backtrace.join(LF_TOKEN)
       end
   end
-  
+
   RSpec::Core::Formatters.register self, :example_group_started, :example_group_finished, :example_started, :example_passed, :example_failed, :message
   def example_group_started(notification)
-    @output.puts "<DESCRIBE::>#{format_message(notification.group.description)}"
+    @output.puts "\n<DESCRIBE::>#{format_message(notification.group.description)}"
   end
 
   def example_group_finished(notification)
-    @output.puts "<COMPLETEDIN::>"
+    @output.puts "\n<COMPLETEDIN::>"
   end
 
   def example_started(notification)
-    @output.puts "<IT::>#{format_message(notification.example.description)}"
+    @output.puts "\n<IT::>#{format_message(notification.example.description)}"
   end
   def example_passed(notification)
-    @output.puts "<PASSED::>Test Passed"# + format_message(notification.example.description)
-    @output.puts "<COMPLETEDIN::>"
+    @output.puts "\n<PASSED::>Test Passed"# + format_message(notification.example.description)
+    @output.puts "\n<COMPLETEDIN::>"
   end
   def example_failed(notification)
     if notification.exception.is_a? RSpec::Expectations::ExpectationNotMetError
-      @output.puts "<FAILED::>#{format_exception(notification)}"
+      @output.puts "\n<FAILED::>#{format_exception(notification)}"
     else
-      @output.puts "<ERROR::>#{format_exception(notification)}#{format_backtrace(notification)}"
+      @output.puts "\n<ERROR::>#{format_exception(notification)}#{format_backtrace(notification)}"
     end
-    @output.puts "<COMPLETEDIN::>"
+    @output.puts "\n<COMPLETEDIN::>"
   end
   def message(notification)
     @output.puts format_message(notification.message)
@@ -71,4 +71,3 @@ class SpecFormatter
     @backtrace_format = value
   end
 end
-

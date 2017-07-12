@@ -1,0 +1,77 @@
+cw-2:
+  bug fixes:
+    initial: |-
+      ++++++++++[>+++++++>++++++++++>+++++++++++>+++>+++++++++<<<<<->++.>+.>--.+++.>++.>---.<<.+++.------.<-.>>+
+    answer: |-
+      ++++++++++[>+++++++>++++++++++>+++++++++++>+++>+++++++++<<<<<-]>++.>+.>--..+++.>++.>---.<<.+++.------.<-.>>+.
+    fixture: |-
+      Test.describe("Your Hello World Program", function () {
+        Test.it("should return the string \"Hello World!\"", function () {
+          Test.assertEquals(runBF(), "Hello World!");
+        });
+      });
+  algorithms:
+    initial: |-
+      [
+        TODO: Write a BF program that accepts exactly 2 characters as input,
+        multiplies the ASCII character codes of the two characters and returns
+        the corresponding character
+
+        E.g.
+        Input: byte(9), byte(8)
+        Output: byte(72) - prints out "H"
+      ]
+    answer: |-
+      [
+        TODO: Write a BF program that accepts exactly 2 characters as input,
+        multiplies the ASCII character codes of the two characters and returns
+        the corresponding character
+
+        E.g.
+        Input: byte(9), byte(8)
+        Output: byte(72) - prints out "H"
+      ]
+      ,>,<      Read two bytes of input (byte(a) and byte(b)) from the input stream
+      [         while a is greater than 0
+        -       Decrement a
+        >       Move pointer to b
+        [       while b is greater than 0
+          -     Decrement b
+          >+>+  Move to cells 3 and 4 and increment both cells
+          <<    Go back to cell 2
+        ]       end while
+        >>      Move to cell 4
+        [       while cell 4 greater than 0
+          -     Decrement cell 4
+          <<    Move to cell 2
+          +     Increment cell 2
+          >>    Return to cell 4
+        ]       end while
+        <<<     Return to cell 1
+      ]         end while
+      >>        Goto cell 3 (a * b)
+      .         Output Result
+    fixture: |-
+      Test.describe("Your Multiply Program", function () {
+        Test.it("should work for the example provided in the loop comment", function () {
+          Test.assertEquals(runBF(String.fromCharCode(9, 8)), "H");
+        });
+        Test.it("should work for some fixed tests", function () {
+          Test.assertEquals(runBF(String.fromCharCode(0, 0)), String.fromCharCode(0));
+          Test.assertEquals(runBF(String.fromCharCode(17, 0)), String.fromCharCode(0));
+          Test.assertEquals(runBF(String.fromCharCode(1, 1)), String.fromCharCode(1));
+          Test.assertEquals(runBF(String.fromCharCode(2, 4)), String.fromCharCode(8));
+          Test.assertEquals(runBF(String.fromCharCode(3, 5)), String.fromCharCode(15));
+          Test.assertEquals(runBF(String.fromCharCode(5, 3)), String.fromCharCode(15));
+          Test.assertEquals(runBF(String.fromCharCode(5, 9)), String.fromCharCode(45));
+          Test.assertEquals(runBF(String.fromCharCode(15, 12)), String.fromCharCode(180));
+          Test.assertEquals(runBF(String.fromCharCode(15, 15)), String.fromCharCode(225));
+        });
+        Test.it("should work for some random tests", function () {
+          for (var i = 0; i < 100; i++) {
+            var a = Math.floor(Math.random() * 16); // Random integer from 0 to 15 (inclusive)
+            var b = Math.floor(Math.random() * 16);
+            Test.assertEquals(runBF(String.fromCharCode(a, b)), String.fromCharCode(a * b));
+          }
+        });
+      });

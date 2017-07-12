@@ -5,7 +5,7 @@ node_js:
   - "6"
 
 install:
-  - npm install -g eslint
+  - npm install -g eslint@3.19.0
 
 services:
   - docker
@@ -33,6 +33,7 @@ env:
     - TEST_IMG=objc
     - TEST_IMG=go
     - TEST_IMG=lua
+    - TEST_IMG=esolangs
 
 script:
   - eslint '**/*.js'

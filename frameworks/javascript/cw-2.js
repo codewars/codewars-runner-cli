@@ -1,33 +1,33 @@
 
 try {
   var util = require('util'),
-    deepEquals = require('lodash').isEqual,
-    Promise = require("bluebird");
+      deepEquals = require('lodash').isEqual,
+      Promise = require("bluebird");
 
   require('./chai-display');
 
   var fnToString = Function.toString;
   Function.prototype.toString = function() {
     switch (this) {
-    case Test.expect:
-    case Test.randomNumber:
-    case Test.randomize:
-    case Test.randomToken:
-      return '[Codewars Code]';
+      case Test.expect:
+      case Test.randomNumber:
+      case Test.randomize:
+      case Test.randomToken:
+        return '[Codewars Code]';
 
-    default:
-      return fnToString.call(this);
+      default:
+        return fnToString.call(this);
     }
   };
 
   var describing = [],
-    async = false,
-    asyncIts = null,
-    asyncDone = null,
-    failed = [],
-    beforeCallbacks = [],
-    afterCallbacks = [],
-    alwaysExplain = false;
+      async = false,
+      asyncIts = null,
+      asyncDone = null,
+      failed = [],
+      beforeCallbacks = [],
+      afterCallbacks = [],
+      alwaysExplain = false;
 
   process.on('uncaughtException', function(err) {
     if (async) {
@@ -180,21 +180,21 @@ try {
         });
 
         var start = new Date(),
-          timeout,
-          done = function() {
-            if (timeout) clearTimeout(timeout);
+            timeout,
+            done = function() {
+              if (timeout) clearTimeout(timeout);
 
-            var ms = new Date() - start;
-            Test.display.write("COMPLETEDIN", ms);
+              var ms = new Date() - start;
+              Test.display.write("COMPLETEDIN", ms);
 
-            afterCallbacks.forEach(function(cb) {
-              cb();
-            });
+              afterCallbacks.forEach(function(cb) {
+                cb();
+              });
 
-            done = null;
+              done = null;
 
-            if (asyncIt) describeNext();
-          };
+              if (asyncIt) describeNext();
+            };
 
         if (asyncIt) {
           timeout = setTimeout(function() {

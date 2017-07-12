@@ -10,7 +10,7 @@ that manages the code execution for that specific language environment and retur
 
 ## Contributions
 
-This project has been open-sourced so that the Codewars and Qualified communites can contribute support for new languages and
+This project has been open-sourced so that the Codewars and Qualified communities can contribute support for new languages and
 frameworks. See the [Language Support Status section](#user-content-language-support-status) for more information regarding which languages are currently supported
 and where their Codewars/Qualified support has been added.
 
@@ -245,10 +245,10 @@ Getting different test suites in different languages to all play together with t
 customizing the test suite output is very limited (sometimes requiring hacking). Because of this, using formats such as
 XML and JSON are complicated because its not always possibly to correctly close out the data format when a program raises an exception.
 
-The format choosen was originally done so that at any point in time the program could exit while still having readable data.
+The format chosen was originally done so that at any point in time the program could exit while still having readable data.
 Other formats, such as TAP (Test Anything Protocol) could also be an option. However another requirement that we had when
 designing the format was to have it be incredibly simple yet flexible, so that Codewars.com could support more than simply
-outputing test results. With the current format there is nothing stopping you from outputing HTML, JS canvas code, etc in order
+outputting test results. With the current format there is nothing stopping you from outputting HTML, JS canvas code, etc in order
 to create a rich and even interactive test result output.
 
 
@@ -271,7 +271,7 @@ as a part of the test suite.
 
 ### Runner Script
 
-The runner script is responsible for outputing a `run` method. This method utilizes the shovel helper which will handle
+The runner script is responsible for outputting a `run` method. This method utilizes the shovel helper which will handle
 all of the inter-process communication for you. The shovel config accepts strategies to determine how to handle running
 the code based on the options passed in. There are currently two types of strategies.
 
