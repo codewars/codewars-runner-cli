@@ -1,5 +1,9 @@
 // this file is used to keep a image alive so that it can be pre-warmed and communicated with.
-var net = require('net');
+const net = require('net'),
+      execSync = require('child_process').execSync;
+
+// if the script is available, it will call it
+console.log(execSync('sh /runner/prewarm.sh').toString());
 
 // Creates a new TCP server. The handler argument is automatically set as a listener for the 'connection' event
 var server = net.createServer(function(socket) {

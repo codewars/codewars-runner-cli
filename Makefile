@@ -1,12 +1,8 @@
 HOSTNAME=codewars
 
 # Building erlang images have been suspended (frozen) until they are able to be repaired
-CONTAINERS=node dotnet jvm python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs
 
-# recent containers should be updated when adding or modifying a language, so that
-# the travis build process will test it. The process cant test all languages
-# without timing out so this is required to get passed that issue.
-RECENT_CONTAINERS=esolangs
+CONTAINERS=node dotnet jvm java python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs chapel
 
 ALL_CONTAINERS=${CONTAINERS} base
 
@@ -44,6 +40,7 @@ push:
 	docker push codewars/python-runner
 	docker push codewars/dotnet-runner
 	docker push codewars/jvm-runner
+	docker push codewars/java-runner
 	docker push codewars/haskell-runner
 	docker push codewars/systems-runner
 	docker push codewars/erlang-runner
@@ -62,6 +59,7 @@ pull:
 	docker pull codewars/python-runner
 	docker pull codewars/dotnet-runner
 	docker pull codewars/jvm-runner
+	docker pull codewars/java-runner
 	docker pull codewars/haskell-runner
 	docker pull codewars/systems-runner
 	docker pull codewars/erlang-runner

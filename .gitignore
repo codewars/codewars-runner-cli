@@ -11,6 +11,7 @@ TestFixture.class
 TestFixture.java
 frameworks/java/CwRunListener.class
 frameworks/java/CwTestRunner.class
+frameworks/java/prewarm.status
 .DS_Store
 *~
 target/*
@@ -22,3 +23,7 @@ Dockerfile
 *.hi
 \#*
 frameworks/csharp/extra
+frameworks/java/.gradle
+frameworks/java/4.0
+frameworks/java/build
+frameworks/java/buildOutputCleanup

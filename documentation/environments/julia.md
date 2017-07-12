@@ -1,3 +1,3 @@
 ## Language Versions
 
-Julia 0.4.6 are supported.
+Julia 0.6.0 are supported.

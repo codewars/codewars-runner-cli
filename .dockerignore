@@ -19,3 +19,7 @@ node_modules/*
 docker/*
 .git/
 **/.DS_Store
+frameworks/java/.gradle
+frameworks/java/4.0
+frameworks/java/build
+frameworks/java/buildOutputCleanup

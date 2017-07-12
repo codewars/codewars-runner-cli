@@ -12,16 +12,18 @@ FROM codewars/base-runner
 # Install Node manager so that we can have multiple versions of node
 RUN npm -g install n
 RUN n 0.10.33
-RUN n 6.6.0
-
-# install TypeScript type definitions
-RUN npm install -gq typings
+RUN n 8.1.3
+# 6.x must come last since it's the version for the runner itself
+RUN n 6.11.0
 
 # Install Coffeescript
-RUN npm -g install coffee-script
+RUN npm -g install "coffee-script@^1.12"
+
+# install TypeScript type definitions
+RUN npm install -gq "typings@^2"
 
 # Install TypeScript
-RUN npm -g install typescript
+RUN npm -g install "typescript@^2.4"
 
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json

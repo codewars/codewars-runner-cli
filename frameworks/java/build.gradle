@@ -1,0 +1,51 @@
+plugins {
+  id 'java'
+  id 'groovy'
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile 'junit:junit:4.12'
+  compileOnly 'org.projectlombok:lombok:1.16.18'
+  compile "joda-time:joda-time:2.2"
+  compile 'org.mockito:mockito-core:2.7.19'
+  compile 'com.google.guava:guava:20.0'
+  compile 'org.apache.commons:commons-lang3:3.6'
+  compile 'org.apache.commons:commons-math3:3.6.1'
+  compile 'org.jsoup:jsoup:1.10.3' // jsoup HTML parser library @ https://jsoup.org/
+  compile 'org.dom4j:dom4j:2.0.1' // Flexible XML framework
+  compile 'org.assertj:assertj-core:3.8.0'
+  compile 'org.assertj:assertj-guava:3.1.0'
+  compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.0'
+  compile 'org.hibernate:hibernate-core:5.2.10.Final'
+  compile 'org.mongodb:mongo-java-driver:3.4.2'
+  compile 'org.xerial:sqlite-jdbc:3.19.3'
+  compile 'org.postgresql:postgresql:42.1.1'
+  compile 'org.springframework:spring-orm:4.3.9.RELEASE'
+  compile 'org.springframework.boot:spring-boot-starter-web:1.5.4.RELEASE'
+  compile 'org.springframework.boot:spring-boot-starter-test:1.5.4.RELEASE'
+  compile 'org.springframework.boot:spring-boot-starter-data-mongodb:1.5.4.RELEASE'
+  compile 'org.springframework.boot:spring-boot-starter-data-redis:1.5.4.RELEASE'
+  compile 'org.springframework.boot:spring-boot-starter-data-jpa:1.5.4.RELEASE'
+  compile 'org.springframework.boot:spring-boot-starter-data-rest:1.5.4.RELEASE'
+  compile 'org.springframework.boot:spring-boot-starter-validation:1.5.4.RELEASE'
+}
+
+test {
+  reports {
+    html.enabled = false
+    junitXml.enabled = false
+  }
+  testLogging {
+      // TODO: Refactor so that we use Gradle to customize output, instead of custom test listener
+      // SEE: https://stackoverflow.com/questions/3963708/gradle-how-to-display-test-results-in-the-console-in-real-time
+      // SEE: https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
+      // Show standard streams so that we can parse STDOUT/ERR output.
+      showStandardStreams = true
+      showExceptions = true
+      showStackTraces = true
+  }
+}

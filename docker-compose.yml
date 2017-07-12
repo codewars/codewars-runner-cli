@@ -28,6 +28,17 @@ services:
     entrypoint: ''
     command: bash
 
+  java-runner:
+    image: codewars/java-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+      - ./listen.js:/runner/listen.js
+    entrypoint: ''
+    command: bash
+
   ruby-runner:
     image: codewars/ruby-runner
     volumes:
@@ -243,7 +254,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: 'mocha -t 5000 test/runners/typescript_spec.js'
+    entrypoint: 'mocha -t 10000 test/runners/typescript_spec.js'
 
   python:
     image: codewars/python-runner
@@ -355,7 +366,7 @@ services:
     entrypoint: 'node run -l java'
 
   java_test:
-    image: codewars/jvm-runner
+    image: codewars/java-runner
     environment:
       - NODE_ENV=test
     volumes:
@@ -363,7 +374,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: 'mocha -t 5000 test/runners/java_spec.js'
+    entrypoint: 'mocha -t 15000 test/runners/java_spec.js'
 
   clojure:
     image: codewars/jvm-runner
