@@ -1,10 +1,9 @@
-cw-2:
+xctest:
   algorithms:
     initial: |-
       // return the two oldest/oldest ages within the array of ages passed in.
       // it should return the two ages as a sorted array, youngest age first
-      func twoOldestAges(ages: [Int]) -> [Int] {
-        // TODO: complete
+      func twoOldestAges(ages: [Int]) -> [Int] { // TODO: complete
       }
 
     answer: |-
@@ -21,62 +20,66 @@ cw-2:
           return [nextOldest, oldest]
       }
 
-
     fixture: |-
-      // some example data
-      let results1 = twoOldestAges(ages: [1,5,87,45,8,8])
-      let results2 = twoOldestAges(ages: [6,5,83,5,3,18])
+      import XCTest
 
-      // NOTE: You can use Test or test, whichever you prefer.
+      class TwoOldestAgesTest: XCTestCase {
+          static var allTests = [
+              ("testReturnSecondOldestFirst", testReturnSecondOldestFirst),
+              ("testReturnOldestSecond", testReturnOldestSecond),
+          ]
+          func testReturnSecondOldestFirst() {
+              let r1 = twoOldestAges(ages: [1,5,87,45,8,8])
+              XCTAssertEqual(r1[0], 45)
+              let r2 = twoOldestAges(ages: [6,5,83,5,3,18])
+              XCTAssertEqual(r2[0], 18)
+          }
+          func testReturnOldestSecond() {
+              let r1 = twoOldestAges(ages: [1,5,87,45,8,8])
+              XCTAssertEqual(r1[1], 87)
+              let r2 = twoOldestAges(ages: [6,5,83,5,3,18])
+              XCTAssertEqual(r2[1], 83)
+          }
+      }
 
-      // Use "describe" to label your test suite.
-      Test.describe("twoOldestAges")
-
-      // Use "it" to identify the conditions you are testing for
-      Test.it("should return the second oldest age first")
-      // using assert_equals will report the invalid values to the user
-      Test.assert_equals(results1[0], 45)
-      // using expect will just give a user a generic error message, unless you provide a message
-      Test.expect(results2[0] == 18, "Number is not the second oldest")
-
-      // its best practice to test for multiple groups of tests, using it calls.
-      Test.it("should return the oldest age last")
-
-      Test.assert_equals(results1[1], 87)
-      Test.expect(results2[1] == 83, "Number is not the oldest")
+      _XCTMain([
+          testCase(TwoOldestAgesTest.allTests)
+      ])
 
   bug fixes:
     initial: |-
-      func add(a: Int, b: Int) -> Int {
+      func add(_ a: Int, _ b: Int) -> Int {
           a + b
       }
 
     answer: |-
-      func add(a: Int, b: Int) -> Int {
+      func add(_ a: Int, _ b: Int) -> Int {
           return a + b
       }
 
     fixture: |-
-      // Use "describe" to define the test suite
-      Test.describe("add method")
+      import XCTest
 
-      // Use "it" to indicate a condition you are testing for
-      Test.it("should add both arguments and return")
+      class AddTest: XCTestCase {
+          static var allTests = [
+              ("testAdd", testAdd),
+          ]
+          func testAdd() {
+              XCTAssertEqual(add(1, 1), 2)
+          }
+      }
 
-      // "assert_equals" will return information about what values were
-      // expect if the assertion fails. This can be very useful to other
-      // users trying to pass the kata.
-      Test.assert_equals(add(a:1,b:2), 3)
+      _XCTMain([
+          testCase(AddTest.allTests)
+      ])
 
-      // "expect" is a lower level assertion that will allow you to test
-      // anything. It just needs a boolean result. You should pass a message
-      // as the second parameter so that if the assertion fails the user
-      // will be giving some useful information.
-      Test.expect(add(a:1,b:1) == 2, "add(a:1,b:1) should == 2")
 
   refactoring:
     initial: |-
       // refactor this method into a Person class with its own greet method
+      // let p = Person("foo")
+      // p.name == "foo"
+      // p.greet("bar") == "Hello bar, my name is foo"
       func greet(other: String, name: String) -> String {
           return "Hello \(other), my name is \(name)"
       }
@@ -84,39 +87,35 @@ cw-2:
     answer: |-
       class Person {
           let name: String
-          init(name: String) {
+          init(_ name: String) {
               self.name = name
           }
-          func greet(other: String) -> String {
+          func greet(_ other: String) -> String {
               return "Hello \(other), my name is \(self.name)"
           }
       }
 
     fixture: |-
-      // Use "describe" to define the test suite
-      Test.describe("Person")
+      import XCTest
+      class PersonTest: XCTestCase {
+          static var allTests = [
+              ("testName", testName),
+              ("testGreet", testGreet),
+          ]
+          func testName() {
+              let jack = Person("Jack")
+              XCTAssertEqual(jack.name, "Jack")
+          }
+          func testGreet() {
+              let jack = Person("Jack")
+              XCTAssertEqual(jack.greet("Jill"), "Hello Jill, my name is Jack")
+              XCTAssertEqual(jack.greet("Jane"), "Hello Jane, my name is Jack")
+          }
+      }
 
-      let jack = Person(name: "Jack")
-
-      // Use "it" to indicate a condition you are testing for
-      Test.it("should have a name")
-
-      // "assert_equals" will return information about what values were
-      // expected if the assertion fails. This can be very useful to other
-      // users trying to pass the kata.
-      Test.assert_equals(jack.name, "Jack")
-
-      Test.it("should greet Jill")
-
-      Test.assert_equals(jack.greet(other: "Jill"), "Hello Jill, my name is Jack")
-
-      Test.it("should greet other people as well")
-
-      // unlike "assert_equals", "expect" is a lower level assertion that
-      // takes a boolean to determine if it passes. If it fails it will
-      // output the message that you give it, or a generic one. It is a good
-      // idea to provide a custom error message to help users pass the kata
-      Test.expect(jack.greet(other: "Jane") == "Hello Jane, my name is Jack", "Jack apparently is only able to greet Jane")
+      _XCTMain([
+          testCase(PersonTest.allTests)
+      ])
 
   reference:
     initial: |-
@@ -126,61 +125,17 @@ cw-2:
       let websites = ["codewars"]
 
     fixture: |-
-      // Use test.describe (or Test.describe) to describe your test suite
-      Test.describe("websites")
-
-      // Use "it" calls to describe the specific test case
-      Test.it("should have the value 'codewars' inside of it")
-
-      // assert equals will pass if both items equal each other (using ==). If
-      // the test fails, assert_equals will output a descriptive message indicating
-      // what the values were expected to be.
-      Test.assert_equals(["codewars"], websites)
-
-      // you can also use the lower level test.expect. If you use test.expect directly then
-      // you should provide a custom error message, as the default one will be pretty useless
-      // to users trying to pass the kata.
-      Test.expect(["codewars"] == websites, "Array does not have correct value")
-xctest:
-  reference:
-    initial: |-
-      class Person {
-          let name: String
-
-          init(_ name: String) {
-              // TODO: Program Constructor
-          }
-
-          func greet(_ other: String) -> String {
-              // TODO: Write a greeting string
-          }
-      }
-
-    answer: |-
-      class Person {
-          let name: String
-
-          init(_ name: String) {
-              self.name = name
-          }
-
-          func greet(_ other: String) -> String {
-              return "Hello, \(other), I am \(name), it's nice to meet you!"
-          }
-      }
-
-    fixture: |-
       import XCTest
 
-      class PersonTest: XCTestCase {
+      class WebsitesTest: XCTestCase {
           static var allTests = [
-              ("testGreet", testGreet),
+              ("testDefined", testDefined),
           ]
-          func testGreet() {
-              let person = Person("Jorge")
-              XCTAssertEqual(person.greet("Aditya"), "Hello, Aditya, I am Jorge, it's nice to meet you!")
+          func testDefined() {
+              XCTAssertEqual(websites[0], "codewars")
           }
-      } 
-      XCTMain([
-          testCase(PersonTest.allTests)
+      }
+
+      _XCTMain([
+          testCase(WebsitesTest.allTests)
       ])
