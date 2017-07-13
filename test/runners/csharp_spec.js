@@ -98,5 +98,33 @@ describe('c# runner', function() {
         done();
       });
     });
+
+
+    it('should have output format commands on independent lines', function(done) {
+      runner.run({
+        language: 'csharp',
+        solution: [
+          'public class Solution {}',
+        ].join('\n'),
+        fixture: [
+          `using System;`,
+          `using NUnit.Framework;`,
+          ``,
+          `[TestFixture]`,
+          `public class KataTestClass`,
+          `{`,
+          `    [Test]`,
+          `    public void Test()`,
+          `    {`,
+          `        Console.Write("foobar");`,
+          `        Assert.AreEqual(true, false);`,
+          `    }`,
+          `}`,
+        ].join('\n')
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain("\n<FAILED::>");
+        done();
+      });
+    });
   });
 });

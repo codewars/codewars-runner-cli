@@ -49,7 +49,7 @@ namespace NUnit.ConsoleRunner
 
 		public static void Write(string type, string message, string label = "", string mode = "")
 		{
-			string line = String.Format("<{0}:{1}:{2}>{3}", type.ToUpper(), mode, label, FormatMessage(message));
+			string line = String.Format("\n<{0}:{1}:{2}>{3}", type.ToUpper(), mode, label, FormatMessage(message));
 			Console.WriteLine(line);
 		}
 
@@ -66,4 +66,3 @@ namespace NUnit.ConsoleRunner
 		}
 	}
 }
-
