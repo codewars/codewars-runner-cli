@@ -39,4 +39,9 @@ env:
 
 script:
   - eslint '**/*.js'
-  - make $TEST_IMG
+  - cp docker/${TEST_IMG}.docker ./Dockerfile
+  - if docker pull codewars/${TEST_IMG}-runner; then
+      docker build --cache-from codewars/${TEST_IMG}-runner -t codewars/${TEST_IMG}-runner .;
+    else
+      docker build -t codewars/${TEST_IMG}-runner .;
+    fi
