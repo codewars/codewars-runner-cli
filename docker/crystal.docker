@@ -44,3 +44,5 @@ ADD frameworks/crystal/formatter.cr /home/codewarrior/crystal/formatter.cr
 USER codewarrior
 
 RUN mocha -t 10000 test/runners/crystal_spec.js
+
+ENTRYPOINT ["node"]

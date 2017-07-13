@@ -26,3 +26,5 @@ RUN ln -s /home/codewarrior /workspace
 USER codewarrior
 
 RUN mocha -t 10000 test/runners/rust_spec.js
+
+ENTRYPOINT ["node"]

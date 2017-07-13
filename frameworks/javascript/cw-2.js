@@ -256,18 +256,18 @@ try {
     // additional code is injected and line numbers will not match.
     trace: function(ex) {
       return (ex.stack || ex.toString() || '')
-                .toString()
-                // remove file names (ie: (/cli-runner/...))
-                .replace(/\s\(.*\)/g, '')
-                // remove at [eval] statements
-                .replace(/(at)*( Object.)*\s*[(]?\[eval\].*(:\d*)*[)]?\n/g, '')
-                // remove stack trace beyond the Module information
-                .replace(/at Module[\w\s.:\d\n]*/g, '')
-                // remove at Object.<anonymous>
-                .replace(/\t*at Object.<\w*>\n/g, '')
-                // handleError is used to wrap top level code, so lets remove it so that it doesn't
-                // confuse users who won't understand why it is there.
-                .replace('at Object.Test.handleError', '');
+        .toString()
+        // remove file names (ie: (/cli-runner/...))
+        .replace(/\s\(.*\)/g, '')
+        // remove at [eval] statements
+        .replace(/(at)*( Object.)*\s*[(]?\[eval\].*(:\d*)*[)]?\n/g, '')
+        // remove stack trace beyond the Module information
+        .replace(/at Module[\w\s.:\d\n]*/g, '')
+        // remove at Object.<anonymous>
+        .replace(/\t*at Object.<\w*>\n/g, '')
+        // handleError is used to wrap top level code, so lets remove it so that it doesn't
+        // confuse users who won't understand why it is there.
+        .replace('at Object.Test.handleError', '');
     },
     pass: function() {
       _expect(true);
