@@ -1,60 +1,61 @@
-# EXAMPLE USAGE:  docker run --privileged --rm codewars/swift-runner run -l swift -c "print(1+1)"
-
-# Pull base image.
+# EXAMPLE USAGE:  docker run --rm codewars/swift-runner run -l swift -c "print(1+1)"
 FROM codewars/base-runner
 
-# Optionally mount '/swift-vol' on ephemeral storage vol for faster
-# installing of packages, compiling, etc.
-env SWIFT_VOL /swift-vol
-env SWIFT_GEN_DIR $SWIFT_VOL/swift-gen
-env SWIFT_SOURCE_DIR $SWIFT_VOL/swift-source
+# Based on https://github.com/swiftdocker/docker-swift/blob/master/Dockerfile
+RUN apt-get -q update && \
+    apt-get -q install -y --no-install-recommends \
+    clang-3.6 \
+    curl \
+    git \
+    libc6-dev \
+    libedit-dev \
+    libicu-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libxml2 \
+    pkg-config \
+    python2.7 \
+    python2.7-dev \
+    make \
+    && update-alternatives --quiet --install /usr/bin/clang clang /usr/bin/clang-3.6 100 \
+    && update-alternatives --quiet --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 100 \
+    && rm -r /var/lib/apt/lists/*
 
-# Install required dependencies for building Swift.
-# See https://github.com/apple/swift
-RUN apt-get update
-RUN apt-get -y upgrade
-RUN apt-get install -y curl rsync cmake git ninja-build clang python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev
-
-# Install cmake (Cmake version must be at least 3.4.3)
-RUN wget http://www.cmake.org/files/v3.5/cmake-3.5.2.tar.gz
-RUN tar xzf cmake-3.5.2.tar.gz
-RUN cd cmake-3.5.2 && ./configure && make && sudo make install
-RUN sudo rm -f /usr/bin/cmake
-RUN sudo ln -s /usr/local/bin/cmake /usr/bin/cmake
-
-# Install clang
-RUN apt-get install -y clang-3.6
-RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 100
-RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 100
-
-# Downalod all Swift related Git repos.
-# See https://github.com/apple/swift
-WORKDIR $SWIFT_SOURCE_DIR
-RUN git clone https://github.com/apple/swift.git && ./swift/utils/update-checkout --clone
-RUN git clone https://github.com/ninja-build/ninja.git && cd ninja && git checkout release
-
-# Copy our custom codewars standard output files to the swift-corelibs-xctest directory.
-COPY frameworks/swift/xctest/PrintObserver.swift $SWIFT_SOURCE_DIR/swift-corelibs-xctest/Sources/XCTest/Private/PrintObserver.swift
-COPY frameworks/swift/xctest/XCTAssert.swift $SWIFT_SOURCE_DIR/swift-corelibs-xctest/Sources/XCTest/Public/XCTAssert.swift
-
-# Copy our custom build-presets file to the swift directory.
-COPY frameworks/swift/xctest/codewars-build-presets.ini $SWIFT_SOURCE_DIR/swift/codewars-build-presets.ini
-
-# Build Swift
-WORKDIR $SWIFT_SOURCE_DIR/swift
-RUN utils/build-script --preset-file=codewars-build-presets.ini --preset=codewars_linux_1404 install_destdir=$SWIFT_GEN_DIR installable_package=$SWIFT_GEN_DIR/swift.tar.gz
-env PATH $SWIFT_GEN_DIR/usr/bin:$PATH
-
-# Remove swift source code to save space on the image.
-RUN rm -rf $SWIFT_SOURCE_DIR/*
-
-# Change permissions so we maybe don't have to use the --privileged docker run flag.
-RUN chmod -R a+rx $SWIFT_VOL/*
+RUN set -ex \
+   && export GNUPGHOME="$(mktemp -d)" \
+   && \
+     for key in \
+       # pub   4096R/412B37AD 2015-11-19 [expires: 2017-11-18]
+       #       Key fingerprint = 7463 A81A 4B2E EA1B 551F  FBCF D441 C977 412B 37AD
+       # uid                  Swift Automatic Signing Key #1 <swift-infrastructure@swift.org>
+       7463A81A4B2EEA1B551FFBCFD441C977412B37AD \
+       # pub   4096R/21A56D5F 2015-11-28 [expires: 2017-11-27]
+       #       Key fingerprint = 1BE1 E29A 084C B305 F397  D62A 9F59 7F4D 21A5 6D5F
+       # uid                  Swift 2.2 Release Signing Key <swift-infrastructure@swift.org>
+       1BE1E29A084CB305F397D62A9F597F4D21A56D5F \
+       # pub   4096R/91D306C6 2016-05-31 [expires: 2018-05-31]
+       #       Key fingerprint = A3BA FD35 56A5 9079 C068  94BD 63BC 1CFE 91D3 06C6
+       # uid                  Swift 3.x Release Signing Key <swift-infrastructure@swift.org>
+       A3BAFD3556A59079C06894BD63BC1CFE91D306C6 \
+     ; do \
+       gpg --quiet --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+     done \
+   && cd /tmp \
+   && curl -fSsL https://swift.org/builds/swift-3.1.1-release/ubuntu1404/swift-3.1.1-RELEASE/swift-3.1.1-RELEASE-ubuntu14.04.tar.gz -o swift.tar.gz \
+   && curl -fSsL https://swift.org/builds/swift-3.1.1-release/ubuntu1404/swift-3.1.1-RELEASE/swift-3.1.1-RELEASE-ubuntu14.04.tar.gz.sig -o swift.tar.gz.sig \
+   && gpg --batch --verify --quiet swift.tar.gz.sig swift.tar.gz \
+   && tar -xzf swift.tar.gz --directory / --strip-components=1 \
+   && rm -r "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz \
+   && rm -rf /var/lib/apt/lists/* \
+   && chmod -R o+r /usr/lib/swift
 
 # Add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+COPY package.json /tmp/package.json
+WORKDIR /tmp
+RUN npm install --production \
+  && mkdir -p /runner \
+  && cp -a /tmp/node_modules /runner \
+  && rm -rf /tmp/node_modules
 
 # ADD cli-runner and install node deps
 ADD . /runner
@@ -62,13 +63,11 @@ ADD . /runner
 WORKDIR /runner
 RUN ln -s /home/codewarrior /workspace
 
-# Run the test suite to make sure this thing works
-
 USER codewarrior
-
 # Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+
+# Run the test suite to make sure this thing works
 RUN mocha -t 5000 test/runners/swift_spec.js
 
 # timeout is a fallback in case an error with node

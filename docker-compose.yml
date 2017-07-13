@@ -213,15 +213,6 @@ services:
     command: bash
 
   # LANGUAGE SPECIFIC HELPERS
-  javascript:
-    image: codewars/node-runner
-    volumes:
-      - ./lib:/runner/lib
-      - ./examples:/runner/examples
-      - ./frameworks:/runner/frameworks
-      - ./test:/runner/test
-    entrypoint: 'node run -l javascript'
-
   javascript_test:
     image: codewars/node-runner
     environment:
