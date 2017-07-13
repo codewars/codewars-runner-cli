@@ -202,6 +202,16 @@ services:
     entrypoint: ''
     command: bash
 
+  esolangs-runner:
+    image: codewars/esolangs-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript:
     image: codewars/node-runner
