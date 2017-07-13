@@ -4,9 +4,6 @@ language: node_js
 node_js:
   - "6"
 
-before_install:
-  - sudo apt-get update && sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
-  - docker --version
 install:
   - npm install -g eslint@3.19.0
 
