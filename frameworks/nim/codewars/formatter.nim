@@ -42,9 +42,9 @@ method testEnded*(f: CodewarsOutputFormatter, testResult: TestResult) =
   let ms = (epochTime() - f.testStartTime)*1000
   case testResult.status:
   of OK:
-    echo("\n<PASSED::>OK")
+    echo("\n<PASSED::>Test Passed")
   of SKIPPED:
-    echo("\n<LOG::>Skipped")
+    echo("\n<LOG::>Test Skipped")
   of FAILED:
     # TODO: stack trace. borrowing JUnitOutputFormatter's for now
     let failureMsg = if f.testStackTrace.len > 0 and f.testErrors.len > 0:
@@ -52,7 +52,7 @@ method testEnded*(f: CodewarsOutputFormatter, testResult: TestResult) =
                      elif f.testErrors.len > 0:
                        f.testErrors[0]
                      else:
-                       "Unknown failure"
+                       "Test Failed"
     var errs = ""
     if f.testErrors.len > 1:
       let startIdx = if f.testStackTrace.len > 0: 0 else: 1

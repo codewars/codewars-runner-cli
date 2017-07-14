@@ -13,6 +13,20 @@ describe('nim runner', function() {
     });
   });
 
+  it('should support setup file', function(done) {
+    runner.run({
+      language: 'nim',
+      setup: 'proc add*(a, b: int): int = a + b',
+      solution: [
+        `import setup`,
+        `echo add(1, 1)`
+      ].join('\n')
+    }, function(buffer) {
+      expect(buffer.stdout).to.equal('2\n');
+      done();
+    });
+  });
+
 
   it('should handle basic assertion', function(done) {
     runner.run({
@@ -30,7 +44,7 @@ describe('nim runner', function() {
         '    check(add(1, 1) == 2)',
       ].join('\n'),
     }, function(buffer) {
-      expect(buffer.stdout).to.contain('<PASSED::>');
+      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
       done();
     });
   });
@@ -75,7 +89,7 @@ describe('nim runner', function() {
         '    check(sub(1, 1) == 0)',
       ].join('\n'),
     }, function(buffer) {
-      expect(buffer.stdout).to.contain('<PASSED::>');
+      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
       expect(buffer.stdout).to.contain('<FAILED::>');
       done();
     });
@@ -101,7 +115,7 @@ describe('nim runner', function() {
         '      add(1, 4) == 5',
       ].join('\n'),
     }, function(buffer) {
-      expect(buffer.stdout).to.contain('<PASSED::>');
+      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
       done();
     });
   });
@@ -123,7 +137,7 @@ describe('nim runner', function() {
         '      discard v[4]',
       ].join('\n'),
     }, function(buffer) {
-      expect(buffer.stdout).to.contain('<PASSED::>');
+      expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
       done();
     });
   });
@@ -132,4 +146,3 @@ describe('nim runner', function() {
 describe('Examples', function() {
   runner.assertCodeExamples('nim');
 });
-
