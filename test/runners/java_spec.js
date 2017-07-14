@@ -249,6 +249,40 @@ describe('java runner', function() {
     });
   });
 
+  describe('compiler warnings as STDERR messages', function() {
+    it('should handle unchecked or unsafe operations', function(done) {
+      runner.run({
+        language: 'java',
+        code: `
+          import java.util.ArrayList;
+
+          public class Example {
+          
+              public static String[] dirReduc(String[] arr) {
+                  ArrayList<String> result = new ArrayList();
+                  return result.toArray(new String[result.size()]);
+              }
+          }
+        `,
+        fixture: `
+          import org.junit.Test;
+          import static org.junit.Assert.assertEquals;
+          
+          public class ExampleTest {
+            @Test
+            public void testRandomDirReduc() throws Exception {
+              assertEquals("I always pass!", 1, 1);
+            }
+          }`
+      }, function(buffer) {
+        console.log(`|${buffer.stderr}|`);
+        expect(buffer.stderr).to.equal('');
+        done();
+      });
+
+    });
+  });
+
   describe('spring', function() {
     it('should handle basic junit tests', function(done) {
       runner.run({
