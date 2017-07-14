@@ -536,6 +536,29 @@ describe('haskell runner', function() {
         done();
       });
     });
+
+    it('should not warn when tabs are used (Codewars/codewars.com#700)', function(done) {
+      runner.run({
+        language: 'haskell',
+        code: 'module Foo where',
+        fixture: [
+          'module Basic.Test where',
+          'import Test.Hspec',
+          'main :: IO ()',
+          'main = hspec $ do',
+          '\tdescribe "Prelude.head" $ do',
+          '\t\tit "returns the first element of a list" $ do',
+          '\t\t\thead [23 ..] `shouldBe` (23 :: Int)'
+        ].join('\n')
+      }, function(buffer) {
+        console.log(buffer);
+        expect(buffer.stderr).to.equal('');
+        expect(buffer.stdout).to.contain('<DESCRIBE::>Prelude.head');
+        expect(buffer.stdout).to.contain('<IT::>returns the first element of a list');
+        expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+        done();
+      });
+    });
   });
   describe('haskell', function() {
     it('can handle SQLite interaction', function(done) {
