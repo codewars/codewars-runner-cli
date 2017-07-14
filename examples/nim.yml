@@ -1,4 +1,31 @@
 unittest:
+  algorithms:
+    initial: |-
+      proc two_oldest_ages*(ages: seq[int]): array[2,int]
+
+    answer: |-
+      proc two_oldest_ages*(ages: seq[int]): array[2,int] =
+        var a = 0
+        var b = 0
+        for age in ages:
+          if age > b:
+            a = b
+            b = age
+          elif age > a:
+            a = age
+        return [a, b]
+
+    fixture: |-
+      import unittest, codewars/formatter
+      import solution
+      addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
+
+      suite "two oldest ages":
+        test "returns two oldest ages @[1,5,87,45,8,8]":
+          check(two_oldest_ages(@[1,5,87,45,8,8]) == [45, 87])
+        test "returns two oldest ages @[6,5,83,5,3,18]":
+          check(two_oldest_ages(@[6,5,83,5,3,18]) == [18, 83])
+
   fundamentals:
     initial: |-
       var websites*: seq[string]
@@ -8,9 +35,11 @@ unittest:
       import unittest, codewars/formatter
       import solution
       addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
+
       suite "fundamentals":
         test "codewars":
           check(websites == @["codewars"])
+
   bug fixes:
     initial: |-
       proc add*(a, b: int): int =
@@ -21,6 +50,7 @@ unittest:
       import unittest, codewars/formatter
       import solution
       addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
+
       suite "add":
         test "1 + 1 = 2":
           check(add(1, 1) == 2)

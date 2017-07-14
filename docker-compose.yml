@@ -207,7 +207,7 @@ services:
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
-      - ./frameworks/nim/codewars:/home/codewarrior/codewars
+      - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: ''
     command: bash
@@ -703,7 +703,7 @@ services:
     image: codewars/nim-runner
     volumes:
       - ./lib:/runner/lib
-      - ./frameworks/nim/codewars:/home/codewarrior/codewars
+      - ./frameworks:/runner/frameworks
     entrypoint: 'node run -l nim'
 
   nim_test:
@@ -711,6 +711,6 @@ services:
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
-      - ./frameworks/nim/codewars:/home/codewarrior/codewars
+      - ./frameworks:/runner/frameworks
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/nim_spec.js'

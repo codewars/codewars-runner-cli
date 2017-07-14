@@ -1,38 +1,44 @@
 FROM codewars/base-runner
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get -q update \
+ && apt-get -q install -y --no-install-recommends gcc \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV NIM_VERSION=0.17.0 CSOURCES_VERSION=0.17.0
+RUN set -ex \
+ && cd /tmp \
+ && curl -fsSL "https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz" -o nim.tar.gz \
+ && mkdir -p /opt/nim \
+ && tar zxf nim.tar.gz -C /opt/nim --strip-components=1 \
+ && rm nim.tar.gz \
+ && cd /opt/nim \
+ && curl -fsSL "https://github.com/nim-lang/csources/archive/v$CSOURCES_VERSION.tar.gz" -o csources.tar.gz \
+ && mkdir csources \
+ && tar zxf csources.tar.gz -C csources --strip-components=1 \
+ && rm csources.tar.gz \
+ && cd csources \
+ && sh build.sh \
+ && cd ../ \
+ && ./bin/nim c koch \
+ && ./koch boot -d:release \
+ && rm -rf ./ci ./csources ./icons ./tests ./web \
+ && chmod -R 755 /opt/nim
 
 ENV NPM_CONFIG_LOGLEVEL=warn
 COPY package.json /tmp/package.json
 WORKDIR /tmp
-RUN npm install --production && mkdir -p /runner && cp -a /tmp/node_modules /runner
-RUN ln -s /home/codewarrior /workspace
+RUN npm install --production \
+ && mkdir -p /runner \
+ && cp -a /tmp/node_modules /runner \
+ && rm -rf /tmp/node_modules
 
-ENV NIM_VERSION=0.17.0 CSOURCES_VERSION=0.17.0
-RUN cd /home/codewarrior && \
-    curl -fsSL "https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz" | tar xz && \
-    mv "./Nim-$NIM_VERSION" ./Nim && \
-    cd ./Nim && \
-    curl -fsSL "https://github.com/nim-lang/csources/archive/v$CSOURCES_VERSION.tar.gz" | tar xz && \
-    mv "./csources-$CSOURCES_VERSION" ./csources && \
-    cd ./csources && \
-    sh build.sh && \
-    cd ../ && \
-    ./bin/nim c koch && \
-    ./koch boot -d:release && \
-    rm -rf ./ci ./csources ./icons ./tests ./web && \
-    chown -R codewarrior:codewarrior /home/codewarrior/Nim
 
-COPY frameworks/nim/codewars /home/codewarrior/codewars
-RUN chown -R codewarrior:codewarrior /home/codewarrior/codewars
-
-USER codewarrior
-ENV USER=codewarrior HOME=/home/codewarrior PATH=/home/codewarrior/Nim/bin:$PATH
 
 COPY . /runner
 WORKDIR /runner
 
+RUN ln -s /home/codewarrior /workspace
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior PATH=/opt/nim/bin:$PATH
 RUN mocha -t 5000 test/runners/nim_spec.js
-ENTRYPOINT ["timeout", "17", "node"]
+ENTRYPOINT ["node"]
