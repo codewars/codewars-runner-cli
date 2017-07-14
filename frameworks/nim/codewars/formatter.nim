@@ -67,7 +67,7 @@ method testEnded*(f: CodewarsOutputFormatter, testResult: TestResult) =
         echo("\n<LOG:ESC:Error>" & escapeLF(removePrefix(failureMsg & "\n" & errs)))
       else:
         echo("\n<LOG:ESC:Error>" & escapeLF(removePrefix(failureMsg)))
-      echo("\n<TAB::Stack Trace>" & escapeLF(f.testStackTrace))
+      echo("\n<TAB::Traceback>" & escapeLF(f.testStackTrace))
     else:
       echo("\n<FAILED::>" & escapeLF(removePrefix(failureMsg)))
       if errs.len > 0: echo("\n<LOG:ESC:Failure>" & escapeLF(errs))

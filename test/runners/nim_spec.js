@@ -141,6 +141,32 @@ describe('nim runner', function() {
       done();
     });
   });
+
+  it('should handle errors', function(done) {
+    runner.run({
+      language: 'nim',
+      solution: [
+        'proc foo*(x, y: int): int =',
+        '  if x != y:',
+        '    raise newException(Exception, "x != y")',
+        '  return x + y',
+      ].join('\n'),
+      fixture: [
+        'import unittest, codewars/formatter',
+        'import solution',
+        'addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))',
+        '',
+        'suite "foo":',
+        '  test "err":',
+        '    check(foo(1, 0) == 1)',
+      ].join('\n'),
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<ERROR::>');
+      expect(buffer.stdout).to.contain('<LOG:ESC:Error>x != y');
+      expect(buffer.stdout).to.contain('<TAB::Traceback>');
+      done();
+    });
+  });
 });
 
 describe('Examples', function() {
