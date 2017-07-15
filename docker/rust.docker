@@ -1,28 +1,38 @@
 FROM codewars/base-runner
 
-# Install Rust Compiler
-RUN curl -sSf https://static.rust-lang.org/rustup.sh | sh
+# Install Rust v1.15.1 to /usr/local
+RUN set -ex \
+ && cd /tmp \
+ && curl -fSsL https://static.rust-lang.org/dist/2017-02-08/rust-1.15.1-x86_64-unknown-linux-gnu.tar.gz -o rust.tar.gz \
+ && echo "0c9318044a6adffda349a1aa82079f031f1fe500578a5eebba5bfd49c54a8f84 *rust.tar.gz" | sha256sum -c - \
+ && mkdir -p /tmp/rust \
+ && tar xzf rust.tar.gz -C /tmp/rust --strip-components=1 \
+ && rm rust.tar.gz \
+ && cd /tmp/rust \
+ && ./install.sh \
+ && rm -rf /tmp/rust
 
 # Setup env
 ENV USER codewarrior
 ENV HOME /home/codewarrior
+ENV NPM_CONFIG_LOGLEVEL warn
 
 # Copy package json to tmp
 ADD package.json /tmp/package.json
 
-# Do npm install in tmp and setup cargo dir
-RUN \
-  cd /tmp && npm install --production && \
-  mkdir -p /runner && cp -a /tmp/node_modules /runner
+# Do npm install in tmp
+RUN cd /tmp \
+ && npm install --production \
+ && mkdir -p /runner \
+ && cp -a /tmp/node_modules /runner \
+ && rm -rf /tmp/node_modules /tmp/package.json
 
 # ADD cli-runner
 ADD . /runner
 
-# Working dir is /runner
 WORKDIR /runner
 RUN ln -s /home/codewarrior /workspace
 
-# Codewarrior...
 USER codewarrior
 
 RUN mocha -t 10000 test/runners/rust_spec.js
