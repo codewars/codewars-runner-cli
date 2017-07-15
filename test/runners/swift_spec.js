@@ -73,7 +73,7 @@ describe('swift runner', function() {
                               }
                             }
 
-                            _XCTMain([
+                            XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
                         `,
@@ -113,7 +113,7 @@ describe('swift runner', function() {
                               }
                             }
 
-                            _XCTMain([
+                            XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
                         `,
@@ -174,7 +174,7 @@ describe('swift runner', function() {
                               }
                             }
 
-                            _XCTMain([
+                            XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
                         `,
@@ -227,7 +227,7 @@ describe('swift runner', function() {
                               }
                             }
 
-                            _XCTMain([
+                            XCTMain([
                                 testCase(CalculatorTest.allTests)
                             ])
                         `,
@@ -274,7 +274,7 @@ describe('swift runner', function() {
                               }
                             }
 
-                            _XCTMain([
+                            XCTMain([
                                 testCase(GreetingsTest.allTests)
                             ])
                         `,
@@ -332,7 +332,7 @@ describe('swift runner', function() {
                                 }
                             }
 
-                            _XCTMain([
+                            XCTMain([
                                 testCase(CalculatorTest.allTests),
                                 testCase(PersonTest.allTests),
                             ])
