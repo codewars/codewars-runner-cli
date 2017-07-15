@@ -1,15 +1,14 @@
 FROM codewars/base-runner
 
 # Setup env
-ENV USER codewarrior
-ENV HOME /home/codewarrior
-ENV NPM_CONFIG_LOGLEVEL warn
-ENV PATH $HOME/.cargo/bin:$PATH
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 
 # Install rustup with the Rust v1.15.1 toolchain
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.15.1 \
- && echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.15.1
 
+USER root
+ENV NPM_CONFIG_LOGLEVEL warn
 # Copy package json to tmp
 ADD package.json /tmp/package.json
 
@@ -27,6 +26,9 @@ WORKDIR /runner
 RUN ln -s /home/codewarrior /workspace
 
 USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+# ~/.cargo/env
+ENV PATH $HOME/.cargo/bin:$PATH
 
 RUN mocha -t 10000 test/runners/rust_spec.js
 
