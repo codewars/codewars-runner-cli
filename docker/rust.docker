@@ -1,21 +1,14 @@
 FROM codewars/base-runner
 
-# Install Rust v1.15.1 to /usr/local
-RUN set -ex \
- && cd /tmp \
- && curl -fSsL https://static.rust-lang.org/dist/2017-02-08/rust-1.15.1-x86_64-unknown-linux-gnu.tar.gz -o rust.tar.gz \
- && echo "0c9318044a6adffda349a1aa82079f031f1fe500578a5eebba5bfd49c54a8f84 *rust.tar.gz" | sha256sum -c - \
- && mkdir -p /tmp/rust \
- && tar xzf rust.tar.gz -C /tmp/rust --strip-components=1 \
- && rm rust.tar.gz \
- && cd /tmp/rust \
- && ./install.sh \
- && rm -rf /tmp/rust
-
 # Setup env
 ENV USER codewarrior
 ENV HOME /home/codewarrior
 ENV NPM_CONFIG_LOGLEVEL warn
+ENV PATH $HOME/.cargo/bin:$PATH
+
+# Install rustup with the Rust v1.15.1 toolchain
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.15.1 \
+ && echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
 
 # Copy package json to tmp
 ADD package.json /tmp/package.json
