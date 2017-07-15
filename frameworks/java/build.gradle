@@ -34,6 +34,12 @@ dependencies {
   compile 'org.springframework.boot:spring-boot-starter-validation:1.5.4.RELEASE'
 }
 
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 test {
   reports {
     html.enabled = false
