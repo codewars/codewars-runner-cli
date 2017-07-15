@@ -87,6 +87,41 @@ describe('swift runner', function() {
       });
     });
 
+    it('should allow whitespace in "XCTMain ("', function(done) {
+      var code = `
+                    func add(_ a: Int, _ b: Int) -> Int {
+                      return a + b
+                    }
+                `;
+      runner.run({
+        language: 'swift',
+        languageVersion: '3',
+        code: code,
+        fixture: `
+                            import XCTest
+                            class AddTest: XCTestCase {
+                              static var allTests = [
+                                    ("testAddCheck", testAddCheck),
+                              ]
+                              func testAddCheck() {
+                                XCTAssertEqual(add(1, 1), 2, "add(1, 1) should be 2")
+                              }
+                            }
+
+                            XCTMain  ([
+                                testCase(AddTest.allTests)
+                            ])
+                        `,
+        testFramework: 'xctest'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<DESCRIBE::>AddTest');
+        expect(buffer.stdout).to.contain('<IT::>testAddCheck');
+        expect(buffer.stdout).to.contain('<PASSED::>Test Passed');
+        expect(buffer.stdout).to.contain('<COMPLETEDIN::>');
+        done();
+      });
+    });
+
     it('should replace newlines in error messages with <:LF:>', function(done) {
       var code = `
                     class Calculator {
