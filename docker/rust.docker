@@ -1,29 +1,34 @@
 FROM codewars/base-runner
 
-# Install Rust Compiler
-RUN curl -sSf https://static.rust-lang.org/rustup.sh | sh
-
 # Setup env
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 
+# Install rustup with the Rust v1.15.1 toolchain
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.15.1
+
+USER root
+ENV NPM_CONFIG_LOGLEVEL warn
 # Copy package json to tmp
 ADD package.json /tmp/package.json
 
-# Do npm install in tmp and setup cargo dir
-RUN \
-  cd /tmp && npm install --production && \
-  mkdir -p /runner && cp -a /tmp/node_modules /runner
+# Do npm install in tmp
+RUN cd /tmp \
+ && npm install --production \
+ && mkdir -p /runner \
+ && cp -a /tmp/node_modules /runner \
+ && rm -rf /tmp/node_modules /tmp/package.json
 
 # ADD cli-runner
 ADD . /runner
 
-# Working dir is /runner
 WORKDIR /runner
 RUN ln -s /home/codewarrior /workspace
 
-# Codewarrior...
 USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+# ~/.cargo/env
+ENV PATH $HOME/.cargo/bin:$PATH
 
 RUN mocha -t 10000 test/runners/rust_spec.js
 
