@@ -19,7 +19,7 @@ and where their Codewars/Qualified support has been added.
 Within each Docker image, there is a copy of the Node executable and a `run` script. That script accepts multiple options
 for executing code. For example to run a simple javascript script which would output `2`:
 
-```
+```shell
 # this is how you run the Node CLI. For this to work you would have to bash into the correct Docker image
 node run -l javascript -c "console.log(1+1)"
 ```
@@ -27,7 +27,7 @@ node run -l javascript -c "console.log(1+1)"
 Because everything runs inside of Docker, you would normally not run Node directly from your host but instead via a Docker run command.
 To do this, you would either bash into the correct Docker image like so:
 
-```
+```shell
 # direct Docker call:
 docker run --rm -it --entrypoint bash codewars/node-runner
 
@@ -37,7 +37,7 @@ docker-compose run node-runner
 
 Or you could choose to execute the code outside of Docker by creating a container that will remove itself after it executes:
 
-```
+```shell
 # direct Docker call:
 docker run --rm codewars/node-runner run -l javascript -c "console.log('I ran inside of Docker using NodeJS')"
 docker run --rm codewars/ruby-runner run -l ruby -c "puts 'I ran inside of Docker using Ruby'"
@@ -48,13 +48,14 @@ docker-compose run ruby -c "puts 'I ran inside of Docker using Ruby'"
 ```
 
 ### Integrated Test Suites
+
 The most significant aspect of this project is that integrated test support is built in to many languages. This is how
 Codewars and Qualified work, instead of testing STDOUT of a program, the executed code is tested using traditional
 code testing methods, with unit-tests and language-specific testing frameworks.
 
 Here is a very simple example of running tests using the simplified Codewars testing framework.
 
-```
+```shell
 # manually running docker
 docker run --rm codewars/node-runner run -l javascript -c "var a = 1;" -t cw -f "Test.assertEquals(a, 1)"
 
@@ -70,54 +71,54 @@ Many languages are currently supported in various states of completeness. This l
 
 **Legend:** `!!!` = Failing Specs, `???` = Status is unknown, `*` = Any
 
-| Language       | Version       | Basic Run  | Project Mode | Test Integration | Codewars      | Qualified      | Docker Image   | Examples     | Notes                                                                   |
-|----------------|---------------|------------|--------------|------------------|----------------|----------------|--------------|---------------| ------------------------------------------------------------------------|
-| Assembly (GAS) |               | !!!        |              |                  |               |                | systems-runner |              | Travis is failing, tests pass locally                                   |
-| Bash           |               | ✓          | ✓            | rspec            | rspec         | rspec          | ruby-runner  |              |                                                                         |
+| Language       | Version       | Basic Run  | Project Mode | Test Integration | Codewars      | Qualified      | Docker Image    | Examples     | Notes                                                                   |
+|----------------|---------------|------------|--------------|------------------|---------------|----------------|-----------------|--------------|-------------------------------------------------------------------------|
+| Assembly (GAS) |               | !!!        |              |                  |               |                | systems-runner  |              | Travis is failing, tests pass locally                                   |
+| Bash           |               | ✓          | ✓            | rspec            | rspec         | rspec          | ruby-runner     |              |                                                                         |
 | Brainf**k      | 20041219      | ✓          | ✓            | cw-2             | cw-2          |                | esolangs-runner |              |                                                                         |
-| C              | Clang 3.6/C11 | ✓          |              | criterion        | criterion     |                | systems-runner |              |                                                                         |
-| Clojure        | 1.6.0         | ✓          |              | clojure.test     | clojure.test  | clojure.test   | jvm-runner    | clojure.test |                                                                         |
-| CoffeeScript   | 1.10.0        | ✓          |              | cw-2             | cw-2          | cw-2           | node-runner    | cw-2         |                                                                         |
-| C++            | 14            | ✓          |              | igloo            | igloo         | igloo          | systems-runner |              |                                                                         |
-| C#             | Mono 4.8      | ✓          | ✓            | nunit            | nunit         | nunit          | dotnet-runner  | nunit        |                                                                         |
-| Chapel         | 1.15.0        | ✓          | ✓            | cw-2             | cw-2          |               | chapel-runner  | cw-2          |                                                                         |
-| Crystal        | 0.21.1        | ✓          |              | spec             | spec          | spec           | crystal-runner | spec         |                                                                         |
-| Dart           | 1.16.1        | ✓          |              | test             | Kumite Only   |                | dart-runner    | test         |                                                                         |
-| Elixir         | 1.2.4         | ✓          |              | exunit           | exunit        |                | erlang-runner  |              |                                                                         |
-| Erlang         | 18            | ✓          |              |                  |               |                | erlang-runner  |              |                                                                         |
-| F#             | 4.1           | ✓          |              | fuchu            | fuchu         |                | dotnet-runner  | Fuchu        | Tests should be placed in a module called "Tests", in a Fuchu testList  |
-| Go             | 1.8           | ✓          |              | ginkgo           | ginkgo        | ginkgo         | go-runner      | ginkgo       |                                                                         |
-| Groovy         |               | ✓          |              |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
-| Haskell        | 7.6.3         | ✓          |              | hspec!!!         | hspec         | hspec          | haskell-runner | hspec        | An older version is running on CW & Qualified that is fully functional  |
-| Java           | 1.8.0_91      | ✓          |              | junit            | Yes           | Yes            | jvm-runner     | junit        |                                                                         |
-| JavaScript     | 0.10.33       | ✓          | ✓            | cw-2             | cw-2          | cw-2,          | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 0.10.33/Babel | ✓          | ✓            | cw-2             | cw-2          | cw-2,          | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 6.11.0        | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 6.11.0/Babel  | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 8.1.3         | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| JavaScript     | 8.1.3/Babel   | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner    | cw-2         |                                                                         |
-| Julia          | 0.4.6         | ✓          |              | factcheck        | factcheck     |                |                |              |                                                                         |
-| Kotlin         | 1.0.3         | ✓          |              | ???              |               |                | jvm-runner     |              |                                                                         |
-| Lisp           |               | ✓          |              |                  | Kumite Only   |                | func-runner    |              |                                                                         |
-| Lua            | 5.2           | ✓          |              | busted           | busted        |                | lua-runner     |              |                                                                         |
-| Objective-C    | 2.0           | ✓          |              | cw               | cw            |                | objc-runner    |              |                                                                         |
-| OCAML          | 4.02.3        | ✓          |              | ounit            | ounit         |                | ocaml-runner    |             | Tests should be placed in a module called "Tests", in an array of OUnit labels named "suite" |
-| Perl           |               | ✓          |              |                  | Kumite Only   |                | *              |              |                                                                         |
-| Php            | 7.0           | ✓          |              | cw-2, phpunit    | phpunit      | phpunit, cw-2 | alt-runner     |              |                                                                         |
-| Python         | 2.7.6         | ✓          | ✓            | cw-2, unittest   | cw-2          | cw-2, unittest | python-runner  | cw-2         |                                                                         |
-| Python         | 3.4.3         | ✓          | ✓            | cw-2, unittest   |               | cw-2, unittest | python-runner  | cw-2         |                                                                         |
-| Python         | 3.6           | ✓          | ✓            | cw-2, unittest   |               | cw-2, unittest | python-runner  | cw-2         |                                                                         |
-| R              |               | ✓          |              |                  |               |                | alt-runner     |              |                                                                         |
-| Racket         |               | ✓          |              |                  | Kumite Only   |                | func-runner    |              |                                                                         |
-| Ruby           | 2.3.0         | ✓          | ✓            | cw-2, rspec      | cw-2          | cw-2, rspec    | ruby-runner    | cw-2         |                                                                         |
-| Rust           | 1.10.0        | ✓          |              | rust             | rust          |                |                |              |                                                                         |
-| Scala          | 2.11.2        | ✓          |              |                  | Kumite Only   |                | jvm-runner     |              |                                                                         |
-| Scss/Sass      |               | ???        |              | ???              |               |                |                |              |                                                                         |
-| SQL            | SQLite3       | ✓          | ✓            | rspec            |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
-| SQL            | Postgres 9.6  | ✓          | ✓            | rspec            |               |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
-| Swift          | 3.0-dev       | ✓          |              | cw-2, xctest     | xctest        |                |                |              | Current contribution designed for OSX, need to move to OS linux version |
-| TypeScript     | 1.8.10        | ✓          |              | mocha            | mocha         |                | node-runner    |              | TypeScript utilizes `require` instead of concatenating files            |
-                                                           
+| C              | Clang 3.6/C11 | ✓          |              | criterion        | criterion     |                | systems-runner  |              |                                                                         |
+| Clojure        | 1.8.0         | ✓          |              | clojure.test     | clojure.test  | clojure.test   | jvm-runner      | clojure.test |                                                                         |
+| CoffeeScript   | 1.10.0        | ✓          |              | cw-2             | cw-2          | cw-2           | node-runner     | cw-2         |                                                                         |
+| C++            | 14            | ✓          |              | igloo            | igloo         | igloo          | systems-runner  |              |                                                                         |
+| C#             | Mono 4.8      | ✓          | ✓            | nunit            | nunit         | nunit          | dotnet-runner   | nunit        |                                                                         |
+| Chapel         | 1.15.0        | ✓          | ✓            | cw-2             | cw-2          |                | chapel-runner   | cw-2         |                                                                         |
+| Crystal        | 0.21.1        | ✓          |              | spec             | spec          | spec           | crystal-runner  | spec         |                                                                         |
+| Dart           | 1.23.0        | ✓          |              | test             | test          |                | dart-runner     | test         |                                                                         |
+| Elixir         | 1.2.4         | ✓          |              | exunit           | exunit        |                | erlang-runner   |              |                                                                         |
+| Erlang         | 18            | ✓          |              |                  |               |                | erlang-runner   |              |                                                                         |
+| F#             | 4.1           | ✓          |              | fuchu            | fuchu         |                | dotnet-runner   | Fuchu        | Tests should be placed in a module called "Tests", in a Fuchu testList  |
+| Go             | 1.8           | ✓          |              | ginkgo           | ginkgo        | ginkgo         | go-runner       | ginkgo       |                                                                         |
+| Groovy         |               | ✓          |              |                  | Kumite Only   |                | jvm-runner      |              |                                                                         |
+| Haskell        | 7.10.3        | ✓          |              | hspec!!!         | hspec         | hspec          | haskell-runner  | hspec        | An older version is running on CW & Qualified that is fully functional  |
+| Java           | 1.8.0_91      | ✓          |              | junit            | junit         | junit          | java-runner     | junit        |                                                                         |
+| JavaScript     | 0.10.33       | ✓          | ✓            | cw-2             | cw-2          | cw-2,          | node-runner     | cw-2         |                                                                         |
+| JavaScript     | 0.10.33/Babel | ✓          | ✓            | cw-2             | cw-2          | cw-2,          | node-runner     | cw-2         |                                                                         |
+| JavaScript     | 6.11.0        | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner     | cw-2         |                                                                         |
+| JavaScript     | 6.11.0/Babel  | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner     | cw-2         |                                                                         |
+| JavaScript     | 8.1.3         | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner     | cw-2         |                                                                         |
+| JavaScript     | 8.1.3/Babel   | ✓          | ✓            | cw-2, mocha      | cw-2          | cw-2, mocha    | node-runner     | cw-2         |                                                                         |
+| Julia          | 0.4.6         | ✓          |              | factcheck        | factcheck     |                |                 |              |                                                                         |
+| Kotlin         | 1.0.3         | ✓          |              | ???              |               |                | jvm-runner      |              |                                                                         |
+| Lisp           |               | ✓          |              |                  | Kumite Only   |                | func-runner     |              |                                                                         |
+| Lua            | 5.2           | ✓          |              | busted           | busted        |                | lua-runner      |              |                                                                         |
+| Objective-C    | 2.0           | ✓          |              | UnitKit          | UnitKit       |                | objc-runner     |              |                                                                         |
+| OCaml          | 4.02.3        | ✓          |              | ounit            | ounit         |                | ocaml-runner    |              | Tests should be placed in a module called "Tests", in an array of OUnit labels named "suite" |
+| Perl           |               | ✓          |              |                  | Kumite Only   |                | *               |              |                                                                         |
+| PHP            | 7.0           | ✓          |              | cw-2, phpunit    | phpunit       | phpunit, cw-2  | alt-runner      |              |                                                                         |
+| Python         | 2.7.6         | ✓          | ✓            | cw-2, unittest   | cw-2          | cw-2, unittest | python-runner   | cw-2         |                                                                         |
+| Python         | 3.4.3         | ✓          | ✓            | cw-2, unittest   |               | cw-2, unittest | python-runner   | cw-2         |                                                                         |
+| Python         | 3.6           | ✓          | ✓            | cw-2, unittest   |               | cw-2, unittest | python-runner   | cw-2         |                                                                         |
+| R              |               | ✓          |              |                  |               |                | alt-runner      |              |                                                                         |
+| Racket         |               | ✓          |              |                  | Kumite Only   |                | func-runner     |              |                                                                         |
+| Ruby           | 2.3.0         | ✓          | ✓            | cw-2, rspec      | cw-2          | cw-2, rspec    | ruby-runner     | cw-2         |                                                                         |
+| Rust           | 1.15.1        | ✓          |              | rust             | rust          |                |                 |              |                                                                         |
+| Scala          | 2.11.2        | ✓          |              |                  | Kumite Only   |                | jvm-runner      |              |                                                                         |
+| Scss/Sass      |               | ???        |              | ???              |               |                |                 |              |                                                                         |
+| SQL            | SQLite3       | ✓          | ✓            | rspec            |               |                |                 |              |                                                                         |
+| SQL            | Postgres 9.6  | ✓          | ✓            | rspec            |               |                |                 |              |                                                                         |
+| Swift          | 3.1.1         | ✓          |              | xctest           | xctest        |                |                 |              |                                                                         |
+| TypeScript     | 2.4           | ✓          |              | mocha            | mocha         |                | node-runner     |              | TypeScript utilizes `require` instead of concatenating files            |
+
 ## Setup
 
 You should have [Docker](https://www.docker.com/) installed, if not do that first. Before you can run any of the code
@@ -129,7 +130,7 @@ downloading the existing images that you intend to work on, which will allow you
 
 For example, if you intend to work on the jvm image, you would do this:
 
-```bash
+```shell
 # download existing images first to greatly speed up time
 docker pull codewars/base-runner
 docker pull codewars/jvm-runner
@@ -143,7 +144,7 @@ have to worry about having any of the project dependencies loaded directly on yo
 
 Run the following command:
 
-```
+```shell
 docker run \
     -it \
     --rm \
@@ -163,6 +164,7 @@ from within the container.
 to update these you should `make {image_you_want_to_update}` the image to ensure you are always testing against the correct packages.
 
 ### Docker Compose
+
 We mentioned before that you also have the option of using [Docker Compose](https://docs.docker.com/compose/) to run the CLI tool. We have setup the `docker-compose.yml`
 file to provide very useful pre-configured services for making development easier. Instead of having to issue the long command
 mentioned above, you can simply run `docker-compose run node-runner` to bash into a fresh container with your local volumes already mounted.
@@ -176,7 +178,7 @@ it will pull down the latest copy from Docker Hub.
 
 Once you are in the Docker image, you can run tests as a part of your development flow. For example:
 
-```
+```shell
 # inside of container
 mocha test/runners/typescript_spec.js
 
