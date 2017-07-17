@@ -1,4 +1,4 @@
-test:
+rust:
   algorithms:
     initial: |-
       // Return the two oldest/oldest ages within the vector of ages passed in.
@@ -68,4 +68,11 @@ test:
         fn greet(&self,your_name: &'a str) -> String {
           format!("Hello {}, my name is {}", your_name, self.name)
         }
+      }
+
+    fixture: |-
+      #[test]
+      fn greet_is_correct() {
+        let p = Person { name: "Bill" };
+        assert_eq!(p.greet("Jack"), "Hello Jack, my name is Bill");
       }

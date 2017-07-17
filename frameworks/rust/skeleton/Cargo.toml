@@ -1,0 +1,7 @@
+[package]
+name = "codewars"
+version = "0.0.1"
+authors = ["codewarrior"]
+
+[dependencies]
+rand = "0.3"
