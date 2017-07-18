@@ -17,9 +17,6 @@ RUN curl -fsSL https://phar.phpunit.de/phpunit-5.7.phar -o phpunit.phar \
 #RUN apt-add-repository ppa:swi-prolog/stable && apt-get update
 #RUN apt-get install -y swi-prolog
 
-# Install GNU R
-RUN apt-get install -y r-base
-
 # add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install --production

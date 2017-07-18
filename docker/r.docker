@@ -1,0 +1,36 @@
+FROM codewars/base-runner
+
+# https://cran.r-project.org/bin/linux/ubuntu/README
+RUN set -ex \
+ && gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 \
+ && gpg -a --export E084DAB9 | apt-key add - \
+ && echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" >> /etc/apt/sources.list \
+ && apt-get -q update \
+ && apt-get -q -y --no-install-recommends install 'r-base=3.4.1-*'
+
+# TODO version lock. need `devtools` package?
+RUN R -q -e 'install.packages("testthat", repo="https://cran.rstudio.com/")' && rm -rf /tmp/*
+
+ENV NPM_CONFIG_LOGLEVEL warn
+# Copy package json to tmp
+ADD package.json /tmp/package.json
+
+# Do npm install in tmp
+RUN cd /tmp \
+ && npm install --production \
+ && mkdir -p /runner \
+ && cp -a /tmp/node_modules /runner \
+ && rm -rf /tmp/node_modules /tmp/package.json
+
+# ADD cli-runner
+ADD . /runner
+
+WORKDIR /runner
+RUN ln -s /home/codewarrior /workspace
+
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+
+RUN mocha -t 5000 test/runners/r_spec.js
+
+ENTRYPOINT ["node"]
