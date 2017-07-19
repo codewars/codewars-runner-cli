@@ -8,28 +8,26 @@ ENV USER=codewarrior HOME=/home/codewarrior
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.15.1
 
 USER root
+RUN ln -s /home/codewarrior /workspace
 ENV NPM_CONFIG_LOGLEVEL warn
-# Copy package json to tmp
-ADD package.json /tmp/package.json
-
-# Do npm install in tmp
-RUN cd /tmp \
- && npm install --production \
- && mkdir -p /runner \
- && cp -a /tmp/node_modules /runner \
- && rm -rf /tmp/node_modules /tmp/package.json
-
-# ADD cli-runner
-ADD . /runner
 
 WORKDIR /runner
-RUN ln -s /home/codewarrior /workspace
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/rust.js lib/runners/
+COPY examples/rust.yml examples/
+COPY test/runner.js test/
+COPY test/runners/rust_spec.js test/runners/
 
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 # ~/.cargo/env
-ENV PATH $HOME/.cargo/bin:$PATH
-
+ENV PATH=$HOME/.cargo/bin:$PATH
 RUN mocha -t 10000 test/runners/rust_spec.js
 
 ENTRYPOINT ["node"]
