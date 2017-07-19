@@ -49,27 +49,26 @@ RUN set -ex \
    && rm -rf /var/lib/apt/lists/* \
    && chmod -R o+r /usr/lib/swift
 
-# Add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-COPY package.json /tmp/package.json
-WORKDIR /tmp
-RUN npm install --production \
-  && mkdir -p /runner \
-  && cp -a /tmp/node_modules /runner \
-  && rm -rf /tmp/node_modules
 
-# ADD cli-runner and install node deps
-ADD . /runner
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
 WORKDIR /runner
-RUN ln -s /home/codewarrior /workspace
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/swift.js lib/runners/
+COPY examples/swift.yml examples/
+COPY frameworks/swift frameworks/swift
+COPY test/runner.js test/
+COPY test/runners/swift_spec.js test/runners/
 
 USER codewarrior
-# Set environment variables
 ENV USER=codewarrior HOME=/home/codewarrior
-
-# Run the test suite to make sure this thing works
 RUN mocha -t 5000 test/runners/swift_spec.js
 
-# timeout is a fallback in case an error with node
-# prevents it from exiting properly
 ENTRYPOINT ["node"]
