@@ -24,21 +24,25 @@ RUN set -ex \
  && rm -rf ./ci ./csources ./icons ./tests ./web \
  && chmod -R 755 /opt/nim
 
-ENV NPM_CONFIG_LOGLEVEL=warn
-COPY package.json /tmp/package.json
-WORKDIR /tmp
-RUN npm install --production \
- && mkdir -p /runner \
- && cp -a /tmp/node_modules /runner \
- && rm -rf /tmp/node_modules
-
-
-
-COPY . /runner
-WORKDIR /runner
-
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
+
+WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/nim.js lib/runners/
+COPY examples/nim.yml examples/
+COPY frameworks/nim frameworks/nim
+COPY test/runner.js test/
+COPY test/runners/nim_spec.js test/runners/
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior PATH=/opt/nim/bin:$PATH
 RUN mocha -t 5000 test/runners/nim_spec.js
+
 ENTRYPOINT ["node"]
