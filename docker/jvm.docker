@@ -35,31 +35,37 @@ RUN dpkg -i /tmp/scala-2.11.2.deb && rm /tmp/scala-2.11.2.deb
 RUN curl -L https://github.com/JetBrains/kotlin/releases/download/v1.0.3/kotlin-compiler-1.0.3.zip > /tmp/kotlin-compiler-1.0.3.zip
 RUN unzip /tmp/kotlin-compiler-1.0.3.zip -d /usr/local/lib/kotlin && rm /tmp/kotlin-compiler-1.0.3.zip
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner and install node deps
-ADD . /runner
-
-# Build the jvm-runner
-WORKDIR /runner/jvm-runner
-RUN LEIN_ROOT=true lein do clean, test, uberjar
 
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
+
 WORKDIR /runner
-RUN npm install
+COPY package.json package.json
+RUN npm install --production
 
-# Run the test suite to make sure this thing works
+# Build the jvm-runner
+COPY jvm-runner jvm-runner
+RUN cd /runner/jvm-runner \
+ && LEIN_ROOT=true lein do clean, test, uberjar
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/clojure.js lib/runners/
+COPY lib/runners/groovy.js lib/runners/
+COPY lib/runners/scala.js lib/runners/
+COPY lib/runners/kotlin.js lib/runners/
+COPY examples/clojure.yml examples/
+COPY test/runner.js test/
+COPY test/runners/clojure_spec.js test/runners/
+COPY test/runners/groovy_spec.js test/runners/
+COPY test/runners/kotlin_spec.js test/runners/
+COPY test/runners/scala_spec.js test/runners/
+
 USER codewarrior
-
-# Set environment variables
+ENV USER=codewarrior HOME=/home/codewarrior
 ENV TIMEOUT 10000
-ENV USER codewarrior
-ENV HOME /home/codewarrior
 RUN mocha -t 10000 test/runners/{clojure,groovy,scala,kotlin}_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]
