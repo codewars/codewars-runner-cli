@@ -11,26 +11,25 @@ RUN set -ex \
 # TODO version lock. need `devtools` package?
 RUN R -q -e 'install.packages("testthat", repo="https://cran.rstudio.com/")' && rm -rf /tmp/*
 
+RUN ln -s /home/codewarrior /workspace
 ENV NPM_CONFIG_LOGLEVEL warn
-# Copy package json to tmp
-ADD package.json /tmp/package.json
-
-# Do npm install in tmp
-RUN cd /tmp \
- && npm install --production \
- && mkdir -p /runner \
- && cp -a /tmp/node_modules /runner \
- && rm -rf /tmp/node_modules /tmp/package.json
-
-# ADD cli-runner
-ADD . /runner
 
 WORKDIR /runner
-RUN ln -s /home/codewarrior /workspace
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/r.js lib/runners/
+COPY examples/r.yml examples/
+COPY frameworks/r frameworks/r
+COPY test/runner.js test/
+COPY test/runners/r_spec.js test/runners/
 
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
-
 RUN mocha -t 5000 test/runners/r_spec.js
 
 ENTRYPOINT ["node"]
