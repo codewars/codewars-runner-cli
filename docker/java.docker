@@ -51,41 +51,37 @@ RUN set -o errexit -o nounset \
 	&& mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
 	&& ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
 
-RUN mkdir /usr/local/.gradle
-RUN chown codewarrior /usr/local/.gradle
+RUN mkdir /usr/local/.gradle \
+ && chown codewarrior /usr/local/.gradle
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
+
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
 WORKDIR /runner
-ADD package.json /runner/package.json
-RUN npm install
+COPY package.json package.json
+RUN npm install --production
 
-# ADD cli-runner and install node deps
-ADD frameworks/java /runner/frameworks/java
-RUN chown codewarrior /runner/frameworks/java
-RUN ln -s /home/codewarrior /workspace
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/java.js lib/runners/
+COPY examples/java.yml examples/
+COPY test/runner.js test/
+COPY test/runners/java_spec.js test/runners/
+COPY frameworks/java/prewarm.sh prewarm.sh
 
+COPY frameworks/java frameworks/java
+RUN chown codewarrior frameworks/java
 RUN gradle --version
 
 USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 
 # pre-install the default referenced java libraries
 RUN cd /runner/frameworks/java && gradle --stacktrace --no-daemon compileTestJava
 
-ADD lib /runner/lib
-ADD *.js /runner/
-ADD frameworks/java/prewarm.sh /runner/prewarm.sh
-
-# Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
-ADD test /runner/test
-
-# Run the test suite to make sure this thing works
-RUN mocha -t 20000 /runner/test/runners/java_spec.js
+RUN mocha -t 20000 test/runners/java_spec.js
 
 ENTRYPOINT ["node"]
-
