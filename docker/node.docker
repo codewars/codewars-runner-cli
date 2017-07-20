@@ -25,37 +25,45 @@ RUN npm install -gq "typings@^2"
 # Install TypeScript
 RUN npm -g install "typescript@^2.4"
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install && npm install --only=dev && npm dedupe
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner and install node deps
-ADD . /runner
-
-# add display as if it is a node module, so that it can easily be included via require("display")
-ADD ./frameworks/javascript/display.js /runner/node_modules/display/index.js
-ADD ./frameworks/javascript/chai-display.js /runner/node_modules/chai-display/index.js
-ADD ./frameworks/javascript/display.js /runner/node_modules/chai-display/display.js
-#ADD ./frameworks/javascript/require-url.js /runner/node_modules/require-url/index.js
-
-# add typings into a cleaner path for inclusion
-ADD typings/main/ambient /runner/typings
 
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
 WORKDIR /runner
-ENV NODE_PATH /usr/lib/node_modules:/runner/node_modules
+COPY package.json package.json
+RUN npm install && npm install --only=dev && npm dedupe
 
-# Set environment variables
-ENV HOME /home/codewarrior
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/javascript.js lib/runners/
+COPY lib/runners/coffeescript.js lib/runners/
+COPY lib/runners/typescript.js lib/runners/
+COPY examples/javascript.yml examples/
+COPY examples/coffeescript.yml examples/
+COPY examples/typescript.yml examples/
+COPY test/runner.js test/
+COPY test/runners/javascript_spec.js test/runners/
+COPY test/runners/coffeescript_spec.js test/runners/
+COPY test/runners/typescript_spec.js test/runners/
+COPY frameworks/javascript frameworks/javascript
+
+# add display as if it is a node module, so that it can easily be included via require("display")
+COPY frameworks/javascript/display.js /runner/node_modules/display/index.js
+COPY frameworks/javascript/chai-display.js /runner/node_modules/chai-display/index.js
+COPY frameworks/javascript/display.js /runner/node_modules/chai-display/display.js
+
+# add typings into a cleaner path for inclusion
+COPY typings/main/ambient /runner/typings
+
 USER codewarrior
-ENV USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+ENV NODE_PATH=/usr/lib/node_modules:/runner/node_modules
 
 # Run the test suite to make sure this thing works
-RUN mocha -t 10000 test/runners/{javascript,coffeescript}_spec.js
+RUN mocha -t 10000 test/runners/javascript_spec.js
+RUN mocha -t 10000 test/runners/coffeescript_spec.js
 RUN mocha -t 10000 test/runners/typescript_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]
