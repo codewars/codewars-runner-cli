@@ -12,9 +12,13 @@ RUN cd /tmp \
  && rm erlang-solutions_1.0_all.deb \
  && apt-get update -q \
 # && apt-cache showpkg esl-erlang \
- && apt-get install -q -y --no-install-recommends 'esl-erlang=1:18.3'
+# && apt-cache showpkg elixir \
+ && apt-get install -q -y --no-install-recommends 'esl-erlang=1:18.3' 'elixir=1.2.4-*'
 
- 
+# Install local Elixir hex and rebar
+RUN mix local.hex --force \
+ && mix local.rebar --force
+
 RUN ln -s /home/codewarrior /workspace
 ENV NPM_CONFIG_LOGLEVEL warn
 
@@ -26,13 +30,15 @@ COPY *.js ./
 COPY lib/*.js lib/
 COPY lib/*.sh lib/
 COPY lib/utils lib/utils
-COPY lib/runners/erlang.js lib/runners/
+COPY lib/runners/elixir.js lib/runners/
+COPY examples/elixir.yml examples/
+COPY frameworks/elixir frameworks/elixir
 COPY test/runner.js test/
-COPY test/runners/erlang_spec.js test/runners/
+COPY test/runners/elixir_spec.js test/runners/
 
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
-RUN mocha -t 5000 test/runners/erlang_spec.js
+RUN mocha -t 5000 test/runners/elixir_spec.js
 
 ENTRYPOINT ["node"]
