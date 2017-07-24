@@ -1,0 +1,24 @@
+eunit:
+  algorithms:
+    initial: |-
+      -module(algo).
+      -export([two_oldest_ages/1]).
+
+      two_oldest_ages(List) ->
+        [0, 0].
+
+    answer: |-
+      -module(algo).
+      -export([two_oldest_ages/1]).
+
+      two_oldest_ages(List) ->
+        lists:nthtail(length(List)-2, lists:sort(List)).
+
+    fixture:
+      -module(algo_tests).
+      -include_lib("eunit/include/eunit.hrl").
+
+      two_oldest_ages_test_() ->
+        {"Two Oldest Ages",
+          [{"returns [45, 87] for [1,5,87,45,8,8]", ?_assertMatch([45, 87], algo:two_oldest_ages([1,5,87,45,8,8]))},
+           {"returns [18, 83] for [6,5,83,5,3,18]", ?_assertMatch([18, 83], algo:two_oldest_ages([6,5,83,5,3,18]))}]}.
