@@ -40,6 +40,7 @@ env:
     - TEST_IMG=r
     - TEST_IMG=erlang
     - TEST_IMG=elixir
+    - TEST_IMG=powershell
 
 script:
   - eslint '**/*.js'
