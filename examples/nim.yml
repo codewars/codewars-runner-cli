@@ -16,10 +16,6 @@ unittest:
         return [a, b]
 
     fixture: |-
-      import unittest, codewars/formatter
-      import solution
-      addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
-
       suite "two oldest ages":
         test "returns two oldest ages @[1,5,87,45,8,8]":
           check(two_oldest_ages(@[1,5,87,45,8,8]) == [45, 87])
@@ -32,10 +28,6 @@ unittest:
     answer: |-
       var websites* = @["codewars"]
     fixture: |-
-      import unittest, codewars/formatter
-      import solution
-      addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
-
       suite "fundamentals":
         test "codewars":
           check(websites == @["codewars"])
@@ -47,10 +39,6 @@ unittest:
     answer: |-
       proc add*(a, b: int): int = a + b
     fixture: |-
-      import unittest, codewars/formatter
-      import solution
-      addOutputFormatter(OutputFormatter(newCodewarsOutputFormatter()))
-
       suite "add":
         test "1 + 1 = 2":
           check(add(1, 1) == 2)
