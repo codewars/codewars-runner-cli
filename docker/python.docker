@@ -79,27 +79,29 @@ RUN apt-get install -y pylint
 RUN pip install pickledb tinydb ZODB dataset psycopg2 queries
 RUN pip3 install pickledb tinydb ZODB dataset psycopg2 queries
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
 RUN ln -s /home/codewarrior /workspace
-
-# ADD cli-runner and install node deps
-ADD . /runner
+ENV NPM_CONFIG_LOGLEVEL warn
 
 WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
 
-# Run the test suite to make sure this thing works
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/python.js lib/runners/
+COPY lib/runners/python3.js lib/runners/
+COPY examples/python.yml examples/
+COPY examples/python3.yml examples/
+COPY frameworks/python frameworks/python
+COPY frameworks/python3 frameworks/python3
+COPY test/runner.js test/
+COPY test/runners/python_spec.js test/runners/
 
 USER codewarrior
-# Set environment variables
-
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 5000 test/runners/python_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]

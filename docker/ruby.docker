@@ -60,78 +60,80 @@ ENV PATH $BUNDLE_BIN:$PATH
 RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
 	&& chmod 777 "$GEM_HOME" "$BUNDLE_BIN"
 
-# RSpec Gems for Testing
-RUN gem install rspec --no-ri --no-rdoc
-RUN gem install rspec-its --no-ri --no-rdoc
-RUN gem install rspec-rails --no-ri --no-rdoc
-
 # needed for nokogiri
 RUN apt-get -y install zlib1g-dev
 
-# Install additional gems
-RUN gem install amqp --no-ri --no-rdoc
-RUN gem install bunny --no-ri --no-rdoc
-RUN gem install capybara --no-ri --no-rdoc
-RUN gem install celluloid --no-ri --no-rdoc
-RUN gem install concerning --no-ri --no-rdoc
-RUN gem install concurrent-ruby --no-ri --no-rdoc
-RUN gem install connection_pool --no-ri --no-rdoc
-RUN gem install couchrest --no-ri --no-rdoc
-RUN gem install couch_potato --no-ri --no-rdoc
-RUN gem install elasticsearch --no-ri --no-rdoc
-RUN gem install eventmachine --no-ri --no-rdoc
-RUN gem install faraday --no-ri --no-rdoc
-RUN gem install jbuilder --no-ri --no-rdoc
-RUN gem install jwt --no-ri --no-rdoc
-RUN gem install hashie --no-ri --no-rdoc
-RUN gem install httparty --no-ri --no-rdoc
-RUN gem install factory_girl --no-ri --no-rdoc
-RUN gem install faker --no-ri --no-rdoc
-RUN gem install ffi-rzmq --no-ri --no-rdoc
-RUN gem install googlecharts --no-ri --no-rdoc
-RUN gem install pg --no-ri --no-rdoc
-RUN gem install pry --no-ri --no-rdoc
-RUN gem install mock_redis --no-ri --no-rdoc
-RUN gem install mongo --no-ri --no-rdoc
-RUN gem install mongoid --no-ri --no-rdoc
-RUN gem install net-ssh --no-ri --no-rdoc
-RUN gem install nokogiri --no-ri --no-rdoc
-RUN gem install rails --no-ri --no-rdoc
-RUN gem install redis --no-ri --no-rdoc
-RUN gem install ruby-graphviz --no-ri --no-rdoc
-RUN gem install sequel --no-ri --no-rdoc
-RUN gem install sinatra --no-ri --no-rdoc
-RUN gem install timecop --no-ri --no-rdoc
-RUN gem install timers --no-ri --no-rdoc
-RUN gem install webmock --no-ri --no-rdoc
-RUN gem install sciruby --no-ri --no-rdoc
+# RSpec Gems for Testing
+RUN gem install --no-ri --no-rdoc \
+	rspec \
+	rspec-its \
+	rspec-rails \
+	\
+	amqp \
+	bunny \
+	capybara \
+	celluloid \
+	concerning \
+	concurrent-ruby \
+	connection_pool \
+	couchrest \
+	couch_potato \
+	elasticsearch \
+	eventmachine \
+	faraday \
+	jbuilder \
+	jwt \
+	hashie \
+	httparty \
+	factory_girl \
+	faker \
+	ffi-rzmq \
+	googlecharts \
+	pg \
+	pry \
+	mock_redis \
+	mongo \
+	mongoid \
+	net-ssh \
+	nokogiri \
+	rails \
+	redis \
+	ruby-graphviz \
+	sequel \
+	sinatra \
+	timecop \
+	timers \
+	webmock
+
 # reduced selection of sciruby-full gems since all needed build dependencies are not installed
-RUN gem install ai4r --no-ri --no-rdoc
-RUN gem install algorithms --no-ri --no-rdoc
-RUN gem install awesome_print --no-ri --no-rdoc
-RUN gem install classifier --no-ri --no-rdoc
-RUN gem install daru --no-ri --no-rdoc
-RUN gem install darwinning --no-ri --no-rdoc
-RUN gem install decisiontree --no-ri --no-rdoc
-RUN gem install distribution --no-ri --no-rdoc
-RUN gem install gga4r --no-ri --no-rdoc
-RUN gem install gimuby --no-ri --no-rdoc
-RUN gem install hamster --no-ri --no-rdoc
-RUN gem install histogram --no-ri --no-rdoc
-RUN gem install measurable --no-ri --no-rdoc
-RUN gem install mikon --no-ri --no-rdoc
-RUN gem install minimization --no-ri --no-rdoc
-RUN gem install narray --no-ri --no-rdoc
-RUN gem install ruby-fann --no-ri --no-rdoc
-RUN gem install statsample --no-ri --no-rdoc
-RUN gem install statsample-glm --no-ri --no-rdoc
-RUN gem install statsample-timeseries --no-ri --no-rdoc
-RUN gem install stuff-classifier --no-ri --no-rdoc
-RUN gem install symbolic --no-ri --no-rdoc
-RUN gem install unit --no-ri --no-rdoc
-RUN gem install chronic --no-ri --no-rdoc
-RUN gem install ably --no-ri --no-rdoc
-RUN gem install bcrypt --no-ri --no-rdoc
+RUN gem install --no-ri --no-rdoc \
+	sciruby \
+	ai4r \
+	algorithms \
+	awesome_print \
+	classifier \
+	daru \
+	darwinning \
+	decisiontree \
+	distribution \
+	gga4r \
+	gimuby \
+	hamster \
+	histogram \
+	measurable \
+	mikon \
+	minimization \
+	narray \
+	ruby-fann \
+	statsample \
+	statsample-glm \
+	statsample-timeseries \
+	stuff-classifier \
+	symbolic \
+	unit \
+	chronic \
+	ably \
+	bcrypt
 
 USER codewarrior
 
@@ -158,29 +160,35 @@ RUN apt-get update && apt-get -y install mlocate bc
 # allow codewarrior to install gems
 RUN chown codewarrior /usr/local/bundle
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
 
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
-# ADD cli-runner
-ADD . /runner
 WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
 
-# Run the test suite to make sure this thing works
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/ruby.js lib/runners/
+COPY lib/runners/shell.js lib/runners/
+COPY lib/runners/sql.js lib/runners/
+COPY examples/ruby.yml examples/
+COPY examples/sql.yml examples/
+COPY frameworks/ruby frameworks/ruby
+COPY test/runner.js test/
+COPY test/runners/ruby_spec.js test/runners/
+COPY test/runners/shell_spec.js test/runners/
+COPY test/runners/sql_spec.js test/runners/
 
 USER codewarrior
-# Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 
 RUN mocha -t 5000 test/runners/ruby_spec.js
 RUN mocha -t 5000 test/runners/shell_spec.js
 #RUN mocha -t 5000 test/runners/sql_spec.js
 RUN sh /runner/lib/cleanup.sh
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]

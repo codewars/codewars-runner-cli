@@ -37,27 +37,30 @@ RUN git clone --branch=master https://github.com/Snaipe/Criterion && \
 # ARM Assembly Emulation
 # RUN apt-get -y install gcc-4.7-arm-linux-gnueabi libc6-dev-armel-cross qemu-user
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
-# ADD cli-runner and install node deps
-ADD . /runner
 WORKDIR /runner
-RUN ln -s /home/codewarrior /workspace
+COPY package.json package.json
+RUN npm install --production
 
-# Run the test suite to make sure this thing works
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/c.js lib/runners/
+COPY lib/runners/cpp.js lib/runners/
+COPY examples/c.yml examples/
+COPY examples/cpp.yml examples/
+COPY frameworks/c frameworks/c
+COPY frameworks/cpp frameworks/cpp
+COPY test/runner.js test/
+COPY test/runners/c_spec.js test/runners/
+COPY test/runners/cpp_spec.js test/runners/
 
 USER codewarrior
-# Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 
 RUN mocha -t 5000 test/runners/{c,cpp}_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]

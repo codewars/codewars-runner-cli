@@ -28,27 +28,25 @@ RUN mkdir $JULIA_PATH \
 
 ENV PATH $JULIA_PATH/bin:$PATH
 
-#CMD ["julia"]
-
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner and install node deps
-ADD . /runner
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
 WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
 
-# Run the test suite to make sure this thing works
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/julia.js lib/runners/
+COPY examples/julia.yml examples/
+COPY test/runner.js test/
+COPY test/runners/julia_spec.js test/runners/
+COPY frameworks/julia frameworks/julia
 
 USER codewarrior
-# Set environment variables
-
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 5000 test/runners/julia_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]
