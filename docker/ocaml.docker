@@ -11,19 +11,24 @@ RUN add-apt-repository -y ppa:avsm/ppa
 RUN apt-get -y update
 RUN apt-get -y install camlp4 ocaml opam
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner
-ADD . /runner
-WORKDIR /runner
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
+
+WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/ocaml.js lib/runners/
+COPY examples/ocaml.yml examples/
+COPY test/runner.js test/
+COPY test/runners/ocaml_spec.js test/runners/
 
 USER codewarrior
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 
 # Install opam stuff as the target user (so that they have utop, etc)
 # Note that because aspucd is max of 1.8 (a broken version) on Ubuntu Trusty, we have to use the internal solver
@@ -34,14 +39,10 @@ RUN echo ". $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true" >> ~
 RUN opam update --use-internal-solver -y
 RUN opam install --use-internal-solver -y ocamlbuild ounit core batteries lwt utop
 
-# Set environment variables
 RUN echo '#!/bin/bash' > /home/codewarrior/run_ocaml.sh
 RUN echo 'eval `opam config env` && $@' >> /home/codewarrior/run_ocaml.sh
 RUN chmod +x /home/codewarrior/run_ocaml.sh
 
-# Run the test suite to make sure this thing works
 RUN /home/codewarrior/run_ocaml.sh mocha -t 5000 test/runners/ocaml_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["/home/codewarrior/run_ocaml.sh", "node"]

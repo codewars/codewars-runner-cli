@@ -28,28 +28,28 @@ RUN go get github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
 RUN go get github.com/onsi/gomega         # fetches the matcher library
 
 
-ENV NPM_CONFIG_LOGLEVEL error
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-COPY package.json /tmp/package.json
-WORKDIR /tmp
-RUN npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner and install node deps
-COPY . /runner
-WORKDIR /runner
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
+
+# ADD cli-runner
+WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/go.js lib/runners/
+COPY examples/go.yml examples/
+COPY test/runner.js test/
+COPY test/runners/go_spec.js test/runners/
 
 COPY frameworks/go/codewars $GOPATH/src/codewars
 RUN go install codewars/reporter
 
 USER codewarrior
-ENV USER codewarrior
-ENV HOME /home/codewarrior
-
-# Run the test suite to make sure this thing works
+ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 5000 test/runners/go_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]
