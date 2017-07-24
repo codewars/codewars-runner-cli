@@ -1,7 +1,7 @@
 HOSTNAME=codewars
 
 # Building erlang images have been suspended (frozen) until they are able to be repaired
-CONTAINERS=node dotnet jvm java python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs chapel nim
+CONTAINERS=node dotnet jvm java python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs chapel nim powershell
 
 ALL_CONTAINERS=${CONTAINERS} base
 
