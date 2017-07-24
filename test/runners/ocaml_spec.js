@@ -41,7 +41,35 @@ describe('ocaml runner', function() {
         ].join('\n')
       }, function(buffer) {
         console.log(buffer);
-        expect(buffer.stdout).to.contain("<DESCRIBE::>Person\n<IT::>.greet\n<PASSED::>");
+        expect(buffer.stdout).to.contain("\n<DESCRIBE::>Person\n\n<IT::>.greet\n\n<PASSED::>");
+        done();
+      });
+    });
+
+    it('should have output format command on independent line', function(done) {
+      runner.run({
+        language: 'ocaml',
+        testFramework: 'ounit',
+        solution: [
+          `let add a b = a - b;;`,
+        ].join('\n'),
+        fixture: [
+          `module Tests = struct`,
+          `    open OUnit`,
+          `    let suite =`,
+          `        [`,
+          `            "Suite Name" >:::`,
+          `            [`,
+          `                "Test Name" >:: (fun _ ->`,
+          `                    Printf.printf "%s" "foo";`,
+          `                    assert_equal 2 (add 1 1)`,
+          `                )`,
+          `            ]`,
+          `        ]`,
+          `end`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('\n<FAILED::>');
         done();
       });
     });
