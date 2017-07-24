@@ -1,59 +1,46 @@
-# Pull base image.
 FROM codewars/base-runner
 
-WORKDIR /tmp
 # Set the locale
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-
-RUN echo "deb http://packages.erlang-solutions.com/ubuntu trusty contrib" >> /etc/apt/sources.list && \
-    apt-key adv --fetch-keys http://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc && \
-    apt-get -qq update && apt-get install -y \
-    esl-erlang \
-    git \
-    unzip \
-    build-essential \
-    wget && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Download and Install Specific Version of Elixir
-WORKDIR /elixir
-RUN wget -q https://github.com/elixir-lang/elixir/releases/download/v1.2.4/Precompiled.zip && \
-    unzip Precompiled.zip && \
-    rm -f Precompiled.zip && \
-    ln -s /elixir/bin/elixirc /usr/local/bin/elixirc && \
-    ln -s /elixir/bin/elixir /usr/local/bin/elixir && \
-    ln -s /elixir/bin/mix /usr/local/bin/mix && \
-    ln -s /elixir/bin/iex /usr/local/bin/iex
+RUN cd /tmp \
+ && wget -q https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb \
+ && dpkg -i erlang-solutions_1.0_all.deb \
+ && rm erlang-solutions_1.0_all.deb \
+ && apt-get update -q \
+# && apt-cache showpkg esl-erlang \
+# && apt-cache showpkg elixir \
+ && apt-get install -q -y --no-install-recommends 'esl-erlang=1:18.3' 'elixir=1.2.4-*'
 
 # Install local Elixir hex and rebar
-RUN /usr/local/bin/mix local.hex --force && \
-    /usr/local/bin/mix local.rebar --force
+RUN mix local.hex --force \
+ && mix local.rebar --force
 
-WORKDIR /
-
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner
-ADD . /runner
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
 WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
 
-# Run the test suite to make sure this thing works
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/erlang.js lib/runners/
+COPY lib/runners/elixir.js lib/runners/
+COPY examples/elixir.yml examples/
+COPY frameworks/elixir frameworks/elixir
+COPY test/runner.js test/
+COPY test/runners/erlang_spec.js test/runners/
+COPY test/runners/elixir_spec.js test/runners/
 
 USER codewarrior
-# Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+
 RUN mocha -t 5000 test/runners/{erlang,elixir}_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]
