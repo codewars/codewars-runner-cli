@@ -1,6 +1,7 @@
 HOSTNAME=codewars
 
-CONTAINERS=node dotnet jvm java python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs chapel nim erlang
+# Building erlang images have been suspended (frozen) until they are able to be repaired
+CONTAINERS=node dotnet jvm java python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs chapel nim r erlang
 
 ALL_CONTAINERS=${CONTAINERS} base
 
