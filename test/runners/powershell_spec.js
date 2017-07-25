@@ -15,10 +15,10 @@ describe('powershell runner', function () {
             });
         });
 
-        it('should handel basic Pester tests', function (done) {
+        it('should handle basic Pester tests', function (done) {
             runner.run({
                 language: 'powershell',
-                code: '$CustomVar = 5',
+                code: '$True',
                 fixture: 'Describe "Basic Tests" { It "X" { 1 | Should Be 1 }; It "Y" { 1 | Should Be 2 }}'
 
             }, function (buffer) {
@@ -29,5 +29,21 @@ describe('powershell runner', function () {
                 done();
             });
         });
+        it('should test code', function (done) {
+            runner.run({
+                language: 'powershell',
+                code: '$Answer = 5',
+                fixture: 'Describe "Basic Tests" { It "Answer Should be correct" { $Answer | Should Be 5 }; }'
+
+            }, function (buffer) {
+                expect(buffer.stdout).to.contain("<PASSED::>");
+                expect(buffer.stdout).to.contain("<DESCRIBE::>");
+                expect(buffer.stdout).to.contain("<IT::>");
+                done();
+            });
+        });
     });
 });
+
+
+runner.assertCodeExamples('powershell');
