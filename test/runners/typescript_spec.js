@@ -446,4 +446,80 @@ describe('typescript runner', function() {
       });
     });
   });
+
+  describe('targets', function() {
+    it('should support running with ES6 target', function(done) {
+      runner.run({
+        language: 'typescript',
+        languageVersion: '2.4/ES6',
+        solution: [
+          `class Cube {`,
+          `  private _n: number;`,
+          `  constructor(n) {`,
+          `    this._n = n;`,
+          `  }`,
+          `  get volume(): number { return Math.pow(this._n, 3); }`,
+          `}`,
+          ``,
+          `const c = new Cube(2);`,
+          `console.log(c.volume);`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.equal('8\n');
+        done();
+      });
+    });
+
+    it('should default to ES3', function(done) {
+      runner.run({
+        language: 'typescript',
+        solution: [
+          `class Cube {`,
+          `  private _n: number;`,
+          `  constructor(n) {`,
+          `    this._n = n;`,
+          `  }`,
+          `  get volume(): number { return Math.pow(this._n, 3); }`,
+          `}`,
+          ``,
+          `const c = new Cube(2);`,
+          `console.log(c.volume);`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).contains('Accessors are only available when targeting ECMAScript 5 and higher.');
+        done();
+      });
+    });
+
+    it('should support testing with ES6 target', function(done) {
+      runner.run({
+        language: 'typescript',
+        languageVersion: '2.4/ES6',
+        testFramework: 'mocha_bdd',
+        solution: [
+          `export class Cube {`,
+          `  private _n: number;`,
+          `  constructor(n) {`,
+          `    this._n = n;`,
+          `  }`,
+          `  get volume(): number { return Math.pow(this._n, 3); }`,
+          `}`,
+        ].join('\n'),
+        fixture: [
+          `/// <reference path="/runner/typings/mocha/index.d.ts" />`,
+          `/// <reference path="/runner/typings/chai/index.d.ts" />`,
+          `import {Cube} from "./solution";`,
+          `import {assert} from "chai";`,
+          `describe("Cube", function() {`,
+          `  it("should have volume getter", function() {`,
+          `    assert.equal(new Cube(2).volume, 8);`,
+          `  });`,
+          `});`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>Passed');
+        done();
+      });
+    });
+  });
 });
