@@ -37,8 +37,12 @@ env:
     - TEST_IMG=esolangs
     - TEST_IMG=chapel
     - TEST_IMG=nim
+<<<<<<< HEAD
+    - TEST_IMG=powershell
+=======
     - TEST_IMG=r
     - TEST_IMG=erlang
+>>>>>>> 6d90a54f1ae484a4298a5395b55238d6c469476f
 
 script:
   - eslint '**/*.js'
