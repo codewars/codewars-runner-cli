@@ -1,18 +1,8 @@
 FROM codewars/base-runner
 
 # Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
 ENV CHPL_VERSION 1.15.0
 ENV CHPL_HOME /usr/local/chapel-${CHPL_VERSION}
-
-# Copy package json to tmp
-ADD package.json /tmp/package.json
-
-# Do npm install in tmp and setup cargo dir
-RUN \
-  cd /tmp && npm install --production && \
-  mkdir -p /runner && cp -a /tmp/node_modules /runner
 
 # Download and build Chapel
 RUN mkdir $CHPL_HOME \
@@ -22,16 +12,31 @@ RUN mkdir $CHPL_HOME \
   && rm -f chapel.tar.gz \
   && cd $CHPL_HOME \
   && make \
-  && cd ..
-
- RUN $CHPL_HOME/util/printchplenv
-
+  && cd .. \
+  && $CHPL_HOME/util/printchplenv
+  
 ENV CHPL_HOST_PLATFORM=linux64
 ENV PATH="$CHPL_HOME"/bin/$CHPL_HOST_PLATFORM:"$CHPL_HOME"/util:"$PATH"
 
-ADD . /runner
-WORKDIR /runner
-USER codewarrior
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
+WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/chapel.js lib/runners/
+COPY examples/chapel.yml examples/
+COPY frameworks/chapel frameworks/chapel
+COPY test/runner.js test/
+COPY test/runners/chapel_spec.js test/runners/
+
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 10000 test/runners/chapel_spec.js
+
 ENTRYPOINT ["node"]

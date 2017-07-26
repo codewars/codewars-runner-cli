@@ -12,24 +12,25 @@ RUN curl -fsSL https://github.com/luarocks/luarocks/archive/v2.4.2.tar.gz | tar 
 
 RUN luarocks install busted
 
-ENV NPM_CONFIG_LOGLEVEL error
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-COPY package.json /tmp/package.json
-WORKDIR /tmp
-RUN npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner and install node deps
-COPY . /runner
 WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/lua.js lib/runners/
+COPY examples/lua.yml examples/
+COPY frameworks/lua frameworks/lua
+COPY test/runner.js test/
+COPY test/runners/lua_spec.js test/runners/
 
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
-
-# Run the test suite to make sure this thing works
 RUN mocha -t 5000 test/runners/lua_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]

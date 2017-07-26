@@ -4,25 +4,29 @@ FROM codewars/base-runner
 # Install "bf" Fast Brainf**k Interpreter
 RUN apt-get update && apt-get install -y --no-install-recommends bf
 
-# add the package json first to a tmp directory and build, copy over so that we don't rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner and install node deps
-ADD . /runner
-
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
 
-# Set environment variables
-ENV HOME /home/codewarrior
-USER codewarrior
-ENV USER codewarrior
-
-# Switch to /runner directory and run BF Test Suite to make sure it works
 WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/bf.js lib/runners/
+COPY examples/bf.yml examples/
+COPY frameworks/bf frameworks/bf
+COPY frameworks/javascript/cw-2.js frameworks/javascript/
+COPY frameworks/javascript/display.js frameworks/javascript/
+COPY frameworks/javascript/chai-display.js frameworks/javascript/
+COPY test/runner.js test/
+COPY test/runners/bf_spec.js test/runners/
+
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+
 RUN mocha -t 10000 test/runners/bf_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]

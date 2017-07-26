@@ -11,37 +11,33 @@ RUN set -ex \
   && ln -s /opt/crystal/embedded/bin/shards /usr/local/bin/shards \
   && ln -s /opt/crystal/bin/crystal /usr/local/bin/crystal
 
-# Setup env
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
+
+
+WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
 
 # Install Shards local to the crystal directory that we will be using
-ADD frameworks/crystal/shard.yml /home/codewarrior/crystal/shard.yml
-WORKDIR /home/codewarrior/crystal
-RUN shards install
-
+COPY frameworks/crystal/shard.yml /home/codewarrior/crystal/shard.yml
+COPY frameworks/crystal/formatter.cr /home/codewarrior/crystal/formatter.cr
 RUN chown -R codewarrior:codewarrior /home/codewarrior/crystal
 
-# Copy package json to tmp
-ADD package.json /tmp/package.json
-
-# Do npm install in tmp for better caching
-RUN \
-  cd /tmp && npm install --production && \
-  mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner
-ADD . /runner
-
-# Working dir is /runner
-WORKDIR /runner
-RUN ln -s /home/codewarrior /workspace
-
-# add the spec formatter to the crystal directory so that everything is ran local
-ADD frameworks/crystal/formatter.cr /home/codewarrior/crystal/formatter.cr
-
-# Codewarrior...
 USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+RUN cd /home/codewarrior/crystal \
+ && shards install
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/crystal.js lib/runners/
+COPY examples/crystal.yml examples/
+COPY test/runner.js test/
+COPY test/runners/crystal_spec.js test/runners/
 
 RUN mocha -t 10000 test/runners/crystal_spec.js
 

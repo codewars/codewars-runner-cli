@@ -222,6 +222,16 @@ services:
     entrypoint: ''
     command: bash
 
+  r-runner:
+    image: codewars/r-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: ''
+    command: bash
+
   # LANGUAGE SPECIFIC HELPERS
   javascript_test:
     image: codewars/node-runner
@@ -715,6 +725,22 @@ services:
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 test/runners/nim_spec.js'
 
+  r:
+    image: codewars/r-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./frameworks:/runner/frameworks
+    entrypoint: 'node run -l r'
+
+  r_test:
+    image: codewars/r-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
+    entrypoint: 'mocha -t 5000 test/runners/r_spec.js'
+
   powershell-runner:
     image: codewars/powershell-runner
     volumes:
@@ -732,5 +758,4 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: ''
     entrypoint: 'mocha -t 5000 test/runners/powershell_spec.js'
