@@ -5,35 +5,39 @@
 # Pull base image.
 FROM codewars/base-runner
 
-RUN apt-get update
-
-# Needed for PowerShell
-RUN apt-get -y install libunwind8 libicu52
-
 # Install PowerShell 6.0
-RUN curl -L https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-beta.4/powershell_6.0.0-beta.4-1ubuntu1.14.04.1_amd64.deb >/tmp/powershell.deb
-RUN dpkg -i /tmp/powershell.deb
-RUN apt-get install -f
+RUN set -ex \
+ && apt-get -q update \
+ && apt-get -q install -y --no-install-recommends libicu52 libunwind8 \
+ && cd /tmp \
+ && curl -fsSL https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-beta.4/powershell_6.0.0-beta.4-1ubuntu1.14.04.1_amd64.deb -o powershell.deb \
+ && dpkg -i powershell.deb \
+ && rm powershell.deb \
+ && apt-get install -f \
+ && rm -rf /var/lib/apt/lists/*
 
 # Install Pester testing framework
 RUN powershell -Command {Install-Module Pester -force}
 
-# add the package json first to a tmp directory and build, copy over so that we dont rebuild every time
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /runner && cp -a /tmp/node_modules /runner
-
-# ADD cli-runner
-ADD . /runner
-
 RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
+
 WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/powershell.js lib/runners/
+COPY examples/powershell.yml examples/
+COPY frameworks/powershell frameworks/powershell
+COPY test/runner.js test/
+COPY test/runners/powershell_spec.js test/runners/
 
 USER codewarrior
-# Set environment variables
-ENV USER codewarrior
-ENV HOME /home/codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+RUN mocha -t 5000 test/runners/powershell_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
 ENTRYPOINT ["node"]
