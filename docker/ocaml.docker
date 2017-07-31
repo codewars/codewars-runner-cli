@@ -1,15 +1,10 @@
-# BUILD-USING:    docker build -t codewars/runner-ocaml .
-# TEST-USING:     docker run --rm -i -t --name=test-runner-ocaml --entrypoint=/bin/bash codewars/runner-ocaml -s
-# RUN-USING:      docker run --rm --name=runner-ocaml codewars/runner-ocaml --help
-
-# Pull base image.
 FROM codewars/base-runner
 
-# Install OCAML
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository -y ppa:avsm/ppa
-RUN apt-get -y update
-RUN apt-get -y install camlp4 ocaml opam
+# Install OCAML 4.02.03 + OPAM 1.2.2
+RUN apt-get install -y software-properties-common \
+ && add-apt-repository -y ppa:avsm/ocaml42+opam12 \
+ && apt-get -y update \
+ && apt-get -y install camlp4 ocaml opam
 
 RUN ln -s /home/codewarrior /workspace
 ENV NPM_CONFIG_LOGLEVEL warn
@@ -30,19 +25,30 @@ COPY test/runners/ocaml_spec.js test/runners/
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
-# Install opam stuff as the target user (so that they have utop, etc)
-# Note that because aspucd is max of 1.8 (a broken version) on Ubuntu Trusty, we have to use the internal solver
-RUN opam init --use-internal-solver  -y
-RUN eval `opam config env`
-RUN echo ". $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true" >> ~/.profile
-RUN echo ". $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true" >> ~/.bashrc
-RUN opam update --use-internal-solver -y
-RUN opam install --use-internal-solver -y ocamlbuild ounit core batteries lwt utop
+WORKDIR /workspace
+ENV OPAMEXTERNALSOLVER=/usr/bin/aspcud
+RUN opam init -y \
+ && eval `opam config env` \
+ && opam update -y \
+ && opam install -y \
+      batteries.2.5.3 \
+      ounit.2.0.0 \
+      core.113.33.03 \
+      lwt.3.1.0 \
+      utop.2.0.1
 
-RUN echo '#!/bin/bash' > /home/codewarrior/run_ocaml.sh
-RUN echo 'eval `opam config env` && $@' >> /home/codewarrior/run_ocaml.sh
-RUN chmod +x /home/codewarrior/run_ocaml.sh
+# opam config env
+ENV PATH=$HOME/.opam/system/bin:$PATH \
+    OCAML_TOPLEVEL_PATH=$HOME/.opam/system/lib/toplevel \
+    PERL5LIB=$HOME/.opam/system/lib/perl5:$PERL5LIB \
+    # MANPATH=$MANPATH:$HOME/.opam/system/man
+    CAML_LD_LIBRARY_PATH=$HOME/.opam/system/lib/stublibs:/usr/lib/ocaml/stublibs
+RUN (echo 'let () ='; \
+     echo '  try Topdirs.dir_directory (Sys.getenv "OCAML_TOPLEVEL_PATH")'; \
+     echo '  with Not_found -> ()'; \
+     echo ';;') >> $HOME/.ocamlinit
 
-RUN /home/codewarrior/run_ocaml.sh mocha -t 5000 test/runners/ocaml_spec.js
+WORKDIR /runner
+RUN mocha -t 5000 test/runners/ocaml_spec.js
 
-ENTRYPOINT ["/home/codewarrior/run_ocaml.sh", "node"]
+ENTRYPOINT ["node"]
