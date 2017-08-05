@@ -1,0 +1,75 @@
+buildscript {
+  ext.kotlin_version = '1.1.3-2'
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+mainClassName = System.getenv('KOTLIN_MAIN_CLASS_NAME')
+defaultTasks 'run'
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  testCompile 'junit:junit:4.12'
+  testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+}
+
+compileKotlin {
+  kotlinOptions {
+  }
+}
+
+test {
+  reports {
+    html.enabled = false
+    junitXml.enabled = false
+  }
+
+  beforeSuite { desc ->
+    if (!desc.name.startsWith("Gradle Test ")) {
+      println("\n<DESCRIBE::>${desc.name}")
+    }
+  }
+  afterSuite { desc, result ->
+    if (!desc.name.startsWith("Gradle Test ")) {
+      println("\n<COMPLETEDIN::>${result.endTime - result.startTime}")
+    }
+  }
+  beforeTest { desc ->
+    println("\n<IT::>${desc.name}")
+  }
+  afterTest { desc, result ->
+    if (result.resultType == TestResult.ResultType.SUCCESS) {
+      println("\n<PASSED::>Test Passed")
+    } else if (result.resultType == TestResult.ResultType.FAILURE) {
+      def ex = result.exception
+      if (ex instanceof AssertionError) {
+        println("\n" + "<FAILED::>Test Failed\n\t${ex.message}".replaceAll("\n", "<:LF:>"))
+      } else {
+        println("\n" + "<ERROR::>Test Errored\n${ex.message}".replaceAll("\n", "<:LF:>"))
+        println("\n" + "<LOG::Stack Trace>${ex.stackTrace.join("\n").replaceAll("\n", "<:LF:>")}")
+      }
+    } else if (result.resultType == TestResult.ResultType.SKIPPED) {
+      println("\n<LOG::>Test Skipped")
+    }
+    println("\n<COMPLETEDIN::>${result.endTime - result.startTime}")
+  }
+
+  onOutput { desc, event ->
+    if (event.destination == TestOutputEvent.Destination.StdOut) {
+      print(event.message)
+    } else if (event.destination == TestOutputEvent.Destination.StdErr) {
+      System.err.print(event.message)
+    }
+  }
+}

@@ -1,0 +1,58 @@
+FROM codewars/base-runner
+
+# Install Oracle JDK 8
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends software-properties-common \
+ && add-apt-repository ppa:webupd8team/java \
+ && apt-get update \
+# http://askubuntu.com/a/190674
+ && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
+ && echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections \
+ && apt-get install -y --no-install-recommends oracle-java8-installer
+
+# Install Gradle
+RUN apt-get update && apt-get install -y --no-install-recommends zip unzip
+ENV GRADLE_HOME=/usr/local/gradle \
+    GRADLE_VERSION=4.0 \
+    GRADLE_DOWNLOAD_SHA256=56bd2dde29ba2a93903c557da1745cafd72cdd8b6b0b83c05a40ed7896b79dfe
+RUN set -o errexit -o nounset \
+	&& echo "Downloading Gradle" \
+	&& wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+	\
+	&& echo "Checking download hash" \
+	&& echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
+	\
+	&& echo "Installing Gradle" \
+	&& unzip gradle.zip \
+	&& rm gradle.zip \
+	&& mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
+	&& ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
+
+RUN ln -s /home/codewarrior /workspace
+ENV NPM_CONFIG_LOGLEVEL warn
+
+WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production
+
+COPY frameworks/kotlin frameworks/kotlin
+RUN chown -R codewarrior:codewarrior frameworks/kotlin
+
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+
+RUN cd /runner/frameworks/kotlin \
+ && gradle --no-daemon test || true
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/kotlin.js lib/runners/
+COPY examples/kotlin.yml examples/
+COPY test/runner.js test/
+COPY test/runners/kotlin_spec.js test/runners/
+
+RUN mocha test/runners/kotlin_spec.js
+
+ENTRYPOINT ["node"]
