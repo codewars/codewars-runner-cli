@@ -1,0 +1,14 @@
+{application, cw,
+ [{description, ""},
+  {vsn, "1.0.0"},
+  {registered, []},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, []},
+  {maintainers, []},
+  {licenses, ["BSD 3-Clause"]},
+  {links, []}
+ ]}.

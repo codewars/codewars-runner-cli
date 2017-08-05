@@ -39,6 +39,7 @@ env:
     - TEST_IMG=nim
     - TEST_IMG=r
     - TEST_IMG=erlang
+    - TEST_IMG=elixir
 
 script:
   - eslint '**/*.js'
