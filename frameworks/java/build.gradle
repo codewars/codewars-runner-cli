@@ -32,6 +32,7 @@ dependencies {
   compile 'org.springframework.boot:spring-boot-starter-data-jpa:1.5.4.RELEASE'
   compile 'org.springframework.boot:spring-boot-starter-data-rest:1.5.4.RELEASE'
   compile 'org.springframework.boot:spring-boot-starter-validation:1.5.4.RELEASE'
+  compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
 }
 
 compileJava.options.encoding = 'UTF-8'
