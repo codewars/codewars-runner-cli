@@ -53,15 +53,13 @@ COPY lib/*.js lib/
 COPY lib/*.sh lib/
 COPY lib/utils lib/utils
 COPY lib/runners/clojure.js lib/runners/
-COPY lib/runners/scala.js lib/runners/
 COPY examples/clojure.yml examples/
 COPY test/runner.js test/
 COPY test/runners/clojure_spec.js test/runners/
-COPY test/runners/scala_spec.js test/runners/
 
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 ENV TIMEOUT 10000
-RUN mocha -t 10000 test/runners/{clojure,scala}_spec.js
+RUN mocha -t 10000 test/runners/clojure_spec.js
 
 ENTRYPOINT ["node"]
