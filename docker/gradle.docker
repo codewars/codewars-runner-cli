@@ -54,6 +54,10 @@ COPY lib/runners/kotlin.js lib/runners/
 COPY examples/kotlin.yml examples/
 COPY test/runners/kotlin_spec.js test/runners/
 
-RUN mocha test/runners/kotlin_spec.js
+COPY lib/runners/groovy.js lib/runners/
+COPY examples/groovy.yml examples/
+COPY test/runners/groovy_spec.js test/runners/
+
+RUN mocha test/runners/kotlin_spec.js test/runners/groovy_spec.js
 
 ENTRYPOINT ["node"]

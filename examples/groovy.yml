@@ -1,0 +1,24 @@
+junit4:
+  bug fixes:
+    initial: |-
+      class Multiplier {
+        static def multiply(a, b) {
+          a + b
+        }
+      }
+    answer: |-
+      class Multiplier {
+        static def multiply(a, b) {
+          return a * b
+        }
+      }
+
+    fixture: |-
+      import org.junit.Test
+
+      class TestMultiply {
+        @Test
+        void returnsProduct() {
+          assert Multiplier.multiply(1, 1) == 1
+        }
+      }
