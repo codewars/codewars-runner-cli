@@ -8,9 +8,6 @@ FROM codewars/base-runner
 # Needed to run add-apt-repository
 RUN apt-get -y install software-properties-common
 
-# Needed for Kotlin
-RUN apt-get install unzip
-
 # Install Java 8
 # RUN apt-get install -y default-jre-headless default-jdk # default is OpenJDK6
 RUN add-apt-repository ppa:webupd8team/java
@@ -24,17 +21,6 @@ RUN apt-get install -y oracle-java8-installer
 RUN curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/bin/lein
 RUN chmod a+x /usr/bin/lein
 RUN mkdir ~/.lein
-
-# Install scala
-RUN apt-get install -y scala
-RUN curl http://downloads.typesafe.com/scala/2.11.2/scala-2.11.2.deb > /tmp/scala-2.11.2.deb
-RUN dpkg -i /tmp/scala-2.11.2.deb && rm /tmp/scala-2.11.2.deb
-
-# Install Kotlin
-# Kotlin doesn't have a usable & safe installer, we're just going to unpack it for now
-RUN curl -L https://github.com/JetBrains/kotlin/releases/download/v1.0.3/kotlin-compiler-1.0.3.zip > /tmp/kotlin-compiler-1.0.3.zip
-RUN unzip /tmp/kotlin-compiler-1.0.3.zip -d /usr/local/lib/kotlin && rm /tmp/kotlin-compiler-1.0.3.zip
-
 
 RUN ln -s /home/codewarrior /workspace
 ENV NPM_CONFIG_LOGLEVEL warn
