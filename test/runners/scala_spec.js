@@ -12,7 +12,7 @@ describe('scala-runner', function() {
     this.timeout(0);
     if (process.env.GRADLE_DAEMON_FLAG !== '--daemon') {
       console.log('Starting Gradle daemon');
-      exec('gradle --daemon test', {
+      exec('gradle --daemon --offline test', {
         cwd: '/runner/frameworks/gradle',
       }, (err) => {
         if (err) return done(err);
@@ -27,7 +27,7 @@ describe('scala-runner', function() {
 
   describe('running', function() {
     afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/src', function(err) {
+      exec('rm -rf /home/codewarrior/project', function(err) {
         if (err) return done(err);
         done();
       });
@@ -97,7 +97,7 @@ describe('scala-runner', function() {
 
   describe('testing with ScalaTest', function() {
     afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/src', function(err) {
+      exec('rm -rf /home/codewarrior/project', function(err) {
         if (err) return done(err);
         done();
       });
@@ -289,7 +289,7 @@ describe('scala-runner', function() {
 
   describe('Example Challenges', function() {
     afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/src', function(err) {
+      exec('rm -rf /home/codewarrior/project', function(err) {
         if (err) return done(err);
         done();
       });

@@ -8,7 +8,7 @@ if (fs.existsSync('/runner/prewarm.sh')) {
   console.log(execSync('sh /runner/prewarm.sh').toString());
 }
 else if (fs.existsSync('/runner/frameworks/gradle/build.gradle')) {
-  execSync('gradle --daemon test', {cwd: '/runner/frameworks/gradle'});
+  execSync('gradle --daemon --offline test', {cwd: '/runner/frameworks/gradle'});
   process.env.GRADLE_DAEMON_FLAG = '--daemon';
 }
 

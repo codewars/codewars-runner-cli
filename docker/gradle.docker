@@ -42,7 +42,10 @@ USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
 RUN cd /runner/frameworks/gradle \
- && gradle --no-daemon test || true
+# download dependencies
+ && gradle --no-daemon test || true \
+# show dependency tree
+ && gradle --no-daemon dependencies
 
 COPY *.js ./
 COPY lib/*.js lib/

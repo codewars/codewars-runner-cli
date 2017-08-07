@@ -11,25 +11,26 @@ repositories {
 
 dependencies {
   // for dependencies in org.jetbrains.kotlin, versions are automatically set to the plugin's version
-  compile     "org.jetbrains.kotlin:kotlin-stdlib"
-  testCompile "org.jetbrains.kotlin:kotlin-test"
-  testCompile "org.jetbrains.kotlin:kotlin-test-junit"
-  testCompile "org.amshove.kluent:kluent:1.26"
-  testCompile "com.winterbe:expekt:0.5.0"
-  testCompile "io.kotlintest:kotlintest:2.0.5"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib"
+  testImplementation "org.jetbrains.kotlin:kotlin-test"
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
+  testImplementation "org.amshove.kluent:kluent:1.26"
+  testImplementation "com.winterbe:expekt:0.5.0"
+  testImplementation "io.kotlintest:kotlintest:2.0.5"
   // TODO Hamkrest support
-  // compile     "org.jetbrains.kotlin:kotlin-reflect"
-  // testCompile "com.natpryce:hamkrest:1.4.1.0"
+  // implementation "org.jetbrains.kotlin:kotlin-reflect"
+  // testImplementation "com.natpryce:hamkrest:1.4.1.0"
 
-  compile     "org.codehaus.groovy:groovy-all:2.4.12"
-  testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+  implementation "org.codehaus.groovy:groovy-all:2.4.12"
+  testImplementation "org.spockframework:spock-core:1.1-groovy-2.4"
 
-  compile "org.scala-lang:scala-library:2.12.3"
-  testCompile "org.scalatest:scalatest_2.12:3.0.3"
+  implementation "org.scala-lang:scala-library:2.12.3"
+  testImplementation "org.scalatest:scalatest_2.12:3.0.3"
 
-  testCompile "junit:junit:4.12"
+  testImplementation "junit:junit:4.12"
 }
 
+compileJava.options.encoding = 'UTF-8'
 compileKotlin {
   kotlinOptions {
   }
@@ -90,4 +91,3 @@ task run(type: JavaExec, dependsOn: classes) {
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
 }
-
