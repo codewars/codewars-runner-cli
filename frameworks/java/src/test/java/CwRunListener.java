@@ -1,12 +1,14 @@
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
 public class CwRunListener extends RunListener
 {
     private boolean failed;
+
     public void testFailure(final Failure failure)
     {
         failed = true;
@@ -24,7 +26,7 @@ public class CwRunListener extends RunListener
     }
     public void testStarted(final Description description)
     {
-        System.out.println(String.format("\n<DESCRIBE::>%s", formatMessage(description.getDisplayName())));
+        System.out.println(String.format("\n<IT::>%s", formatMessage(description.getDisplayName())));
         failed = false;
     }
     public void testFinished(final Description description)
@@ -35,6 +37,17 @@ public class CwRunListener extends RunListener
         }
         System.out.println("\n<COMPLETEDIN::>");
     }
+
+    public void testRunStarted(final Description description) {
+        final String name = description.getDisplayName();
+        final boolean hasName = name != null && name.length() > 0 && name != "null";
+        System.out.println(String.format("\n<DESCRIBE::>%s", formatMessage(hasName ? name : "Test Suite")));
+    }
+
+    public void testRunFinished(final Result result) {
+        System.out.println(String.format("\n<COMPLETEDIN::>%s", result.getRunTime()));
+    }
+
     private static String formatException(final Throwable ex)
     {
         if(ex == null){
