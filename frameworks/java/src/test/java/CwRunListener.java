@@ -45,7 +45,7 @@ public class CwRunListener extends RunListener
     }
 
     public void testRunFinished(final Result result) {
-        System.out.println(String.format("\n<COMPLETEDIN::>%s", result.getRunTime()));
+        System.out.println(String.format("\n<COMPLETEDIN::>%sms", result.getRunTime()));
     }
 
     private static String formatException(final Throwable ex)
