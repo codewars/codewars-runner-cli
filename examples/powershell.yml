@@ -1,0 +1,44 @@
+pester:
+  algorithms:
+    initial: |-
+      # return the two oldest ages within the array of ages passed in.
+      # it should return the two ages as a sorted array, youngest age first.
+
+      function two_oldest_ages
+      param($Ages) {
+        # TODO: complete
+      }
+    answer: |-
+      function two_oldest_ages($ages) {
+        $oldest = $nextoldest = 0
+        foreach ( $age in $ages) {
+          if ($age -gt $Oldest ) {
+            $NextOldest = $Oldest
+            $Oldest = $age
+          }
+            elseif ($Age -gt $nextoldest) {
+            $nextoldest = $Age
+          }
+        }
+
+        return @($nextoldest, $oldest)
+      }
+
+    fixture: |-
+
+      # Example data
+
+      $Results = two_oldest_ages @(1,5,87,45,8,9)
+
+      Describe 'Two oldest ages' {
+
+        It 'Should return the second oldest age first' {
+          $Results[0] | Should be 45
+
+        }
+
+        It 'Should return the oldest age last' {
+          $Results[1] | Should be 87
+        }
+
+      }
