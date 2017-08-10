@@ -65,7 +65,7 @@ describe('java runner', function() {
                   System.err.println("error test");
           }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)\ntest out\n<PASSED::>Test Passed\n');
+        expect(buffer.stdout).to.contain('<IT::>myTestFunction(TestFixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
@@ -91,7 +91,7 @@ describe('java runner', function() {
                   System.out.println("test out");
           }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(TestFixture)\n<FAILED::>Failed Message expected:<5> but was:<3>\n');
+        expect(buffer.stdout).to.contain('<IT::>myTestFunction(TestFixture)\n<FAILED::>Failed Message expected:<5> but was:<3>\n');
         done();
       });
     });
@@ -142,7 +142,7 @@ describe('java runner', function() {
                   System.out.println("test out");
           }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
+        expect(buffer.stdout).to.contain('<IT::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
@@ -171,7 +171,7 @@ describe('java runner', function() {
                   System.out.println("test out");
           }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
+        expect(buffer.stdout).to.contain('<IT::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
@@ -208,7 +208,7 @@ describe('java runner', function() {
                   System.out.println(Helpers.out());
           }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
+        expect(buffer.stdout).to.contain('<IT::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
@@ -243,7 +243,7 @@ describe('java runner', function() {
                   System.out.println(Helpers.out());
           }}`
       }, function(buffer) {
-        expect(buffer.stdout).to.contain('<DESCRIBE::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
+        expect(buffer.stdout).to.contain('<IT::>myTestFunction(Fixture)\ntest out\n<PASSED::>Test Passed\n');
         done();
       });
     });
