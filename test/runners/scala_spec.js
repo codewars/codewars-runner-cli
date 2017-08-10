@@ -10,19 +10,13 @@ const exec = require('child_process').exec;
 describe('scala-runner', function() {
   before(function startDaemon(done) {
     this.timeout(0);
-    if (process.env.GRADLE_DAEMON_FLAG !== '--daemon') {
-      console.log('Starting Gradle daemon');
-      exec('gradle --daemon --offline test', {
-        cwd: '/runner/frameworks/gradle',
-      }, (err) => {
-        if (err) return done(err);
-        process.env.GRADLE_DAEMON_FLAG = '--daemon';
-        done();
-      });
-    }
-    else {
-      process.nextTick(done);
-    }
+    exec('gradle --daemon --offline test', {
+      cwd: '/runner/frameworks/gradle',
+    }, (err) => {
+      if (err) return done(err);
+      console.log('Started Gradle daemon');
+      done();
+    });
   });
 
   describe('running', function() {

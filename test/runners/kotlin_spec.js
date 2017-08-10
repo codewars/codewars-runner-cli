@@ -10,19 +10,13 @@ const exec = require('child_process').exec;
 describe('kotlin-runner', function() {
   before(function startDaemon(done) {
     this.timeout(0);
-    if (process.env.GRADLE_DAEMON_FLAG !== '--daemon') {
-      console.log('Starting Gradle daemon');
-      exec('gradle --daemon --offline test', {
-        cwd: '/runner/frameworks/gradle',
-      }, (err) => {
-        if (err) return done(err);
-        process.env.GRADLE_DAEMON_FLAG = '--daemon';
-        done();
-      });
-    }
-    else {
-      process.nextTick(done);
-    }
+    exec('gradle --daemon --offline test', {
+      cwd: '/runner/frameworks/gradle',
+    }, (err) => {
+      if (err) return done(err);
+      console.log('Started Gradle daemon');
+      done();
+    });
   });
 
   describe('running', function() {
@@ -177,6 +171,7 @@ describe('kotlin-runner', function() {
           `}`,
         ].join('\n'),
       }, function(buffer) {
+        console.log(buffer);
         expect(buffer.stdout).to.contain('<FAILED::>');
         done();
       });
@@ -206,6 +201,7 @@ describe('kotlin-runner', function() {
           `}`,
         ].join('\n'),
       }, function(buffer) {
+        console.log(buffer);
         expect(buffer.stdout).to.contain('<ERROR::>');
         done();
       });
@@ -235,6 +231,7 @@ describe('kotlin-runner', function() {
           `}`,
         ].join('\n'),
       }, function(buffer) {
+        console.log(buffer);
         expect(buffer.stdout).to.contain('<FAILED::>');
         expect(buffer.stdout).to.contain('add(1, 1) should return 2');
         done();

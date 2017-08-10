@@ -30,15 +30,30 @@ dependencies {
   testImplementation "junit:junit:4.12"
 }
 
-compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
+}
+tasks.withType(GroovyCompile) {
+  options.encoding = 'UTF-8'
+  groovyOptions.encoding = 'UTF-8'
+}
+
+
 compileKotlin {
   kotlinOptions {
   }
 }
 
-test {
-  systemProperty 'java.awt.headless', true
+tasks.withType(ScalaCompile) {
+  scalaCompileOptions.with {
+    // disable incremental compilation
+    // incremental compilation requires dependency analysis
+    // and the first build takes much longer
+    force = true
+  }
+}
 
+test {
   reports {
     html.enabled = false
     junitXml.enabled = false
@@ -88,6 +103,7 @@ test {
 task run(type: JavaExec, dependsOn: classes) {
   // use gradle -D?
   main = System.getenv("MAIN_CLASS_NAME")
+  jvmArgs '-Xmx256m'
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
 }
