@@ -73,12 +73,12 @@ type Error <: Result
     meta::Dict
 end
 
-LF = "<:LF:>\n"
+LF = "\n"
 
 function format_line(s...)
     context = isempty(contexts) ? () : ("<IT::>$(contexts[end])",LF)
     #apply(string,tuple(context...,s...,LF))
-    string(tuple(context...,s...,LF))
+    string(context...,s...,LF)
 end
 
 # A TestSuite collects the results of a series of tests, as well as some
