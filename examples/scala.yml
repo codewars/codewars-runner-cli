@@ -25,4 +25,27 @@ scalatest:
         }
       }
 
+junit4:
+  bug fixes:
+    initial: |-
+      package com.example
+      object Buggy {
+        def multiply(a: Int, b: Int) = a - b
+      }
 
+    answer: |-
+      package com.example
+      object Buggy {
+        def multiply(a: Int, b: Int) = a * b
+      }
+
+    fixture: |-
+      import org.junit.Test
+      import org.junit.Assert._
+      import com.example._
+
+      class BugFixes {
+        @Test def multiplyTest() {
+          assertEquals(1, Buggy.multiply(1, 1))
+        }
+      }

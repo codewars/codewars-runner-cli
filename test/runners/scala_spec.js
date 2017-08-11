@@ -235,7 +235,7 @@ describe('scala-runner', function() {
           '  <IT::><PASSED::><COMPLETEDIN::>',
           '<COMPLETEDIN::>',
         ].join('').replace(/\s/g, '');
-        expect(buffer.stdout.match(/<(?:DESCRIBE|IT|PASSED|FAILED|COMPLETEDIN)::>/g).join('')).to.equal(expected);
+        expect((buffer.stdout.match(/<(?:DESCRIBE|IT|PASSED|FAILED|COMPLETEDIN)::>/g) || []).join('')).to.equal(expected);
         done();
       });
     });
@@ -277,7 +277,205 @@ describe('scala-runner', function() {
     });
   });
 
-  describe.skip('testing with JUnit', function() {
+  describe('testing with JUnit', function() {
+    afterEach(function cleanup(done) {
+      exec('rm -rf /home/codewarrior/project', function(err) {
+        if (err) return done(err);
+        done();
+      });
+    });
+
+    it('should handle basic assertion', function(done) {
+      this.timeout(0);
+      runner.run({
+        language: 'scala',
+        testFramework: 'junit4',
+        solution: [
+          `package example`,
+          ``,
+          `object Adder {`,
+          `  def add(a: Int, b: Int) = a + b`,
+          `}`,
+        ].join('\n'),
+        fixture: [
+          `import org.junit.Test`,
+          `import org.junit.Assert._`,
+          `import example.Adder._`,
+          ``,
+          `class TestAdd {`,
+          `  @Test def addTest() {`,
+          `    assertEquals("add(1, 1) == 2", 2, add(1, 1))`,
+          `  }`,
+          `}`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        done();
+      });
+    });
+
+    it('should handle basic assertion failure', function(done) {
+      this.timeout(0);
+      runner.run({
+        language: 'scala',
+        testFramework: 'junit4',
+        solution: [
+          `package example`,
+          ``,
+          `object Adder {`,
+          `  def add(a: Int, b: Int) = a - b`,
+          `}`,
+        ].join('\n'),
+        fixture: [
+          `import org.junit.Test`,
+          `import org.junit.Assert._`,
+          `import example.Adder._`,
+          ``,
+          `class TestAdd {`,
+          `  @Test def addTest() {`,
+          `    assertEquals("add(1, 1) == 2", 2, add(1, 1))`,
+          `  }`,
+          `}`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<FAILED::>');
+        done();
+      });
+    });
+
+    it('should handle basic assertion failure by error', function(done) {
+      this.timeout(0);
+      runner.run({
+        language: 'scala',
+        testFramework: 'junit4',
+        solution: [
+          `package example`,
+          ``,
+          `object Adder {`,
+          `  def add(a: Int, b: Int) = a / b`,
+          `}`,
+        ].join('\n'),
+        fixture: [
+          `import org.junit.Test`,
+          `import org.junit.Assert._`,
+          `import example.Adder._`,
+          ``,
+          `class TestAdd {`,
+          `  @Test def addTest() {`,
+          `    assertEquals("add(1, 0) == 1", 1, add(1, 0))`,
+          `  }`,
+          `}`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<ERROR::>');
+        done();
+      });
+    });
+
+    it('should handle basic assertion failure with message', function(done) {
+      this.timeout(0);
+      runner.run({
+        language: 'scala',
+        testFramework: 'junit4',
+        solution: [
+          `package example`,
+          ``,
+          `object Adder {`,
+          `  def add(a: Int, b: Int) = a - b`,
+          `}`,
+        ].join('\n'),
+        fixture: [
+          `import org.junit.Test`,
+          `import org.junit.Assert._`,
+          `import example.Adder._`,
+          ``,
+          `class TestAdd {`,
+          `  @Test def addTest() {`,
+          `    assertEquals("add(1, 1) returns 2", 2, add(1, 1))`,
+          `  }`,
+          `}`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<FAILED::>');
+        expect(buffer.stdout).to.contain('add(1, 1) returns 2');
+        done();
+      });
+    });
+
+    it('can have multiple suites', function(done) {
+      this.timeout(0);
+      runner.run({
+        language: 'scala',
+        testFramework: 'junit4',
+        solution: [
+          `package example`,
+          ``,
+          `object Adder {`,
+          `  def add(a: Int, b: Int) = a + b`,
+          `}`,
+        ].join('\n'),
+        fixture: [
+          `import org.junit.Test`,
+          `import org.junit.Assert._`,
+          `import example.Adder._`,
+          ``,
+          `class TestAddPos {`,
+          `  @Test def addTest() {`,
+          `    assertEquals("add(1, 1) == 2", 2, add(1, 1))`,
+          `  }`,
+          `}`,
+          `class TestAddNeg {`,
+          `  @Test def addTest() {`,
+          `    assertEquals("add(-1, -1) == -2", -2, add(-1, -1))`,
+          `  }`,
+          `}`,
+        ].join('\n'),
+      }, function(buffer) {
+        const expected = [
+          '<DESCRIBE::>',
+          '  <IT::><PASSED::><COMPLETEDIN::>',
+          '<COMPLETEDIN::>',
+          '<DESCRIBE::>',
+          '  <IT::><PASSED::><COMPLETEDIN::>',
+          '<COMPLETEDIN::>',
+        ].join('').replace(/\s/g, '');
+        expect((buffer.stdout.match(/<(?:DESCRIBE|IT|PASSED|FAILED|COMPLETEDIN)::>/g) || []).join('')).to.equal(expected);
+        done();
+      });
+    });
+
+    it('should allow logging', function(done) {
+      this.timeout(0);
+      runner.run({
+        language: 'scala',
+        testFramework: 'junit4',
+        solution: [
+          `package example`,
+          ``,
+          `object Adder {`,
+          `  def add(a: Int, b: Int): Int = {`,
+          '    println(s"a = $a, b = $b")',
+          `    a + b`,
+          `  }`,
+          `}`,
+        ].join('\n'),
+        fixture: [
+          `import org.junit.Test`,
+          `import org.junit.Assert._`,
+          `import example.Adder._`,
+          ``,
+          `class TestAdd {`,
+          `  @Test def addTest() {`,
+          `    assertEquals("add(1, 1) == 2", 2, add(1, 1))`,
+          `  }`,
+          `}`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('a = 1, b = 1');
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        done();
+      });
+    });
   });
 
 
