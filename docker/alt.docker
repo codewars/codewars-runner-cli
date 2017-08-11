@@ -17,9 +17,6 @@ RUN curl -fsSL https://phar.phpunit.de/phpunit-5.7.phar -o phpunit.phar \
 #RUN apt-add-repository ppa:swi-prolog/stable && apt-get update
 #RUN apt-get install -y swi-prolog
 
-# Install GNU R
-RUN apt-get install -y r-base
-
 RUN ln -s /home/codewarrior /workspace
 ENV NPM_CONFIG_LOGLEVEL warn
 
@@ -32,12 +29,10 @@ COPY lib/*.js lib/
 COPY lib/*.sh lib/
 COPY lib/utils lib/utils
 COPY lib/runners/php.js lib/runners/
-COPY lib/runners/r.js lib/runners/
 COPY examples/php.yml examples/
 COPY frameworks/php frameworks/php
 COPY test/runner.js test/
 COPY test/runners/php_spec.js test/runners/
-COPY test/runners/r_spec.js test/runners/
 
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
