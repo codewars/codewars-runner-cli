@@ -28,6 +28,16 @@ dependencies {
   testImplementation "org.scalatest:scalatest_2.12:3.0.3"
 
   testImplementation "junit:junit:4.12"
+
+  // Spring Boot
+  implementation('org.springframework.boot:spring-boot-starter-web:1.5.6.RELEASE') {
+    // HACK
+    // stops super verbose logs from org.reflections.Reflections
+    // seems to be using the SLF4J binding inside ch.qos.logback:logback-classic:1.1.11
+    // introduced by org.springframework.boot:spring-boot-starter-logging
+    exclude module: 'logback-classic'
+  }
+  testImplementation 'org.springframework.boot:spring-boot-starter-test:1.5.6.RELEASE'
 }
 
 tasks.withType(JavaCompile) {

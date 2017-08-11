@@ -63,8 +63,13 @@ COPY lib/runners/scala.js lib/runners/
 COPY examples/scala.yml examples/
 COPY test/runners/scala_spec.js test/runners/
 
+COPY lib/runners/java2.js lib/runners/java.js
+COPY examples/java.yml examples/
+COPY test/runners/java2_spec.js test/runners/java_spec.js
+
 RUN mocha test/runners/kotlin_spec.js
 RUN mocha test/runners/groovy_spec.js
 RUN mocha test/runners/scala_spec.js
+RUN mocha test/runners/java_spec.js
 
 ENTRYPOINT ["node"]
