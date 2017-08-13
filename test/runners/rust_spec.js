@@ -460,5 +460,18 @@ describe('rust runner', function() {
         done();
       });
     });
+
+    it('should allow non snake case', function(done) {
+      runner.run({
+        language: 'rust',
+        code: 'fn add(x: i32, y: i32) -> i32 { x + y }',
+        fixture: `#[test] fn testAdd() { assert_eq!(add(1, 1), 2); }`,
+        testFramework: 'rust'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
+        expect(buffer.stderr).to.be.empty;
+        done();
+      });
+    });
   });
 });
