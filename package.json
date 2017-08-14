@@ -158,7 +158,7 @@
     "mathf": "0.0.3",
     "mkdirp": "^0.5.1",
     "mongodb": "^2.1.18",
-    "mongoose": "^4.4.14",
+    "mongoose": "4.10.x",
     "mongoose-mock": "^0.4.0",
     "mysql": "^2.11.1",
     "natural": "^0.4.0",

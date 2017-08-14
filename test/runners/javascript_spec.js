@@ -123,6 +123,7 @@ describe('javascript runner', function() {
                     `
         }, function(buffer) {
           expect(buffer.stdout).to.contain('meow');
+          expect(buffer.stderr).to.be.empty;
           done();
         });
       });
