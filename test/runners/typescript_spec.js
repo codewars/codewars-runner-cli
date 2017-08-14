@@ -121,7 +121,7 @@ describe('typescript runner', function() {
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
-            
+
             @Component({
                 selector: "app-hello",
                 template: "<h1>{{title}}</h1>"
@@ -138,10 +138,10 @@ describe('typescript runner', function() {
             import 'zone.js/dist/mocha-patch';
             import 'zone.js/dist/async-test';
             import 'zone.js/dist/fake-async-test';
-            
+
             import { TestBed } from '@angular/core/testing';
             import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-            
+
             TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
           `,
           fixture: `\
@@ -151,15 +151,15 @@ describe('typescript runner', function() {
             import { DebugElement } from "@angular/core";
             import { async, ComponentFixture, TestBed } from "@angular/core/testing";
             import { By } from "@angular/platform-browser";
-            
+
             import {HelloComponent} from './solution';
-            
+
             describe("HelloComponent", () => {
-            
+
                 let fixture: ComponentFixture<HelloComponent>;
-            
+
                 beforeEach(async(() => {
-            
+
                     return TestBed
                         .configureTestingModule({
                             declarations: [HelloComponent]
@@ -169,22 +169,22 @@ describe('typescript runner', function() {
                             fixture = TestBed.createComponent(HelloComponent);
                         });
                 }));
-            
+
                 it("should display original title", () => {
-            
+
                     let debugElement = fixture.debugElement.query(By.css("h1"));
                     fixture.detectChanges();
-            
+
                     expect(debugElement.nativeElement.textContent).to.equal("Hello :)");
                 });
-            
+
                 it("should display a different test title", () => {
-            
+
                     let debugElement = fixture.debugElement.query(By.css("h1"));
-            
+
                     fixture.componentInstance.title = "Test Title";
                     fixture.detectChanges();
-            
+
                     expect(debugElement.nativeElement.textContent).to.equal("Test Title");
                 });
             });`,
@@ -201,7 +201,7 @@ describe('typescript runner', function() {
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
-            
+
             @Component({
                 selector: "app-hello",
                 template: "<h1>{{tittle}}</h1>"
@@ -218,10 +218,10 @@ describe('typescript runner', function() {
             import 'zone.js/dist/mocha-patch';
             import 'zone.js/dist/async-test';
             import 'zone.js/dist/fake-async-test';
-            
+
             import { TestBed } from '@angular/core/testing';
             import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-            
+
             TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
           `,
           fixture: `\
@@ -231,15 +231,15 @@ describe('typescript runner', function() {
             import { DebugElement } from "@angular/core";
             import { async, ComponentFixture, TestBed } from "@angular/core/testing";
             import { By } from "@angular/platform-browser";
-            
+
             import {HelloComponent} from './solution';
-            
+
             describe("HelloComponent", () => {
-            
+
                 let fixture: ComponentFixture<HelloComponent>;
-            
+
                 beforeEach(async(() => {
-            
+
                     return TestBed
                         .configureTestingModule({
                             declarations: [HelloComponent]
@@ -249,12 +249,12 @@ describe('typescript runner', function() {
                             fixture = TestBed.createComponent(HelloComponent);
                         });
                 }));
-            
+
                 it("should display original title", () => {
-            
+
                     let debugElement = fixture.debugElement.query(By.css("h1"));
                     fixture.detectChanges();
-            
+
                     expect(debugElement.nativeElement.textContent).to.equal("Hello :)");
                 });
             });`,
@@ -301,7 +301,7 @@ describe('typescript runner', function() {
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
-            
+
             @Component({
                 selector: "app-hello",
                 template: "<h1>{{title}}</h1>"
@@ -318,10 +318,10 @@ describe('typescript runner', function() {
             import 'zone.js/dist/mocha-patch';
             import 'zone.js/dist/async-test';
             import 'zone.js/dist/fake-async-test';
-            
+
             import { TestBed } from '@angular/core/testing';
             import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-            
+
             TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
           `,
           fixture: `\
@@ -331,15 +331,15 @@ describe('typescript runner', function() {
             import { DebugElement } from "@angular/core";
             import { async, ComponentFixture, TestBed } from "@angular/core/testing";
             import { By } from "@angular/platform-browser";
-            
+
             import {HelloComponent} from './solution';
-            
+
             suite("HelloComponent", () => {
-            
+
                 let fixture: ComponentFixture<HelloComponent>;
-            
+
                 beforeEach(async(() => {
-            
+
                     return TestBed
                         .configureTestingModule({
                             declarations: [HelloComponent]
@@ -349,22 +349,22 @@ describe('typescript runner', function() {
                             fixture = TestBed.createComponent(HelloComponent);
                         });
                 }));
-            
+
                 test("should display original title", () => {
-            
+
                     let debugElement = fixture.debugElement.query(By.css("h1"));
                     fixture.detectChanges();
-            
+
                     expect(debugElement.nativeElement.textContent).to.equal("Hello :)");
                 });
-            
+
                 test("should display a different test title", () => {
-            
+
                     let debugElement = fixture.debugElement.query(By.css("h1"));
-            
+
                     fixture.componentInstance.title = "Test Title";
                     fixture.detectChanges();
-            
+
                     expect(debugElement.nativeElement.textContent).to.equal("Test Title");
                 });
             });`,
@@ -381,7 +381,7 @@ describe('typescript runner', function() {
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
-            
+
             @Component({
                 selector: "app-hello",
                 template: "<h1>{{tittle}}</h1>"
@@ -398,10 +398,10 @@ describe('typescript runner', function() {
             import 'zone.js/dist/mocha-patch';
             import 'zone.js/dist/async-test';
             import 'zone.js/dist/fake-async-test';
-            
+
             import { TestBed } from '@angular/core/testing';
             import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-            
+
             TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
           `,
           fixture: `\
@@ -411,15 +411,15 @@ describe('typescript runner', function() {
             import { DebugElement } from "@angular/core";
             import { async, ComponentFixture, TestBed } from "@angular/core/testing";
             import { By } from "@angular/platform-browser";
-            
+
             import {HelloComponent} from './solution';
-            
+
             suite("HelloComponent", () => {
-            
+
                 let fixture: ComponentFixture<HelloComponent>;
-            
+
                 beforeEach(async(() => {
-            
+
                     return TestBed
                         .configureTestingModule({
                             declarations: [HelloComponent]
@@ -429,12 +429,12 @@ describe('typescript runner', function() {
                             fixture = TestBed.createComponent(HelloComponent);
                         });
                 }));
-            
+
                 test("should display original title", () => {
-            
+
                     let debugElement = fixture.debugElement.query(By.css("h1"));
                     fixture.detectChanges();
-            
+
                     expect(debugElement.nativeElement.textContent).to.equal("Hello :)");
                 });
             });`,
@@ -518,6 +518,34 @@ describe('typescript runner', function() {
         ].join('\n'),
       }, function(buffer) {
         expect(buffer.stdout).to.contain('<PASSED::>Passed');
+        done();
+      });
+    });
+  });
+
+  describe('typings', function() {
+    it('should support the reference path under /runner/typings/main/ambient', function(done) {
+      runner.run({
+        language: 'typescript',
+        code: `
+                        export interface B {
+                            b:number
+                        };
+                        export var a:B = {b: 3};
+                    `,
+        fixture: `
+                        /// <reference path="/runner/typings/main/ambient/mocha/index.d.ts" />
+                        /// <reference path="/runner/typings/main/ambient/chai/index.d.ts" />
+                        import solution = require('./solution');
+                        import {assert} from "chai";
+                        describe("test", function(){
+                            it("should be 3", function(){
+                                assert.equal(3, solution.a.b);
+                            })
+                        });`,
+        testFramework: 'mocha_bdd'
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('<PASSED::>');
         done();
       });
     });
