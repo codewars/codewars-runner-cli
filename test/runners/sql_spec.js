@@ -107,3 +107,38 @@ describe('sql runner', function() {
     });
   });
 });
+
+describe('Sequel deprecation warnings', function() {
+  it("should be silenced", function(done) {
+    runner.run({
+      language: 'sql',
+      languageVersion: 'sqlite',
+      setup: [
+        `DB.drop_table :items rescue nil`,
+        `DB.create_table :items do`,
+        `  primary_key :id`,
+        `  String :name`,
+        `  Int :age`,
+        `end`,
+        ``,
+        `$items = DB[:items]`,
+        `100.times do`,
+        `  $items.insert(name: Faker::Name.name, age: Faker::Number.number(2))`,
+        `end`,
+      ].join('\n'),
+      solution: `SELECT * FROM items WHERE age > 50`,
+      fixture: [
+        `describe :items do`,
+        `   it "should return records with age over 50" do`,
+        `     expect(run_sql.to_a.count).to eq DB[:items].where('age > 50').count`,
+        `   end`,
+        `end`,
+      ].join('\n'),
+    }, function(buffer) {
+      expect(buffer.stdout).not.to.contain('SEQUEL DEPRECATION WARNING:');
+      expect(buffer.stderr).to.be.empty;
+      done();
+    });
+  });
+});
+
