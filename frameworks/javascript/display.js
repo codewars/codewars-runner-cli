@@ -52,7 +52,7 @@ module.exports.write = function write(type, msg, opts) {
   }
 
   msg = display.format(display.message(msg));
-  console.log("<" + type.toUpperCase() + ":" + mode + ":" + label + ">" + msg);
+  console.log("\n<" + type.toUpperCase() + ":" + mode + ":" + label + ">" + msg);
 };
 
 /**

@@ -512,7 +512,7 @@ describe("test", function(){
 
       it('should handle a basic assertion', function(done) {
         runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 1);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
@@ -526,7 +526,7 @@ describe("test", function(){
 
       it('should handle a basic failed test', function(done) {
         runner.run({language: 'javascript', code: 'var a = 1', fixture: 'Test.expect(a == 2)', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<FAILED::>Value is not what was expected\n');
+          expect(buffer.stdout).to.equal('\n<FAILED::>Value is not what was expected\n');
           done();
         });
       });
@@ -556,7 +556,19 @@ describe("test", function(){
                     `,
           testFramework: 'cw-2'
         }, function(buffer) {
-          expect(buffer.stdout).to.include(`<DESCRIBE::>top\n<DESCRIBE::>2nd\n<IT::>should a\n`);
+          expect(buffer.stdout).to.include(`<DESCRIBE::>top\n\n<DESCRIBE::>2nd\n\n<IT::>should a\n`);
+          done();
+        });
+      });
+
+      it('should have formatting commands on independent lines', function(done) {
+        runner.run({
+          language: 'javascript',
+          solution: `process.stdout.write('foo');`,
+          fixture: 'Test.expect(true);',
+          testFramework: 'cw-2'
+        }, function(buffer) {
+          expect(buffer.stdout).to.equal('foo\n<PASSED::>Test Passed\n');
           done();
         });
       });
@@ -600,7 +612,7 @@ describe("test", function(){
                         `,
             testFramework: 'cw-2'
           }, function(buffer) {
-            expect(buffer.stdout).to.include("<ERROR::>`it` function timed out. Function ran longer than 2ms\n<COMPLETEDIN::>");
+            expect(buffer.stdout).to.include("<ERROR::>`it` function timed out. Function ran longer than 2ms\n\n<COMPLETEDIN::>");
             done();
           });
         });
@@ -622,7 +634,7 @@ describe("test", function(){
                         `,
             testFramework: 'cw-2'
           }, function(buffer) {
-            expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n<PASSED::>Test Passed: Value == \'ok\'\n<COMPLETEDIN::>");
+            expect(buffer.stdout).to.include("<IT::>should do something\nran solution\n\n<PASSED::>Test Passed: Value == \'ok\'\n\n<COMPLETEDIN::>");
             done();
           });
         });
@@ -749,7 +761,7 @@ describe("test", function(){
             fixture: 'Test.expect(a.every(x => Number.isInteger(x) && x >= 0 && x <= 100));',
             testFramework: 'cw-2'
           }, function(buffer) {
-            expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+            expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
             done();
           });
         });
@@ -761,7 +773,7 @@ describe("test", function(){
             fixture: 'Test.expect(a.every(x => Math.abs(1 - 100*x/1e7) <= 0.2));',
             testFramework: 'cw-2'
           }, function(buffer) {
-            expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+            expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
             done();
           });
         });
@@ -771,25 +783,25 @@ describe("test", function(){
     describe('Test.assertApproxEquals', function() {
       it("should allow for minor floating point errors and compare them as equal", function(done) {
         runner.run({language: 'javascript', code: 'var a = 2.00000000004', fixture: 'Test.assertApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
       it("should allow for minor floating point errors and compare them as equal (2)", function(done) {
         runner.run({language: 'javascript', code: 'var a = 1.99999999996', fixture: 'Test.assertApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
       it("should handle 0 properly and not throw DivisionByZeroError", function(done) {
         runner.run({language: 'javascript', code: 'var a = 0.00000000009', fixture: 'Test.assertApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
       it("should handle 0 properly and not throw DivisionByZeroError (2)", function(done) {
         runner.run({language: 'javascript', code: 'var a = -0.00000000009', fixture: 'Test.assertApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
@@ -812,25 +824,25 @@ describe("test", function(){
     describe('Test.assertNotApproxEquals', function() {
       it('should pass tests where the two values are outside the rejected relative error', function(done) {
         runner.run({language: 'javascript', code: 'var a = 2.004', fixture: 'Test.assertNotApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
       it('should pass tests where the two values are outside the rejected relative error (2)', function(done) {
         runner.run({language: 'javascript', code: 'var a = 1.996', fixture: 'Test.assertNotApproxEquals(a, 2);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
       it('should handle 0 properly and not throw DivisionByZeroError', function(done) {
         runner.run({language: 'javascript', code: 'var a = -0.009', fixture: 'Test.assertNotApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
       it('should handle 0 properly and not throw DivisionByZeroError (2)', function(done) {
         runner.run({language: 'javascript', code: 'var a = 0.009', fixture: 'Test.assertNotApproxEquals(a, 0);', testFramework: 'cw-2'}, function(buffer) {
-          expect(buffer.stdout).to.equal('<PASSED::>Test Passed\n');
+          expect(buffer.stdout).to.equal('\n<PASSED::>Test Passed\n');
           done();
         });
       });
@@ -1011,6 +1023,8 @@ Test.assertNotApproxEquals(a, -1e-8);`, testFramework: 'cw-2'}, function(buffer)
           });
         });
       });
+
+
     });
 
     //----------------------------------------------------------------------------------------
