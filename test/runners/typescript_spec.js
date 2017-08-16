@@ -85,6 +85,30 @@ describe('typescript runner', function() {
         done();
       });
     });
+
+    it('should have formatting commands on independent lines', function(done) {
+      runner.run({
+        language: 'typescript',
+        solution: `//`,
+        fixture: [
+          `/// <reference path="/runner/typings/node/index.d.ts" />`,
+          `/// <reference path="/runner/typings/mocha/index.d.ts" />`,
+          `/// <reference path="/runner/typings/chai/index.d.ts" />`,
+          `import {assert} from "chai";`,
+          ``,
+          `describe("tests", function() {`,
+          `  it("test", function() {`,
+          `    process.stdout.write('foo');`,
+          `    assert.equal(1, 1);`,
+          `  });`,
+          `});`,
+        ].join('\n'),
+        testFramework: 'mocha_bdd',
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('foo\n<PASSED::>Passed\n');
+        done();
+      });
+    });
   });
 
 

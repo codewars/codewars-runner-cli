@@ -423,6 +423,26 @@ describe("test", function(){
           });
         });
       });
+
+      it('should have formatting commands on independent lines', function(done) {
+        runner.run({
+          language: 'javascript',
+          solution: `//`,
+          fixture: [
+            `const assert = require('chai').assert;`,
+            `describe("tests", function() {`,
+            `  it("test", function() {`,
+            `    process.stdout.write('foo');`,
+            `    assert.equal(1, 1);`,
+            `  });`,
+            `});`,
+          ].join('\n'),
+          testFramework: 'mocha_bdd',
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('foo\n<PASSED::>Passed\n');
+          done();
+        });
+      });
     });
 
 
@@ -472,6 +492,26 @@ describe("test", function(){
           testFramework: 'mocha_tdd'
         }, function(buffer) {
           expect(buffer.stdout).to.contain('<ERROR::>');
+          done();
+        });
+      });
+
+      it('should have formatting commands on independent lines', function(done) {
+        runner.run({
+          language: 'javascript',
+          solution: `//`,
+          fixture: [
+            `const assert = require('chai').assert;`,
+            `suite("tests", function() {`,
+            `  test("test", function() {`,
+            `    process.stdout.write('foo');`,
+            `    assert.equal(1, 1);`,
+            `  });`,
+            `});`,
+          ].join('\n'),
+          testFramework: 'mocha_tdd',
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('foo\n<PASSED::>Passed\n');
           done();
         });
       });
