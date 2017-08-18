@@ -4,7 +4,7 @@ Code is executed within a Dockerized Ubuntu 14.04 container.
 
 ## Language
 
-[Kotlin](https://kotlinlang.org/) v1.1.3-2
+[Kotlin](https://kotlinlang.org/) v1.1.4
 
 ## Testing
 
