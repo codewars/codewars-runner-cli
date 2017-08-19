@@ -1,0 +1,56 @@
+junit4:
+  bug fixes:
+    initial: |-
+      class Multiplier {
+        static def multiply(a, b) {
+          a + b
+        }
+      }
+    answer: |-
+      class Multiplier {
+        static def multiply(a, b) {
+          return a * b
+        }
+      }
+
+    fixture: |-
+      import org.junit.Test
+
+      class TestMultiply {
+        @Test
+        void returnsProduct() {
+          assert Multiplier.multiply(1, 1) == 1
+        }
+      }
+
+spock:
+  bug fixes:
+    initial: |-
+      class Multiplier {
+        static def multiply(a, b) {
+          a + b
+        }
+      }
+    answer: |-
+      class Multiplier {
+        static def multiply(a, b) {
+          return a * b
+        }
+      }
+    fixture: |-
+      import spock.lang.Specification
+      import spock.lang.Unroll
+
+      class MultiplierSpec extends Specification {
+        @Unroll
+        def "Multiplier.multipy(#a, #b) returns the product #c"() {
+          expect:
+          Multiplier.multiply(a, b) == c
+
+          where:
+          a | b || c
+          1 | 1 || 1
+          1 | 2 || 2
+          1 | 3 || 3
+        }
+      }

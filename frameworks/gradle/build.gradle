@@ -1,0 +1,109 @@
+plugins {
+  id 'java'
+  id 'groovy'
+  id 'scala'
+  id 'org.jetbrains.kotlin.jvm' version '1.1.4'
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  // for dependencies in org.jetbrains.kotlin, versions are automatically set to the plugin's version
+  implementation "org.jetbrains.kotlin:kotlin-stdlib"
+  testImplementation "org.jetbrains.kotlin:kotlin-test"
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
+  testImplementation "org.amshove.kluent:kluent:1.26"
+  testImplementation "com.winterbe:expekt:0.5.0"
+  testImplementation "io.kotlintest:kotlintest:2.0.5"
+  // TODO Hamkrest support
+  // implementation "org.jetbrains.kotlin:kotlin-reflect"
+  // testImplementation "com.natpryce:hamkrest:1.4.1.0"
+
+  implementation "org.codehaus.groovy:groovy-all:2.4.12"
+  testImplementation "org.spockframework:spock-core:1.1-groovy-2.4"
+
+  implementation "org.scala-lang:scala-library:2.12.3"
+  testImplementation "org.scalatest:scalatest_2.12:3.0.3"
+
+  testImplementation "junit:junit:4.12"
+}
+
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
+}
+tasks.withType(GroovyCompile) {
+  options.encoding = 'UTF-8'
+  groovyOptions.encoding = 'UTF-8'
+}
+
+
+compileKotlin {
+  kotlinOptions {
+  }
+}
+
+tasks.withType(ScalaCompile) {
+  scalaCompileOptions.with {
+    // disable incremental compilation
+    // incremental compilation requires dependency analysis
+    // and the first build takes much longer
+    force = true
+  }
+}
+
+test {
+  reports {
+    html.enabled = false
+    junitXml.enabled = false
+  }
+
+  beforeSuite { desc ->
+    if (!desc.name.startsWith("Gradle Test ")) {
+      println("\n<DESCRIBE::>${desc.name}")
+    }
+  }
+  afterSuite { desc, result ->
+    if (!desc.name.startsWith("Gradle Test ")) {
+      println("\n<COMPLETEDIN::>${result.endTime - result.startTime}")
+    }
+  }
+  beforeTest { desc ->
+    println("\n<IT::>${desc.name}")
+  }
+  afterTest { desc, result ->
+    if (result.resultType == TestResult.ResultType.SUCCESS) {
+      println("\n<PASSED::>Test Passed")
+    } else if (result.resultType == TestResult.ResultType.FAILURE) {
+      def ex = result.exception
+      // org.gradle.internal.serialize.PlaceholderException is used when the exception is not serializable.
+      // for example org.scalatest.exceptions.TestFailedException from ScalaTest
+      if (ex in AssertionError || ex in org.gradle.internal.serialize.PlaceholderException) {
+        println("\n" + "<FAILED::>Test Failed\n${ex.message}".replaceAll("\n", "<:LF:>"))
+      } else {
+        println("\n" + "<ERROR::>Test Errored\n${ex.message}".replaceAll("\n", "<:LF:>"))
+        println("\n" + "<LOG::Stack Trace>${ex.stackTrace.join("\n").replaceAll("\n", "<:LF:>")}")
+      }
+    } else if (result.resultType == TestResult.ResultType.SKIPPED) {
+      println("\n<LOG::>Test Skipped")
+    }
+    println("\n<COMPLETEDIN::>${result.endTime - result.startTime}")
+  }
+
+  onOutput { desc, event ->
+    if (event.destination == TestOutputEvent.Destination.StdOut) {
+      print(event.message)
+    } else if (event.destination == TestOutputEvent.Destination.StdErr) {
+      System.err.print(event.message)
+    }
+  }
+}
+
+task run(type: JavaExec, dependsOn: classes) {
+  // use gradle -D?
+  main = System.getenv("MAIN_CLASS_NAME")
+  jvmArgs '-Xmx256m'
+  classpath sourceSets.main.runtimeClasspath
+  classpath configurations.runtime
+}

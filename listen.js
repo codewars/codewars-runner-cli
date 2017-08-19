@@ -8,7 +8,6 @@ if (fs.existsSync('/runner/prewarm.sh')) {
   console.log(execSync('sh /runner/prewarm.sh').toString());
 }
 
-
 // Creates a new TCP server. The handler argument is automatically set as a listener for the 'connection' event
 var server = net.createServer(function(socket) {
   // Every time someone connects, tell them hello and then close the connection.
