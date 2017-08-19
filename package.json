@@ -54,7 +54,6 @@
     "js-yaml": "^3.8.3",
     "lodash": "^4.17.4",
     "mocha": "2.5.3",
-    "mocha-reporter": "git://github.com/codewars/mocha-reporter",
     "nomnom": "1.6.x",
     "temp": "^0.8.3",
     "utf8": "^2.1.1"
