@@ -124,7 +124,7 @@ COPY examples/javascript.yml examples/
 COPY examples/coffeescript.yml examples/
 COPY examples/typescript.yml examples/
 COPY test/runner.js test/
-COPY test/runners/javascript_spec.js test/runners/
+COPY test/runners/javascript/ test/runners/javascript/
 COPY test/runners/coffeescript_spec.js test/runners/
 COPY test/runners/typescript_spec.js test/runners/
 COPY frameworks/javascript/*.js frameworks/javascript/
@@ -144,7 +144,7 @@ ENV USER=codewarrior HOME=/home/codewarrior
 ENV NODE_PATH=/usr/lib/node_modules:/runner/node_modules
 
 # Run the test suite to make sure this thing works
-RUN mocha -t 10000 test/runners/javascript_spec.js
+RUN mocha -t 10000 --recursive test/runners/javascript/
 RUN mocha -t 10000 test/runners/coffeescript_spec.js
 RUN mocha -t 10000 test/runners/typescript_spec.js
 

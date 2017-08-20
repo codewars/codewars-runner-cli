@@ -242,7 +242,7 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-    entrypoint: 'mocha -t 5000 test/runners/javascript_spec.js'
+    entrypoint: 'mocha -t 5000 --recursive test/runners/javascript/'
 
   coffeescript:
     image: codewars/node-runner
