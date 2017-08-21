@@ -172,7 +172,7 @@ COPY *.js ./
 COPY lib/*.js lib/
 COPY lib/*.sh lib/
 COPY lib/utils lib/utils
-COPY lib/runners/ruby.js lib/runners/
+COPY lib/runners/ruby/ lib/runners/ruby/
 COPY lib/runners/shell.js lib/runners/
 COPY lib/runners/sql.js lib/runners/
 COPY examples/ruby.yml examples/
