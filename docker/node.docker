@@ -117,7 +117,7 @@ COPY *.js ./
 COPY lib/*.js lib/
 COPY lib/*.sh lib/
 COPY lib/utils lib/utils
-COPY lib/runners/javascript.js lib/runners/
+COPY lib/runners/javascript/ lib/runners/javascript/
 COPY lib/runners/coffeescript.js lib/runners/
 COPY lib/runners/typescript.js lib/runners/
 COPY examples/javascript.yml examples/
