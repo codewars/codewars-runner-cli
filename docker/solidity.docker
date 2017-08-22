@@ -1,0 +1,47 @@
+FROM node:8.4.0-alpine
+RUN apk add --no-cache bash git coreutils findutils
+
+RUN adduser -D codewarrior
+RUN ln -s /home/codewarrior /workspace
+
+# ethereumjs-testrpc >= 3.0.2, requires Node >= 6.9.1
+ENV NPM_CONFIG_LOGLEVEL=warn \
+    NODE_PATH=/usr/local/lib/node_modules
+RUN npm -g install \
+      truffle@3.4.8 \
+      ethereumjs-testrpc@4.0.1 \
+      \
+      # for testing solidity-runner
+      mocha@3.5.0 \
+      chai@4.1.1 \
+ && rm -rf /tmp/npm-*
+
+WORKDIR /runner
+COPY package.json package.json
+RUN npm install --production && rm -rf /tmp/npm-*
+
+COPY frameworks/solidity/truffle /workspace/solidity
+RUN chown -R codewarrior:codewarrior /workspace/solidity
+COPY frameworks/javascript/mocha-reporter.js /runner/frameworks/solidity/
+
+COPY *.js ./
+COPY lib/*.js lib/
+COPY lib/*.sh lib/
+COPY lib/utils lib/utils
+COPY lib/runners/solidity.js lib/runners/
+COPY test/runner.js test/
+COPY test/runners/solidity_spec.js test/runners/
+
+USER codewarrior
+ENV USER=codewarrior HOME=/home/codewarrior
+
+RUN cd /workspace/solidity \
+ && npm install \
+ && rm -rf /tmp/npm-* \
+#&& npm test \
+ && rm -f ./contracts/setup.sol ./contracts/solution.sol \
+ && rm -rf /tmp/test-* \
+ && truffle version
+RUN mocha test/runners/solidity_spec.js
+
+ENTRYPOINT ["node"]
