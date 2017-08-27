@@ -80,6 +80,8 @@ RUN gem install --no-ri --no-rdoc \
 	couch_potato \
 	elasticsearch \
 	eventmachine \
+	eventide-event_store \
+	eventide-postgres \
 	faraday \
 	jbuilder \
 	jwt \
