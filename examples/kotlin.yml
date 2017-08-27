@@ -1,0 +1,140 @@
+junit4:
+  algorithms:
+    initial: |-
+      package algos
+
+      fun twoOldestAges(xs: List<Int>): List<Int> {
+        return listOf(0, 0)
+      }
+
+    answer: |-
+      package algos
+
+      fun twoOldestAges(xs: List<Int>): List<Int> {
+        var a = 0
+        var b = 0
+        for (x in xs) {
+          if (x > b) {
+            a = b
+            b = x
+          } else if (x > a) {
+            a = x
+          }
+        }
+        return listOf(a, b)
+      }
+
+    fixture: |-
+      package algos
+
+      import kotlin.test.assertEquals
+      import org.junit.Test
+
+      class TestTwoOldestAges {
+        @Test
+        fun returnsTwoOldest1() {
+          assertEquals(listOf(45, 87), twoOldestAges(listOf(1,5,87,45,8,8)))
+        }
+        @Test
+        fun returnsTwoOldest2() {
+          assertEquals(listOf(18, 83), twoOldestAges(listOf(6,5,83,5,3,18)))
+        }
+      }
+
+  bug fixes:
+    initial: |-
+      package buggy
+
+      fun multiply(a: Int, b: Int): Int {
+        a * b
+      }
+    answer: |-
+      package buggy
+
+      fun multiply(a: Int, b: Int) = a * b
+
+    fixture: |-
+      package buggy
+
+      import kotlin.test.assertEquals
+      import org.junit.Test
+
+      class TestMultiply {
+        @Test
+        fun returnsProduct() {
+          assertEquals(1, multiply(1, 1), "1*1 == 1")
+        }
+      }
+
+
+kotlintest:
+  algorithms:
+    initial: |-
+      package algos
+
+      fun twoOldestAges(xs: List<Int>): List<Int> {
+        return listOf(0, 0)
+      }
+
+    answer: |-
+      package algos
+
+      fun twoOldestAges(xs: List<Int>): List<Int> {
+        var a = 0
+        var b = 0
+        for (x in xs) {
+          if (x > b) {
+            a = b
+            b = x
+          } else if (x > a) {
+            a = x
+          }
+        }
+        return listOf(a, b)
+      }
+
+    fixture: |-
+      package algos
+
+      import io.kotlintest.matchers.shouldBe
+      import io.kotlintest.specs.StringSpec
+
+      class TestTwoOldestAges : StringSpec() {
+        init {
+          "twoOldestAges(listOf(1,5,87,45,8,8)) should be listOf(45, 87)" {
+            twoOldestAges(listOf(1,5,87,45,8,8)) shouldBe listOf(45, 87)
+          }
+          "twoOldestAges(listOf(6,5,83,5,3,18)) should be listOf(18, 83)" {
+            twoOldestAges(listOf(6,5,83,5,3,18)) shouldBe listOf(18, 83)
+          }
+        }
+      }
+
+  bug fixes:
+    initial: |-
+      package buggy
+
+      fun multiply(a: Int, b: Int): Int {
+        a * b
+      }
+
+    answer: |-
+      package buggy
+
+      fun multiply(a: Int, b: Int) = a * b
+
+    fixture: |-
+      package buggy
+
+      import io.kotlintest.properties.*
+      import io.kotlintest.specs.StringSpec
+
+      class TestMultiply : StringSpec() {
+        init {
+          "multiply(x, y) == x * y for arbitrary Integers" {
+            forAll(Gen.int(), Gen.int(), { x: Int, y: Int ->
+              multiply(x, y) == x * y
+            })
+          }
+        }
+      }

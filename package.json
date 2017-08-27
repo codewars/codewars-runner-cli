@@ -54,7 +54,6 @@
     "js-yaml": "^3.8.3",
     "lodash": "^4.17.4",
     "mocha": "2.5.3",
-    "mocha-reporter": "git://github.com/codewars/mocha-reporter",
     "nomnom": "1.6.x",
     "temp": "^0.8.3",
     "utf8": "^2.1.1"
@@ -166,7 +165,7 @@
     "merkle-patricia-tree": "^2.2.0",
     "mkdirp": "^0.5.1",
     "mongodb": "^2.1.18",
-    "mongoose": "^4.4.14",
+    "mongoose": "4.10.x",
     "mongoose-mock": "^0.4.0",
     "mysql": "^2.11.1",
     "natural": "^0.4.0",

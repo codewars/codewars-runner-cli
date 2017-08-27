@@ -57,7 +57,7 @@ COPY test/runners/fsharp_spec.js test/runners/
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
-# RUN mocha -t 10000 test/runners/csharp_spec.js
+RUN mocha -t 10000 test/runners/csharp_spec.js
 RUN mocha -t 10000 test/runners/fsharp_spec.js
 RUN sh /runner/lib/cleanup.sh
 RUN mono -V

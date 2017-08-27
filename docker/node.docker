@@ -117,14 +117,14 @@ COPY *.js ./
 COPY lib/*.js lib/
 COPY lib/*.sh lib/
 COPY lib/utils lib/utils
-COPY lib/runners/javascript.js lib/runners/
+COPY lib/runners/javascript/ lib/runners/javascript/
 COPY lib/runners/coffeescript.js lib/runners/
 COPY lib/runners/typescript.js lib/runners/
 COPY examples/javascript.yml examples/
 COPY examples/coffeescript.yml examples/
 COPY examples/typescript.yml examples/
 COPY test/runner.js test/
-COPY test/runners/javascript_spec.js test/runners/
+COPY test/runners/javascript/ test/runners/javascript/
 COPY test/runners/coffeescript_spec.js test/runners/
 COPY test/runners/typescript_spec.js test/runners/
 COPY frameworks/javascript/*.js frameworks/javascript/
@@ -134,6 +134,8 @@ COPY frameworks/javascript/display.js /runner/node_modules/display/index.js
 COPY frameworks/javascript/chai-display.js /runner/node_modules/chai-display/index.js
 COPY frameworks/javascript/display.js /runner/node_modules/chai-display/display.js
 
+# Add entire typings/ for now for backward compatibility
+COPY typings /runner/typings
 # add typings into a cleaner path for inclusion
 COPY typings/main/ambient /runner/typings
 
@@ -142,7 +144,7 @@ ENV USER=codewarrior HOME=/home/codewarrior
 ENV NODE_PATH=/usr/lib/node_modules:/runner/node_modules
 
 # Run the test suite to make sure this thing works
-RUN mocha -t 10000 test/runners/javascript_spec.js
+RUN mocha -t 10000 --recursive test/runners/javascript/
 RUN mocha -t 10000 test/runners/coffeescript_spec.js
 RUN mocha -t 10000 test/runners/typescript_spec.js
 

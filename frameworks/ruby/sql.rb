@@ -9,6 +9,10 @@ require_relative 'sql/csv_importer'
 require_relative 'sql/charts'
 require_relative 'sql/compare'
 
+# Silence "SEQUEL DEPRECATION WARNING:"
+# <http://sequel.jeremyevans.net/rdoc/classes/Sequel/Deprecation.html>
+Sequel::Deprecation::output = false
+
 def clean_sql(sql)
   sql.gsub(/(\/\*([\s\S]*?)\*\/|--.*)/, "")
 end
