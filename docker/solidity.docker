@@ -32,6 +32,9 @@ COPY lib/runners/solidity.js lib/runners/
 COPY test/runner.js test/
 COPY test/runners/solidity_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
@@ -44,4 +47,4 @@ RUN cd /workspace/solidity \
  && truffle version
 RUN mocha test/runners/solidity_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

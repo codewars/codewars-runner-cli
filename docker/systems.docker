@@ -58,9 +58,12 @@ COPY test/runner.js test/
 COPY test/runners/c_spec.js test/runners/
 COPY test/runners/cpp_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
 RUN mocha -t 5000 test/runners/{c,cpp}_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

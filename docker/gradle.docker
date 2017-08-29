@@ -32,6 +32,9 @@ RUN npm install --production
 COPY frameworks/gradle frameworks/gradle
 RUN chown -R codewarrior:codewarrior frameworks/gradle
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
@@ -67,4 +70,4 @@ RUN mocha test/runners/kotlin_spec.js
 RUN mocha test/runners/groovy_spec.js
 RUN mocha test/runners/scala_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -24,9 +24,12 @@ COPY frameworks/javascript/chai-display.js frameworks/javascript/
 COPY test/runner.js test/
 COPY test/runners/bf_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
 RUN mocha -t 10000 test/runners/bf_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]
