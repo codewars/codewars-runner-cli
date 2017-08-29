@@ -42,6 +42,7 @@ env:
     - TEST_IMG=elixir
     - TEST_IMG=powershell
     - TEST_IMG=gradle
+    - TEST_IMG=solidity
 
 script:
   - eslint '**/*.js'

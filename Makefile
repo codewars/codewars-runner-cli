@@ -1,6 +1,6 @@
 HOSTNAME=codewars
 
-CONTAINERS=node dotnet jvm java python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs chapel nim r erlang elixir powershell gradle
+CONTAINERS=node dotnet jvm java python ruby alt rust julia systems dart crystal ocaml swift haskell objc go lua esolangs chapel nim r erlang elixir powershell gradle solidity
 
 ALL_CONTAINERS=${CONTAINERS} base
 
