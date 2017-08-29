@@ -14,7 +14,7 @@ RUN mkdir $CHPL_HOME \
   && make \
   && cd .. \
   && $CHPL_HOME/util/printchplenv
-  
+
 ENV CHPL_HOST_PLATFORM=linux64
 ENV PATH="$CHPL_HOME"/bin/$CHPL_HOST_PLATFORM:"$CHPL_HOME"/util:"$PATH"
 
@@ -35,8 +35,11 @@ COPY frameworks/chapel frameworks/chapel
 COPY test/runner.js test/
 COPY test/runners/chapel_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 10000 test/runners/chapel_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

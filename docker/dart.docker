@@ -20,6 +20,9 @@ WORKDIR /runner
 COPY package.json package.json
 RUN npm install --production
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 ENV PATH=$PATH:$HOME/.pub-cache/bin
@@ -44,4 +47,4 @@ COPY test/runners/dart_spec.js test/runners/
 
 RUN mocha -t 10000 test/runners/dart_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -146,8 +146,11 @@ COPY test/runner.js test/
 COPY test/runners/objc_spec.js test/runners/
 COPY frameworks/objc /usr/local/include
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 5000 test/runners/objc_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]
