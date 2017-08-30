@@ -10,7 +10,7 @@ services:
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
-      - ./frameworks:/runner/frameworks
+      - ./frameworks/javascript:/runner/frameworks/javascript
       - ./test:/runner/test
       - ./tsconfig.json:/runner/tsconfig.json
 
