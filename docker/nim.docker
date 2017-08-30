@@ -41,8 +41,11 @@ COPY frameworks/nim frameworks/nim
 COPY test/runner.js test/
 COPY test/runners/nim_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior PATH=/opt/nim/bin:$PATH
 RUN mocha -t 5000 test/runners/nim_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

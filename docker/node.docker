@@ -139,6 +139,9 @@ COPY typings /runner/typings
 # add typings into a cleaner path for inclusion
 COPY typings/main/ambient /runner/typings
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 ENV NODE_PATH=/usr/lib/node_modules:/runner/node_modules
@@ -148,4 +151,4 @@ RUN mocha -t 10000 --recursive test/runners/javascript/
 RUN mocha -t 10000 test/runners/coffeescript_spec.js
 RUN mocha -t 10000 test/runners/typescript_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

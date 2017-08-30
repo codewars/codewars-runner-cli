@@ -22,6 +22,9 @@ COPY examples/ocaml.yml examples/
 COPY test/runner.js test/
 COPY test/runners/ocaml_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
@@ -51,4 +54,4 @@ RUN (echo 'let () ='; \
 WORKDIR /runner
 RUN mocha -t 5000 test/runners/ocaml_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

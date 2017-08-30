@@ -48,8 +48,11 @@ COPY test/runners/go_spec.js test/runners/
 COPY frameworks/go/codewars $GOPATH/src/codewars
 RUN go install codewars/reporter
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 RUN mocha -t 5000 test/runners/go_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

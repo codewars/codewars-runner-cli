@@ -30,10 +30,13 @@ COPY examples/rust.yml examples/
 COPY test/runner.js test/
 COPY test/runners/rust_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 ENV PATH=$HOME/.cargo/bin:$PATH
 
 RUN mocha -t 10000 test/runners/rust_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]
