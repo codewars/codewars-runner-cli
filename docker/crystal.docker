@@ -25,6 +25,9 @@ COPY frameworks/crystal/shard.yml /home/codewarrior/crystal/shard.yml
 COPY frameworks/crystal/formatter.cr /home/codewarrior/crystal/formatter.cr
 RUN chown -R codewarrior:codewarrior /home/codewarrior/crystal
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 RUN cd /home/codewarrior/crystal \
@@ -41,4 +44,4 @@ COPY test/runners/crystal_spec.js test/runners/
 
 RUN mocha -t 10000 test/runners/crystal_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

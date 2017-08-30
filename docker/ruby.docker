@@ -183,6 +183,9 @@ COPY test/runners/ruby_spec.js test/runners/
 COPY test/runners/shell_spec.js test/runners/
 COPY test/runners/sql_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
@@ -191,4 +194,4 @@ RUN mocha -t 5000 test/runners/shell_spec.js
 #RUN mocha -t 5000 test/runners/sql_spec.js
 RUN sh /runner/lib/cleanup.sh
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

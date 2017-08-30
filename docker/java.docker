@@ -76,6 +76,9 @@ COPY frameworks/java frameworks/java
 RUN chown codewarrior frameworks/java
 RUN gradle --version
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
@@ -84,4 +87,4 @@ RUN cd /runner/frameworks/java && gradle --stacktrace --no-daemon compileTestJav
 
 RUN mocha -t 20000 test/runners/java_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

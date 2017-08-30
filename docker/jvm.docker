@@ -43,9 +43,12 @@ COPY examples/clojure.yml examples/
 COPY test/runner.js test/
 COPY test/runners/clojure_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 ENV TIMEOUT 10000
 RUN mocha -t 10000 test/runners/clojure_spec.js
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

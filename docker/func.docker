@@ -24,6 +24,9 @@ ADD . /runner
 WORKDIR /runner
 RUN ln -s /home/codewarrior /workspace
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 # Run the test suite to make sure this thing works
 
 USER codewarrior
@@ -32,6 +35,4 @@ ENV USER codewarrior
 ENV HOME /home/codewarrior
 RUN mocha -t 5000 test/runners/{ocaml,racket}_spec.js
 
-#timeout is a fallback in case an error with node
-#prevents it from exiting properly
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]

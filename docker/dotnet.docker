@@ -54,6 +54,9 @@ COPY test/runner.js test/
 COPY test/runners/csharp_spec.js test/runners/
 COPY test/runners/fsharp_spec.js test/runners/
 
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
@@ -62,4 +65,4 @@ RUN mocha -t 10000 test/runners/fsharp_spec.js
 RUN sh /runner/lib/cleanup.sh
 RUN mono -V
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["./entrypoint.sh"]
