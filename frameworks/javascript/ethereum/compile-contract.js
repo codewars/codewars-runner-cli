@@ -4,7 +4,7 @@ const solc = require('solc'),
       contract = require("truffle-contract");
 
 //var contractName = 'Greeter';
-if(process.argv.length < 3) {
+if (process.argv.length < 3) {
   console.log('needs the contract Name as argument!');
   process.exit(1);
 }
@@ -30,6 +30,6 @@ const compiledContract = compiled.contracts[contractKey],
 
 artifactor.save(contract_data).then(() => {
   // load the contract just to make sure nothing fails
-  const Contract = contract(require(`${outputFile}/${contractName}.json`));
-  console.log(`File ${outputFile} was created with the JS contract!`)
+  contract(require(`${outputFile}/${contractName}.json`));
+  console.log(`File ${outputFile} was created with the JS contract!`);
 });
