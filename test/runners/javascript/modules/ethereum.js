@@ -5,6 +5,8 @@ const expect = require('chai').expect;
 const runner = require('../../../runner');
 
 describe('ethereum', function() {
+  this.timeout(0);
+
   it('should support basic VM', function(done) {
     runner.run({
       language: 'javascript',
@@ -27,10 +29,32 @@ describe('ethereum', function() {
     });
   });
 
+  it('should support merkle-patricia-tree', function(done) {
+    runner.run({
+      language: 'javascript',
+      code: `
+        var Trie = require('merkle-patricia-tree'),
+        levelup = require('levelup'),
+        db = levelup({ db: require('memdown') }),
+        trie = new Trie(db); 
+         
+        trie.put('test', 'one', function () {
+          trie.get('test', function (err, value) {
+            if(value) console.log(value.toString())
+          });
+        });
+      `
+    }, buffer => {
+      expect(buffer.stdout).to.contain('one');
+      done();
+    });
+  });
+
   // https://raw.githubusercontent.com/ethereumjs/ethereumjs-vm/master/examples/run-blockchain/index.js
   it('should support blockchain', function(done) {
     runner.run({
       language: 'javascript',
+      timeout: 60000, // for some reason this is really slow when ran with the entire suite
       code: `
         const Buffer = require('safe-buffer').Buffer // use for Node.js <4.5.0
         const async = require('async')
@@ -212,7 +236,7 @@ describe('ethereum', function() {
         var web3 = new Web3();
         web3.setProvider(provider)
         
-        const Ballot = contract(require('/runner/frameworks/ethereum/contracts/Ballot.sol.js/Ballot.json'));
+        const Ballot = contract(require('/runner/frameworks/ethereum/contracts/Ballot.json'));
         Ballot.setProvider(provider);
       `
     }, buffer => {

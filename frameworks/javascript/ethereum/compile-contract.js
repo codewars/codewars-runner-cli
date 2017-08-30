@@ -25,11 +25,12 @@ const compiledContract = compiled.contracts[contractKey],
         abi: JSON.parse(compiledContract.interface),
         binary: compiledContract.bytecode
       },
-      outputFile = `/runner/frameworks/ethereum/contracts/${contractName}.sol.js`,
-      artifactor = new Artifactor(outputFile);
+      outputDir = `/runner/frameworks/ethereum/contracts/`,
+      artifactor = new Artifactor(outputDir);
 
 artifactor.save(contract_data).then(() => {
+  const file = `${outputDir}/${contractName}.json`;
   // load the contract just to make sure nothing fails
-  contract(require(`${outputFile}/${contractName}.json`));
-  console.log(`File ${outputFile} was created with the JS contract!`);
+  contract(require(file));
+  console.log(`File ${file} was created with the JS contract!`);
 });
