@@ -153,8 +153,8 @@ ENV USER=codewarrior HOME=/home/codewarrior
 ENV NODE_PATH=/usr/lib/node_modules:/runner/node_modules
 
 # Run the test suite to make sure this thing works
-#RUN mocha -t 10000 --recursive test/runners/javascript/
-#RUN mocha -t 10000 test/runners/coffeescript_spec.js
-#RUN mocha -t 10000 test/runners/typescript_spec.js
+RUN mocha -t 10000 --recursive test/runners/javascript/
+RUN mocha -t 10000 test/runners/coffeescript_spec.js
+RUN mocha -t 10000 test/runners/typescript_spec.js
 
 ENTRYPOINT ["node"]
