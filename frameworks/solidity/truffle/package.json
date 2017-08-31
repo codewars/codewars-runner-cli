@@ -8,7 +8,8 @@
     "test": "bash ./start-testrpc.sh && truffle test"
   },
   "dependencies": {
-    "web3": "0.20.x"
+    "web3": "0.20.x",
+    "zeppelin-solidity": "^1.2.0"
   }
 }
 
