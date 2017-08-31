@@ -18,6 +18,18 @@ services:
     user: root
     command: bash
 
+  solidity-runner:
+    image: codewars/solidity-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks/solidity:/runner/frameworks/solidity
+      - ./test:/runner/test
+
+    entrypoint: ''
+    user: root
+    command: bash
+
   jvm-runner:
     image: codewars/jvm-runner
     volumes:
