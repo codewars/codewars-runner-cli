@@ -10,9 +10,21 @@ services:
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
-      - ./frameworks:/runner/frameworks
+      - ./frameworks/javascript:/runner/frameworks/javascript
       - ./test:/runner/test
       - ./tsconfig.json:/runner/tsconfig.json
+
+    entrypoint: ''
+    user: root
+    command: bash
+
+  solidity-runner:
+    image: codewars/solidity-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks/solidity:/runner/frameworks/solidity
+      - ./test:/runner/test
 
     entrypoint: ''
     user: root

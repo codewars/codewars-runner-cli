@@ -533,4 +533,43 @@ describe('truffle test', function() {
       done();
     });
   });
+
+  it('should support zeppelin', function(done) {
+    this.timeout(0);
+    runner.run({
+      language: 'solidity',
+      solution: `
+        pragma solidity ^0.4.4;
+        import "zeppelin-solidity/contracts/token/StandardToken.sol";
+        
+        contract ExampleToken is StandardToken {
+          string public name = "ExampleToken"; 
+          string public symbol = "EGT";
+          uint public decimals = 18;
+          uint public INITIAL_SUPPLY = 10000;
+        
+          function ExampleToken() {
+            totalSupply = INITIAL_SUPPLY;
+            balances[msg.sender] = INITIAL_SUPPLY;
+          }
+        }
+      `,
+      fixture: `
+        const Example = artifacts.require("ExampleToken");
+        contract('Example', function(accounts) {
+          it("should put 10000 in the first account", async function() {
+            const m = await Example.deployed();
+            
+            const balance = await m.balanceOf.call(accounts[0]);
+            assert.equal(balance.valueOf(), 10000, "10000 wasn't in the first account");
+          });
+        });
+      `,
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('\n<PASSED::>');
+      expect(buffer.stdout).not.to.contain('\n<FAILED::>');
+      expect(buffer.stderr).to.be.empty;
+      done();
+    });
+  });
 });

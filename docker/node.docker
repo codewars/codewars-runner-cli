@@ -25,6 +25,9 @@ RUN npm install -gq "typings@^2"
 # Install TypeScript
 RUN npm -g install "typescript@^2.4"
 
+# Install test ethereum client so that we can test basic network actions
+RUN npm -g install "ethereumjs-testrpc@4.0.1"
+
 RUN set -ex; \
   mkdir -p /runner/frameworks/javascript/angular; \
   cd /runner/frameworks/javascript/angular; \
@@ -105,7 +108,6 @@ RUN set -ex; \
     https://code.angularjs.org/1.6.5/angular.js; \
   chmod -R a+r .;
 
-
 RUN ln -s /home/codewarrior /workspace
 ENV NPM_CONFIG_LOGLEVEL warn
 
@@ -127,12 +129,19 @@ COPY test/runner.js test/
 COPY test/runners/javascript/ test/runners/javascript/
 COPY test/runners/coffeescript_spec.js test/runners/
 COPY test/runners/typescript_spec.js test/runners/
-COPY frameworks/javascript/*.js frameworks/javascript/
+COPY frameworks/javascript/ frameworks/javascript/
 
 # add display as if it is a node module, so that it can easily be included via require("display")
 COPY frameworks/javascript/display.js /runner/node_modules/display/index.js
 COPY frameworks/javascript/chai-display.js /runner/node_modules/chai-display/index.js
 COPY frameworks/javascript/display.js /runner/node_modules/chai-display/display.js
+COPY frameworks/ethereum/contracts frameworks/ethereum/contracts
+
+# precompile some example contracts to use with ethereum based challenges
+RUN node frameworks/javascript/ethereum/compile-contract BlindAuction
+RUN node frameworks/javascript/ethereum/compile-contract Purchase
+RUN node frameworks/javascript/ethereum/compile-contract Ballot
+RUN node frameworks/javascript/ethereum/compile-contract SimpleAuction
 
 # Add entire typings/ for now for backward compatibility
 COPY typings /runner/typings
