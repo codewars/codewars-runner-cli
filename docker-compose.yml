@@ -47,7 +47,16 @@ services:
       - ./examples:/runner/examples
       - ./frameworks:/runner/frameworks
       - ./test:/runner/test
-      - ./listen.js:/runner/listen.js
+    entrypoint: ''
+    command: bash
+
+  gradle-runner:
+    image: codewars/gradle-runner
+    volumes:
+      - ./lib:/runner/lib
+      - ./examples:/runner/examples
+      - ./frameworks:/runner/frameworks
+      - ./test:/runner/test
     entrypoint: ''
     command: bash
 

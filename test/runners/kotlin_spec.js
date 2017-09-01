@@ -6,29 +6,23 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 const exec = require('child_process').exec;
+const prewarm = require('../../lib/utils/when-prewarmed').setupMocha;
 
 describe('kotlin-runner', function() {
-  before(function startDaemon(done) {
-    this.timeout(0);
-    exec('gradle --daemon --offline test', {
-      cwd: '/runner/frameworks/gradle',
-    }, (err) => {
+  this.timeout(0);
+
+  prewarm();
+
+  afterEach(function cleanup(done) {
+    exec('rm -rf /home/codewarrior/project', function(err) {
       if (err) return done(err);
-      console.log('Started Gradle daemon');
       done();
     });
   });
 
   describe('running', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
-
     it('should handle basic code evaluation', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         solution: [
@@ -43,7 +37,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle setup code', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         setup: [
@@ -63,7 +57,7 @@ describe('kotlin-runner', function() {
     });
 
     it('can have package declaration', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         setup: [
@@ -86,15 +80,8 @@ describe('kotlin-runner', function() {
   });
 
   describe('testing with JUnit', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
-
     it('should handle basic assertion', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'junit4',
@@ -119,7 +106,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle basic assertion with named package', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'junit4',
@@ -148,7 +135,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle basic assertion failure', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'junit4',
@@ -178,7 +165,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle basic assertion failure by error', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'junit4',
@@ -208,7 +195,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle basic assertion failure with message', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'junit4',
@@ -239,7 +226,7 @@ describe('kotlin-runner', function() {
     });
 
     it('can have multiple suites', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'junit4',
@@ -281,7 +268,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should allow logging', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'junit4',
@@ -315,15 +302,8 @@ describe('kotlin-runner', function() {
   });
 
   describe('testing with KotlinTest', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
-
     it('should handle basic assertion', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'kotlintest',
@@ -349,7 +329,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle basic assertion with named package', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'kotlintest',
@@ -379,7 +359,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle basic assertion failure', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'kotlintest',
@@ -405,7 +385,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should handle basic assertion failure by error', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'kotlintest',
@@ -432,7 +412,7 @@ describe('kotlin-runner', function() {
 
 
     it('can have multiple suites', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'kotlintest',
@@ -478,7 +458,7 @@ describe('kotlin-runner', function() {
     });
 
     it('should allow logging', function(done) {
-      this.timeout(0);
+
       runner.run({
         language: 'kotlin',
         testFramework: 'kotlintest',
@@ -513,13 +493,6 @@ describe('kotlin-runner', function() {
   });
 
   describe('Example Challenges', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
-
     forEachExamples(function(framework, name, example) {
       describe(`${framework}: "${name}" example`, function() {
         it('should define an initial code block', function() {
@@ -527,7 +500,7 @@ describe('kotlin-runner', function() {
         });
 
         it('should have a passing solution', function(done) {
-          this.timeout(0);
+
           runner.run({
             language: 'kotlin',
             setup: example.setup,
