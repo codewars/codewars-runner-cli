@@ -30,6 +30,7 @@ COPY package.json package.json
 RUN npm install --production
 
 COPY frameworks/gradle/build.gradle frameworks/gradle/build.gradle
+COPY frameworks/gradle/gradle.properties frameworks/gradle/gradle.properties
 COPY frameworks/gradle/src frameworks/gradle/src
 RUN chown -R codewarrior:codewarrior frameworks/gradle
 
