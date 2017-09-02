@@ -103,7 +103,7 @@ test {
 task run(type: JavaExec, dependsOn: classes) {
   // use gradle -D?
   main = System.getenv("MAIN_CLASS_NAME")
-  jvmArgs '-Xmx256m'
+  jvmArgs '-Xmx512m'
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
 }

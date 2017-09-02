@@ -27,3 +27,5 @@ frameworks/java/.gradle
 frameworks/java/4.0
 frameworks/java/build
 frameworks/java/buildOutputCleanup
+frameworks/gradle/.gradle
+frameworks/gradle/build

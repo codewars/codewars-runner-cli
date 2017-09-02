@@ -7,5 +7,3 @@ cd /runner/frameworks/java && gradle --daemon --offline test
 
 echo "loaded" > /workspace/prewarm.status
 
-# node run -l java -c "public class Solution {}" -f "import org.junit.Test;public class TestFixture{}"
-

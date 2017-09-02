@@ -6,29 +6,23 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 const exec = require('child_process').exec;
+const prewarm = require('../../lib/utils/when-prewarmed').setupMocha;
 
 describe('groovy-runner', function() {
-  before(function startDaemon(done) {
-    this.timeout(0);
-    exec('gradle --daemon --offline test', {
-      cwd: '/runner/frameworks/gradle',
-    }, (err) => {
+  this.timeout(0);
+
+  prewarm();
+
+  afterEach(function cleanup(done) {
+    exec('rm -rf /home/codewarrior/project', function(err) {
       if (err) return done(err);
-      console.log('Started Gradle daemon');
       done();
     });
   });
 
   describe('running', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
 
     it('should handle basic code evaluation (script)', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         solution: [
@@ -42,7 +36,6 @@ describe('groovy-runner', function() {
 
     it('should handle basic code evaluation (static void main)', function(done) {
       // class needs to be `Main`
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         solution: [
@@ -59,7 +52,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle setup code', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         setup: [
@@ -79,7 +71,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle setup code with package declaration', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         setup: [
@@ -100,7 +91,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle setup code with arbitrary package declaration', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         setup: [
@@ -122,15 +112,7 @@ describe('groovy-runner', function() {
   });
 
   describe('testing with JUnit', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
-
     it('should handle basic assertion', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'junit4',
@@ -156,7 +138,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle basic assertion with package declared', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'junit4',
@@ -184,7 +165,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle basic assertion failure', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'junit4',
@@ -210,7 +190,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle basic assertion failure by error', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'junit4',
@@ -237,7 +216,6 @@ describe('groovy-runner', function() {
 
 
     it('should handle basic assertion failure with message', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'junit4',
@@ -265,7 +243,6 @@ describe('groovy-runner', function() {
 
 
     it('can have multiple suites', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'junit4',
@@ -306,7 +283,6 @@ describe('groovy-runner', function() {
 
 
     it('should allow logging', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'junit4',
@@ -337,15 +313,7 @@ describe('groovy-runner', function() {
   });
 
   describe('testing with Spock', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
-
     it('should handle basic assertion', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'spock',
@@ -371,7 +339,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle basic assertion with package declared', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'spock',
@@ -399,7 +366,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle basic assertion failure', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'spock',
@@ -425,7 +391,6 @@ describe('groovy-runner', function() {
     });
 
     it('should handle basic assertion failure by error', function(done) { // No <ERROR::>
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'spock',
@@ -453,7 +418,6 @@ describe('groovy-runner', function() {
     });
 
     it('can have multiple suites', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'spock',
@@ -493,7 +457,6 @@ describe('groovy-runner', function() {
     });
 
     it('should allow logging', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'spock',
@@ -523,7 +486,6 @@ describe('groovy-runner', function() {
     });
 
     it('should support @Unroll', function(done) {
-      this.timeout(0);
       runner.run({
         language: 'groovy',
         testFramework: 'spock',
@@ -568,13 +530,6 @@ describe('groovy-runner', function() {
   });
 
   describe('Example Challenges', function() {
-    afterEach(function cleanup(done) {
-      exec('rm -rf /home/codewarrior/project', function(err) {
-        if (err) return done(err);
-        done();
-      });
-    });
-
     forEachExamples(function(framework, name, example) {
       describe(`${framework}: "${name}" example`, function() {
         it('should define an initial code block', function() {
@@ -582,7 +537,6 @@ describe('groovy-runner', function() {
         });
 
         it('should have a passing solution', function(done) {
-          this.timeout(0);
           runner.run({
             language: 'groovy',
             setup: example.setup,

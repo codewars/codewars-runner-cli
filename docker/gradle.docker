@@ -29,7 +29,9 @@ WORKDIR /runner
 COPY package.json package.json
 RUN npm install --production
 
-COPY frameworks/gradle frameworks/gradle
+COPY frameworks/gradle/build.gradle frameworks/gradle/build.gradle
+COPY frameworks/gradle/gradle.properties frameworks/gradle/gradle.properties
+COPY frameworks/gradle/src frameworks/gradle/src
 RUN chown -R codewarrior:codewarrior frameworks/gradle
 
 COPY entrypoint.sh entrypoint.sh
@@ -39,7 +41,7 @@ USER codewarrior
 ENV USER=codewarrior HOME=/home/codewarrior
 
 # JVM flags to control memory usage. org.gradle.jvmargs applies to forked JVM process
-ENV GRADLE_OPTS="-Xmx64m -Dorg.gradle.jvmargs='-Xmx256m'"
+ENV GRADLE_OPTS="-Xmx64m -Dorg.gradle.jvmargs='-Xmx512m'"
 
 RUN cd /runner/frameworks/gradle \
 # download dependencies
