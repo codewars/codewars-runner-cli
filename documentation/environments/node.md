@@ -54,7 +54,7 @@ The solution, test fixture and optional setup/preloaded code are all combined in
 
 ## TypeScript
 
-Typescript 2.4 is supported. Only the Mocha test framework is available for testing.
+Typescript 2.4 is supported. The Mocha test framework and Karma+Mocha are available for testing.
  
 The following typings are available:
 
