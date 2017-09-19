@@ -131,7 +131,7 @@ try {
       return util.inspect(obj);
     },
     log: function(msg, opts) {
-      return Test.display.log(msg, opts);
+      Test.display.log(msg, opts);
     },
     describe: function(msg, asyncTimeout, fn) {
       return new Promise(function(resolve, reject) {
@@ -238,10 +238,10 @@ try {
       }
     },
     before: function(cb) { 
-      beforeCallbacks.push(cb) 
+      beforeCallbacks.push(cb);
     },
     after: function(cb) { 
-      afterCallbacks.push(cb)
+      afterCallbacks.push(cb);
     },
     // handles an error and writes the appropriate output. If a function is provided it will handle the error
     // if the function errors, and then rethrow the exception
@@ -315,7 +315,7 @@ try {
         }
 
         if (explain === true) {
-          Test.expect(false, msg || "Values should equal each other", _failed(options, function() {
+          Test.expect(false, msg || "Values should be equal", _failed(options, function() {
             Test.display.explain(actual, expected, {mode: explain, className: "failed"});
           }));
         } 
@@ -343,7 +343,7 @@ try {
         var explain = options.hasOwnProperty("explain") && options.explain ? options.explain : alwaysExplain;
 
         if (explain) {
-          Test.expect(false, msg = "Values should not equal each other", _failed(options, function() {
+          Test.expect(false, msg || "Values should not equal each other", _failed(options, function() {
             Test.display.explain(actual, expected, {mode: explain, className: "failed"});
           }));
         } 
@@ -487,10 +487,10 @@ try {
       Test.expect(passed, msg, options);
     },
     randomNumber: function() {
-      Math.floor(Math.random() * 101);
+      return Math.floor(Math.random() * 101);
     },
     randomToken: function() { 
-      Math.random().toString(36).substr(8);
+      return Math.random().toString(36).substr(8);
     },
     randomize: function(array) {
       var arr = array.concat(), i = arr.length, j, x;
@@ -503,10 +503,10 @@ try {
       return arr;
     },
     sample: function() { 
-      array[~~(array.length * Math.random())];
+      return array[~~(array.length * Math.random())];
     },
     escapeHtml: function() {
-      Test.display.escapeHtml(html);
+      return Test.display.escapeHtml(html);
     },
     Error: function(message) {
       if (typeof message !== "string") {
