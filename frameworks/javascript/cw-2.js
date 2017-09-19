@@ -1,11 +1,11 @@
 try {
-  const util = require("util"),
+  var util = require("util"),
       deepEquals = require("lodash").isEqual,
       Promise = require("bluebird");
 
   require("./chai-display");
 
-  const fnToString = Function.toString;
+  var fnToString = Function.toString;
   Function.prototype.toString = function() {
     switch (this) {
       case Test.expect:
@@ -19,7 +19,7 @@ try {
     }
   };
 
-  let describing = [],
+  var describing = [],
       async = false,
       asyncIts = null,
       asyncDone = null,
@@ -35,7 +35,7 @@ try {
     }
   });
 
-  const describeNext = function() {
+  var describeNext = function() {
     if (asyncIts.length > 0) {
       asyncIts.shift()();
     }
@@ -44,42 +44,61 @@ try {
     }
   };
 
-  const _expect = function(passed, failMsg = "Value is not what was expected", options = {}) {
-    if (passed) {
-      let successMsg = "Test Passed";
+  var _expect = function(passed, failMsg, options) {
+    if (typeof options !== "object") {
+      options = {};
+    }
+    
+    if (typeof failMsg !== "string") {
+      failMsg = "Value is not what was expected";
+    }
+    
+    if (passed === true) {
+      var successMsg = "Test Passed";
       if (options.hasOwnProperty("successMsg") && typeof options.successMsg === "string") {
         successMsg += ": " + options.successMsg;
       }
       Test.display.write("PASSED", successMsg);
 
-      if (options.hasOwnProperty("passed") && options.passed) {
+      if (options.hasOwnProperty("passed") && typeof options.passed === "function") {
         options.passed(successMsg, options);
       }
-    } else {
+    } 
+    else {
       Test.display.write("FAILED", failMsg);
 
-      if (options.hasOwnProperty("failed") && options.failed) {
+      if (options.hasOwnProperty("failed") && typeof options.failed === "function") {
         options.failed(failMsg, options);
       }
 
-      const error = new Test.Error(failMsg);
+      var error = new Test.Error(failMsg);
       if (describing) {
         failed.push(error);
-      } else {
+      } 
+      else {
         throw error;
       }
     }
   };
 
   // convenience method for adding a default failed callback to an options
-  const _failed = function(options = {}, callback) {
-    options.failed = options.failed || callback;
+  var _failed = function(options, callback) {
+    if (typeof options !== "object") {
+      object = {failed: callback}; 
+    }
+    
+    if (typeof options.failed !== "function") {
+      object.failed = callback || function() {}; 
+    }
     return options;
   };
 
-  const Test = {
+  var Test = {
     // when called, it will set a flag to cause all failed tests to explain the expected/actual results
-    explainAll: function(mode = true) {
+    explainAll: function(mode) {
+      if (typeof mode !== "boolean") {
+        mode = true;
+      }
       alwaysExplain = mode;
     },
 
@@ -87,7 +106,7 @@ try {
 
     // we use this instead of util.inspect so that we can support the indent option and json options
     stringify: function(obj, indent) {
-      const cache = [];
+      var cache = [];
       return JSON.stringify(obj, function(key, value) {
         if (typeof value === "object" && value !== null) {
           // Circular reference found, discard key
@@ -100,7 +119,7 @@ try {
     },
 
     // backwards compatibility
-    format: this.display.format,
+    format: Test.display.format,
     inspect: function(obj) {
       // format arrays ourselves since long arrays end up getting broken out into separate lines, which is often a
       // bad format for typical use cases.
@@ -111,23 +130,27 @@ try {
       }
       return util.inspect(obj);
     },
-    log: (msg, opts) => this.display.log(msg, opts),
+    log: function(msg, opts) {
+      return Test.display.log(msg, opts);
+    },
     describe: function(msg, asyncTimeout, fn) {
       return new Promise(function(resolve, reject) {
         if (typeof fn !== "function") {
-          fn = asyncTimeout;
+          if (typeof asyncTimeout === "function") {
+            fn = asyncTimeout;
+          }
           asyncTimeout = false;
         }
         else if (asyncTimeout === true) {
           asyncTimeout = 2000; // default timeout to 2 seconds
         }
 
-        const start = new Date().getMilliseconds();
+        var start = new Date().getMilliseconds();
         try {
           async = asyncTimeout;
           asyncIts = [];
           describing.push(function() {
-            const ms = new Date().getMilliseconds() - start;
+            var ms = new Date().getMilliseconds() - start;
             Test.display.write("COMPLETEDIN", ms);
 
             // TODO: right now before/after blocks don't work very well with multi level describes so they
@@ -157,22 +180,22 @@ try {
 
     },
     it: function(msg, fn) {
-      if (!describing.length) throw "\"it\" calls must be invoked within a parent \"describe\" context";
-      const asyncIt = (async && fn.length > 0);
+      if (describing.length === 0) throw "\"it\" calls must be invoked within a parent \"describe\" context";
+      var asyncIt = (async && fn.length > 0);
 
-      const begin = function() {
+      var begin = function() {
         Test.display.write("IT", msg);
 
         beforeCallbacks.forEach(function(cb) {
           cb();
         });
 
-        let start = new Date().getMilliseconds(),
+        var start = new Date().getMilliseconds(),
             timeout,
             done = function() {
               if (timeout) clearTimeout(timeout);
 
-              const ms = new Date().getMilliseconds() - start;
+              var ms = new Date().getMilliseconds() - start;
               Test.display.write("COMPLETEDIN", ms);
 
               afterCallbacks.forEach(function(cb) {
@@ -214,12 +237,16 @@ try {
         begin();
       }
     },
-    before: (cb) => beforeCallbacks.push(cb),
-    after: (cb) => afterCallbacks.push(cb),
+    before: function(cb) { 
+      beforeCallbacks.push(cb) 
+    },
+    after: function(cb) { 
+      afterCallbacks.push(cb)
+    },
     // handles an error and writes the appropriate output. If a function is provided it will handle the error
     // if the function errors, and then rethrow the exception
     handleError: function(ex) {
-      if (typeof ex == "function") {
+      if (typeof ex === "function") {
         try {
           ex();
         } 
@@ -228,10 +255,10 @@ try {
           throw ex;
         }
       }
-      else if (ex.name == "AssertionError") {
+      else if (ex.name === "AssertionError") {
         this.fail(ex.message);
       }
-      else if (ex.name != "TestError") {
+      else if (ex.name !== "TestError") {
         Test.display.write("ERROR", Test.trace(ex));
       }
     },
@@ -253,99 +280,168 @@ try {
         // confuse users who won't understand why it is there.
         .replace("at Object.Test.handleError", "");
     },
-    pass: () => _expect(true),
-    fail: message => _expect(false, message),
-    expect: (passed, failMsg, options) => _expect(passed, failMsg, options);
+    pass: function() {
+      _expect(true); 
+    },
+    fail: function(message) {
+      if (typeof message !== "string") {
+        message = "Value is not what was expected."
+      }
+      _expect(false, message);
+    },
+    expect: _expect,
     assertSimilar: function(actual, expected, msg, options) {
       this.assertEquals(Test.inspect(actual), Test.inspect(expected), msg, options);
     },
     assertNotSimilar: function(actual, expected, msg, options) {
       this.assertNotEquals(Test.inspect(actual), Test.inspect(expected), msg, options);
     },
-    assertEquals: function(actual, expected, msg, options = {successMsg: "Value == " + Test.inspect(expected)}) {
-      if (typeof(msg) == "object") {
-        options = msg;
-        msg = null;
+    assertEquals: function(actual, expected, msg, options) {
+      // Type-checking and default arguments
+      if (typeof options !== "object") {
+        if (typeof msg === "object") {
+          options = msg;
+          msg = null;
+        }
+        else {
+           options = {successMsg: "Value == " + Test.inspect(expected)};
+        }
       }
 
       if (actual !== expected) {
-        const explain = options && options.explain ? options.explain : alwaysExplain;
+        var explain = alwaysExplain;
+        if (options.hasOwnProperty("explain")) {
+          explain = options.explain;
+        }
 
-        if (explain) {
-          Test.expect(false, msg || "Values should be equal", _failed(options, function() {
+        if (explain === true) {
+          Test.expect(false, msg || "Values should equal each other", _failed(options, function() {
             Test.display.explain(actual, expected, {mode: explain, className: "failed"});
           }));
-        } else {
+        } 
+        else {
           Test.expect(false, Test.display.message("Expected: " + Test.inspect(expected) + ", instead got: " + Test.inspect(actual), msg));
         }
-      } else {
+      } 
+      else {
         Test.expect(true, null, options);
       }
     },
-    assertNotEquals: function(actual, expected, msg, options = {successMsg: "Value != " + Test.inspect(expected)}) {
-      if (typeof(msg) == "object") {
-        options = msg;
-        msg = null;
+    assertNotEquals: function(actual, expected, msg, options) {
+      // Type-checking and default arguments
+      if (typeof options !== "object") {
+        if (typeof msg === "object") {
+          options = msg;
+          msg = null;
+        }
+        else {
+           options = {successMsg: "Value != " + Test.inspect(expected)};
+        }
       }
 
       if (actual === expected) {
-        const explain = options.hasOwnProperty("explain") && options.explain ? options.explain : alwaysExplain;
+        var explain = options.hasOwnProperty("explain") && options.explain ? options.explain : alwaysExplain;
 
         if (explain) {
-          Test.expect(false, msg || "Values should not equal each other", _failed(options, function() {
+          Test.expect(false, msg = "Values should not equal each other", _failed(options, function() {
             Test.display.explain(actual, expected, {mode: explain, className: "failed"});
           }));
-        } else {
+        } 
+        else {
           msg = Test.display.message("Values should not be equal: " + Test.inspect(actual), msg);
           Test.expect(false, msg, options);
         }
-      } else {
+      } 
+      else {
         Test.expect(true, null, options);
       }
     },
-    assertDeepEquals: function(actual, expected, msg, options = {successMsg: "Value deep equals " + Test.inspect(expected)}) {
+    assertDeepEquals: function(actual, expected, msg, options) {
+      // Type-checking and default arguments
+      if (typeof options !== "object") {
+        if (typeof msg === "object") {
+          options = msg;
+          msg = null;
+        }
+        else {
+           options = {successMsg: "Value deep equals " + Test.inspect(expected)};
+        }
+      }
+      
       if (deepEquals(actual, expected)) {
         Test.expect(true, null, options);
-      } else {
+      } 
+      else {
         msg = Test.display.message("Expected: " + Test.inspect(expected) + ", instead got: " + Test.inspect(actual), msg);
         Test.expect(false, msg, options);
       }
     },
-    assertNotDeepEquals: function(actual, expected, msg, options = {successMsg: "Value not deep equals " + Test.inspect(expected)}) {
+    assertNotDeepEquals: function(actual, expected, msg, options) {
+      // Type-checking and default arguments
+      if (typeof options !== "object") {
+        if (typeof msg === "object") {
+          options = msg;
+          msg = null;
+        }
+        else {
+           options = {successMsg: "Value not deep equals " + Test.inspect(expected)};
+        }
+      }
+      
       if (!deepEquals(actual, expected)) {
         Test.expect(true, null, options);
-      } else {
+      } 
+      else {
         msg = Test.display.message("Value should not deep equal " + Test.inspect(actual), msg);
         Test.expect(false, msg, options);
       }
     },
-    assertApproxEquals: function(actual, expected, msg, options = {}) {
+    assertApproxEquals: function(actual, expected, msg, options) {
       // Compares two floating point values and checks whether they are approximately equal to each other
+      if (typeof options !== "object") {
+        options = {}; 
+      }
+      
       msg = Test.display.message("Expected actual value " + actual + " to approximately equal expected value " + expected + " (accepted relative error: 1e-9)", msg);
       if (Math.abs(expected) <= 1) {
         Test.expect(Math.abs(expected - actual) <= 1e-9, msg, options);
-      } else {
+      } 
+      else {
         Test.expect(Math.abs((expected - actual) / expected) <= 1e-9, msg, options);
       }
     },
-    assertNotApproxEquals: function(actual, unexpected, msg, options = {}) {
+    assertNotApproxEquals: function(actual, unexpected, msg, options) {
       // Compares two floating point values and checks whether they are sufficiently different from each other
+      if (typeof options !== "object") {
+        options = {}; 
+      }
+      
       msg = Test.display.message("Actual value " + actual + " should not approximately equal unexpected value " + unexpected + " (rejected relative error: 1e-9)", msg);
       if (Math.abs(unexpected) <= 1) {
         Test.expect(Math.abs(unexpected - actual) > 1e-9, msg, options);
-      } else {
+      } 
+      else {
         Test.expect(Math.abs((unexpected - actual) / unexpected) > 1e-9, msg, options);
       }
     },
-    assertContains: function(actual, expected, msg, options = {successMsg: "Value " + Test.inspect(actual) + " contains " + Test.inspect(expected)}) {
+    assertContains: function(actual, expected, msg, options) {
+      if (typeof options !== "object") {
+        options = {successMsg: "Value " + Test.inspect(actual) + " contains " + Test.inspect(expected)}; 
+      }
+      
       if (actual.indexOf(expected) >= 0) {
         Test.expect(true, null, options);
-      } else {
+      } 
+      else {
         msg = Test.display.message("Value " + Test.inspect(actual) + " should contain " + Test.inspect(expected), msg);
         Test.expect(false, msg, options);
       }
     },
-    assertNotContains: function(actual, expected, msg, options = {successMsg: "Value " + Test.inspect(actual) + " does not contain " + Test.inspect(expected)}) {
+    assertNotContains: function(actual, expected, msg, options) {
+      if (typeof options !== "object") {
+        options = {successMsg: "Value " + Test.inspect(actual) + " does not contain " + Test.inspect(expected)}; 
+      }
+      
       if (actual.indexOf(expected) === -1) {
         Test.expect(true, null, options);
       } else {
@@ -366,7 +462,8 @@ try {
       catch (ex) {
         if (ex.name == "TestError") {
           throw ex;
-        } else {
+        } 
+        else {
           msg += ": " + ex.toString();
           Test.expect(false, msg);
         }
@@ -378,7 +475,7 @@ try {
         msg = "Expected an error to be thrown";
       }
 
-      let passed = false;
+      var passed = false;
       try {
         fn();
       }
@@ -389,10 +486,14 @@ try {
 
       Test.expect(passed, msg, options);
     },
-    randomNumber: () => Math.floor(Math.random() * 101);
-    randomToken: () => Math.random().toString(36).substr(8);
+    randomNumber: function() {
+      Math.floor(Math.random() * 101);
+    },
+    randomToken: function() { 
+      Math.random().toString(36).substr(8);
+    },
     randomize: function(array) {
-      let arr = array.concat(), i = arr.length, j, x;
+      var arr = array.concat(), i = arr.length, j, x;
       while (i) {
         j = (Math.random() * i) | 0;
         x = arr[--i];
@@ -401,9 +502,17 @@ try {
       }
       return arr;
     },
-    sample: () => array[~~(array.length * Math.random())];
-    escapeHtml: () => Test.display.escapeHtml(html);
-    Error: function(message = "") {
+    sample: function() { 
+      array[~~(array.length * Math.random())];
+    },
+    escapeHtml: function() {
+      Test.display.escapeHtml(html);
+    },
+    Error: function(message) {
+      if (typeof message !== "string") {
+        message = ""; 
+      }
+      this.message = message;
       this.name = "TestError";
     }
   };
