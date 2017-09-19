@@ -502,10 +502,10 @@ try {
       }
       return arr;
     },
-    sample: function() { 
+    sample: function(array) { 
       return array[~~(array.length * Math.random())];
     },
-    escapeHtml: function() {
+    escapeHtml: function(html) {
       return Test.display.escapeHtml(html);
     },
     Error: function(message) {
