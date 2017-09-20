@@ -45,36 +45,32 @@ try {
   };
 
   var _expect = function(passed, failMsg, options) {
-    if (typeof options !== "object") {
-      options = {};
-    }
-    
-    if (typeof failMsg !== "string") {
-      failMsg = "Value is not what was expected";
-    }
-    
-    if (passed === true) {
+    options = options || {};
+
+    if (passed) {
       var successMsg = "Test Passed";
-      if (options.hasOwnProperty("successMsg") && typeof options.successMsg === "string") {
+      if (options.successMsg) {
         successMsg += ": " + options.successMsg;
       }
       Test.display.write("PASSED", successMsg);
 
-      if (options.hasOwnProperty("passed") && typeof options.passed === "function") {
+      if (options.passed) {
         options.passed(successMsg, options);
       }
-    } 
+    }
     else {
+      failMsg = failMsg || 'Value is not what was expected';
+
       Test.display.write("FAILED", failMsg);
 
-      if (options.hasOwnProperty("failed") && typeof options.failed === "function") {
+      if (options.failed) {
         options.failed(failMsg, options);
       }
 
       var error = new Test.Error(failMsg);
       if (describing) {
         failed.push(error);
-      } 
+      }
       else {
         throw error;
       }
@@ -84,11 +80,11 @@ try {
   // convenience method for adding a default failed callback to an options
   var _failed = function(options, callback) {
     if (typeof options !== "object") {
-      object = {failed: callback}; 
+      options = {failed: callback};
     }
-    
+
     if (typeof options.failed !== "function") {
-      object.failed = callback || function() {}; 
+      options.failed = callback || function() {};
     }
     return options;
   };
@@ -119,7 +115,9 @@ try {
     },
 
     // backwards compatibility
-    format: Test.display.format,
+    format: function(obj, options) {
+      Test.display.format(obj, options);
+    },
     inspect: function(obj) {
       // format arrays ourselves since long arrays end up getting broken out into separate lines, which is often a
       // bad format for typical use cases.
@@ -219,7 +217,7 @@ try {
 
         try {
           fn(asyncIt ? done : undefined);
-        } 
+        }
         catch (ex) {
           Test.handleError(ex);
         }
@@ -237,10 +235,10 @@ try {
         begin();
       }
     },
-    before: function(cb) { 
+    before: function(cb) {
       beforeCallbacks.push(cb);
     },
-    after: function(cb) { 
+    after: function(cb) {
       afterCallbacks.push(cb);
     },
     // handles an error and writes the appropriate output. If a function is provided it will handle the error
@@ -249,7 +247,7 @@ try {
       if (typeof ex === "function") {
         try {
           ex();
-        } 
+        }
         catch (ex) {
           this.handleError(ex);
           throw ex;
@@ -281,11 +279,11 @@ try {
         .replace("at Object.Test.handleError", "");
     },
     pass: function() {
-      _expect(true); 
+      _expect(true);
     },
     fail: function(message) {
       if (typeof message !== "string") {
-        message = "Value is not what was expected."
+        message = "Value is not what was expected.";
       }
       _expect(false, message);
     },
@@ -304,7 +302,7 @@ try {
           msg = null;
         }
         else {
-           options = {successMsg: "Value == " + Test.inspect(expected)};
+          options = {successMsg: "Value == " + Test.inspect(expected)};
         }
       }
 
@@ -318,11 +316,11 @@ try {
           Test.expect(false, msg || "Values should be equal", _failed(options, function() {
             Test.display.explain(actual, expected, {mode: explain, className: "failed"});
           }));
-        } 
+        }
         else {
           Test.expect(false, Test.display.message("Expected: " + Test.inspect(expected) + ", instead got: " + Test.inspect(actual), msg));
         }
-      } 
+      }
       else {
         Test.expect(true, null, options);
       }
@@ -335,7 +333,7 @@ try {
           msg = null;
         }
         else {
-           options = {successMsg: "Value != " + Test.inspect(expected)};
+          options = {successMsg: "Value != " + Test.inspect(expected)};
         }
       }
 
@@ -346,12 +344,12 @@ try {
           Test.expect(false, msg || "Values should not equal each other", _failed(options, function() {
             Test.display.explain(actual, expected, {mode: explain, className: "failed"});
           }));
-        } 
+        }
         else {
           msg = Test.display.message("Values should not be equal: " + Test.inspect(actual), msg);
           Test.expect(false, msg, options);
         }
-      } 
+      }
       else {
         Test.expect(true, null, options);
       }
@@ -364,13 +362,13 @@ try {
           msg = null;
         }
         else {
-           options = {successMsg: "Value deep equals " + Test.inspect(expected)};
+          options = {successMsg: "Value deep equals " + Test.inspect(expected)};
         }
       }
-      
+
       if (deepEquals(actual, expected)) {
         Test.expect(true, null, options);
-      } 
+      }
       else {
         msg = Test.display.message("Expected: " + Test.inspect(expected) + ", instead got: " + Test.inspect(actual), msg);
         Test.expect(false, msg, options);
@@ -384,13 +382,13 @@ try {
           msg = null;
         }
         else {
-           options = {successMsg: "Value not deep equals " + Test.inspect(expected)};
+          options = {successMsg: "Value not deep equals " + Test.inspect(expected)};
         }
       }
-      
+
       if (!deepEquals(actual, expected)) {
         Test.expect(true, null, options);
-      } 
+      }
       else {
         msg = Test.display.message("Value should not deep equal " + Test.inspect(actual), msg);
         Test.expect(false, msg, options);
@@ -399,13 +397,13 @@ try {
     assertApproxEquals: function(actual, expected, msg, options) {
       // Compares two floating point values and checks whether they are approximately equal to each other
       if (typeof options !== "object") {
-        options = {}; 
+        options = {};
       }
-      
+
       msg = Test.display.message("Expected actual value " + actual + " to approximately equal expected value " + expected + " (accepted relative error: 1e-9)", msg);
       if (Math.abs(expected) <= 1) {
         Test.expect(Math.abs(expected - actual) <= 1e-9, msg, options);
-      } 
+      }
       else {
         Test.expect(Math.abs((expected - actual) / expected) <= 1e-9, msg, options);
       }
@@ -413,25 +411,25 @@ try {
     assertNotApproxEquals: function(actual, unexpected, msg, options) {
       // Compares two floating point values and checks whether they are sufficiently different from each other
       if (typeof options !== "object") {
-        options = {}; 
+        options = {};
       }
-      
+
       msg = Test.display.message("Actual value " + actual + " should not approximately equal unexpected value " + unexpected + " (rejected relative error: 1e-9)", msg);
       if (Math.abs(unexpected) <= 1) {
         Test.expect(Math.abs(unexpected - actual) > 1e-9, msg, options);
-      } 
+      }
       else {
         Test.expect(Math.abs((unexpected - actual) / unexpected) > 1e-9, msg, options);
       }
     },
     assertContains: function(actual, expected, msg, options) {
       if (typeof options !== "object") {
-        options = {successMsg: "Value " + Test.inspect(actual) + " contains " + Test.inspect(expected)}; 
+        options = {successMsg: "Value " + Test.inspect(actual) + " contains " + Test.inspect(expected)};
       }
-      
+
       if (actual.indexOf(expected) >= 0) {
         Test.expect(true, null, options);
-      } 
+      }
       else {
         msg = Test.display.message("Value " + Test.inspect(actual) + " should contain " + Test.inspect(expected), msg);
         Test.expect(false, msg, options);
@@ -439,12 +437,13 @@ try {
     },
     assertNotContains: function(actual, expected, msg, options) {
       if (typeof options !== "object") {
-        options = {successMsg: "Value " + Test.inspect(actual) + " does not contain " + Test.inspect(expected)}; 
+        options = {successMsg: "Value " + Test.inspect(actual) + " does not contain " + Test.inspect(expected)};
       }
-      
+
       if (actual.indexOf(expected) === -1) {
         Test.expect(true, null, options);
-      } else {
+      }
+      else {
         msg = Test.display.message("Value " + Test.inspect(actual) + " should not contain " + Test.inspect(expected), msg);
         Test.expect(false, msg, options);
       }
@@ -458,11 +457,11 @@ try {
       try {
         fn();
         Test.expect(true);
-      } 
+      }
       catch (ex) {
         if (ex.name == "TestError") {
           throw ex;
-        } 
+        }
         else {
           msg += ": " + ex.toString();
           Test.expect(false, msg);
@@ -489,7 +488,7 @@ try {
     randomNumber: function() {
       return Math.floor(Math.random() * 101);
     },
-    randomToken: function() { 
+    randomToken: function() {
       return Math.random().toString(36).substr(8);
     },
     randomize: function(array) {
@@ -502,7 +501,7 @@ try {
       }
       return arr;
     },
-    sample: function(array) { 
+    sample: function(array) {
       return array[~~(array.length * Math.random())];
     },
     escapeHtml: function(html) {
@@ -510,7 +509,7 @@ try {
     },
     Error: function(message) {
       if (typeof message !== "string") {
-        message = ""; 
+        message = "";
       }
       this.message = message;
       this.name = "TestError";
@@ -546,7 +545,7 @@ try {
   });
 
 
-} 
+}
 catch (ex) {
   console.error(ex);
   throw "Failed to load core API methods";
