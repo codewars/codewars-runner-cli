@@ -120,6 +120,7 @@ describe('typescript runner', function() {
     it('basic test', function(done) {
       runner.run({
         language: 'typescript',
+        languageVersion: '2.4',
         code: 'export var a = {b: 2};',
         fixture: `\
           /// <reference path="/runner/typings/mocha/index.d.ts" />
@@ -142,6 +143,7 @@ describe('typescript runner', function() {
       it('handle successes', function(done) {
         runner.run({
           language: 'typescript',
+          languageVersion: '2.4',
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
@@ -222,6 +224,7 @@ describe('typescript runner', function() {
       it('handles failure', function(done) {
         runner.run({
           language: 'typescript',
+          languageVersion: '2.4',
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
@@ -300,6 +303,7 @@ describe('typescript runner', function() {
     it('basic test', function(done) {
       runner.run({
         language: 'typescript',
+        languageVersion: '2.4',
         code: 'export var a = {b: 2};',
         fixture: `\
           /// <reference path="/runner/typings/mocha/index.d.ts" />
@@ -322,6 +326,7 @@ describe('typescript runner', function() {
       it('handle successes', function(done) {
         runner.run({
           language: 'typescript',
+          languageVersion: '2.4',
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
@@ -402,6 +407,7 @@ describe('typescript runner', function() {
       it('handles failure', function(done) {
         runner.run({
           language: 'typescript',
+          languageVersion: '2.4',
           code: `\
             import 'core-js';
             import { Component } from "@angular/core";
