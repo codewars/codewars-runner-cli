@@ -3,14 +3,11 @@ defmodule CWRunner do
 
   def run(solution_path, fixture_path) do
     with :ok <- safe_compile(solution_path, "solution"),
-         :ok <- init_ex_unit,
+         :ok <- init_ex_unit(),
          :ok <- safe_compile(fixture_path, "fixture")
     do
       :ok
-    end
-    # This will look much prettier in Elixir 1.3
-    |> case do
-      :ok -> :ok
+    else
       {:error, message} ->
         IO.puts "\n<ERROR::>" <> message
     end
