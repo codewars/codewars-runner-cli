@@ -261,7 +261,11 @@ services:
     volumes:
       - ./lib:/runner/lib
       - ./examples:/runner/examples
-      - ./frameworks:/runner/frameworks
+      - ./frameworks/javascript/chai-display.js:/runner/frameworks/javascript/chai-display.js
+      - ./frameworks/javascript/cw-2.js:/runner/frameworks/javascript/cw-2.js
+      - ./frameworks/javascript/display.js:/runner/frameworks/javascript/display.js
+      - ./frameworks/javascript/karma-coderunner-reporter.js:/runner/frameworks/javascript/karma-coderunner-reporter.js
+      - ./frameworks/javascript/mocha-reporter.js:/runner/frameworks/javascript/mocha-reporter.js
       - ./test:/runner/test
     entrypoint: 'mocha -t 5000 --recursive test/runners/javascript/'
 
