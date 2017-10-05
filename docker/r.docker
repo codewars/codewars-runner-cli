@@ -6,7 +6,7 @@ RUN set -ex \
  && gpg -a --export E084DAB9 | apt-key add - \
  && echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" >> /etc/apt/sources.list \
  && apt-get -q update \
- && apt-get -q -y --no-install-recommends install 'r-base=3.4.1-*'
+ && apt-get -q -y --no-install-recommends install 'r-base=3.4.*' 'r-base-dev=3.4.*'
 
 # TODO version lock. need `devtools` package?
 RUN R -q -e 'install.packages("testthat", repo="https://cran.rstudio.com/")' && rm -rf /tmp/*
