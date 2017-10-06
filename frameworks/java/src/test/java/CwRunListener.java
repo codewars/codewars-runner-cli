@@ -56,7 +56,7 @@ public class CwRunListener extends RunListener
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         ex.printStackTrace(pw);
-        return sw.toString();
+        return sw.toString().replaceAll("\tat (?:org.junit.(?:internal|runners?)|sun.reflect|org.gradle|java|com.sun|Start.start).*\n", "");
     }
     private static String formatMessage(final String s)
     {
