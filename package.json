@@ -143,7 +143,7 @@
     "hyperscript": "^2.0.2",
     "immutable": "^3.8.1",
     "joi": "^9.0.4",
-    "jsdom": "^11.3.0",
+    "jsdom": "^10.1.0",
     "jwt-simple": "^0.2.0",
     "karma": "^1.1.2",
     "karma-chai": "^0.1.0",
