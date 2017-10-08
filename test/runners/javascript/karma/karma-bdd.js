@@ -26,6 +26,32 @@ describe('karma bdd', function() {
       done();
     });
   });
+  it('should handle ES6 transformations', function(done) {
+    runner.run({
+      language: 'javascript',
+      code: `\
+const a = [1, 2, 3];
+let b = [];
+for(let v of a) b.push(v + 1);
+let symbolTest = Symbol();
+`,
+      fixture: `\
+describe("test", () => {
+  it("should be have incremented the values", () => {
+    assert.deepEqual(b, [2,3,4]);
+  });
+  it("should handle symbols", () => {
+    assert.equal(typeof symbolTest, 'symbol');
+  });
+});
+`,
+      testFramework: 'karma_bdd'
+    }, function(buffer) {
+      expect(buffer.stdout).to.contain('<PASSED::>');
+      expect(buffer.stdout).to.not.contain('<FAILED:>');
+      done();
+    });
+  });
   it('should handle loading Angular', function(done) {
     runner.run({
       language: 'javascript',
