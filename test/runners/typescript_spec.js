@@ -1,8 +1,16 @@
 var expect = require('chai').expect;
 var runner = require('../runner');
+var exec = require('child_process').exec;
 
 
 describe('typescript runner', function() {
+  afterEach(function cleanup(done) {
+    exec('rm -f /workspace/*.ts /workspace/*.js /workspace/*.txt /workspace/*.css', function(err) {
+      if (err) return done(err);
+      done();
+    });
+  });
+
   runner.assertCodeExamples('typescript');
 
   describe('.run', function() {
