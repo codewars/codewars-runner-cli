@@ -13,7 +13,7 @@ RUN cd /tmp \
  && apt-get update -q \
 # && apt-cache showpkg esl-erlang \
 # && apt-cache showpkg elixir \
- && apt-get install -q -y --no-install-recommends 'esl-erlang=1:18.3' 'elixir=1.2.4-*'
+ && apt-get install -q -y --no-install-recommends 'esl-erlang=1:20.0' 'elixir=1.5.1-*'
 
 # Install local Elixir hex and rebar
 RUN mix local.hex --force \
