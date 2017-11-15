@@ -133,6 +133,28 @@ describe('python runner', function() {
           done();
         });
       });
+      it('should show KeyErrors', function(done) {
+        runner.run({
+          language: 'python',
+          languageVersion: lv,
+          testFramework: 'unittest',
+          code: 'a = {}; a[10] += 3',
+          code: [
+            'def go(one):',
+            '  a = {}',
+            '  a[10] += 3'
+          ].join('\n'),
+          fixture: [
+            'class Test(unittest.TestCase):',
+            '  def test_assert(self):',
+            '    self.assertEqual(go(1), 1)'
+          ].join('\n'),
+          testFramework: 'unittest'
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain("<ERROR::>KeyError: 10");
+          done();
+        });
+      });
       it('should include test names', function(done) {
         runner.run({
           language: 'python',
@@ -178,7 +200,7 @@ describe('python runner', function() {
           ].join('\n'),
           testFramework: 'unittest'
         }, function(buffer) {
-          expect(buffer.stdout).to.contain('\n<ERROR::>Unhandled Exception: exceptions are my favorite, I always throw them\n');
+          expect(buffer.stdout).to.contain('\n<ERROR::>Exception: exceptions are my favorite, I always throw them\n');
           done();
         });
       });
