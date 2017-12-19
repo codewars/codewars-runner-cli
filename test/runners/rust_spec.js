@@ -312,9 +312,9 @@ describe('rust runner', function() {
       }, function(buffer) {
         expect(buffer.stdout).to.contain(`<IT::>returns_sum1_1`);
         expect(buffer.stdout).to.contain(`\n<PASSED::>Test Passed`);
-        expect(buffer.stdout).to.contain(`\n<FAILED::>Test Failed<:LF:>assertion failed: \`(left == right)\` (left: \`"abc\\\\'"\`, right: \`"'\\\\cba"\`)`);
-        expect(buffer.stdout).to.contain(`\n<FAILED::>Test Failed<:LF:>assertion failed: \`(left == right)\` (left: \`"abc'"\`, right: \`"'cba"\`)`);
-        expect(buffer.stdout).to.contain(`\n<FAILED::>Test Failed<:LF:>assertion failed: \`(left == right)\` (left: \`1\`, right: \`2\`)`);
+        expect(buffer.stdout).to.contain(`\n<FAILED::>Test Failed<:LF:>assertion failed: \`(left == right)\`\n  left: \`"abc\\\\'"\`,\n right: \`"'\\\\cba"\``);
+        expect(buffer.stdout).to.contain(`\n<FAILED::>Test Failed<:LF:>assertion failed: \`(left == right)\`\n  left: \`"abc'"\`,\n right: \`"'cba"\``);
+        expect(buffer.stdout).to.contain(`\n<FAILED::>Test Failed<:LF:>assertion failed: \`(left == right)\`\n  left: \`1\`,\n right: \`2\``);
         done();
       });
     });

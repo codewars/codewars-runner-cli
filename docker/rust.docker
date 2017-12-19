@@ -4,7 +4,7 @@ FROM codewars/base-runner
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path --default-toolchain 1.15.1; \
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path --default-toolchain 1.22.1; \
     chmod -R a+w $RUSTUP_HOME $CARGO_HOME;
 
 RUN ln -s /home/codewarrior /workspace
