@@ -137,8 +137,6 @@ describe('python runner', function() {
         runner.run({
           language: 'python',
           languageVersion: lv,
-          testFramework: 'unittest',
-          code: 'a = {}; a[10] += 3',
           code: [
             'def go(one):',
             '  a = {}',
