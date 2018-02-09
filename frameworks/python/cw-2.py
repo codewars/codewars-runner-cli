@@ -4,8 +4,31 @@ class AssertException(Exception):
     pass
 
 
+_print = print
+
+
+'''Fix the dreaded Unicode Error Trap'''
+def print(*args, **kwargs):
+    from sys import stdout
+    sep = kwargs.get('sep', ' ')
+    end = kwargs.get('end', '\n')
+    file = kwargs.get('file', stdout)
+    
+    def _replace(c):
+        if ord(c) >= 128: return u'&#{};'.format(ord(c))
+        return c
+    def _escape(s): return ''.join(_replace(c) for c in s)
+    
+    _print(*map(_escape, args), sep=_escape(sep), end=_escape(end), file=file)
+
+
 def format_message(message):
-    return message.replace("\n", "<:LF:>")
+    def _replace(c):
+        if ord(c) >= 65536: return r'\U' + hex(ord(c))[2:].zfill(8)
+        if ord(c) >= 128: return r'\u' + hex(ord(c))[2:].zfill(4)
+        return c
+    def _escape(s): return ''.join(_replace(c) for c in s)
+    return _escape(message.replace("\n", "<:LF:>"))
 
 
 def display(type, message, label="", mode=""):
