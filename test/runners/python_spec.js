@@ -322,31 +322,5 @@ describe('Fixed and new features', function() {
         done();
       });
     });
-
-    it(`should support unicode output (log) (Python${v} cw-2)`, function(done) {
-      runner.run({
-        language: 'python',
-        languageVersion: v,
-        testFramework: 'cw-2',
-        code: 'a = 1',
-        fixture: 'print(u"\\uac00")',
-      }, function(buffer) {
-        expect(buffer.stdout).to.include('&#44032;');
-        done();
-      });
-    });
-
-    it(`should support unicode output (test output) (Python${v} cw-2)`, function(done) {
-      runner.run({
-        language: 'python',
-        languageVersion: v,
-        testFramework: 'cw-2',
-        code: 'a = 1',
-        fixture: 'test.assert_equals(u"\\uac00", "")',
-      }, function(buffer) {
-        expect(buffer.stdout).to.include('\\uac00');
-        done();
-      });
-    });
   }
 });
