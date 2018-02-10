@@ -225,3 +225,102 @@ describe('Output format commands', function() {
     });
   }
 });
+
+describe('Fixed and new features', function() {
+  for (const v of ['2', '3', '3.6']) {
+    it(`should not block execution on failed test by default (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `test.assert_equals(a, 2)`,
+          `test.assert_equals(a, 1)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        done();
+      });
+    });
+    
+    it(`should support legacy style describe (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `test.describe('describe')`,
+          `test.assert_equals(a, 1)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        done();
+      });
+    });
+    
+    it(`should support new style describe (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `@test.describe('describe')`,
+          `def describe1():`,
+          `  test.assert_equals(a, 1)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        expect(buffer.stdout).to.include('\n<COMPLETEDIN::>');
+        done();
+      });
+    });
+    
+    it(`should support timeout (passing) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `@test.describe('describe')`,
+          `def describe1():`,
+          `  @test.timeout(0.01)`,
+          `  def dummy(): test.pass_()`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        expect(buffer.stdout).to.include('\n<COMPLETEDIN::>');
+        done();
+      });
+    });
+    
+    it(`should support timeout (failing) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `@test.describe('describe')`,
+          `def describe1():`,
+          `  @test.timeout(0.01)`,
+          `  def count():`,
+          `    x = 0`,
+          `    while x < 10 ** 9: x += 1`,
+          `    test.pass_()`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<FAILED::>Exceeded time limit');
+        expect(buffer.stdout).to.include('\n<COMPLETEDIN::>');
+        done();
+      });
+    });
+  }
+});
