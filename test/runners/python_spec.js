@@ -243,7 +243,7 @@ describe('Fixed and new features', function() {
         done();
       });
     });
-    
+
     it(`should support legacy style describe (Python${v} cw-2)`, function(done) {
       runner.run({
         language: 'python',
@@ -260,7 +260,7 @@ describe('Fixed and new features', function() {
         done();
       });
     });
-    
+
     it(`should support new style describe (Python${v} cw-2)`, function(done) {
       runner.run({
         language: 'python',
@@ -279,7 +279,7 @@ describe('Fixed and new features', function() {
         done();
       });
     });
-    
+
     it(`should support timeout (passing) (Python${v} cw-2)`, function(done) {
       runner.run({
         language: 'python',
@@ -299,7 +299,7 @@ describe('Fixed and new features', function() {
         done();
       });
     });
-    
+
     it(`should support timeout (failing) (Python${v} cw-2)`, function(done) {
       runner.run({
         language: 'python',

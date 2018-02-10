@@ -1,10 +1,8 @@
 from __future__ import print_function
+import six
 
 class AssertException(Exception):
     pass
-
-
-_print = print
 
 
 '''Fix the dreaded Unicode Error Trap'''
@@ -19,7 +17,7 @@ def print(*args, **kwargs):
         return c
     def _escape(s): return ''.join(_replace(c) for c in s)
     
-    _print(*map(_escape, args), sep=_escape(sep), end=_escape(end), file=file)
+    six.print_(*map(_escape, args), sep=_escape(sep), end=_escape(end), file=file)
 
 
 def format_message(message):
