@@ -322,5 +322,31 @@ describe('Fixed and new features', function() {
         done();
       });
     });
+
+    it(`should support unicode output (log) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: 'print("\\uac00")',
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('&#44032;');
+        done();
+      });
+    });
+
+    it(`should support unicode output (test output) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: 'test.assert_equals("\\uac00", "")',
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\\uac00');
+        done();
+      });
+    });
   }
 });
