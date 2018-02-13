@@ -1,12 +1,12 @@
 from __future__ import print_function
-import six
+import re, six
 
 class AssertException(Exception):
     pass
 
 
 '''Fix the dreaded Unicode Error Trap'''
-def print(*args, **kwargs):
+def uni_print(*args, **kwargs):
     from sys import stdout
     sep = kwargs.get('sep', ' ')
     end = kwargs.get('end', '\n')
@@ -16,9 +16,10 @@ def print(*args, **kwargs):
         if ord(c) >= 128: return u'&#{};'.format(ord(c))
         return c
     def _escape(s):
-        if isinstance(s, six.string_types):
-            return ''.join(_replace(c) for c in s)
-        return s
+        escaped = ''.join(_replace(c) for c in six.text_type(s))
+        escaped = re.sub(r'\\u([\da-f]{4})', lambda m: '&#{};'.format(int(m.group(1), 16)), escaped)
+        escaped = re.sub(r'\\U([\da-f]{8})', lambda m: '&#{};'.format(int(m.group(1), 16)), escaped)
+        return escaped
         
     six.print_(*map(_escape, args), sep=_escape(sep), end=_escape(end), file=file)
 

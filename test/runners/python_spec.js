@@ -329,9 +329,12 @@ describe('Fixed and new features', function() {
         languageVersion: v,
         testFramework: 'cw-2',
         code: 'a = 1',
-        fixture: 'print(1, "2", u"\\uac00")',
+        fixture: 'test.uni_print(1, "a", u"\\uac00", [314159, "b", u"\\uac01"])',
       }, function(buffer) {
-        expect(buffer.stdout).to.include('1 2 &#44032;');
+        expect(buffer.stdout).to.include('1 a &#44032;');
+        expect(buffer.stdout).to.include('314159');
+        expect(buffer.stdout).to.include('b');
+        expect(buffer.stdout).to.include('&#44033;');
         done();
       });
     });
