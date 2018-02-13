@@ -329,9 +329,9 @@ describe('Fixed and new features', function() {
         languageVersion: v,
         testFramework: 'cw-2',
         code: 'a = 1',
-        fixture: 'print("u\\uac00")',
+        fixture: 'print(1, "2", u"\\uac00")',
       }, function(buffer) {
-        expect(buffer.stdout).to.include('&#44032;');
+        expect(buffer.stdout).to.include('1 2 &#44032;');
         done();
       });
     });
@@ -342,7 +342,7 @@ describe('Fixed and new features', function() {
         languageVersion: v,
         testFramework: 'cw-2',
         code: 'a = 1',
-        fixture: 'test.assert_equals("u\\uac00", "")',
+        fixture: 'test.assert_equals(u"\\uac00", "")',
       }, function(buffer) {
         expect(buffer.stdout).to.include('\\uac00');
         done();

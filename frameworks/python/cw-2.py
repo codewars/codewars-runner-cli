@@ -15,8 +15,11 @@ def print(*args, **kwargs):
     def _replace(c):
         if ord(c) >= 128: return u'&#{};'.format(ord(c))
         return c
-    def _escape(s): return ''.join(_replace(c) for c in s)
-    
+    def _escape(s):
+        if isinstance(s, six.string_types):
+            return ''.join(_replace(c) for c in s)
+        return s
+        
     six.print_(*map(_escape, args), sep=_escape(sep), end=_escape(end), file=file)
 
 
