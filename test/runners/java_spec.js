@@ -92,6 +92,7 @@ describe('java runner', function() {
           }}`
       }, function(buffer) {
         expect(buffer.stdout).to.contain('<IT::>myTestFunction(TestFixture)\n<FAILED::>Failed Message expected:<5> but was:<3>\n');
+        expect(buffer.stdout).to.not.contain('at java.lang.reflect.Method');
         done();
       });
     });
@@ -339,12 +340,14 @@ describe('java runner', function() {
               private HomeController controller;
           
               @Test
-              public void contexLoads() throws Exception {
+              public void contexLoads() throws Exception {                 
                   assertThat(controller).isNotNull();
               }
           }`
       }, function(buffer) {
+        console.log(buffer.stdout);
         console.log(buffer.stderr);
+        expect(buffer.stdout).to.contain('<LOG::-Startup Logs>');
         expect(buffer.stdout).to.contain('<PASSED::>Test Passed\n');
         done();
       });

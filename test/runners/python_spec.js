@@ -1,7 +1,20 @@
 var expect = require('chai').expect;
 var runner = require('../runner');
+const exec = require('child_process').exec;
 
 describe('python runner', function() {
+  afterEach(function cleanup(done) {
+    exec([
+      'rm -rf',
+      '/home/codewarrior/*.py',
+      '/home/codewarrior/__pycache__',
+      '/home/codewarrior/test',
+    ].join(' '), function(err) {
+      if (err) return done(err);
+      return done();
+    });
+  });
+
   // These specs are compatible with both Python 2 and 3
   ['2', '3', '3.6'].forEach(lv => {
     describe('.run', function() {
@@ -198,7 +211,12 @@ describe('python runner', function() {
           ].join('\n'),
           testFramework: 'unittest'
         }, function(buffer) {
-          expect(buffer.stdout).to.contain('\n<ERROR::>Exception: exceptions are my favorite, I always throw them\n');
+          if (lv.startsWith('3')) {
+            expect(buffer.stdout).to.contain('\n<ERROR::>Exception');
+          }
+          else {
+            expect(buffer.stdout).to.contain('\n<ERROR::>Exception: exceptions are my favorite, I always throw them\n');
+          }
           done();
         });
       });
@@ -207,6 +225,18 @@ describe('python runner', function() {
 });
 
 describe('Output format commands', function() {
+  afterEach(function cleanup(done) {
+    exec([
+      'rm -rf',
+      '/home/codewarrior/*.py',
+      '/home/codewarrior/__pycache__',
+      '/home/codewarrior/test',
+    ].join(' '), function(err) {
+      if (err) return done(err);
+      return done();
+    });
+  });
+
   for (const v of ['2', '3', '3.6']) {
     it(`should be on independent lines (Python${v} cw-2)`, function(done) {
       runner.run({
@@ -240,6 +270,130 @@ describe('Output format commands', function() {
         ].join('\n'),
       }, function(buffer) {
         expect(buffer.stdout).to.include('\n<FAILED::>');
+        done();
+      });
+    });
+  }
+});
+
+describe('unittest no concat', function() {
+  afterEach(function cleanup(done) {
+    exec([
+      'rm -rf',
+      '/home/codewarrior/*.py',
+      '/home/codewarrior/__pycache__',
+      '/home/codewarrior/test',
+    ].join(' '), function(err) {
+      if (err) return done(err);
+      return done();
+    });
+  });
+
+  for (const v of ['3.x', '3.6']) {
+    it(`should handle a basic assertion (${v})`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'unittest',
+        solution: [
+          'def add(a, b): return a + b'
+        ].join('\n'),
+        fixture: [
+          // Test class name is no longer restricted.
+          'class TestAddition(unittest.TestCase):',
+          '  def test_add(self):',
+          '    self.assertEqual(add(1, 1), 2)'
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('\n<PASSED::>');
+        done();
+      });
+    });
+
+    it(`should handle a failed assetion (${v})`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'unittest',
+        solution: [
+          'def add(a, b): return a - b'
+        ].join('\n'),
+        fixture: [
+          'class TestAddition(unittest.TestCase):',
+          '  def test_add(self):',
+          '    self.assertEqual(add(1, 1), 2)',
+          ''
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('\n<FAILED::>');
+        done();
+      });
+    });
+
+    it(`syntax error in solution show line numbers (${v})`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'unittest',
+        solution: [
+          'def add(a, b): return a b'
+        ].join('\n'),
+        fixture: [
+          'class TestAddition(unittest.TestCase):',
+          '  def test_add(self):',
+          '    self.assertEqual(add(1, 1), 2)',
+          ''
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('\n<ERROR::>');
+        expect(buffer.stdout).to.contain('solution.py", line 1');
+        expect(buffer.stdout).to.contain('SyntaxError');
+        done();
+      });
+    });
+
+    it(`should handle error (${v})`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'unittest',
+        solution: [
+          'def add(a, b): return a / b'
+        ].join('\n'),
+        fixture: [
+          'class TestAddition(unittest.TestCase):',
+          '  def test_add(self):',
+          '    self.assertEqual(add(1, 0), 1)',
+          ''
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('\n<ERROR::>');
+        done();
+      });
+    });
+
+    it(`should handle tests in multiple suites (${v})`, function(done) {
+      // combined into one suite
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'unittest',
+        solution: [
+          'def add(a, b): return a + b'
+        ].join('\n'),
+        fixture: [
+          'class TestAddition1(unittest.TestCase):',
+          '  def test_add1(self):',
+          '    self.assertEqual(add(1, 1), 2)',
+          '',
+          'class TestAddition2(unittest.TestCase):',
+          '  def test_add2(self):',
+          '    self.assertEqual(add(2, 2), 4)',
+          '',
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.contain('\n<IT::>test_add1');
+        expect(buffer.stdout).to.contain('\n<IT::>test_add2');
         done();
       });
     });
