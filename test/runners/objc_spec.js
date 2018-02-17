@@ -631,6 +631,79 @@ describe('objc runner', function() {
           done();
         });
       });
+
+      it('should support setup code', function(done) {
+        // https://github.com/Codewars/codewars.com/issues/1221
+        runner.run({
+          language: 'objc',
+          testFramework: 'unitkit',
+          setup: `
+#import <Foundation/Foundation.h>
+
+@interface Node: NSObject
+{
+  int data;
+  Node *next;
+}
+@property (readonly) int data;
+@property (readonly) Node *next;
+- (id)initWithData: (int)d andNext: (Node *)n;
+- (id)initWithData: (int)d;
++ (Node *)nodeWithData: (int)d andNext: (Node *)n;
++ (Node *)nodeWithData: (int)d;
+@end
+
+@implementation Node
+@synthesize data;
+@synthesize next;
+- (id)initWithData: (int)d andNext: (Node *)n
+{
+  data = d;
+  next = n;
+  return self;
+}
+- (id)initWithData: (int)d
+{
+  data = d;
+  next = NULL;
+  return self;
+}
++ (Node *)nodeWithData: (int)d andNext: (Node *)n
+{
+  return [[Node alloc] initWithData: d andNext: n];
+}
++ (Node *)nodeWithData: (int)d
+{
+  return [[Node alloc] initWithData: d];
+}
+@end
+          `,
+          solution: `
+#import <Foundation/Foundation.h>
+
+NSString *stringify(Node *list) {
+  // TODO: Return a string representation of the list passed in
+  return @"";
+}
+          `,
+          fixture: `
+@implementation TestSuite
+- (void)testNULL
+{
+  UKStringsEqual(@"", stringify(NULL));
+}
+- (void)testSingle
+{
+  UKStringsEqual(@"1", stringify([Node nodeWithData: 1]));
+}
+@end
+          `,
+        }, function(buffer) {
+          expect(buffer.stdout).to.contain('<PASSED::>');
+          expect(buffer.stdout).to.contain('<FAILED::>');
+          done();
+        });
+      });
     });
 
     describe('CW', function() {
