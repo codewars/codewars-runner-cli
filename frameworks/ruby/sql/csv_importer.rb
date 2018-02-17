@@ -1,12 +1,19 @@
 require 'csv'
 require 'chronic'
+require 'open-uri'
 
 # data importer utility
 class CsvImporter
   attr_reader :fields, :csv, :table, :limit, :random
 
   def initialize(file, table, fields: {}, limit: 500, random: false)
-    @csv = CSV.read(file)
+    # make it possible to load CSV files from either web or file system
+    @csv = if (file =~ /^https?:\//i) == 0
+      CSV.parse(open(file).read)
+    else
+      CSV.read(file)
+    end
+
     @table = table
     @fields = fields
     @limit = limit
@@ -17,8 +24,22 @@ class CsvImporter
     importer = self
     DB.create_table @table do
       importer.csv.first.each do |field|
-        if importer.fields[field]
-          column field, importer.fields[field]
+        if schema_type = importer.fields[field]
+          case schema_type
+            when :primary_key
+              primary_key field
+            when Array
+              case schema_type.first
+                when :primary_key
+                  primary_key field, schema_type.last || {}
+                when :foreign_key
+                  foreign_key field, schema_type[1], schema_type[2] || {}
+              end
+            else
+              column field, schema_type
+          end
+        elsif field == 'id'
+          primary_key :id
         else
           String field
         end
