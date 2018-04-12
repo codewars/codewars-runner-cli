@@ -1,8 +1,10 @@
+> THIS REPO IS NOW OBSOLETE
+
 # About
 
 [![Build Status](https://travis-ci.org/Codewars/codewars-runner-cli.svg?branch=master)](https://travis-ci.org/Codewars/codewars-runner-cli)
 
-This project is used by [Codewars](http://www.codewars.com) and [Qualified.io](https://www.qualified.io) to execute small sets of code within various languages, using various testing frameworks.
+This project was previously used by [Codewars](http://www.codewars.com) and [Qualified.io](https://www.qualified.io) to execute small sets of code within various languages, using various testing frameworks.
 Each time code is run, it is executed within a Docker container in order to secure unsafe code execution.
 
 All execution is done within Docker, with a Node CLI app contained within each container
@@ -287,18 +289,3 @@ the code based on the options passed in. There are currently two types of strate
 
 Each of these strategies is passed in a `run` method which is used to ultimately execute the final command.
 
-## TODO
-
-### Paradigm Shift
-
-There is currently no way of handling language/package versioning well. This is largely caused by the Node CLI tool having to be
-baked in to the Docker container. A more ideal solution would involve keeping the CLI outside of Docker (or within its own sibling container)
-and communicating to language specific containers. This would allow us to easily swap out container versions that have no
-dependencies on the CLI codebase. This would involve having to utilize the `docker cp` command to copy
-files to the docker container in order to be compiled. Upgrading to this newer paradigm is the next big phase of this project.
-
-### Ability to send input parameters and return data
-
-This would likely involve a new shovel strategy. One where we can pass in parameters to the code and expect a specific format to
-be returned (like JSON). This would allow Codewars to eventually support dynamic APIs leveraging user submitted code - opening
-up new possibilites in what the community could build together as a social experiment.
