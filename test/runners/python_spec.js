@@ -256,6 +256,134 @@ describe('Output format commands', function() {
   }
 });
 
+describe('Fixed and new features', function() {
+  for (const v of ['2', '3', '3.6']) {
+    it(`should not block execution on failed test by default (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `test.assert_equals(a, 2)`,
+          `test.assert_equals(a, 1)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        done();
+      });
+    });
+
+    it(`should support legacy style describe (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `test.describe('describe')`,
+          `test.assert_equals(a, 1)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        done();
+      });
+    });
+
+    it(`should support new style describe (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `@test.describe('describe')`,
+          `def describe1():`,
+          `  test.assert_equals(a, 1)`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        expect(buffer.stdout).to.include('\n<COMPLETEDIN::>');
+        done();
+      });
+    });
+
+    it(`should support timeout (passing) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `@test.describe('describe')`,
+          `def describe1():`,
+          `  @test.timeout(0.01)`,
+          `  def dummy(): test.pass_()`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<PASSED::>');
+        expect(buffer.stdout).to.include('\n<COMPLETEDIN::>');
+        done();
+      });
+    });
+
+    it(`should support timeout (failing) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: [
+          `@test.describe('describe')`,
+          `def describe1():`,
+          `  @test.timeout(0.01)`,
+          `  def count():`,
+          `    x = 0`,
+          `    while x < 10 ** 9: x += 1`,
+          `    test.pass_()`,
+        ].join('\n'),
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\n<DESCRIBE::>describe');
+        expect(buffer.stdout).to.include('\n<FAILED::>Exceeded time limit');
+        expect(buffer.stdout).to.include('\n<COMPLETEDIN::>');
+        done();
+      });
+    });
+
+    it(`should support unicode output (log) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: 'test.uni_print(1, "a", u"\\uac00", [314159, "b", u"\\uac01"])',
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('1 a &#44032;');
+        expect(buffer.stdout).to.include('314159');
+        expect(buffer.stdout).to.include('b');
+        expect(buffer.stdout).to.include('&#44033;');
+        done();
+      });
+    });
+
+    it(`should support unicode output (test output) (Python${v} cw-2)`, function(done) {
+      runner.run({
+        language: 'python',
+        languageVersion: v,
+        testFramework: 'cw-2',
+        code: 'a = 1',
+        fixture: 'test.assert_equals(u"\\uac00", "")',
+      }, function(buffer) {
+        expect(buffer.stdout).to.include('\\uac00');
+        done();
+      });
+    });
+  }
+});
+
 describe('unittest no concat', function() {
   afterEach(function cleanup(done) {
     exec([
@@ -289,7 +417,6 @@ describe('unittest no concat', function() {
         done();
       });
     });
-
     it(`should handle a failed assetion (${v})`, function(done) {
       runner.run({
         language: 'python',
@@ -309,7 +436,6 @@ describe('unittest no concat', function() {
         done();
       });
     });
-
     it(`syntax error in solution show line numbers (${v})`, function(done) {
       runner.run({
         language: 'python',
@@ -331,7 +457,6 @@ describe('unittest no concat', function() {
         done();
       });
     });
-
     it(`should handle error (${v})`, function(done) {
       runner.run({
         language: 'python',
@@ -351,7 +476,6 @@ describe('unittest no concat', function() {
         done();
       });
     });
-
     it(`should handle tests in multiple suites (${v})`, function(done) {
       // combined into one suite
       runner.run({
