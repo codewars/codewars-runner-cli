@@ -17,10 +17,10 @@ RUN apt-get update -qq
 RUN apt-get install -y python3.6
 
 # Install Additional Python2 libraries
-RUN apt-get install -y python-numpy python-scipy python-pandas
+RUN apt-get install -y python-numpy python-scipy python-pandas python-regex
 
 # Install Python3 libraries
-RUN apt-get install -y python3-numpy python3-scipy python3-pandas
+RUN apt-get install -y python3-numpy python3-scipy python3-pandas python3-regex
 
 # Install Packages
 RUN pip install pymongo redis
