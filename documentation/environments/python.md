@@ -4,7 +4,7 @@ Code is executed within a Dockerized Ubuntu 14.04 container.
 
 ## Language Versions
 
-Python 2.7.6 and 3.4.3 are supported.
+Python 2.7.6, 3.4.3 and 3.6.0 are supported.
 
 ## Testing Frameworks
 
@@ -20,6 +20,7 @@ Python 2.7.6 and 3.4.3 are supported.
 - pandas
 - pymongo
 - redis
+- regex
 
 ## Installed Services
 
