@@ -1,4 +1,8 @@
+# Status
+
 > THIS REPO IS NOW OBSOLETE
+
+If you like to contribute to codewars, please read [#695](https://github.com/Codewars/codewars-runner-cli/issues/695#issuecomment-462525036)
 
 # About
 
