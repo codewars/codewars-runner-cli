@@ -1,12 +1,8 @@
-# Status
+# ARCHIVED
 
-> THIS REPO IS NOW OBSOLETE
-
-If you like to contribute to codewars, please read [#695](https://github.com/Codewars/codewars-runner-cli/issues/695#issuecomment-462525036)
+Please use https://github.com/codewars/runner to report any language related issues.
 
 # About
-
-[![Build Status](https://travis-ci.org/Codewars/codewars-runner-cli.svg?branch=master)](https://travis-ci.org/Codewars/codewars-runner-cli)
 
 This project was previously used by [Codewars](http://www.codewars.com) and [Qualified.io](https://www.qualified.io) to execute small sets of code within various languages, using various testing frameworks.
 Each time code is run, it is executed within a Docker container in order to secure unsafe code execution.
